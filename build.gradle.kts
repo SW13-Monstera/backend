@@ -65,3 +65,9 @@ tasks.asciidoctor {
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
 }
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}

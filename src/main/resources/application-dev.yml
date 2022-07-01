@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:tcp://localhost/~/test
 
   jpa:
     hibernate:
@@ -12,10 +12,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+
 logging:
   level:
     org.hibernate.sql: debug
