@@ -18,5 +18,4 @@ class ProblemTag(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
     val tag: Tag
-) {
-}
+)
