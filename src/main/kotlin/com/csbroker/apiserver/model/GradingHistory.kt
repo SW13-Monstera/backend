@@ -9,7 +9,7 @@ class GradingHistory(
     @Id
     @GeneratedValue
     @Column(name = "grading_history_id")
-    var gradingHistoryId: UUID? = null,
+    val gradingHistoryId: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
@@ -19,10 +19,9 @@ class GradingHistory(
     @JoinColumn(name = "user_id")
     val user: User,
 
-    @Column(name = "user_answer")
+    @Column(name = "user_answer", columnDefinition = "VARCHAR(300)")
     val userAnswer: String,
 
     @Column(name = "score")
     val score: Float
-) {
-}
+)

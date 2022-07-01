@@ -5,12 +5,12 @@ import java.util.UUID
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 class User(
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    var id: UUID? = null,
+    val id: UUID? = null,
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(30)")
     var email: String,
@@ -22,11 +22,9 @@ class User(
     @Column(name = "role")
     var role: Role = Role.ROLE_USER,
 
-    @Column(name = "profile_image")
+    @Column(name = "profile_image", columnDefinition = "TEXT")
     var profileImageUrl: String? = null,
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "creator")
     val problems: MutableList<Problem> = mutableListOf()
-) {
-
-}
+)

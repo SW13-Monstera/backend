@@ -16,8 +16,8 @@ class Tag(
     @Column(name = "tag_id")
     val id: UUID? = null,
 
-    @Column(name = "tag_name")
-    var name: String,
+    @Column(name = "tag_name", columnDefinition = "VARCHAR(30)")
+    val name: String,
 
     @OneToMany(mappedBy = "tag")
     val problemTags: MutableList<ProblemTag> = mutableListOf()

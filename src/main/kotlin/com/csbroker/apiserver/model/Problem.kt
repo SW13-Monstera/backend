@@ -9,15 +9,15 @@ class Problem(
     @Id
     @GeneratedValue
     @Column(name = "problem_id")
-    var id: UUID? = null,
+    val id: UUID? = null,
 
-    @Column(name = "problem_title")
+    @Column(name = "problem_title", columnDefinition = "VARCHAR(50)")
     var title: String,
 
-    @Column(name = "problem_description")
+    @Column(name = "problem_description", columnDefinition = "LONGTEXT")
     var description: String,
 
-    @Column(name = "standard_answer")
+    @Column(name = "standard_answer", columnDefinition = "VARCHAR(300)")
     var answer: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,5 +26,4 @@ class Problem(
 
     @OneToMany(mappedBy = "problem")
     val problemTags: MutableList<ProblemTag> = mutableListOf(),
-) {
-}
+)
