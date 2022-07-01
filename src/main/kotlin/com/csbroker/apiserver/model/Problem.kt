@@ -1,7 +1,15 @@
 package com.csbroker.apiserver.model
 
 import java.util.UUID
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "problem")
@@ -26,4 +34,4 @@ class Problem(
 
     @OneToMany(mappedBy = "problem")
     val problemTags: MutableList<ProblemTag> = mutableListOf(),
-)
+) : BaseEntity()
