@@ -5,16 +5,12 @@ import javax.servlet.http.HttpServletRequest
 const val HEADER_AUTHORIZATION = "Authorization"
 const val TOKEN_PREFIX = "Bearer "
 
-class HeaderUtil {
-    companion object {
-        fun getAccessToken(request: HttpServletRequest): String? {
-            val headerValue = request.getHeader(HEADER_AUTHORIZATION)
+fun getAccessToken(request: HttpServletRequest): String? {
+    val headerValue = request.getHeader(HEADER_AUTHORIZATION)
 
-            headerValue?.let {
-                return if (headerValue.startsWith(TOKEN_PREFIX)) headerValue.substring(TOKEN_PREFIX.length) else null
-            }.let {
-                return null
-            }
-        }
+    headerValue?.let {
+        return if (headerValue.startsWith(TOKEN_PREFIX)) headerValue.substring(TOKEN_PREFIX.length) else null
+    }.let {
+        return null
     }
 }
