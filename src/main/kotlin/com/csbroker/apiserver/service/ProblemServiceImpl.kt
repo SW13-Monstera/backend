@@ -7,7 +7,6 @@ import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.ProblemTag
 import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.repository.ProblemRepository
-import com.linecorp.kotlinjdsl.spring.data.SpringDataQueryFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -17,9 +16,6 @@ import java.util.UUID
 class ProblemServiceImpl : ProblemService {
     @Autowired
     private lateinit var problemRepository: ProblemRepository
-
-    @Autowired
-    private lateinit var queryFactory: SpringDataQueryFactory
 
     override fun findProblems(problemSearchDto: ProblemSearchDto): List<ProblemResponseDto> {
         return problemRepository.findByTitleContainingIgnoreCase(problemSearchDto.query)
