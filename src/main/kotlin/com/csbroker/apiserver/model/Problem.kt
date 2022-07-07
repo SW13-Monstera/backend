@@ -1,5 +1,7 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.ProblemResponseDto
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -34,4 +36,56 @@ class Problem(
 
     @OneToMany(mappedBy = "problem")
     val problemTags: MutableList<ProblemTag> = mutableListOf(),
-) : BaseEntity()
+
+    @OneToMany(mappedBy = "problem")
+    val gradingHistory: MutableList<GradingHistory> = mutableListOf()
+) : BaseEntity() {
+    fun toProblemResponseDto(): ProblemResponseDto {
+        val tags = this.problemTags.map {
+            it.tag
+        }.map {
+            it.name
+        }
+
+        val avgScore = this.gradingHistory.map {
+            it.score
+        }.average()
+
+        val totalSolved = this.gradingHistory.map {
+            it.user.username
+        }.distinct().size
+
+        return ProblemResponseDto(
+            this.title,
+            tags,
+            avgScore,
+            totalSolved
+        )
+    }
+
+    fun toProblemDetailResponseDto(): ProblemDetailResponseDto {
+        val tags = this.problemTags.map {
+            it.tag
+        }.map {
+            it.name
+        }
+
+        val scoreList = this.gradingHistory.map {
+            it.score
+        }.toList().sorted()
+
+        val totalSolved = this.gradingHistory.map {
+            it.user.username
+        }.distinct().size
+
+        return ProblemDetailResponseDto(
+            this.title,
+            tags,
+            this.description,
+            scoreList.average(),
+            scoreList.first(),
+            scoreList.last(),
+            totalSolved
+        )
+    }
+}

@@ -1,18 +1,25 @@
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:tcp://localhost/~/test
+    datasource:
+        driver-class-name: org.h2.Driver
+        username: sa
+        password:
+        url: jdbc:h2:tcp://localhost/~/test
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                format_sql: true
+                show_sql: true
+
+    redis:
+        host: localhost
+        port: 6379
 
 logging:
-  level:
-    org.hibernate.sql: debug
+    level:
+        org.hibernate.sql: debug
+
+jwt:
+    secret: asjgnlansndasljn1n2l14as12214wasdxsavasfsaasxasdasfe21e12
