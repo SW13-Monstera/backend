@@ -40,7 +40,7 @@ class Problem(
     @OneToMany(mappedBy = "problem")
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
-    fun toProblemResponseDto(): ProblemResponseDto{
+    fun toProblemResponseDto(): ProblemResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
@@ -63,7 +63,7 @@ class Problem(
         )
     }
 
-    fun toProblemDetailResponseDto(): ProblemDetailResponseDto{
+    fun toProblemDetailResponseDto(): ProblemDetailResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {

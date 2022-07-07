@@ -10,7 +10,6 @@ import java.security.Key
 import java.util.Date
 import java.util.UUID
 
-
 class AuthTokenProvider(
     secret: String
 ) {
