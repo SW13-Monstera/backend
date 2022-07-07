@@ -17,6 +17,8 @@ plugins {
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    kotlin("kapt") version "1.3.61" // QueryDsl
+    idea // QueryDsl
 }
 
 group = "com.csbroker"
@@ -28,6 +30,7 @@ repositories {
 }
 
 val snippetsDir by extra { file("build/generated-snippets") }
+val querydslVersion = "5.0.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -47,6 +50,18 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
+    // QueryDsl
+    implementation("com.querydsl:querydsl-jpa:$querydslVersion")
+    kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+}
+
+idea {
+    module {
+        val kaptMain = file("build/generated/source/kapt/main")
+        sourceDirs.add(kaptMain)
+        generatedSourceDirs.add(kaptMain)
+    }
 }
 
 tasks.withType<KotlinCompile> {
