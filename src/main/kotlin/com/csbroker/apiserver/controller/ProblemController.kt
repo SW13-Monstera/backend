@@ -5,7 +5,6 @@ import com.csbroker.apiserver.dto.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.ProblemResponseDto
 import com.csbroker.apiserver.dto.ProblemSearchDto
 import com.csbroker.apiserver.service.ProblemService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,10 +15,9 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/problems")
-class ProblemController {
-
-    @Autowired
-    private lateinit var problemService: ProblemService
+class ProblemController(
+    private val problemService: ProblemService
+) {
 
     @GetMapping("/")
     fun getAllProblemsByQuery(

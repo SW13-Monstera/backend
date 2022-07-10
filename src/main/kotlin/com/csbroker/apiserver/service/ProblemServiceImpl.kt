@@ -5,16 +5,15 @@ import com.csbroker.apiserver.dto.ProblemResponseDto
 import com.csbroker.apiserver.dto.ProblemSearchDto
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.repository.ProblemRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
-class ProblemServiceImpl : ProblemService {
-    @Autowired
-    private lateinit var problemRepository: ProblemRepository
+class ProblemServiceImpl(
+    private val problemRepository: ProblemRepository
+) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<ProblemResponseDto> {
         return this.problemRepository.findProblemsByQuery(problemSearchDto, pageable)
