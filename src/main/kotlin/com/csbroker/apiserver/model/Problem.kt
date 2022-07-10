@@ -35,7 +35,7 @@ class Problem(
     val creator: User,
 
     @OneToMany(mappedBy = "problem")
-    val problemTags: MutableList<ProblemTag> = mutableListOf(),
+    val problemTags: MutableSet<ProblemTag> = mutableSetOf(),
 
     @OneToMany(mappedBy = "problem")
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()

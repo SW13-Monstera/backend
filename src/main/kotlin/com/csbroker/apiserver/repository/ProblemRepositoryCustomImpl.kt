@@ -18,10 +18,11 @@ class ProblemRepositoryCustomImpl(
     override fun findProblemsByQuery(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<Problem> {
         return queryFactory.selectFrom(problem)
             .distinct()
-            .leftJoin(problem.gradingHistory, gradingHistory)
-            .leftJoin(gradingHistory.user, user)
-            .leftJoin(problem.problemTags, problemTag)
-            .leftJoin(problemTag.tag, tag)
+            .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
+            .leftJoin(gradingHistory.user, user).fetchJoin()
+            .leftJoin(problem.problemTags, problemTag).fetchJoin()
+            .leftJoin(problemTag.tag, tag).fetchJoin()
+            .groupBy()
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
