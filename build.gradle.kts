@@ -19,6 +19,15 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     kotlin("kapt") version "1.3.61" // QueryDsl
     idea // QueryDsl
+    id("org.sonarqube") version "3.4.0.2513"
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "SW13-Monstera_backend")
+        property("sonar.organization", "sw13-monstera")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 group = "com.csbroker"
