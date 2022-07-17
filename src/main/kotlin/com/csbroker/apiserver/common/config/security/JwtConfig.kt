@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.common.config
+package com.csbroker.apiserver.common.config.security
 
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import org.springframework.beans.factory.annotation.Value
