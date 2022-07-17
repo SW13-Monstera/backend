@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.common.auth.AUTHORITIES_KEY
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.Role
@@ -58,18 +59,20 @@ class AuthServiceImpl(
         val tokenExpiry = appProperties.auth.tokenExpiry
         val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
 
-        val newAccessToken = authTokenProvider.createAuthToken(
+        val accessToken = authTokenProvider.createAuthToken(
             email,
             Date(now.time + tokenExpiry),
             role.code
         ).token
 
-        val newRefreshToken = authTokenProvider.createAuthToken(
+        val refreshToken = authTokenProvider.createAuthToken(
             appProperties.auth.tokenSecret,
             Date(now.time + refreshTokenExpiry)
         ).token
 
-        return TokenDto(newAccessToken, newRefreshToken)
+        redisRepository.setRefreshTokenByEmail(email, refreshToken)
+
+        return TokenDto(accessToken, refreshToken)
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
@@ -86,7 +89,7 @@ class AuthServiceImpl(
             ?: throw IllegalArgumentException("Access Token이 만료되지 않았습니다.")
 
         val email = claims.subject
-        val role = Role.of(claims.get("role", String::class.java))
+        val role = Role.of(claims.get(AUTHORITIES_KEY, String::class.java))
 
         val refreshToken = getCookie(request, REFRESH_TOKEN)?.value
             ?: throw IllegalArgumentException("Refresh Token이 존재하지 않습니다.")

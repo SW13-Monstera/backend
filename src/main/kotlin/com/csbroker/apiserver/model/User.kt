@@ -10,6 +10,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.OneToMany
@@ -30,7 +31,7 @@ class User(
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(100)")
     var username: String,
 
-    @Column(name = "password", columnDefinition = "VARCHAR(50)")
+    @Column(name = "password", columnDefinition = "VARCHAR(100)")
     var password: String = "NO_PASSWORD",
 
     @Enumerated(EnumType.STRING)
@@ -44,7 +45,7 @@ class User(
     @Column(name = "profile_image", columnDefinition = "TEXT")
     var profileImageUrl: String? = null,
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     val problems: MutableList<Problem> = mutableListOf()
 ) : BaseEntity() {
     fun updateInfo(userInfo: OAuth2UserInfo) {

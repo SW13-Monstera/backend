@@ -37,7 +37,7 @@ class AuthController(
     fun login(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        userLoginRequestDto: UserLoginRequestDto
+        @RequestBody userLoginRequestDto: UserLoginRequestDto
     ): ApiResponse<TokenResponseDto> {
         val (accessToken, refreshToken) = this.authService.loginUser(userLoginRequestDto)
 
