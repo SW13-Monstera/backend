@@ -35,7 +35,10 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
         }
 
         addCookie(
-            response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, serialize(authorizationRequest), cookieExpireSeconds
+            response,
+            OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
+            serialize(authorizationRequest),
+            cookieExpireSeconds
         )
 
         val redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)

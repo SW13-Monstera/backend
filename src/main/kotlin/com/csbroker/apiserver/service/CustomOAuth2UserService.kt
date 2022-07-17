@@ -37,7 +37,7 @@ class CustomOAuth2UserService(
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
         var savedUser = userRepository.findByEmail(userInfo.getEmail())
 
-        if(savedUser != null){
+        if (savedUser != null) {
             if (providerType != savedUser.providerType) {
                 throw IllegalArgumentException(
                     "This user signed up with ${savedUser.providerType} account not ${providerType.name}"

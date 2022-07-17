@@ -17,7 +17,7 @@ class AuthToken(
     private val key: Key
 ) {
     constructor(email: String, expiry: Date, key: Key, role: String? = null) : this("", key) {
-        if(role != null){
+        if (role != null) {
             this.token = this.createAuthToken(email, expiry, role)
         } else {
             this.token = this.createAuthToken(email, expiry)
