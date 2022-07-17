@@ -1,6 +1,5 @@
 package com.csbroker.apiserver.common.auth
 
-import com.csbroker.apiserver.common.enums.Role
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -8,15 +7,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import java.security.Key
 import java.util.Date
-import java.util.UUID
 
 class AuthTokenProvider(
     secret: String
 ) {
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
 
-    fun createAuthToken(id: UUID, expiry: Date, role: Role? = null): AuthToken {
-        return AuthToken(id, expiry, this.key, role)
+    fun createAuthToken(email: String, expiry: Date, role: String? = null): AuthToken {
+        return AuthToken(email, expiry, this.key, role)
     }
 
     fun convertAuthToken(token: String): AuthToken {

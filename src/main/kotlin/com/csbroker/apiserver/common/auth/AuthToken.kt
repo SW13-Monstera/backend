@@ -1,6 +1,5 @@
 package com.csbroker.apiserver.common.auth
 
-import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.log
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
@@ -10,19 +9,18 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
 import java.security.Key
 import java.util.Date
-import java.util.UUID
 
 const val AUTHORITIES_KEY: String = "ROLE"
 
 class AuthToken(
-    private var token: String,
+    var token: String,
     private val key: Key
 ) {
-    constructor(id: UUID, expiry: Date, key: Key, role: Role? = null) : this("", key) {
-        role?.let {
-            this.token = this.createAuthToken(id, expiry, role)
-        }.let {
-            this.token = this.createAuthToken(id, expiry)
+    constructor(email: String, expiry: Date, key: Key, role: String? = null) : this("", key) {
+        if(role != null){
+            this.token = this.createAuthToken(email, expiry, role)
+        } else {
+            this.token = this.createAuthToken(email, expiry)
         }
     }
 
@@ -66,17 +64,17 @@ class AuthToken(
     val isValid: Boolean
         get() = this.tokenClaims != null
 
-    private fun createAuthToken(id: UUID, expiry: Date): String {
+    private fun createAuthToken(email: String, expiry: Date): String {
         return Jwts.builder()
-            .setSubject(id.toString())
+            .setSubject(email)
             .signWith(this.key, SignatureAlgorithm.HS256)
             .setExpiration(expiry)
             .compact()
     }
 
-    private fun createAuthToken(id: UUID, expiry: Date, role: Role): String {
+    private fun createAuthToken(email: String, expiry: Date, role: String): String {
         return Jwts.builder()
-            .setSubject(id.toString())
+            .setSubject(email)
             .claim(AUTHORITIES_KEY, role)
             .signWith(this.key, SignatureAlgorithm.HS256)
             .setExpiration(expiry)
