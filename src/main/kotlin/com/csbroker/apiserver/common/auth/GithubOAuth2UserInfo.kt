@@ -5,18 +5,18 @@ class GithubOAuth2UserInfo(
 ) : OAuth2UserInfo(attributes) {
 
     override fun getId(): String {
-        TODO("Not yet implemented")
+        return (attributes["id"] as Int).toString()
     }
 
     override fun getName(): String {
-        TODO("Not yet implemented")
+        return attributes["name"] as String
     }
 
     override fun getEmail(): String {
-        TODO("Not yet implemented")
+        return attributes["email"] as String
     }
 
     override fun getImageUrl(): String {
-        TODO("Not yet implemented")
+        return attributes["avatar_url"] as String
     }
 }
