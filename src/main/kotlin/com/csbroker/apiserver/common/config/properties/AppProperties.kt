@@ -1,8 +1,10 @@
 package com.csbroker.apiserver.common.config.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConfigurationProperties(prefix = "app")
+@ConstructorBinding
 data class AppProperties(
     val auth: Auth,
     val oAuth2: OAuth2
