@@ -1,7 +1,9 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.common.auth.OAuth2UserInfo
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.dto.UserResponseDto
 import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
@@ -44,4 +46,23 @@ class User(
 
     @OneToMany(mappedBy = "creator")
     val problems: MutableList<Problem> = mutableListOf()
-) : BaseEntity()
+) : BaseEntity() {
+    fun updateInfo(userInfo: OAuth2UserInfo) {
+        this.username = userInfo.getName()
+        this.profileImageUrl = userInfo.getImageUrl()
+        this.email = userInfo.getEmail()
+    }
+
+    fun toUserResponseDto(): UserResponseDto {
+        return UserResponseDto(
+            id = this.id!!,
+            email = this.email,
+            username = this.username,
+            role = this.role
+        )
+    }
+
+    fun encodePassword(encodedPassword: String) {
+        this.password = encodedPassword
+    }
+}
