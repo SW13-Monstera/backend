@@ -2,6 +2,7 @@ package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -16,8 +17,9 @@ import javax.persistence.Table
 @Table(name = "users")
 class User(
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "user_id", columnDefinition = "BINARY(16)")
     var id: UUID? = null,
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(30)")
@@ -27,7 +29,7 @@ class User(
     var username: String,
 
     @Column(name = "password", columnDefinition = "VARCHAR(50)")
-    var password: String,
+    var password: String = "NO_PASSWORD",
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")

@@ -2,6 +2,7 @@ package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.dto.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.ProblemResponseDto
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -17,8 +18,9 @@ import javax.persistence.Table
 @Table(name = "problem")
 class Problem(
     @Id
-    @GeneratedValue
-    @Column(name = "problem_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "problem_id", columnDefinition = "BINARY(16)")
     val id: UUID? = null,
 
     @Column(name = "problem_title", columnDefinition = "VARCHAR(50)")
@@ -49,13 +51,20 @@ class Problem(
 
         val avgScore = this.gradingHistory.map {
             it.score
-        }.average()
+        }.average().let {
+            if (it.isNaN()) {
+                null
+            } else {
+                it
+            }
+        }
 
         val totalSolved = this.gradingHistory.map {
             it.user.username
         }.distinct().size
 
         return ProblemResponseDto(
+            this.id!!,
             this.title,
             tags,
             avgScore,
@@ -79,12 +88,13 @@ class Problem(
         }.distinct().size
 
         return ProblemDetailResponseDto(
+            this.id!!,
             this.title,
             tags,
             this.description,
-            scoreList.average(),
-            scoreList.first(),
-            scoreList.last(),
+            if (scoreList.isEmpty()) null else scoreList.average(),
+            if (scoreList.isEmpty()) null else scoreList.first(),
+            if (scoreList.isEmpty()) null else scoreList.last(),
             totalSolved
         )
     }
