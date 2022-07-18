@@ -57,6 +57,14 @@ class AuthToken(
             } catch (e: ExpiredJwtException) {
                 log.info("Expired JWT token.")
                 return e.claims
+            } catch (e: SecurityException) {
+                log.error("Invalid JWT signature.")
+            } catch (e: MalformedJwtException) {
+                log.error("Invalid Jwt token.")
+            } catch (e: UnsupportedJwtException) {
+                log.error("Unsupported JWT token.")
+            } catch (e: java.lang.IllegalArgumentException) {
+                log.error("Jwt token compact of handler are invalid.")
             }
             return null
         }

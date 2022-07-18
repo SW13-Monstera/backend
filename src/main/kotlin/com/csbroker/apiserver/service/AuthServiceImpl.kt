@@ -81,12 +81,8 @@ class AuthServiceImpl(
 
         val convertAuthToken = authTokenProvider.convertAuthToken(accessToken)
 
-        if (!convertAuthToken.isValid) {
-            throw IllegalArgumentException("Access Token이 올바르지 않습니다.")
-        }
-
         val claims = convertAuthToken.expiredTokenClaims
-            ?: throw IllegalArgumentException("Access Token이 만료되지 않았습니다.")
+            ?: throw IllegalArgumentException("Access Token이 만료되지 않았거나 올바르지 않습니다.")
 
         val email = claims.subject
         val role = Role.of(claims.get(AUTHORITIES_KEY, String::class.java))
