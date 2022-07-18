@@ -10,6 +10,8 @@ endif::[]
 
 이 API는 https://github.com/omniti-labs/jsend[JSend] Format을 따르는 API로, 아래와 같은 공통된 응답을 줍니다.
 
+추가 사항으로, 권한 인증이 필요한 API는 클라이언트에서 가지고 있는 JWT 토큰을 요청시 Authorization 헤더에 Bearer token과 같은 형태로 함께 전송해야합니다.
+
 |===
 |Type | Description	| Required Keys
 
@@ -121,3 +123,38 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 
 include::{snippets}/auth/login/response-headers.adoc[]
 
+=== 토큰 재발급
+
+.description
+[source]
+----
+토큰 재발급을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/auth/refresh
+----
+
+.Sample Request
+include::{snippets}/auth/refresh/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/auth/refresh/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authrization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 만료된 Access Token이며, 토큰 재발급시 쿠키에 포함되어 함께 전송되는 Refresh token과 함께 토큰 재발급시 사용됩니다.
+
+include::{snippets}/auth/refresh/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/auth/refresh/response-body.adoc[]
+include::{snippets}/auth/refresh/response-fields.adoc[]
+
+.Response Header
+response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름의 쿠키가 세팅되는 것을 알 수 있습니다.
+
+이 refresh token은 요청에 포함되어 전송된 refresh token의 기한이 3일 이하로 남았을 때, access token과 함께 재발급됩니다.
+
+만약, 요청에 포함되어 전송된 refresh token의 유효기간이 3일 이상이라면 새로운 refresh token을 전송하지 않습니다.
+include::{snippets}/auth/refresh/response-headers.adoc[]
