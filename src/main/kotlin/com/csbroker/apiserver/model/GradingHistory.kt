@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -14,8 +15,9 @@ import javax.persistence.Table
 @Table(name = "grading_history")
 class GradingHistory(
     @Id
-    @GeneratedValue
-    @Column(name = "grading_history_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "grading_history_id", columnDefinition = "BINARY(16)")
     val gradingHistoryId: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)

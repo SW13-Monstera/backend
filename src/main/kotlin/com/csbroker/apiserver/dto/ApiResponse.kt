@@ -8,9 +8,9 @@ private const val ERROR = "error"
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ApiResponse<T> private constructor(
-    private var status: String,
-    private var data: T? = null,
-    private var message: String? = null
+    val status: String,
+    val data: T? = null,
+    val message: String? = null
 ) {
     companion object {
         fun <T> success(data: T): ApiResponse<T> {

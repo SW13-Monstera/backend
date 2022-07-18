@@ -1,12 +1,16 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.common.auth.OAuth2UserInfo
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.dto.UserResponseDto
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.OneToMany
@@ -16,8 +20,9 @@ import javax.persistence.Table
 @Table(name = "users")
 class User(
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "user_id", columnDefinition = "BINARY(16)")
     var id: UUID? = null,
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(30)")
@@ -26,8 +31,8 @@ class User(
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(100)")
     var username: String,
 
-    @Column(name = "password", columnDefinition = "VARCHAR(50)")
-    var password: String,
+    @Column(name = "password", columnDefinition = "VARCHAR(100)")
+    var password: String = "NO_PASSWORD",
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -40,6 +45,25 @@ class User(
     @Column(name = "profile_image", columnDefinition = "TEXT")
     var profileImageUrl: String? = null,
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     val problems: MutableList<Problem> = mutableListOf()
-) : BaseEntity()
+) : BaseEntity() {
+    fun updateInfo(userInfo: OAuth2UserInfo) {
+        this.username = userInfo.getName()
+        this.profileImageUrl = userInfo.getImageUrl()
+        this.email = userInfo.getEmail()
+    }
+
+    fun toUserResponseDto(): UserResponseDto {
+        return UserResponseDto(
+            id = this.id!!,
+            email = this.email,
+            username = this.username,
+            role = this.role
+        )
+    }
+
+    fun encodePassword(encodedPassword: String) {
+        this.password = encodedPassword
+    }
+}

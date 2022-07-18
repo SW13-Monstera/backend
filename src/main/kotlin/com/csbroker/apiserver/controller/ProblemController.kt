@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/problems")
+@RequestMapping("/api/problems")
 class ProblemController(
     private val problemService: ProblemService
 ) {
-
-    @GetMapping("/")
+    @GetMapping
     fun getAllProblemsByQuery(
-        @RequestParam("query") query: String,
-        @RequestParam("isSolved") isSolved: Boolean,
-        @RequestParam("tags") tags: List<String>,
+        @RequestParam("query", required = false, defaultValue = "") query: String,
+        @RequestParam("isSolved", required = false, defaultValue = "false") isSolved: Boolean,
+        @RequestParam("tags", required = false, defaultValue = "") tags: List<String>,
         pageable: Pageable
     ): ApiResponse<List<ProblemResponseDto>> {
         // TODO("Auth 권한 체크하여, solved, not solved 체크")
@@ -34,9 +33,10 @@ class ProblemController(
     }
 
     @GetMapping("/{id}")
-    fun getProblemById(@PathVariable("id") id: String): ApiResponse<ProblemDetailResponseDto?> {
-        val uuid = UUID.fromString(id)
-        val findProblem = this.problemService.findProblemById(uuid)
+    fun getProblemById(@PathVariable("id") id: UUID): ApiResponse<ProblemDetailResponseDto> {
+        val findProblem = this.problemService.findProblemById(id)
+            ?: throw IllegalArgumentException("$id is not appropriate id")
+
         return ApiResponse.success(findProblem)
     }
 }

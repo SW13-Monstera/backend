@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -12,8 +13,9 @@ import javax.persistence.Table
 @Table(name = "tag")
 class Tag(
     @Id
-    @GeneratedValue
-    @Column(name = "tag_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "tag_id", columnDefinition = "BINARY(16)")
     val id: UUID? = null,
 
     @Column(name = "tag_name", columnDefinition = "VARCHAR(30)")
