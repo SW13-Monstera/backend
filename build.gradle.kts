@@ -12,7 +12,7 @@ buildscript {
 plugins {
     id("org.springframework.boot") version "2.7.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.asciidoctor.convert") version "1.5.8"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
@@ -64,6 +64,7 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 idea {
@@ -92,6 +93,28 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
+    doFirst { // 2
+        delete("src/main/resources/static/docs")
+    }
+}
+
+tasks.register("copyHTML", Copy::class) { // 3
+    dependsOn(tasks.asciidoctor)
+    destinationDir = file(".")
+    from(tasks.asciidoctor.get().outputDir) {
+        into("src/main/resources/static/docs")
+    }
+}
+
+tasks.build { // 4
+    dependsOn(tasks.getByName("copyHTML"))
+}
+
+tasks.bootJar { // 5
+    dependsOn(tasks.asciidoctor)
+    from(tasks.asciidoctor.get().outputDir) {
+        into("BOOT-INF/classes/static/docs")
+    }
 }
 
 allOpen {
