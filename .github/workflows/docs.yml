@@ -1,6 +1,11 @@
 name: deploy documentation
 
-on: [pull_request]
+on:
+    push:
+        branches:
+            - dev 
+    pull_request:
+        types: [opened]
 
 jobs:
     deploy-docs:
