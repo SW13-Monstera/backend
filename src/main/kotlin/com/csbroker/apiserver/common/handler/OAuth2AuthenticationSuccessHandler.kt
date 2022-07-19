@@ -83,7 +83,7 @@ class OAuth2AuthenticationSuccessHandler(
         )
 
         val refreshToken = tokenProvider.createAuthToken(
-            appProperties.auth.tokenSecret,
+            userInfo.getEmail(),
             Date(now.time + refreshTokenExpiry)
         )
 

@@ -66,7 +66,7 @@ class AuthServiceImpl(
         ).token
 
         val refreshToken = authTokenProvider.createAuthToken(
-            appProperties.auth.tokenSecret,
+            email,
             Date(now.time + refreshTokenExpiry)
         ).token
 
@@ -116,7 +116,7 @@ class AuthServiceImpl(
         if (validTime <= THREE_DAYS_MSEC) {
             val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
             val newRefreshToken = authTokenProvider.createAuthToken(
-                appProperties.auth.tokenSecret,
+                email,
                 Date(now.time + refreshTokenExpiry)
             ).token
 
