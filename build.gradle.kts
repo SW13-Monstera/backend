@@ -90,6 +90,14 @@ tasks.test {
     outputs.dir(snippetsDir)
 }
 
+tasks.register("copyYml", Copy::class) {
+    copy {
+        from("./backend-config")
+        include("*.yml")
+        into("src/main/resources")
+    }
+}
+
 tasks.asciidoctor {
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
@@ -106,7 +114,12 @@ tasks.register("copyHTML", Copy::class) { // 3
     }
 }
 
+tasks.bootRun {
+    dependsOn(tasks.getByName("copyYml"))
+}
+
 tasks.build { // 4
+    dependsOn(tasks.getByName("copyYml"))
     dependsOn(tasks.getByName("copyHTML"))
 }
 
