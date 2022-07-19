@@ -86,7 +86,7 @@ class AuthControllerTest {
                     requestFields(
                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -128,7 +128,7 @@ class AuthControllerTest {
                     preprocessResponse(prettyPrint()),
                     requestFields(
                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
