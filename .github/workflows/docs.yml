@@ -19,6 +19,11 @@ jobs:
                 java-version: '11'
                 cache: 'gradle'
 
+            - name: Start Redis
+              uses: supercharge/redis-github-action@1.1.0
+              with:
+                redis-version: 6
+
             - name: add permission to gradlew
               run: chmod +x ./gradlew
               shell: bash
