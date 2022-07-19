@@ -99,6 +99,7 @@ tasks.register("copyYml", Copy::class) {
 }
 
 tasks.asciidoctor {
+    dependsOn(tasks.getByName("copyYml"))
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
     doFirst { // 2
