@@ -158,3 +158,60 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 
 만약, 요청에 포함되어 전송된 refresh token의 유효기간이 3일 이상이라면 새로운 refresh token을 전송하지 않습니다.
 include::{snippets}/auth/refresh/response-headers.adoc[]
+
+== Problem API ( /api/problems )
+
+=== 문제 단건 조회
+
+
+.description
+[source]
+----
+문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/problems/{problem_id:UUID}
+----
+
+.Sample Request
+include::{snippets}/problems/inquire/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/inquire/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/inquire/path-parameters.adoc[]
+
+문제 단건 조회를 위한 path parameter의 설명입니다.
+
+
+.Response Body
+include::{snippets}/problems/inquire/response-body.adoc[]
+include::{snippets}/problems/inquire/response-fields.adoc[]
+
+=== 문제 검색
+
+.description
+[source]
+----
+문제 검색을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/problems
+Req Params  : query, tags, isSolved, page, size
+----
+
+.Sample Request
+include::{snippets}/problems/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/search/http-response.adoc[]
+
+.Request parameters
+include::{snippets}/problems/search/request-parameters.adoc[]
+
+문제 검색을 위한 request parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/problems/search/response-body.adoc[]
+include::{snippets}/problems/search/response-fields.adoc[]

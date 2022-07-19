@@ -1,9 +1,6 @@
 name: deploy documentation
 
-on:
-    push:
-        branches:
-            - dev
+on: [pull_request]
 
 jobs:
     deploy-docs:
@@ -42,9 +39,9 @@ jobs:
                   production-branch: dev
                   github-token: ${{ secrets.PRIVATE_TOKEN }}
                   deploy-message: 'Deploy from GitHub Actions'
-                  enable-pull-request-comment: false
+                  enable-pull-request-comment: true
                   enable-commit-comment: false
-                  overwrites-pull-request-comment: false
+                  overwrites-pull-request-comment: true
               env:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
