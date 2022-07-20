@@ -132,6 +132,7 @@ class AuthControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("회원의 UUID"),
                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
                             .description("Access 토큰 (JWT)")
                     ),
