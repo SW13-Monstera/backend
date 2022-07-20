@@ -6,6 +6,7 @@ import com.csbroker.apiserver.dto.ProblemResponseDto
 import com.csbroker.apiserver.dto.ProblemSearchDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,8 +26,19 @@ class ProblemController(
         @RequestParam("tags", required = false, defaultValue = "") tags: List<String>,
         pageable: Pageable
     ): ApiResponse<List<ProblemResponseDto>> {
-        // TODO("Auth 권한 체크하여, solved, not solved 체크")
-        val searchDto = ProblemSearchDto(tags, null, query)
+        var solvedBy: String? = null
+
+        if (isSolved) {
+            try {
+                val principal = SecurityContextHolder.getContext().authentication.principal
+                    as org.springframework.security.core.userdetails.User
+                solvedBy = principal.username
+            } catch (e: Exception) {
+                throw IllegalArgumentException("사용자 권한이 없습니다.")
+            }
+        }
+
+        val searchDto = ProblemSearchDto(tags, solvedBy, query)
         val foundProblems = this.problemService.findProblems(searchDto, pageable)
 
         return ApiResponse.success(foundProblems)

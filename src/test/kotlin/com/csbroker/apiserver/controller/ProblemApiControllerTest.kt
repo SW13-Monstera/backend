@@ -1,6 +1,8 @@
 package com.csbroker.apiserver.controller
 
+import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.ProblemTag
@@ -21,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
@@ -36,6 +41,7 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParamete
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.util.Date
 import java.util.UUID
 
 @SpringBootTest
@@ -64,6 +70,9 @@ class ProblemApiControllerTest {
 
     @Autowired
     private lateinit var gradingHistoryRepository: GradingHistoryRepository
+
+    @Autowired
+    private lateinit var tokenProvider: AuthTokenProvider
 
     private lateinit var problemId: UUID
 
@@ -180,15 +189,25 @@ class ProblemApiControllerTest {
     fun `problem 검색`() {
         // given
         val query = "test"
-        val isSolved = false
+        val isSolved = true
         val tags = "os,ds"
         val page = 0
         val size = 10
+
+        val now = Date()
+        val email = "test2@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 600000),
+            role = Role.ROLE_USER.code
+        )
 
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders
                 .get("$PROBLEM_ENDPOINT?query=$query&isSolved=$isSolved&tags=$tags&page=$page&size=$size")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
                 .accept(MediaType.APPLICATION_JSON)
         )
 
@@ -200,6 +219,11 @@ class ProblemApiControllerTest {
                     "problems/search",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰 ( 푼 문제로 검색을 하는 경우가 아니라면, 포함하지 않아도 됨. )")
+                            .optional()
+                    ),
                     requestParameters(
                         parameterWithName("query").description("검색어"),
                         parameterWithName("isSolved").description("풀이 여부"),
