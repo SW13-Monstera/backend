@@ -22,6 +22,7 @@ import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation
@@ -177,8 +178,8 @@ class UserControllerTest {
         )
         val userUpdateRequestDto = UserUpdateRequestDto(
             username = "test-admin-update",
-            profileImageUrl = null,
-            password = null
+            profileImageUrl = "https://test.com/test.png",
+            password = "changePassword123!"
         )
 
         val userUpdateRequestDtoString = objectMapper.writeValueAsString(userUpdateRequestDto)
@@ -198,6 +199,7 @@ class UserControllerTest {
             .andDo(
                 document(
                     "users/update",
+                    preprocessRequest(Preprocessors.prettyPrint()),
                     preprocessResponse(Preprocessors.prettyPrint()),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
@@ -205,11 +207,11 @@ class UserControllerTest {
                     ),
                     PayloadDocumentation.requestFields(
                         fieldWithPath("username").type(JsonFieldType.STRING)
-                            .description("수정할 닉네임").optional(),
+                            .description("수정할 닉네임 ( 필수 X )").optional(),
                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
-                            .description("수정할 프로필 이미지 url").optional(),
+                            .description("수정할 프로필 이미지 url ( 필수 X )").optional(),
                         fieldWithPath("password").type(JsonFieldType.STRING)
-                            .description("수정할 비밀번호").optional()
+                            .description("수정할 비밀번호 ( 필수 X )").optional()
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
