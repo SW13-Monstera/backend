@@ -7,6 +7,7 @@ import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.getAccessToken
 import com.csbroker.apiserver.common.util.getCookie
 import com.csbroker.apiserver.dto.TokenDto
+import com.csbroker.apiserver.dto.UserLoginDto
 import com.csbroker.apiserver.dto.UserLoginRequestDto
 import com.csbroker.apiserver.dto.UserSignUpDto
 import com.csbroker.apiserver.model.User
@@ -42,7 +43,7 @@ class AuthServiceImpl(
         return userRepository.save(user)
     }
 
-    override fun loginUser(userLoginRequestDto: UserLoginRequestDto): TokenDto {
+    override fun loginUser(userLoginRequestDto: UserLoginRequestDto): UserLoginDto {
         val email = userLoginRequestDto.email
         val rawPassword = userLoginRequestDto.password
 
@@ -72,7 +73,7 @@ class AuthServiceImpl(
 
         redisRepository.setRefreshTokenByEmail(email, refreshToken)
 
-        return TokenDto(accessToken, refreshToken)
+        return UserLoginDto(findUser.id!!, accessToken, refreshToken)
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
