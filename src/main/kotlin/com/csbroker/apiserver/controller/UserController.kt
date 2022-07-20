@@ -50,6 +50,16 @@ class UserController(
         @PathVariable("id") id: UUID,
         @RequestBody userUpdateRequestDto: UserUpdateRequestDto
     ): ApiResponse<UserResponseDto> {
+        val principal =
+            SecurityContextHolder.getContext().authentication.principal
+                as org.springframework.security.core.userdetails.User
+
+        val findUser = this.userService.findUserById(id)
+
+        if (findUser == null || findUser.email != principal.username) {
+            throw IllegalArgumentException("옳지 않은 권한 혹은 id입니다.")
+        }
+
         val user = this.userService.modifyUser(id, userUpdateRequestDto)
             ?: throw IllegalArgumentException("문제가 생겨 업데이트를 하지 못하였습니다.")
 
