@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.security.SignatureException
 import java.security.Key
 import java.util.Date
 
@@ -42,6 +43,8 @@ class AuthToken(
                 log.error("Unsupported JWT token.")
             } catch (e: java.lang.IllegalArgumentException) {
                 log.error("Jwt token compact of handler are invalid.")
+            } catch (e: SignatureException) {
+                log.error("Jwt signature does not match.")
             }
             return null
         }
@@ -65,6 +68,8 @@ class AuthToken(
                 log.error("Unsupported JWT token.")
             } catch (e: java.lang.IllegalArgumentException) {
                 log.error("Jwt token compact of handler are invalid.")
+            } catch (e: SignatureException) {
+                log.error("Jwt signature does not match.")
             }
             return null
         }
