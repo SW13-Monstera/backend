@@ -46,11 +46,11 @@ class ProblemRepositoryCustomImpl(
         return tag.name.`in`(tags)
     }
 
-    private fun solvedBy(username: String?): BooleanExpression? {
-        if (username == null) {
+    private fun solvedBy(email: String?): BooleanExpression? {
+        if (email == null) {
             return null
         }
 
-        return user.username.eq(username)
+        return user.email.eq(email)
     }
 }
