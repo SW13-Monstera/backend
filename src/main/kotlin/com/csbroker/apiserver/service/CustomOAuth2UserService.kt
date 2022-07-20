@@ -43,7 +43,6 @@ class CustomOAuth2UserService(
                     "This user signed up with ${savedUser.providerType} account not ${providerType.name}"
                 )
             }
-            this.updateUser(savedUser, userInfo)
         } else {
             savedUser = this.createUser(userInfo, providerType)
         }
@@ -60,10 +59,5 @@ class CustomOAuth2UserService(
         )
 
         return userRepository.saveAndFlush(user)
-    }
-
-    private fun updateUser(user: User, userInfo: OAuth2UserInfo): User {
-        user.updateInfo(userInfo)
-        return user
     }
 }
