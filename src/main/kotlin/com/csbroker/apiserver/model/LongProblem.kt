@@ -17,6 +17,5 @@ class LongProblem(
     var isGradable: Boolean,
 
     @Column(name = "standard_answer", columnDefinition = "VARCHAR(300)")
-    var standardAnswer: String,
-
+    var standardAnswer: String
 ) : Problem(title = title, description = description, creator = creator)
