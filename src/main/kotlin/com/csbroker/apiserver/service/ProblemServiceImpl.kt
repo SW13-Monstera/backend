@@ -8,7 +8,6 @@ import com.csbroker.apiserver.repository.ProblemRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class ProblemServiceImpl(
@@ -20,7 +19,7 @@ class ProblemServiceImpl(
             .map(Problem::toProblemResponseDto)
     }
 
-    override fun findProblemById(id: UUID): ProblemDetailResponseDto? {
+    override fun findProblemById(id: Long): ProblemDetailResponseDto? {
         return problemRepository.findByIdOrNull(id)?.toProblemDetailResponseDto()
     }
 }

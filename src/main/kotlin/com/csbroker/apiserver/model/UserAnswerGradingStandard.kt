@@ -10,24 +10,18 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "grading_history")
-class GradingHistory(
+@Table(name = "user_answer_grading_standard")
+class UserAnswerGradingStandard(
     @Id
     @GeneratedValue
-    @Column(name = "grading_history_id")
-    val gradingHistoryId: Long? = null,
+    @Column(name = "user_answer_grading_standard_id")
+    val userAnswerGradingStandardId: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_id")
-    val problem: Problem,
+    @JoinColumn(name = "user_answer_id")
+    val userAnswer: UserAnswer,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    val user: User,
-
-    @Column(name = "user_answer", columnDefinition = "VARCHAR(300)")
-    val userAnswer: String,
-
-    @Column(name = "score")
-    val score: Double
-) : BaseEntity()
+    @JoinColumn(name = "grading_standard_id")
+    val gradingStandard: GradingStandard
+)

@@ -10,18 +10,20 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "problem_tag")
-class ProblemTag(
+@Table(name = "choice")
+class Choice(
     @Id
     @GeneratedValue
-    @Column(name = "problem_tag_id")
+    @Column(name = "choice_id")
     val id: Long? = null,
+
+    @Column(name = "content")
+    var content: String,
+
+    @Column(name = "is_answer")
+    var isAnswer: Boolean,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
-    val problem: Problem,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    val tag: Tag
-) : BaseEntity()
+    val multipleChoiceProblem: MultipleChoiceProblem
+)

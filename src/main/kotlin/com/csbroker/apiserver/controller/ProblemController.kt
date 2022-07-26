@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping("/api/problems")
@@ -45,7 +44,7 @@ class ProblemController(
     }
 
     @GetMapping("/{id}")
-    fun getProblemById(@PathVariable("id") id: UUID): ApiResponse<ProblemDetailResponseDto> {
+    fun getProblemById(@PathVariable("id") id: Long): ApiResponse<ProblemDetailResponseDto> {
         val findProblem = this.problemService.findProblemById(id)
             ?: throw IllegalArgumentException("$id is not appropriate id")
 
