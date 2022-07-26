@@ -4,7 +4,7 @@ import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.model.GradingHistory
-import com.csbroker.apiserver.model.Problem
+import com.csbroker.apiserver.model.LongProblem
 import com.csbroker.apiserver.model.ProblemTag
 import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.model.User
@@ -42,7 +42,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.Date
-import java.util.UUID
 
 @SpringBootTest
 @AutoConfigureRestDocs
@@ -74,7 +73,7 @@ class ProblemApiControllerTest {
     @Autowired
     private lateinit var tokenProvider: AuthTokenProvider
 
-    private lateinit var problemId: UUID
+    private var problemId: Long? = null
 
     private val PROBLEM_ENDPOINT = "/api/problems"
 
@@ -99,17 +98,18 @@ class ProblemApiControllerTest {
         tagRepository.save(dsTag)
 
         for (i in 1..10) {
-            val problem = Problem(
+            val problem = LongProblem(
                 title = "test$i",
                 description = "test",
-                answer = "test",
-                creator = user
+                creator = user,
+                standardAnswer = "test",
+                isGradable = true
             )
 
             problemRepository.save(problem)
 
             if (i == 1) {
-                this.problemId = problem.id!!
+                this.problemId = problem.id
             }
 
             if (i <= 2) {
@@ -117,7 +117,7 @@ class ProblemApiControllerTest {
                     problem = problem,
                     user = user,
                     userAnswer = "test",
-                    score = 9.5f
+                    score = 9.5
                 )
                 gradingHistoryRepository.save(gradingHistory)
             }
@@ -147,7 +147,7 @@ class ProblemApiControllerTest {
 
         // when
         val result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(urlString, problemId.toString())
+            RestDocumentationRequestBuilders.get(urlString, problemId)
                 .accept(MediaType.APPLICATION_JSON)
         )
 
@@ -164,7 +164,7 @@ class ProblemApiControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("문제 id"),
                         fieldWithPath("data.title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
                         fieldWithPath("data.description").type(JsonFieldType.STRING)
@@ -178,7 +178,6 @@ class ProblemApiControllerTest {
                             .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
                         fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
                             .description("문제를 푼 사람 수")
-
                     )
                 )
             )
@@ -233,7 +232,7 @@ class ProblemApiControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.[].id").type(JsonFieldType.STRING).description("UUID"),
+                        fieldWithPath("data.[].id").type(JsonFieldType.NUMBER).description("문제 id"),
                         fieldWithPath("data.[].title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
                         fieldWithPath("data.[].tags").type(JsonFieldType.ARRAY).description("태그"),

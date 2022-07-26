@@ -170,7 +170,7 @@ include::{snippets}/auth/refresh/response-headers.adoc[]
 문제 단건 조회를 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/problems/{problem_id:UUID}
+End-Point   : /api/problems/{problem_id:Long}
 ----
 
 .Sample Request
