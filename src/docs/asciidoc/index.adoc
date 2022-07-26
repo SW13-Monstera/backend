@@ -215,10 +215,109 @@ request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, acces
 include::{snippets}/problems/search/request-headers.adoc[]
 
 .Request parameters
-include::{snippets}/problems/search/request-parameters.adoc[]
 
 문제 검색을 위한 request parameter의 설명입니다.
+include::{snippets}/problems/search/request-parameters.adoc[]
+
 
 .Response Body
 include::{snippets}/problems/search/response-body.adoc[]
 include::{snippets}/problems/search/response-fields.adoc[]
+
+== User API ( /api/users )
+
+=== 유저 조회
+
+
+.description
+[source]
+----
+유저 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/users/{user_id:UUID}
+----
+
+.Sample Request
+include::{snippets}/users/findOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/users/findOne/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 회원 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/users/findOne/request-headers.adoc[]
+
+.Path parameters
+include::{snippets}/users/findOne/path-parameters.adoc[]
+
+유저 조회를 위한 path parameter의 설명입니다.
+
+
+.Response Body
+include::{snippets}/users/findOne/response-body.adoc[]
+include::{snippets}/users/findOne/response-fields.adoc[]
+
+=== 유저 전체 조회
+
+
+.description
+[source]
+----
+유저 전체 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/users
+----
+
+.Sample Request
+include::{snippets}/users/findAll/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/users/findAll/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 Admin 권한을 가진 유저의 Access Token이며, 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/users/findAll/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/users/findAll/response-body.adoc[]
+include::{snippets}/users/findAll/response-fields.adoc[]
+
+=== 유저 정보 수정
+
+.description
+[source]
+----
+유저 정보 수정을 위한 API입니다.
+
+HTTP Method : PATCH
+End-Point   : /api/users
+----
+
+.Sample Request
+include::{snippets}/users/update/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/users/update/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 회원 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/users/update/request-headers.adoc[]
+
+.Request Body
+include::{snippets}/users/update/request-body.adoc[]
+include::{snippets}/users/update/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/users/update/response-body.adoc[]
+include::{snippets}/users/update/response-fields.adoc[]

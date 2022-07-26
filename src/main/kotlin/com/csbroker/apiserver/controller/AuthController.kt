@@ -6,6 +6,7 @@ import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.TokenResponseDto
 import com.csbroker.apiserver.dto.UserLoginRequestDto
+import com.csbroker.apiserver.dto.UserLoginResponseDto
 import com.csbroker.apiserver.dto.UserResponseDto
 import com.csbroker.apiserver.dto.UserSignUpDto
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
@@ -38,15 +39,15 @@ class AuthController(
         request: HttpServletRequest,
         response: HttpServletResponse,
         @RequestBody userLoginRequestDto: UserLoginRequestDto
-    ): ApiResponse<TokenResponseDto> {
-        val (accessToken, refreshToken) = this.authService.loginUser(userLoginRequestDto)
+    ): ApiResponse<UserLoginResponseDto> {
+        val (id, accessToken, refreshToken) = this.authService.loginUser(userLoginRequestDto)
 
         val cookieMaxAge = (appProperties.auth.refreshTokenExpiry / 60).toInt()
 
         deleteCookie(request, response, REFRESH_TOKEN)
         addCookie(response, REFRESH_TOKEN, refreshToken!!, cookieMaxAge)
 
-        return ApiResponse.success(TokenResponseDto(accessToken))
+        return ApiResponse.success(UserLoginResponseDto(id, accessToken))
     }
 
     @GetMapping("/refresh")
