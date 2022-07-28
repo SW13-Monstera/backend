@@ -15,7 +15,7 @@ data class LongProblemCreateRequestDto(
     data class GradingStandardData(
         val content: String,
         val score: Double,
-        val type: GradingStandardType,
+        val type: GradingStandardType
     )
 
     fun toLongProblem(creator: User): LongProblem {

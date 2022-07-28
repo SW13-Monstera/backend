@@ -6,7 +6,7 @@ import com.csbroker.apiserver.model.User
 data class ShortProblemCreateRequestDto(
     val title: String,
     val description: String,
-    val answer: String,
+    val answer: String
 ) {
     fun toShortProblem(creator: User): ShortProblem {
         return ShortProblem(
