@@ -8,7 +8,7 @@ data class MultipleChoiceProblemCreateRequestDto(
     val title: String,
     val description: String,
     val tags: List<String>,
-    val choices: List<ChoiceData>,
+    val choices: List<ChoiceData>
 ) {
     data class ChoiceData(
         val content: String,
