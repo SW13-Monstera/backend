@@ -25,5 +25,5 @@ class Choice(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
-    val multipleChoiceProblem: MultipleChoiceProblem
+    var multipleChoiceProblem: MultipleChoiceProblem
 )
