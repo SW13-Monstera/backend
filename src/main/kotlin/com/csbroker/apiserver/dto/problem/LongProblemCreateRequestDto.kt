@@ -9,6 +9,7 @@ data class LongProblemCreateRequestDto(
     val title: String,
     val description: String,
     val standardAnswer: String,
+    val tags: List<String>,
     val gradingStandards: List<GradingStandardData>
 ) {
 

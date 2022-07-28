@@ -7,7 +7,8 @@ import com.csbroker.apiserver.model.User
 data class MultipleChoiceProblemCreateRequestDto(
     val title: String,
     val description: String,
-    val choices: List<ChoiceData>
+    val tags: List<String>,
+    val choices: List<ChoiceData>,
 ) {
     data class ChoiceData(
         val content: String,
