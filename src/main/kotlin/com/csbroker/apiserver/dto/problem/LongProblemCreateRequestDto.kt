@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.dto
+package com.csbroker.apiserver.dto.problem
 
 import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.model.GradingStandard

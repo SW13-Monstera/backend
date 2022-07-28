@@ -1,7 +1,7 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.ProblemDetailResponseDto
-import com.csbroker.apiserver.dto.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import javax.persistence.Column
 import javax.persistence.DiscriminatorColumn
 import javax.persistence.Entity

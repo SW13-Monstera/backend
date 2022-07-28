@@ -1,11 +1,11 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.dto.LongProblemCreateRequestDto
-import com.csbroker.apiserver.dto.MultipleChoiceProblemCreateRequestDto
-import com.csbroker.apiserver.dto.ProblemDetailResponseDto
-import com.csbroker.apiserver.dto.ProblemResponseDto
-import com.csbroker.apiserver.dto.ProblemSearchDto
-import com.csbroker.apiserver.dto.ShortProblemCreateRequestDto
+import com.csbroker.apiserver.dto.problem.LongProblemCreateRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemCreateRequestDto
+import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemCreateRequestDto
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.repository.LongProblemRepository
 import com.csbroker.apiserver.repository.MultipleChoiceProblemRepository

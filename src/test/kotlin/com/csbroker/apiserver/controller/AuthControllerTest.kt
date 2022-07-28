@@ -2,8 +2,8 @@ package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.enums.Role
-import com.csbroker.apiserver.dto.UserLoginRequestDto
-import com.csbroker.apiserver.dto.UserSignUpDto
+import com.csbroker.apiserver.dto.user.UserLoginRequestDto
+import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.repository.RedisRepository
 import com.fasterxml.jackson.databind.ObjectMapper
