@@ -5,12 +5,12 @@ import com.csbroker.apiserver.model.GradingStandard
 import com.csbroker.apiserver.model.LongProblem
 import com.csbroker.apiserver.model.User
 
-data class LongProblemCreateRequestDto(
+data class LongProblemUpsertRequestDto(
     val title: String,
     val description: String,
     val standardAnswer: String,
-    val tags: List<String>,
-    val gradingStandards: List<GradingStandardData>
+    val tags: MutableList<String>,
+    val gradingStandards: MutableList<GradingStandardData>
 ) {
 
     data class GradingStandardData(

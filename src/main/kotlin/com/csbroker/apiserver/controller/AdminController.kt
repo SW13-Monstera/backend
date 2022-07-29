@@ -2,13 +2,15 @@ package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.CreateSuccessResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemCreateRequestDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemCreateRequestDto
-import com.csbroker.apiserver.dto.problem.ShortProblemCreateRequestDto
+import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.security.core.userdetails.User
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -20,28 +22,58 @@ class AdminController(
 ) {
     @PostMapping("/problems/long")
     fun createLongProblem(
-        @RequestBody createRequestDto: LongProblemCreateRequestDto,
+        @RequestBody createRequestDto: LongProblemUpsertRequestDto,
         @LoginUser loginUser: User
-    ): ApiResponse<CreateSuccessResponseDto> {
+    ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = this.problemService.createLongProblem(createRequestDto, loginUser.username)
-        return ApiResponse.success(CreateSuccessResponseDto(createProblemId))
+        return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
+    }
+
+    @PutMapping("/problems/long/{id}")
+    fun updateLongProblem(
+        @PathVariable("id") id: Long,
+        @RequestBody updateRequestDto: LongProblemUpsertRequestDto,
+        @LoginUser loginUser: User
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val updateProblemId = this.problemService.updateLongProblem(id, updateRequestDto, loginUser.username)
+        return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 
     @PostMapping("/problems/short")
     fun createShortProblem(
-        @RequestBody createRequestDto: ShortProblemCreateRequestDto,
+        @RequestBody createRequestDto: ShortProblemUpsertRequestDto,
         @LoginUser loginUser: User
-    ): ApiResponse<CreateSuccessResponseDto> {
+    ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = this.problemService.createShortProblem(createRequestDto, loginUser.username)
-        return ApiResponse.success(CreateSuccessResponseDto(createProblemId))
+        return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
+    }
+
+    @PutMapping("/problems/short/{id}")
+    fun updateLongProblem(
+        @PathVariable("id") id: Long,
+        @RequestBody updateRequestDto: ShortProblemUpsertRequestDto,
+        @LoginUser loginUser: User
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val updateProblemId = this.problemService.updateShortProblem(id, updateRequestDto, loginUser.username)
+        return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 
     @PostMapping("/problems/multiple")
     fun createMultipleProblem(
-        @RequestBody createRequestDto: MultipleChoiceProblemCreateRequestDto,
+        @RequestBody createRequestDto: MultipleChoiceProblemUpsertRequestDto,
         @LoginUser loginUser: User
-    ): ApiResponse<CreateSuccessResponseDto> {
+    ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = this.problemService.createMultipleChoiceProblem(createRequestDto, loginUser.username)
-        return ApiResponse.success(CreateSuccessResponseDto(createProblemId))
+        return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
+    }
+
+    @PutMapping("/problems/multiple/{id}")
+    fun updateMultipleProblem(
+        @PathVariable("id") id: Long,
+        @RequestBody updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
+        @LoginUser loginUser: User
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val updateProblemId = this.problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
+        return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 }

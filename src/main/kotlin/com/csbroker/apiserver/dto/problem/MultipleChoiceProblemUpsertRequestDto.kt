@@ -4,11 +4,11 @@ import com.csbroker.apiserver.model.Choice
 import com.csbroker.apiserver.model.MultipleChoiceProblem
 import com.csbroker.apiserver.model.User
 
-data class MultipleChoiceProblemCreateRequestDto(
+data class MultipleChoiceProblemUpsertRequestDto(
     val title: String,
     val description: String,
-    val tags: List<String>,
-    val choices: List<ChoiceData>
+    val tags: MutableList<String>,
+    val choices: MutableList<ChoiceData>
 ) {
     data class ChoiceData(
         val content: String,
