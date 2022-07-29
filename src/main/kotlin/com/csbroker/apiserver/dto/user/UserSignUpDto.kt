@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.dto
+package com.csbroker.apiserver.dto.user
 
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.model.User

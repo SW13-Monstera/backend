@@ -1,7 +1,8 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.ProblemDetailResponseDto
-import com.csbroker.apiserver.dto.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemResponseDto
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.DiscriminatorColumn
 import javax.persistence.Entity
@@ -38,7 +39,7 @@ abstract class Problem(
     @JoinColumn(name = "user_id")
     val creator: User,
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     val problemTags: MutableSet<ProblemTag> = mutableSetOf(),
 
     @OneToMany(mappedBy = "problem")

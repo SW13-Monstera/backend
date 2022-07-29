@@ -6,10 +6,10 @@ import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.getAccessToken
 import com.csbroker.apiserver.common.util.getCookie
-import com.csbroker.apiserver.dto.TokenDto
-import com.csbroker.apiserver.dto.UserLoginDto
-import com.csbroker.apiserver.dto.UserLoginRequestDto
-import com.csbroker.apiserver.dto.UserSignUpDto
+import com.csbroker.apiserver.dto.auth.TokenDto
+import com.csbroker.apiserver.dto.user.UserLoginDto
+import com.csbroker.apiserver.dto.user.UserLoginRequestDto
+import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.repository.RedisRepository

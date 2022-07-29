@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.dto
+package com.csbroker.apiserver.dto.user
 
 data class UserLoginRequestDto(
     val email: String,

@@ -4,11 +4,11 @@ import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.TokenResponseDto
-import com.csbroker.apiserver.dto.UserLoginRequestDto
-import com.csbroker.apiserver.dto.UserLoginResponseDto
-import com.csbroker.apiserver.dto.UserResponseDto
-import com.csbroker.apiserver.dto.UserSignUpDto
+import com.csbroker.apiserver.dto.auth.TokenResponseDto
+import com.csbroker.apiserver.dto.user.UserLoginRequestDto
+import com.csbroker.apiserver.dto.user.UserLoginResponseDto
+import com.csbroker.apiserver.dto.user.UserResponseDto
+import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.service.AuthService
 import org.springframework.web.bind.annotation.GetMapping

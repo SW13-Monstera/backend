@@ -3,7 +3,7 @@ package com.csbroker.apiserver.controller
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
-import com.csbroker.apiserver.dto.UserUpdateRequestDto
+import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper

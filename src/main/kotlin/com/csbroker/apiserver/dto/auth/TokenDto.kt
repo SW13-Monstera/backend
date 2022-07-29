@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.dto
+package com.csbroker.apiserver.dto.auth
 
 data class TokenDto(
     val accessToken: String,

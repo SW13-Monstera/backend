@@ -2,8 +2,8 @@ package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.UserResponseDto
-import com.csbroker.apiserver.dto.UserUpdateRequestDto
+import com.csbroker.apiserver.dto.user.UserResponseDto
+import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.userdetails.User

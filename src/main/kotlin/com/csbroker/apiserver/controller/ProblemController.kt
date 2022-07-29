@@ -1,9 +1,9 @@
 package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.ProblemDetailResponseDto
-import com.csbroker.apiserver.dto.ProblemResponseDto
-import com.csbroker.apiserver.dto.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder

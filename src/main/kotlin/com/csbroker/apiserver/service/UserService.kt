@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.dto.UserUpdateRequestDto
+import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
 import java.util.UUID
 

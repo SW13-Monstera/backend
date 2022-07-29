@@ -2,8 +2,8 @@ package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
-import com.csbroker.apiserver.dto.UserResponseDto
-import com.csbroker.apiserver.dto.UserUpdateRequestDto
+import com.csbroker.apiserver.dto.user.UserResponseDto
+import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 import javax.persistence.Column

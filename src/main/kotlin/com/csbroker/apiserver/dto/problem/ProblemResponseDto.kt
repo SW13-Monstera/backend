@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.dto
+package com.csbroker.apiserver.dto.problem
 
 data class ProblemResponseDto(
     val id: Long,

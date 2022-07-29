@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.repository
 
-import com.csbroker.apiserver.dto.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.QGradingHistory.gradingHistory
 import com.csbroker.apiserver.model.QProblem.problem
