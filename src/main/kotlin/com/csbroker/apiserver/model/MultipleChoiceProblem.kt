@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
@@ -30,5 +31,10 @@ class MultipleChoiceProblem(
         choices.forEach {
             it.multipleChoiceProblem = this
         }
+    }
+
+    fun updateFromDto(upsertRequestDto: MultipleChoiceProblemUpsertRequestDto) {
+        this.title = upsertRequestDto.title
+        this.description = upsertRequestDto.description
     }
 }

@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
@@ -14,5 +15,11 @@ class ShortProblem(
     creator: User,
 
     @Column(name = "answer")
-    val answer: String
-) : Problem(title = title, description = description, creator = creator)
+    var answer: String
+) : Problem(title = title, description = description, creator = creator) {
+    fun updateFromDto(upsertRequestDto: ShortProblemUpsertRequestDto) {
+        this.title = upsertRequestDto.title
+        this.description = upsertRequestDto.description
+        this.answer = upsertRequestDto.answer
+    }
+}
