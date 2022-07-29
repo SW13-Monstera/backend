@@ -89,8 +89,6 @@ class ProblemServiceImpl(
 
     @Transactional
     override fun updateLongProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findUser = userRepository.findByEmail(email) ?: throw IllegalArgumentException("에러 발생")
-
         val findProblem = this.longProblemRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("에러 발생")
 
