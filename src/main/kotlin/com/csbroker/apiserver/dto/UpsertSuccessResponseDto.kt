@@ -1,5 +1,5 @@
 package com.csbroker.apiserver.dto
 
-data class CreateSuccessResponseDto(
+data class UpsertSuccessResponseDto(
     val id: Long
 )

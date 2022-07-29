@@ -3,10 +3,10 @@ package com.csbroker.apiserver.dto.problem
 import com.csbroker.apiserver.model.ShortProblem
 import com.csbroker.apiserver.model.User
 
-data class ShortProblemCreateRequestDto(
+data class ShortProblemUpsertRequestDto(
     val title: String,
     val description: String,
-    val tags: List<String>,
+    val tags: MutableList<String>,
     val answer: String
 ) {
     fun toShortProblem(creator: User): ShortProblem {
