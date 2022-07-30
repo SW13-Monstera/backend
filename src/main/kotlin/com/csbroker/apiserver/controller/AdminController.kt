@@ -4,6 +4,9 @@ import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
+import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
+import com.csbroker.apiserver.dto.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.UserAnswerUpsertDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
@@ -12,6 +15,7 @@ import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -99,14 +103,38 @@ class AdminController(
     }
 
     @PostMapping("/user-answers")
-    fun crateUserAnswers(
-        @RequestBody userAnswers: UserAnswerBatchInsertDto,
-        @LoginUser loginUser: User
+    fun createUserAnswers(
+        @RequestBody userAnswers: UserAnswerBatchInsertDto
     ): ApiResponse<UpsertSuccessResponseDto> {
         val size = this.userAnswerService.createUserAnswers(userAnswers.userAnswers)
         if (size != userAnswers.size) {
             throw IllegalArgumentException("버그 발생!!!!")
         }
         return ApiResponse.success(UpsertSuccessResponseDto(size = size))
+    }
+
+    @PostMapping("/user-answer")
+    fun createUserAnswer(
+        @RequestBody userAnswer: UserAnswerUpsertDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val createUserAnswerId = this.userAnswerService.createUserAnswer(userAnswer)
+        return ApiResponse.success(UpsertSuccessResponseDto(id = createUserAnswerId))
+    }
+
+    @GetMapping("/user-answers/{id}")
+    fun getUserAnswerById(
+        @PathVariable("id") id: Long
+    ): ApiResponse<UserAnswerResponseDto> {
+        return ApiResponse.success(this.userAnswerService.findUserAnswerById(id))
+    }
+
+    @PostMapping("/user-answers/{id}/label")
+    fun labellingUserAnswer(
+        @PathVariable("id") id: Long,
+        @RequestBody userAnswerLabelRequestDto: UserAnswerLabelRequestDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val labeledAnswerId = this.userAnswerService
+            .labelUserAnswer(id, userAnswerLabelRequestDto.selectedGradingStandardIds)
+        return ApiResponse.success(UpsertSuccessResponseDto(id = labeledAnswerId))
     }
 }
