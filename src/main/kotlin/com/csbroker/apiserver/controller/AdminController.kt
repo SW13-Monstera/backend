@@ -3,10 +3,12 @@ package com.csbroker.apiserver.controller
 import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
+import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.service.ProblemService
+import com.csbroker.apiserver.service.UserAnswerService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/admin")
 class AdminController(
-    private val problemService: ProblemService
+    private val problemService: ProblemService,
+    private val userAnswerService: UserAnswerService
 ) {
     @PostMapping("/problems/long")
     fun createLongProblem(
@@ -75,5 +78,17 @@ class AdminController(
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = this.problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
+    }
+
+    @PostMapping("/user-answers")
+    fun crateUserAnswers(
+        @RequestBody userAnswers: UserAnswerBatchInsertDto,
+        @LoginUser loginUser: User
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        val size = this.userAnswerService.createUserAnswers(userAnswers.userAnswers)
+        if (size != userAnswers.size) {
+            throw IllegalArgumentException("버그 발생!!!!")
+        }
+        return ApiResponse.success(UpsertSuccessResponseDto(size = size))
     }
 }
