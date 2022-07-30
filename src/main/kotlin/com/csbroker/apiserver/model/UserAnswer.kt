@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -22,10 +24,10 @@ class UserAnswer(
     val answer: String,
 
     @Column(name = "is_labeled")
-    val isLabeled: Boolean = false,
+    var isLabeled: Boolean = false,
 
     @Column(name = "is_validated")
-    val isValidated: Boolean = false,
+    var isValidated: Boolean = false,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
@@ -37,5 +39,8 @@ class UserAnswer(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "validator_id")
-    var validatingUser: User? = null
+    var validatingUser: User? = null,
+
+    @OneToMany(mappedBy = "userAnswer", cascade = [CascadeType.ALL])
+    var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
 )
