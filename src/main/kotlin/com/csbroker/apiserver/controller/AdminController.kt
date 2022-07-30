@@ -128,13 +128,28 @@ class AdminController(
         return ApiResponse.success(this.userAnswerService.findUserAnswerById(id))
     }
 
-    @PostMapping("/user-answers/{id}/label")
-    fun labellingUserAnswer(
+    @PostMapping("/user-answers/{id}/{type:label|validate}")
+    fun checkUserAnswer(
         @PathVariable("id") id: Long,
-        @RequestBody userAnswerLabelRequestDto: UserAnswerLabelRequestDto
+        @RequestBody userAnswerLabelRequestDto: UserAnswerLabelRequestDto,
+        @PathVariable("type") type: String,
+        @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val labeledAnswerId = this.userAnswerService
-            .labelUserAnswer(id, userAnswerLabelRequestDto.selectedGradingStandardIds)
-        return ApiResponse.success(UpsertSuccessResponseDto(id = labeledAnswerId))
+        val answerId = when (type) {
+            "label" ->
+                this.userAnswerService.labelUserAnswer(
+                    loginUser.username,
+                    id,
+                    userAnswerLabelRequestDto.selectedGradingStandardIds
+                )
+            "validate" ->
+                this.userAnswerService.validateUserAnswer(
+                    loginUser.username,
+                    id,
+                    userAnswerLabelRequestDto.selectedGradingStandardIds
+                )
+            else -> throw IllegalArgumentException("존재하지 않는 uri ( $type ) 입니다. ")
+        }
+        return ApiResponse.success(UpsertSuccessResponseDto(id = answerId))
     }
 }

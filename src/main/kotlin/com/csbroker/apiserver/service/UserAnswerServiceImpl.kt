@@ -1,6 +1,5 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
 import com.csbroker.apiserver.dto.UserAnswerResponseDto
 import com.csbroker.apiserver.dto.UserAnswerUpsertDto
 import com.csbroker.apiserver.model.UserAnswer
@@ -57,19 +56,58 @@ class UserAnswerServiceImpl(
     }
 
     override fun findUserAnswerById(id: Long): UserAnswerResponseDto {
-        val userAnswer = (this.userAnswerRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("${id}번 유저 응답을 찾을 수 없습니다."))
+        val userAnswer = this.userAnswerRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("${id}번 유저 응답을 찾을 수 없습니다.")
 
         return UserAnswerResponseDto.fromUserAnswer(userAnswer)
     }
 
     @Transactional
-    override fun labelUserAnswer(userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long {
+    override fun labelUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long {
         val userAnswer = this.userAnswerRepository.findByIdOrNull(userAnswerId)
             ?: throw IllegalArgumentException(
                 "${userAnswerId}번 유저 응답을 찾을 수 없습니다."
             )
 
+        if (userAnswer.assignedUser == null || userAnswer.assignedUser!!.email != email) {
+            throw IllegalArgumentException("${userAnswerId}번에 할당된 유저가 아닙니다.")
+        }
+
+        this.setGradingStandards(selectedGradingStandardIds, userAnswerId)
+
+        userAnswer.isLabeled = true
+
+        return userAnswerId
+    }
+
+    @Transactional
+    override fun validateUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long {
+        val userAnswer = this.userAnswerRepository.findByIdOrNull(userAnswerId)
+            ?: throw IllegalArgumentException(
+                "${userAnswerId}번 유저 응답을 찾을 수 없습니다."
+            )
+
+        if (!userAnswer.isLabeled) {
+            throw IllegalArgumentException(
+                "${userAnswerId}번 유저 응답은 라벨링 되지 않았기때문에, 검수할 수 없습니다."
+            )
+        }
+
+        if (userAnswer.validatingUser == null || userAnswer.validatingUser!!.email != email) {
+            throw IllegalArgumentException("${userAnswerId}번에 검수자로 할당된 유저가 아닙니다.")
+        }
+
+        this.setGradingStandards(selectedGradingStandardIds, userAnswerId)
+
+        userAnswer.isValidated = true
+
+        return userAnswerId
+    }
+
+    private fun setGradingStandards(
+        selectedGradingStandardIds: List<Long>,
+        userAnswerId: Long
+    ) {
         val foundGradingStandardsCount = this.gradingStandardRepository
             .countByIdIn(selectedGradingStandardIds)
 
@@ -80,9 +118,5 @@ class UserAnswerServiceImpl(
         this.userAnswerGradingStandardRepository.deleteAllByUserAnswerId(userAnswerId)
 
         this.userAnswerGradingStandardRepository.batchInsert(userAnswerId, selectedGradingStandardIds)
-
-        userAnswer.isLabeled = true
-
-        return userAnswerId
     }
 }

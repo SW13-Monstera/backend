@@ -7,5 +7,6 @@ interface UserAnswerService {
     fun createUserAnswers(userAnswers: List<UserAnswerUpsertDto>): Int
     fun createUserAnswer(userAnswer: UserAnswerUpsertDto): Long
     fun findUserAnswerById(id: Long) : UserAnswerResponseDto
-    fun labelUserAnswer(userAnswerId: Long, selectedGradingStandardIds: List<Long>) : Long
+    fun labelUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>) : Long
+    fun validateUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>) : Long
 }
