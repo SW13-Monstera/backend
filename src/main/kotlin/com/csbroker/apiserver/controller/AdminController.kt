@@ -6,10 +6,12 @@ import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
 import org.springframework.security.core.userdetails.User
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -78,6 +80,22 @@ class AdminController(
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = this.problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
+    }
+
+    @DeleteMapping("/problems/{id}")
+    fun deleteProblem(
+        @PathVariable("id") id: Long
+    ): ApiResponse<Boolean> {
+        this.problemService.removeProblemById(id)
+        return ApiResponse.success(true)
+    }
+
+    @DeleteMapping("/problems")
+    fun deleteProblems(
+        @RequestBody deleteRequestDto: ProblemDeleteRequestDto
+    ): ApiResponse<Boolean> {
+        this.problemService.removeProblemsById(deleteRequestDto.ids)
+        return ApiResponse.success(true)
     }
 
     @PostMapping("/user-answers")

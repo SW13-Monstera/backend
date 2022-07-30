@@ -46,6 +46,16 @@ class ProblemServiceImpl(
     }
 
     @Transactional
+    override fun removeProblemById(id: Long) {
+        this.problemRepository.deleteById(id)
+    }
+
+    @Transactional
+    override fun removeProblemsById(ids: List<Long>) {
+        this.problemRepository.deleteProblemsByIdIn(ids)
+    }
+
+    @Transactional
     override fun createLongProblem(createRequestDto: LongProblemUpsertRequestDto, email: String): Long {
         val findUser = this.userRepository.findByEmail(email) ?: throw IllegalArgumentException("에러 발생")
         val longProblem = createRequestDto.toLongProblem(findUser)

@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable
 interface ProblemService {
     fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<ProblemResponseDto>
     fun findProblemById(id: Long): ProblemDetailResponseDto?
+    fun removeProblemById(id: Long)
+    fun removeProblemsById(ids: List<Long>)
     fun createLongProblem(createRequestDto: LongProblemUpsertRequestDto, email: String): Long
     fun createShortProblem(createRequestDto: ShortProblemUpsertRequestDto, email: String): Long
     fun createMultipleChoiceProblem(createRequestDto: MultipleChoiceProblemUpsertRequestDto, email: String): Long
