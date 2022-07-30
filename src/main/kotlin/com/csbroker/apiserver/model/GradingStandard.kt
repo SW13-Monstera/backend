@@ -7,6 +7,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
@@ -16,7 +17,7 @@ import javax.persistence.Table
 @Table(name = "grading_standard")
 class GradingStandard(
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_standard_id")
     val id: Long? = null,
 

@@ -46,7 +46,13 @@ class User(
     var profileImageUrl: String? = null,
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
-    val problems: MutableList<Problem> = mutableListOf()
+    val problems: MutableList<Problem> = mutableListOf(),
+
+    @OneToMany(mappedBy = "assignedUser", fetch = FetchType.LAZY)
+    val assignedAnswers: MutableList<UserAnswer> = mutableListOf(),
+
+    @OneToMany(mappedBy = "validatingUser", fetch = FetchType.LAZY)
+    val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf(),
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
         this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl

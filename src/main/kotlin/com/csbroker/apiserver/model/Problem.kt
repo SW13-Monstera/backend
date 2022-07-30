@@ -8,6 +8,7 @@ import javax.persistence.DiscriminatorColumn
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Inheritance
 import javax.persistence.InheritanceType
@@ -22,7 +23,7 @@ import javax.persistence.Table
 @DiscriminatorColumn(name = "dtype")
 abstract class Problem(
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "problem_id")
     val id: Long? = null,
 
