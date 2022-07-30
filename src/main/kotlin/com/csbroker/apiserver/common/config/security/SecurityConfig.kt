@@ -73,8 +73,8 @@ class SecurityConfig(
                 "/**/*.js"
             )
             .permitAll()
-            .antMatchers("/api/**").permitAll()
-            .antMatchers("/api/admin/**").hasAnyAuthority(Role.ROLE_ADMIN.code)
+            .antMatchers("/api/v1/**").permitAll()
+            .antMatchers("/api/admin/**").hasAuthority(Role.ROLE_ADMIN.code)
             .anyRequest().authenticated()
             .and()
             .oauth2Login()
