@@ -8,7 +8,8 @@ data class MultipleChoiceProblemUpsertRequestDto(
     val title: String,
     val description: String,
     val tags: MutableList<String>,
-    val choices: MutableList<ChoiceData>
+    val choices: MutableList<ChoiceData>,
+    val score: Double
 ) {
     data class ChoiceData(
         val content: String,
@@ -22,7 +23,8 @@ data class MultipleChoiceProblemUpsertRequestDto(
             title = title,
             description = description,
             creator = creator,
-            isMultiple = isMultiple
+            isMultiple = isMultiple,
+            score = score
         )
     }
 

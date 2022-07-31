@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
@@ -15,8 +16,12 @@ class MultipleChoiceProblem(
     title: String,
     description: String,
     creator: User,
+
     @Column(name = "is_multiple")
     var isMultiple: Boolean,
+
+    @Column(name = "score")
+    var score: Double,
 
     @OneToMany(mappedBy = "multipleChoiceProblem", cascade = [CascadeType.ALL])
     val choicesList: MutableList<Choice> = arrayListOf()
@@ -36,5 +41,24 @@ class MultipleChoiceProblem(
     fun updateFromDto(upsertRequestDto: MultipleChoiceProblemUpsertRequestDto) {
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description
+    }
+
+    fun toMultipleChoiceProblemResponseDto(): MultipleProblemResponseDto {
+        return MultipleProblemResponseDto(
+            this.id!!,
+            this.title,
+            this.description,
+            this.problemTags.map {
+                it.tag.name
+            },
+            this.isMultiple,
+            this.choicesList.map {
+                MultipleChoiceProblemUpsertRequestDto.ChoiceData(
+                    it.content,
+                    it.isAnswer
+                )
+            },
+            this.score
+        )
     }
 }

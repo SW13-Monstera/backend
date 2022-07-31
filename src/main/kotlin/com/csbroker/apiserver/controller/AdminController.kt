@@ -7,9 +7,12 @@ import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
 import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
 import com.csbroker.apiserver.dto.UserAnswerResponseDto
 import com.csbroker.apiserver.dto.UserAnswerUpsertDto
+import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
+import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
@@ -46,6 +49,30 @@ class AdminController(
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = this.problemService.updateLongProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
+    }
+
+    @GetMapping("/problems/long/{id}")
+    fun getLongProblem(
+        @PathVariable("id") id: Long
+    ): ApiResponse<LongProblemResponseDto> {
+        val longProblemResponseDto = this.problemService.findLongProblemById(id)
+        return ApiResponse.success(longProblemResponseDto)
+    }
+
+    @GetMapping("/problems/short/{id}")
+    fun getShortProblem(
+        @PathVariable("id") id: Long
+    ): ApiResponse<ShortProblemResponseDto> {
+        val shortProblemResponseDto = this.problemService.findShortProblemById(id)
+        return ApiResponse.success(shortProblemResponseDto)
+    }
+
+    @GetMapping("/problems/multiple/{id}")
+    fun getMultipleChoiceProblem(
+        @PathVariable("id") id: Long
+    ): ApiResponse<MultipleProblemResponseDto> {
+        val multipleProblemResponseDto = this.problemService.findMultipleProblemById(id)
+        return ApiResponse.success(multipleProblemResponseDto)
     }
 
     @PostMapping("/problems/short")

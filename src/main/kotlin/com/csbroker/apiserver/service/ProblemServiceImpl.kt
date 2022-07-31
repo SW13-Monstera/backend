@@ -1,10 +1,13 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.ProblemTag
@@ -43,6 +46,24 @@ class ProblemServiceImpl(
 
     override fun findProblemById(id: Long): ProblemDetailResponseDto? {
         return problemRepository.findByIdOrNull(id)?.toProblemDetailResponseDto()
+    }
+
+    override fun findLongProblemById(id: Long): LongProblemResponseDto {
+        val longProblem = this.longProblemRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
+        return longProblem.toLongProblemResponseDto()
+    }
+
+    override fun findShortProblemById(id: Long): ShortProblemResponseDto {
+        val shortProblem = this.shortProblemRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
+        return shortProblem.toShortProblemResponseDto()
+    }
+
+    override fun findMultipleProblemById(id: Long): MultipleProblemResponseDto {
+        val multipleChoiceProblem = this.multipleChoiceProblemRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
+        return multipleChoiceProblem.toMultipleChoiceProblemResponseDto()
     }
 
     @Transactional

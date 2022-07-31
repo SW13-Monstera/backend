@@ -7,14 +7,16 @@ data class ShortProblemUpsertRequestDto(
     val title: String,
     val description: String,
     val tags: MutableList<String>,
-    val answer: String
+    val answer: String,
+    val score: Double
 ) {
     fun toShortProblem(creator: User): ShortProblem {
         return ShortProblem(
             title = title,
             description = description,
             creator = creator,
-            answer = answer
+            answer = answer,
+            score = score
         )
     }
 }

@@ -1,6 +1,8 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
@@ -37,5 +39,15 @@ class LongProblem(
         this.description = upsertRequestDto.description
         this.standardAnswer = upsertRequestDto.standardAnswer
         this.isGradable = false
+    }
+
+    fun toLongProblemResponseDto(): LongProblemResponseDto {
+        return LongProblemResponseDto(
+            this.id!!,
+            this.title,
+            this.description,
+            this.problemTags.map { it.tag.name },
+            this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) }
+        )
     }
 }
