@@ -64,7 +64,7 @@ endif::[]
 }
 ----
 
-== Auth API ( /api/auth )
+== Auth API ( /api/v1/auth )
 
 === 회원가입
 
@@ -74,7 +74,7 @@ endif::[]
 회원가입을 위한 API입니다.
 
 HTTP Method : POST
-End-Point   : /api/auth/signup
+End-Point   : /api/v1/auth/signup
 ----
 
 .Sample Request
@@ -99,7 +99,7 @@ include::{snippets}/auth/signup/response-fields.adoc[]
 로그인을 위한 API입니다.
 
 HTTP Method : POST
-End-Point   : /api/auth/login
+End-Point   : /api/v1/auth/login
 ----
 
 .Sample Request
@@ -131,7 +131,7 @@ include::{snippets}/auth/login/response-headers.adoc[]
 토큰 재발급을 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/auth/refresh
+End-Point   : /api/v1/auth/refresh
 ----
 
 .Sample Request
@@ -159,7 +159,7 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 만약, 요청에 포함되어 전송된 refresh token의 유효기간이 3일 이상이라면 새로운 refresh token을 전송하지 않습니다.
 include::{snippets}/auth/refresh/response-headers.adoc[]
 
-== Problem API ( /api/problems )
+== Problem API ( /api/v1/problems )
 
 === 문제 단건 조회
 
@@ -170,7 +170,7 @@ include::{snippets}/auth/refresh/response-headers.adoc[]
 문제 단건 조회를 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/problems/{problem_id:Long}
+End-Point   : /api/v1/problems/{problem_id:Long}
 ----
 
 .Sample Request
@@ -197,7 +197,7 @@ include::{snippets}/problems/inquire/response-fields.adoc[]
 문제 검색을 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/problems
+End-Point   : /api/v1/problems
 Req Params  : query, tags, isSolved, page, size
 ----
 
@@ -224,7 +224,7 @@ include::{snippets}/problems/search/request-parameters.adoc[]
 include::{snippets}/problems/search/response-body.adoc[]
 include::{snippets}/problems/search/response-fields.adoc[]
 
-== User API ( /api/users )
+== User API ( /api/v1/users )
 
 === 유저 조회
 
@@ -235,7 +235,7 @@ include::{snippets}/problems/search/response-fields.adoc[]
 유저 조회를 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/users/{user_id:UUID}
+End-Point   : /api/v1/users/{user_id:UUID}
 ----
 
 .Sample Request
@@ -270,7 +270,7 @@ include::{snippets}/users/findOne/response-fields.adoc[]
 유저 전체 조회를 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/users
+End-Point   : /api/v1/users
 ----
 
 .Sample Request
@@ -298,7 +298,7 @@ include::{snippets}/users/findAll/response-fields.adoc[]
 유저 정보 수정을 위한 API입니다.
 
 HTTP Method : PATCH
-End-Point   : /api/users
+End-Point   : /api/v1/users
 ----
 
 .Sample Request
