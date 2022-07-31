@@ -4,10 +4,10 @@ import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.dto.ApiResponse
+import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.auth.TokenResponseDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserLoginResponseDto
-import com.csbroker.apiserver.dto.user.UserResponseDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.service.AuthService
@@ -27,11 +27,9 @@ class AuthController(
 ) {
 
     @PostMapping("/signup")
-    fun signUp(@RequestBody userSignUpDto: UserSignUpDto): ApiResponse<UserResponseDto> {
-        val userResponseDto = this.authService.saveUser(userSignUpDto)
-            .toUserResponseDto()
-
-        return ApiResponse.success(userResponseDto)
+    fun signUp(@RequestBody userSignUpDto: UserSignUpDto): ApiResponse<UpsertSuccessResponseDto> {
+        val userId = this.authService.saveUser(userSignUpDto)
+        return ApiResponse.success(UpsertSuccessResponseDto(id = userId))
     }
 
     @PostMapping("/login")
@@ -40,14 +38,14 @@ class AuthController(
         response: HttpServletResponse,
         @RequestBody userLoginRequestDto: UserLoginRequestDto
     ): ApiResponse<UserLoginResponseDto> {
-        val (id, accessToken, refreshToken) = this.authService.loginUser(userLoginRequestDto)
+        val userLoginDto = this.authService.loginUser(userLoginRequestDto)
 
         val cookieMaxAge = (appProperties.auth.refreshTokenExpiry / 60).toInt()
 
         deleteCookie(request, response, REFRESH_TOKEN)
-        addCookie(response, REFRESH_TOKEN, refreshToken!!, cookieMaxAge)
+        addCookie(response, REFRESH_TOKEN, userLoginDto.refreshToken!!, cookieMaxAge)
 
-        return ApiResponse.success(UserLoginResponseDto(id, accessToken))
+        return ApiResponse.success(UserLoginResponseDto(userLoginDto))
     }
 
     @GetMapping("/refresh")

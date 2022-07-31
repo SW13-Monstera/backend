@@ -10,13 +10,13 @@ import com.csbroker.apiserver.dto.auth.TokenDto
 import com.csbroker.apiserver.dto.user.UserLoginDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
-import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.repository.RedisRepository
 import com.csbroker.apiserver.repository.UserRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.Date
+import java.util.UUID
 import javax.servlet.http.HttpServletRequest
 
 private const val THREE_DAYS_MSEC = 259200000
@@ -29,7 +29,7 @@ class AuthServiceImpl(
     private val appProperties: AppProperties,
     private val passwordEncoder: BCryptPasswordEncoder
 ) : AuthService {
-    override fun saveUser(userDto: UserSignUpDto): User {
+    override fun saveUser(userDto: UserSignUpDto): UUID {
         val findUser = userRepository.findByEmailOrUsername(userDto.email, userDto.username)
 
         if (findUser != null) {
@@ -40,7 +40,7 @@ class AuthServiceImpl(
         val encodedPassword = passwordEncoder.encode(user.password)
         user.encodePassword(encodedPassword)
 
-        return userRepository.save(user)
+        return userRepository.save(user).id!!
     }
 
     override fun loginUser(userLoginRequestDto: UserLoginRequestDto): UserLoginDto {
@@ -73,7 +73,7 @@ class AuthServiceImpl(
 
         redisRepository.setRefreshTokenByEmail(email, refreshToken)
 
-        return UserLoginDto(findUser.id!!, accessToken, refreshToken)
+        return UserLoginDto(findUser, accessToken, refreshToken)
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
