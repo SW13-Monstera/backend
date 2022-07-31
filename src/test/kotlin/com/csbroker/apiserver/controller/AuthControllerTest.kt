@@ -53,7 +53,7 @@ class AuthControllerTest {
     @Autowired
     private lateinit var redisRepository: RedisRepository
 
-    private val AUTH_ENDPOINT = "/api/auth"
+    private val AUTH_ENDPOINT = "/api/v1/auth"
 
     @Test
     @Order(1)
@@ -77,7 +77,7 @@ class AuthControllerTest {
 
         // then
         result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("test")))
+            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
             .andDo(
                 MockMvcRestDocumentation.document(
                     "auth/signup",
@@ -90,10 +90,7 @@ class AuthControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
-                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
+                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID")
                     )
                 )
             )
@@ -133,6 +130,9 @@ class AuthControllerTest {
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("회원의 UUID"),
+                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
+                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
+                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
                             .description("Access 토큰 (JWT)")
                     ),

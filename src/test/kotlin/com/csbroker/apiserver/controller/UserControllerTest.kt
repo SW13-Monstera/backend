@@ -56,7 +56,7 @@ class UserControllerTest {
     @Autowired
     private lateinit var userRepository: UserRepository
 
-    private val USER_ENDPOINT = "/api/users"
+    private val USER_ENDPOINT = "/api/v1/users"
 
     private lateinit var adminId: UUID
 

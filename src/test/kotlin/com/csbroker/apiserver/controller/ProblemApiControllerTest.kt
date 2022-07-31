@@ -75,7 +75,7 @@ class ProblemApiControllerTest {
 
     private var problemId: Long? = null
 
-    private val PROBLEM_ENDPOINT = "/api/problems"
+    private val PROBLEM_ENDPOINT = "/api/v1/problems"
 
     @BeforeAll
     fun setUpData() {
