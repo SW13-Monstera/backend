@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.common.enums.GradingStandardType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -43,4 +44,24 @@ class UserAnswer(
 
     @OneToMany(mappedBy = "userAnswer", cascade = [CascadeType.ALL])
     var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
-)
+) {
+    fun getKeywordScore(): Double {
+        return this.userAnswerGradingStandards.map {
+            it.gradingStandard
+        }.filter {
+            it.type == GradingStandardType.KEYWORD
+        }.sumOf {
+            it.score
+        }
+    }
+
+    fun getPromptScore(): Double {
+        return this.userAnswerGradingStandards.map {
+            it.gradingStandard
+        }.filter {
+            it.type == GradingStandardType.PROMPT
+        }.sumOf {
+            it.score
+        }
+    }
+}

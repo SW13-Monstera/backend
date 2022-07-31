@@ -8,14 +8,18 @@ import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
 import com.csbroker.apiserver.dto.UserAnswerResponseDto
 import com.csbroker.apiserver.dto.UserAnswerUpsertDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -178,5 +183,35 @@ class AdminController(
             else -> throw IllegalArgumentException("존재하지 않는 uri ( $type ) 입니다. ")
         }
         return ApiResponse.success(UpsertSuccessResponseDto(id = answerId))
+    }
+
+    @GetMapping("/problems/long")
+    fun findLongProblemsByQuery(
+        @RequestParam("id", required = false) id: Long?,
+        @RequestParam("title", required = false) title: String?,
+        @RequestParam("description", required = false) description: String?,
+        pageable: Pageable
+    ): ApiResponse<LongProblemSearchResponseDto> {
+        return ApiResponse.success(this.problemService.findLongProblems(id, title, description, pageable))
+    }
+
+    @GetMapping("/problems/short")
+    fun findShortProblemsByQuery(
+        @RequestParam("id", required = false) id: Long?,
+        @RequestParam("title", required = false) title: String?,
+        @RequestParam("description", required = false) description: String?,
+        pageable: Pageable
+    ): ApiResponse<ShortProblemSearchResponseDto> {
+        return ApiResponse.success(this.problemService.findShortProblems(id, title, description, pageable))
+    }
+
+    @GetMapping("/problems/multiple")
+    fun findMultipleChoiceProblemsByQuery(
+        @RequestParam("id", required = false) id: Long?,
+        @RequestParam("title", required = false) title: String?,
+        @RequestParam("description", required = false) description: String?,
+        pageable: Pageable
+    ): ApiResponse<MultipleChoiceProblemSearchResponseDto> {
+        return ApiResponse.success(this.problemService.findMultipleProblems(id, title, description, pageable))
     }
 }

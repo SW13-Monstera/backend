@@ -64,9 +64,13 @@ endif::[]
 }
 ----
 
-== Auth API ( /api/v1/auth )
+== End-User APIs
 
-=== 회원가입
+사용자가 사용하는 실 서비스에 이용되는 API입니다.
+
+=== Auth API ( /api/v1/auth )
+
+==== 회원가입
 
 .description
 [source]
@@ -91,12 +95,12 @@ include::{snippets}/auth/signup/request-fields.adoc[]
 include::{snippets}/auth/signup/response-body.adoc[]
 include::{snippets}/auth/signup/response-fields.adoc[]
 
-=== 로그인
+==== 로그인
 
 .description
 [source]
 ----
-로그인을 위한 API입니다.
+로그인을 위한 API입니다. ( 예외적으로, Back Office에서 함께 사용되는 API입니다. )
 
 HTTP Method : POST
 End-Point   : /api/v1/auth/login
@@ -123,7 +127,7 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 
 include::{snippets}/auth/login/response-headers.adoc[]
 
-=== 토큰 재발급
+==== 토큰 재발급
 
 .description
 [source]
@@ -159,9 +163,9 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 만약, 요청에 포함되어 전송된 refresh token의 유효기간이 3일 이상이라면 새로운 refresh token을 전송하지 않습니다.
 include::{snippets}/auth/refresh/response-headers.adoc[]
 
-== Problem API ( /api/v1/problems )
+=== Problem API ( /api/v1/problems )
 
-=== 문제 단건 조회
+==== 문제 단건 조회
 
 
 .description
@@ -189,7 +193,7 @@ include::{snippets}/problems/inquire/path-parameters.adoc[]
 include::{snippets}/problems/inquire/response-body.adoc[]
 include::{snippets}/problems/inquire/response-fields.adoc[]
 
-=== 문제 검색
+==== 문제 검색
 
 .description
 [source]
@@ -224,9 +228,9 @@ include::{snippets}/problems/search/request-parameters.adoc[]
 include::{snippets}/problems/search/response-body.adoc[]
 include::{snippets}/problems/search/response-fields.adoc[]
 
-== User API ( /api/v1/users )
+=== User API ( /api/v1/users )
 
-=== 유저 조회
+==== 유저 조회
 
 
 .description
@@ -261,7 +265,7 @@ include::{snippets}/users/findOne/path-parameters.adoc[]
 include::{snippets}/users/findOne/response-body.adoc[]
 include::{snippets}/users/findOne/response-fields.adoc[]
 
-=== 유저 전체 조회
+==== 유저 전체 조회
 
 
 .description
@@ -290,7 +294,7 @@ include::{snippets}/users/findAll/request-headers.adoc[]
 include::{snippets}/users/findAll/response-body.adoc[]
 include::{snippets}/users/findAll/response-fields.adoc[]
 
-=== 유저 정보 수정
+==== 유저 정보 수정
 
 .description
 [source]
@@ -321,3 +325,9 @@ include::{snippets}/users/update/request-fields.adoc[]
 .Response Body
 include::{snippets}/users/update/response-body.adoc[]
 include::{snippets}/users/update/response-fields.adoc[]
+
+== Back-Office APIs
+
+백오피스에서 사용되는 API입니다.
+
+이 API들의 호출을 위해서는 필수적으로 ADMIN 권한이 필요합니다.

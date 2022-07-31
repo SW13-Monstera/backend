@@ -1,13 +1,16 @@
 package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.ProblemTag
@@ -42,6 +45,55 @@ class ProblemServiceImpl(
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<ProblemResponseDto> {
         return this.problemRepository.findProblemsByQuery(problemSearchDto, pageable)
             .map(Problem::toProblemResponseDto)
+    }
+
+    override fun findLongProblems(
+        id: Long?,
+        title: String?,
+        description: String?,
+        pageable: Pageable
+    ): LongProblemSearchResponseDto {
+        val pagedProblems = this.longProblemRepository
+            .findLongProblemsByQuery(id, title, description, pageable)
+
+        return LongProblemSearchResponseDto(
+            pagedProblems.map { it.toLongProblemDataDto() }.toList(),
+            pagedProblems.totalPages,
+            pagedProblems.totalElements
+        )
+
+    }
+
+    override fun findShortProblems(
+        id: Long?,
+        title: String?,
+        description: String?,
+        pageable: Pageable
+    ): ShortProblemSearchResponseDto {
+        val pagedProblems = this.shortProblemRepository
+            .findShortProblemsByQuery(id, title, description, pageable)
+
+        return ShortProblemSearchResponseDto(
+            pagedProblems.map { it.toShortProblemDataDto() }.toList(),
+            pagedProblems.totalPages,
+            pagedProblems.totalElements
+        )
+    }
+
+    override fun findMultipleProblems(
+        id: Long?,
+        title: String?,
+        description: String?,
+        pageable: Pageable
+    ): MultipleChoiceProblemSearchResponseDto {
+        val pagedProblems = this.multipleChoiceProblemRepository
+            .findMultipleChoiceProblemsByQuery(id, title, description, pageable)
+
+        return MultipleChoiceProblemSearchResponseDto(
+            pagedProblems.map { it.toMultipleChoiceDataDto() }.toList(),
+            pagedProblems.totalPages,
+            pagedProblems.totalElements
+        )
     }
 
     override fun findProblemById(id: Long): ProblemDetailResponseDto? {

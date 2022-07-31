@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
@@ -48,6 +49,26 @@ class LongProblem(
             this.description,
             this.problemTags.map { it.tag.name },
             this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) }
+        )
+    }
+
+    fun toLongProblemDataDto(): LongProblemSearchResponseDto.LongProblemDataDto {
+        val keywordScores = this.userAnswers.map {
+            it.getKeywordScore()
+        }
+
+        val promptScores = this.userAnswers.map {
+            it.getPromptScore()
+        }
+
+        return LongProblemSearchResponseDto.LongProblemDataDto(
+            this.id!!,
+            this.title,
+            this.creator.username,
+            if (keywordScores.isEmpty()) null else keywordScores.average(),
+            if (promptScores.isEmpty()) null else promptScores.average(),
+            this.userAnswers.size,
+            this.isActive
         )
     }
 }

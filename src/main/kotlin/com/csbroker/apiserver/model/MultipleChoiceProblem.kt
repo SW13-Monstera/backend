@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import javax.persistence.CascadeType
@@ -59,6 +60,22 @@ class MultipleChoiceProblem(
                 )
             },
             this.score
+        )
+    }
+
+    fun toMultipleChoiceDataDto(): MultipleChoiceProblemSearchResponseDto.MultipleChoiceProblemDataDto {
+        val answerCnt = this.gradingHistory.size
+        val correctAnswerCnt = this.gradingHistory.count {
+            it.score == this.score
+        }
+
+        return MultipleChoiceProblemSearchResponseDto.MultipleChoiceProblemDataDto(
+            this.id!!,
+            this.title,
+            this.creator.username,
+            if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
+            answerCnt,
+            this.isActive
         )
     }
 }

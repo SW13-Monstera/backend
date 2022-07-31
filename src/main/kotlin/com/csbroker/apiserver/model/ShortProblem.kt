@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
@@ -35,6 +36,22 @@ class ShortProblem(
             this.problemTags.map { it.tag.name },
             this.answer,
             this.score
+        )
+    }
+
+    fun toShortProblemDataDto(): ShortProblemSearchResponseDto.ShortProblemDataDto {
+        val answerCnt = this.gradingHistory.size
+        val correctAnswerCnt = this.gradingHistory.count {
+            it.score == this.score
+        }
+
+        return ShortProblemSearchResponseDto.ShortProblemDataDto(
+            this.id!!,
+            this.title,
+            this.creator.username,
+            if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
+            answerCnt,
+            this.isActive
         )
     }
 }
