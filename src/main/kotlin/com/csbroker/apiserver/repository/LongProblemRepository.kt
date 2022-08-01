@@ -9,8 +9,9 @@ import org.springframework.data.repository.query.Param
 
 interface LongProblemRepository : JpaRepository<LongProblem, Long> {
     @Query(
-        "SELECT lp FROM LongProblem lp WHERE (:id is null or lp.id = :id) " +
-            "and (:title is null or lp.title = :title) or (:description is null or lp.description = :description)"
+        "SELECT lp FROM LongProblem lp WHERE (lp.id = :id OR :id IS NULL)" +
+            "AND (lp.title LIKE '%'||:title||'%' OR :title IS NULL) " +
+            "AND (lp.description LIKE '%'||:description||'%' OR :description IS NULL)"
     )
     fun findLongProblemsByQuery(
         @Param("id") id: Long?,

@@ -9,8 +9,9 @@ import org.springframework.data.repository.query.Param
 
 interface MultipleChoiceProblemRepository : JpaRepository<MultipleChoiceProblem, Long> {
     @Query(
-        "SELECT mp FROM MultipleChoiceProblem mp WHERE (:id is null or mp.id = :id) " +
-            "and (:title is null or mp.title = :title) or (:description is null or mp.description = :description)"
+        "SELECT mp FROM MultipleChoiceProblem mp WHERE (mp.id = :id OR :id IS NULL)" +
+            "AND (mp.title LIKE '%'||:title||'%' OR :title IS NULL) " +
+            "AND (mp.description LIKE '%'||:description||'%' OR :description IS NULL)"
     )
     fun findMultipleChoiceProblemsByQuery(
         @Param("id") id: Long?,
