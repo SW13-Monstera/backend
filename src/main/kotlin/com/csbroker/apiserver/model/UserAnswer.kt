@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.common.enums.GradingStandardType
+import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -44,7 +45,7 @@ class UserAnswer(
 
     @OneToMany(mappedBy = "userAnswer", cascade = [CascadeType.ALL])
     var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
-) {
+) : BaseEntity() {
     fun getKeywordScore(): Double {
         return this.userAnswerGradingStandards.map {
             it.gradingStandard
@@ -63,5 +64,17 @@ class UserAnswer(
         }.sumOf {
             it.score
         }
+    }
+
+    fun toUserAnswerDataDto(): UserAnswerSearchResponseDto.UserAnswerDataDto {
+        return UserAnswerSearchResponseDto.UserAnswerDataDto(
+            this.id!!,
+            this.problem.title,
+            this.assignedUser?.username,
+            this.validatingUser?.username,
+            this.updatedAt!!,
+            this.isLabeled,
+            this.isValidated
+        )
     }
 }

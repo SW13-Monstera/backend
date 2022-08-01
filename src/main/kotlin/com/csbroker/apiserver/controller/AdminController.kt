@@ -6,6 +6,7 @@ import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
 import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
 import com.csbroker.apiserver.dto.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
 import com.csbroker.apiserver.dto.UserAnswerUpsertDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
@@ -213,5 +214,30 @@ class AdminController(
         pageable: Pageable
     ): ApiResponse<MultipleChoiceProblemSearchResponseDto> {
         return ApiResponse.success(this.problemService.findMultipleProblems(id, title, description, pageable))
+    }
+
+    @GetMapping("/user-answers")
+    fun findUserAnswersByQuery(
+        @RequestParam("id", required = false) id: Long?,
+        @RequestParam("assignedBy", required = false) assignedBy: String?,
+        @RequestParam("validatedBy", required = false) validatedBy: String?,
+        @RequestParam("problemTitle", required = false) problemTitle: String?,
+        @RequestParam("answer", required = false) answer: String?,
+        @RequestParam("isLabeled", required = false) isLabeled: Boolean?,
+        @RequestParam("isValidated", required = false) isValidated: Boolean?,
+        pageable: Pageable
+    ): ApiResponse<UserAnswerSearchResponseDto> {
+        return ApiResponse.success(
+            this.userAnswerService.findUserAnswersByQuery(
+                id,
+                assignedBy,
+                validatedBy,
+                problemTitle,
+                answer,
+                isLabeled,
+                isValidated,
+                pageable
+            )
+        )
     }
 }

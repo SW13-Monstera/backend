@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.dto.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
 import com.csbroker.apiserver.dto.UserAnswerUpsertDto
 import com.csbroker.apiserver.model.UserAnswer
 import com.csbroker.apiserver.repository.GradingStandardRepository
@@ -8,6 +9,7 @@ import com.csbroker.apiserver.repository.LongProblemRepository
 import com.csbroker.apiserver.repository.UserAnswerGradingStandardRepository
 import com.csbroker.apiserver.repository.UserAnswerRepository
 import com.csbroker.apiserver.repository.UserRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -118,5 +120,33 @@ class UserAnswerServiceImpl(
         this.userAnswerGradingStandardRepository.deleteAllByUserAnswerId(userAnswerId)
 
         this.userAnswerGradingStandardRepository.batchInsert(userAnswerId, selectedGradingStandardIds)
+    }
+
+    override fun findUserAnswersByQuery(
+        id: Long?,
+        assignedBy: String?,
+        validatedBy: String?,
+        problemTitle: String?,
+        answer: String?,
+        isLabeled: Boolean?,
+        isValidated: Boolean?,
+        pageable: Pageable
+    ): UserAnswerSearchResponseDto {
+        val pagedUserAnswers = this.userAnswerRepository.findUserAnswersByQuery(
+            id,
+            assignedBy,
+            validatedBy,
+            problemTitle,
+            answer,
+            isLabeled,
+            isValidated,
+            pageable
+        )
+
+        return UserAnswerSearchResponseDto(
+            pagedUserAnswers.map { it.toUserAnswerDataDto() }.toList(),
+            pagedUserAnswers.totalPages,
+            pagedUserAnswers.totalElements
+        )
     }
 }
