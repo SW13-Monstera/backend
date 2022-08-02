@@ -47,6 +47,7 @@ class LongProblem(
             this.id!!,
             this.title,
             this.description,
+            this.standardAnswer,
             this.problemTags.map { it.tag.name },
             this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) }
         )
