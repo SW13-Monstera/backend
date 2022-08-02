@@ -61,7 +61,6 @@ class ProblemServiceImpl(
             pagedProblems.totalPages,
             pagedProblems.totalElements
         )
-
     }
 
     override fun findShortProblems(
