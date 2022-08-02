@@ -137,3 +137,7 @@ allOpen {
     annotation("javax.persistence.MappedSuperclass")
     annotation("javax.persistence.Embeddable")
 }
+
+val jar: Jar by tasks
+
+jar.enabled = false
