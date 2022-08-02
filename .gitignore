@@ -42,3 +42,6 @@ out/
 
 ### Yml ###
 src/main/resources/*.yml
+
+### static ###
+src/main/resources/static/
