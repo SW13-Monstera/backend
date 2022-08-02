@@ -884,3 +884,26 @@ include::{snippets}/admin/userAnswer/validate/request-fields.adoc[]
 .Response Body
 include::{snippets}/admin/userAnswer/validate/response-body.adoc[]
 include::{snippets}/admin/userAnswer/validate/response-fields.adoc[]
+
+=== User API ( /api/admin/users )
+
+==== ADMIN 유저 조회
+
+.description
+[source]
+----
+ADMIN 유저 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/users/admin
+----
+
+.Sample Request
+include::{snippets}/admin/user/admin/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/user/admin/search//http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/user/admin/search/response-body.adoc[]
+include::{snippets}/admin/user/admin/search/response-fields.adoc[]
