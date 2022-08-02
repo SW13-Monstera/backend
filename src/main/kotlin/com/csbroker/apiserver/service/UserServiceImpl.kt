@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
@@ -39,5 +40,9 @@ class UserServiceImpl(
 
     override fun findUsers(): List<User> {
         return this.userRepository.findAll()
+    }
+
+    override fun findAdminUsers(): List<User> {
+        return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
     }
 }

@@ -1944,4 +1944,43 @@ class AdminControllerTest {
                 )
             )
     }
+
+    @Test
+    @Order(21)
+    fun `Search Admin Users 200`() {
+        // given
+        val accessToken = token
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "$ADMIN_ENDPOINT/users/admin"
+            )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "admin/user/admin/search",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY)
+                            .description("ADMIN 유저 정보"),
+                        PayloadDocumentation.fieldWithPath("data.[].id").type(JsonFieldType.STRING)
+                            .description("유저 ID"),
+                        PayloadDocumentation.fieldWithPath("data.[].username")
+                            .type(JsonFieldType.STRING)
+                            .description("유저 닉네임")
+                    )
+                )
+            )
+    }
 }

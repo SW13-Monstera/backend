@@ -18,8 +18,10 @@ import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.user.AdminUserInfoResponseDto
 import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
+import com.csbroker.apiserver.service.UserService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -36,8 +38,21 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/admin")
 class AdminController(
     private val problemService: ProblemService,
-    private val userAnswerService: UserAnswerService
+    private val userAnswerService: UserAnswerService,
+    private val userService: UserService
 ) {
+    @GetMapping("/users/admin")
+    fun findAdminUsers(): ApiResponse<List<AdminUserInfoResponseDto>> {
+        val adminUserInfoResponseDtoList = this.userService.findAdminUsers().map {
+            AdminUserInfoResponseDto(
+                it.id!!,
+                it.username
+            )
+        }
+
+        return ApiResponse.success(adminUserInfoResponseDtoList)
+    }
+
     @PostMapping("/problems/long")
     fun createLongProblem(
         @RequestBody createRequestDto: LongProblemUpsertRequestDto,

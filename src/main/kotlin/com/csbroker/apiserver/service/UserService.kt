@@ -12,4 +12,6 @@ interface UserService {
     fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User?
 
     fun findUsers(): List<User>
+
+    fun findAdminUsers(): List<User>
 }
