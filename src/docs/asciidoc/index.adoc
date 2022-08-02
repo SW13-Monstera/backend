@@ -331,3 +331,556 @@ include::{snippets}/users/update/response-fields.adoc[]
 백오피스에서 사용되는 API입니다.
 
 이 API들의 호출을 위해서는 필수적으로 ADMIN 권한이 필요합니다.
+
+각 설명에서는 생략하겠지만, 항상 ADMIN 권한을 가진 Access Token을 Authorization Header에 포함해야합니다.
+
+=== Long Problem API ( /api/admin/problems )
+
+==== 서술형 문제 생성
+
+.description
+[source]
+----
+서술형 문제를 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/problems/long
+----
+
+.Sample Request
+include::{snippets}/admin/problems/long/create/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/long/create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/long/create/request-body.adoc[]
+include::{snippets}/admin/problems/long/create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/problems/long/create/response-body.adoc[]
+include::{snippets}/admin/problems/long/create/response-fields.adoc[]
+
+==== 서술형 문제 단건 조회
+
+.description
+[source]
+----
+단답형 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/long/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/long/findOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/long/findOne/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/long/findOne/path-parameters.adoc[]
+
+문제 단건 조회를 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/long/findOne/response-body.adoc[]
+include::{snippets}/admin/problems/long/findOne/response-fields.adoc[]
+
+==== 서술형 문제 검색
+
+.description
+[source]
+----
+서술형 문제 검색을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/long
+Req Params  : id, title, description page, size
+----
+
+.Sample Request
+include::{snippets}/admin/problems/long/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/long/search/http-response.adoc[]
+
+.Request parameters
+
+문제 검색을 위한 request parameter의 설명입니다.
+include::{snippets}/admin/problems/long/search/request-parameters.adoc[]
+
+
+.Response Body
+include::{snippets}/admin/problems/long/search/response-body.adoc[]
+include::{snippets}/admin/problems/long/search//response-fields.adoc[]
+
+==== 서술형 문제 수정
+
+.description
+[source]
+----
+서술형 문제 수정를 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/admin/problems/long/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/long/modify/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/long/modify/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/long/modify/request-body.adoc[]
+include::{snippets}/admin/problems/long/modify/request-fields.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/long/modify/path-parameters.adoc[]
+
+문제 수정을 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/multiple/modify/response-body.adoc[]
+include::{snippets}/admin/problems/multiple/modify/response-fields.adoc[]
+
+=== Multiple Choice Problem API ( /api/admin/multiple )
+
+==== 객관식 문제 생성
+
+.description
+[source]
+----
+객관식 문제를 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/problems/multiple
+----
+
+.Sample Request
+include::{snippets}/admin/problems/multiple/create/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/multiple/create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/multiple/create/request-body.adoc[]
+include::{snippets}/admin/problems/multiple/create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/problems/multiple/create/response-body.adoc[]
+include::{snippets}/admin/problems/multiple/create/response-fields.adoc[]
+
+==== 객관식 문제 단건 조회
+
+.description
+[source]
+----
+객관식 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/multiple/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/multiple/findOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/multiple/findOne/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/multiple/findOne/path-parameters.adoc[]
+
+문제 단건 조회를 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/multiple/findOne/response-body.adoc[]
+include::{snippets}/admin/problems/multiple/findOne/response-fields.adoc[]
+
+==== 객관식 문제 검색
+
+.description
+[source]
+----
+객관식 문제 검색을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/multiple
+Req Params  : id, title, description page, size
+----
+
+.Sample Request
+include::{snippets}/admin/problems/multiple/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/multiple/search/http-response.adoc[]
+
+.Request parameters
+
+문제 검색을 위한 request parameter의 설명입니다.
+include::{snippets}/admin/problems/multiple/search/request-parameters.adoc[]
+
+
+.Response Body
+include::{snippets}/admin/problems/multiple/search/response-body.adoc[]
+include::{snippets}/admin/problems/multiple/search//response-fields.adoc[]
+
+==== 객관식 문제 수정
+
+.description
+[source]
+----
+객관식 문제 수정를 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/admin/problems/multiple/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/multiple/modify/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/multiple/modify/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/multiple/modify/request-body.adoc[]
+include::{snippets}/admin/problems/multiple/modify/request-fields.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/multiple/modify/path-parameters.adoc[]
+
+문제 수정을 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/multiple/modify/response-body.adoc[]
+include::{snippets}/admin/problems/multiple/modify/response-fields.adoc[]
+
+=== Short Problem API ( /api/admin/short)
+
+==== 단답형 문제 생성
+
+.description
+[source]
+----
+단답형 문제를 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/problems/short
+----
+
+.Sample Request
+include::{snippets}/admin/problems/short/create/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/short/create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/short/create/request-body.adoc[]
+include::{snippets}/admin/problems/short/create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/problems/short/create/response-body.adoc[]
+include::{snippets}/admin/problems/short/create/response-fields.adoc[]
+
+==== 단답형 문제 단건 조회
+
+.description
+[source]
+----
+단답형 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/short/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/short/findOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/short/findOne/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/short/findOne/path-parameters.adoc[]
+
+문제 단건 조회를 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/short/findOne/response-body.adoc[]
+include::{snippets}/admin/problems/short/findOne/response-fields.adoc[]
+
+==== 단답형 문제 검색
+
+.description
+[source]
+----
+단답형 문제 검색을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/problems/short
+Req Params  : id, title, description page, size
+----
+
+.Sample Request
+include::{snippets}/admin/problems/short/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/short/search/http-response.adoc[]
+
+.Request parameters
+
+문제 검색을 위한 request parameter의 설명입니다.
+include::{snippets}/admin/problems/short/search/request-parameters.adoc[]
+
+
+.Response Body
+include::{snippets}/admin/problems/short/search/response-body.adoc[]
+include::{snippets}/admin/problems/short/search//response-fields.adoc[]
+
+==== 단답형 문제 수정
+
+.description
+[source]
+----
+단답형 문제 수정를 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/admin/problems/short/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/short/modify/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/short/modify/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/short/modify/request-body.adoc[]
+include::{snippets}/admin/problems/short/modify/request-fields.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/short/modify/path-parameters.adoc[]
+
+문제 수정을 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/short/modify/response-body.adoc[]
+include::{snippets}/admin/problems/short/modify/response-fields.adoc[]
+
+=== Problem Delete API ( /api/admin/problems )
+
+==== 문제 단건 삭제
+.description
+[source]
+----
+문제 삭제를 위한 API입니다.
+
+HTTP Method : DELETE
+End-Point   : /api/admin/problems/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/admin/problems/deleteOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/deleteOne/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/problems/deleteOne/path-parameters.adoc[]
+
+문제 삭제를 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/problems/deleteOne/response-body.adoc[]
+include::{snippets}/admin/problems/deleteOne/response-fields.adoc[]
+
+==== 문제 다중 삭제
+.description
+[source]
+----
+여러 개의 문제 삭제를 위한 API입니다.
+
+HTTP Method : DELETE
+End-Point   : /api/admin/problems
+----
+
+.Sample Request
+include::{snippets}/admin/problems/deleteMany/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/problems/deleteMany/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/problems/deleteMany/request-body.adoc[]
+include::{snippets}/admin/problems/deleteMany/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/problems/deleteMany/response-body.adoc[]
+include::{snippets}/admin/problems/deleteMany/response-fields.adoc[]
+
+
+=== UserAnswer API ( /api/admin/user-answers, /api/admin/user-answer )
+
+==== 유저 응답 단일 생성
+
+.description
+[source]
+----
+하나의 유저 응답을 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/user-answer
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/createOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/createOne/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/userAnswer/createOne/request-body.adoc[]
+include::{snippets}/admin/userAnswer/createOne/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/createOne/response-body.adoc[]
+include::{snippets}/admin/userAnswer/createOne/response-fields.adoc[]
+
+==== 유저 응답 생성
+
+.description
+[source]
+----
+여러 개의 유저 응답을 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/user-answers
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/createMany/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/createMany/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/userAnswer/createMany/request-body.adoc[]
+include::{snippets}/admin/userAnswer/createMany/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/createMany/response-body.adoc[]
+include::{snippets}/admin/userAnswer/createMany/response-fields.adoc[]
+
+==== 유저 응답 단건 조회
+
+.description
+[source]
+----
+유저 응답 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/user-answers/{user_answer_id: Long}
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/findOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/findOne/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/userAnswer/findOne/path-parameters.adoc[]
+
+유저 답안 조회를 위한 path parameter의 설명입니다.
+
+.Response Body
+include::{snippets}/admin/userAnswer/findOne/response-body.adoc[]
+include::{snippets}/admin/userAnswer/findOne/response-fields.adoc[]
+
+==== 유저 답안 검색
+
+.description
+[source]
+----
+유저 답안 검색을 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/admin/user-answers
+Req Params  : id, assignedBy, validatedBy, problemTitle, answer, isLabeled, isValidated, size, page
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/search/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/search/http-response.adoc[]
+
+.Request parameters
+
+유저 답안 검색을 위한 request parameter의 설명입니다.
+include::{snippets}/admin/userAnswer/search/request-parameters.adoc[]
+
+
+.Response Body
+include::{snippets}/admin/userAnswer/search/response-body.adoc[]
+include::{snippets}/admin/userAnswer/search/response-fields.adoc[]
+
+==== 유저 답안 라벨링
+
+.description
+[source]
+----
+유저 답안 라벨링을 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/user-answers/{user_answer_id: Long}/label
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/label/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/label/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/userAnswer/label/path-parameters.adoc[]
+
+유저 답안 라벨링을 위한 path parameter의 설명입니다.
+
+.Request Body
+include::{snippets}/admin/userAnswer/label/request-body.adoc[]
+include::{snippets}/admin/userAnswer/label/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/label/response-body.adoc[]
+include::{snippets}/admin/userAnswer/label/response-fields.adoc[]
+
+==== 유저 답안 검수
+
+.description
+[source]
+----
+유저 답안 검수를 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/user-answers/{user_answer_id: Long}/validate
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/validate/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/validate/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/admin/userAnswer/validate/path-parameters.adoc[]
+
+유저 답안 검수를 위한 path parameter의 설명입니다.
+
+.Request Body
+include::{snippets}/admin/userAnswer/validate/request-body.adoc[]
+include::{snippets}/admin/userAnswer/validate/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/validate/response-body.adoc[]
+include::{snippets}/admin/userAnswer/validate/response-fields.adoc[]

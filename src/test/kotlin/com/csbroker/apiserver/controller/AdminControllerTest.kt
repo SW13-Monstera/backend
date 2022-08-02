@@ -338,6 +338,9 @@ class AdminControllerTest {
                     "admin/problems/long/modify",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                    ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
@@ -550,6 +553,9 @@ class AdminControllerTest {
                     "admin/problems/short/modify",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                    ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
@@ -736,6 +742,9 @@ class AdminControllerTest {
                     "admin/problems/multiple/modify",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                    ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
@@ -1745,7 +1754,7 @@ class AdminControllerTest {
             .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
             .andDo(
                 MockMvcRestDocumentation.document(
-                    "admin/problems/short/search",
+                    "admin/problems/multiple/search",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.requestParameters(
