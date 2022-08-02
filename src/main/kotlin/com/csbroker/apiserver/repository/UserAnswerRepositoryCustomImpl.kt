@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
 import java.nio.ByteBuffer
 import java.sql.PreparedStatement
+import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.UUID
 
 class UserAnswerRepositoryCustomImpl(
@@ -13,9 +15,9 @@ class UserAnswerRepositoryCustomImpl(
     override fun batchInsert(userAnswers: List<UserAnswerUpsertDto>) {
         val sql = """
             INSERT INTO user_answer
-            (answer, is_labeled, is_validated, assigned_user_id, problem_id, validator_id)
+            (answer, is_labeled, is_validated, assigned_user_id, problem_id, validator_id, created_at, updated_at)
             VALUES
-            (?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
         jdbcTemplate.batchUpdate(
@@ -29,6 +31,8 @@ class UserAnswerRepositoryCustomImpl(
                     ps.setBytes(4, uuidAsByte(userAnswer.assignedUserId))
                     ps.setLong(5, userAnswer.problemId)
                     ps.setBytes(6, uuidAsByte(userAnswer.validatingUserId))
+                    ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()))
+                    ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()))
                 }
 
                 override fun getBatchSize(): Int {
