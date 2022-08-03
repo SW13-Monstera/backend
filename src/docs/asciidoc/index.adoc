@@ -334,7 +334,7 @@ include::{snippets}/users/update/response-fields.adoc[]
 
 각 설명에서는 생략하겠지만, 항상 ADMIN 권한을 가진 Access Token을 Authorization Header에 포함해야합니다.
 
-=== Long Problem API ( /api/admin/problems )
+=== Long Problem API ( /api/admin/problems/long )
 
 ==== 서술형 문제 생성
 
@@ -445,7 +445,7 @@ include::{snippets}/admin/problems/long/modify/path-parameters.adoc[]
 include::{snippets}/admin/problems/multiple/modify/response-body.adoc[]
 include::{snippets}/admin/problems/multiple/modify/response-fields.adoc[]
 
-=== Multiple Choice Problem API ( /api/admin/multiple )
+=== Multiple Choice Problem API ( /api/admin/problems/multiple )
 
 ==== 객관식 문제 생성
 
@@ -556,7 +556,7 @@ include::{snippets}/admin/problems/multiple/modify/path-parameters.adoc[]
 include::{snippets}/admin/problems/multiple/modify/response-body.adoc[]
 include::{snippets}/admin/problems/multiple/modify/response-fields.adoc[]
 
-=== Short Problem API ( /api/admin/short)
+=== Short Problem API ( /api/admin/problems/short)
 
 ==== 단답형 문제 생성
 
