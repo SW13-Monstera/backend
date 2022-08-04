@@ -1251,6 +1251,12 @@ class AdminControllerTest {
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
                             .type(JsonFieldType.NUMBER).description("유저 답안 ID"),
+                        PayloadDocumentation.fieldWithPath("data.problemId")
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                        PayloadDocumentation.fieldWithPath("data.problemTitle")
+                            .type(JsonFieldType.STRING).description("문제 제목"),
+                        PayloadDocumentation.fieldWithPath("data.problemDescription")
+                            .type(JsonFieldType.STRING).description("문제 내용"),
                         PayloadDocumentation.fieldWithPath("data.answer")
                             .type(JsonFieldType.STRING).description("유저 답안"),
                         PayloadDocumentation.fieldWithPath("data.isLabeled")

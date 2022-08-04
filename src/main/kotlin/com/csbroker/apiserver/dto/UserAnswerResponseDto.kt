@@ -6,6 +6,9 @@ import com.csbroker.apiserver.model.UserAnswer
 
 data class UserAnswerResponseDto(
     val id: Long,
+    val problemId: Long,
+    val problemTitle: String,
+    val problemDescription: String,
     val answer: String,
     val isLabeled: Boolean,
     val isValidated: Boolean,
@@ -29,6 +32,9 @@ data class UserAnswerResponseDto(
 
             return UserAnswerResponseDto(
                 userAnswer.id!!,
+                userAnswer.problem.id!!,
+                userAnswer.problem.title,
+                userAnswer.problem.description,
                 userAnswer.answer,
                 userAnswer.isLabeled,
                 userAnswer.isValidated,
