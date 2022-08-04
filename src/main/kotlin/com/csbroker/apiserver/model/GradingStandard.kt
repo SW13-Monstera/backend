@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.common.enums.GradingStandardType
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -33,5 +35,8 @@ class GradingStandard(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
-    var problem: LongProblem
+    var problem: LongProblem,
+
+    @OneToMany(mappedBy = "gradingStandard", cascade = [CascadeType.ALL])
+    var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf()
 ) : BaseEntity()
