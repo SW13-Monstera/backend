@@ -184,6 +184,8 @@ class ProblemServiceImpl(
 
         findProblem.addGradingStandards(gradingStandardList)
 
+        findProblem.updateFromDto(updateRequestDto)
+
         this.updateTags(findProblem, updateRequestDto.tags)
 
         return id
