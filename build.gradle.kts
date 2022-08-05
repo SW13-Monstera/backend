@@ -66,6 +66,8 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8")
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 idea {
