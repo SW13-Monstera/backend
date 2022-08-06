@@ -1,0 +1,54 @@
+name: Deploy to dev env
+
+on:
+    push:
+        branches:
+            - dev
+            - 'feat/**'
+jobs:
+    build-docker:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+              with:
+                  token: ${{ secrets.PRIVATE_TOKEN }}
+                  submodules: true
+
+            - name: setup jdk 11
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'adopt'
+                  java-version: '11'
+                  cache: 'gradle'
+
+            - name: add permission to gradlew
+              run: chmod +x ./gradlew
+              shell: bash
+
+            - name: aws configure
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ap-northeast-2
+
+            - name: Login to ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: build docker file
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: cs-broker
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+#            - name: code deploy
+#              run: |
+#                aws deploy create-deployment --application-name cs-broker-deploy \
+#                --deployment-config-name CodeDeployDefault.OneAtATime \
+#                --deployment-group-name server \
+#                --s3-location bucket=blabla,bundleType=zip,key=deploy.zip
