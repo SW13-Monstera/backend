@@ -37,7 +37,7 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: build docker file
+            - name: build docker file and setting deploy files
               env:
                 ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
                 ECR_REPOSITORY: cs-broker
@@ -45,10 +45,19 @@ jobs:
               run: |
                 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                mkdir scripts
+                touch scripts/deploy.sh
+                echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+                echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+                echo "docker run -p 8080:8080 -e PROFILE=dev -d --name csbroker-api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+                zip -r deploy-$IMAGE_TAG.zip ./scripts appespec.yml
+
+            - name: s3 upload
+              run: aws s3 cp --region ap-northeast-2 --acl private ./deploy-$IMAGE_TAG.zip s3://cs-broker-bucket
 
 #            - name: code deploy
 #              run: |
-#                aws deploy create-deployment --application-name cs-broker-deploy \
+#                aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
 #                --deployment-config-name CodeDeployDefault.OneAtATime \
-#                --deployment-group-name server \
-#                --s3-location bucket=blabla,bundleType=zip,key=deploy.zip
+#                --deployment-group-name csbroker-dev-api \
+#                --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
