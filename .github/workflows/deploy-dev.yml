@@ -53,9 +53,9 @@ jobs:
                 zip -r deploy-$IMAGE_TAG.zip ./scripts appespec.yml
                 aws s3 cp --region ap-northeast-2 --acl private ./deploy-$IMAGE_TAG.zip s3://cs-broker-bucket
 
-#            - name: code deploy
-#              run: |
-#                aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
-#                --deployment-config-name CodeDeployDefault.OneAtATime \
-#                --deployment-group-name csbroker-dev-api \
-#                --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
+            - name: start deploy
+              run: |
+                aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
+                --deployment-config-name CodeDeployDefault.OneAtATime \
+                --deployment-group-name csbroker-dev-api \
+                --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
