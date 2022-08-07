@@ -1,0 +1,67 @@
+name: Deploy to dev env
+
+on:
+    push:
+        branches:
+            - dev
+jobs:
+    build-docker:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+              with:
+                  token: ${{ secrets.PRIVATE_TOKEN }}
+                  submodules: true
+
+            - name: setup jdk 11
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'adopt'
+                  java-version: '11'
+                  cache: 'gradle'
+
+            - name: add permission to gradlew
+              run: chmod +x ./gradlew
+              shell: bash
+
+            - name: aws configure
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ap-northeast-2
+
+            - name: Login to ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: build docker file and setting deploy files
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: cs-broker
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                mkdir scripts
+                touch scripts/deploy.sh
+                echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+                echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+                echo "docker run -p 8080:8080 -e PROFILE=dev -d --restart always --name csbroker-api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+
+            - name: upload to s3
+              env:
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
+                aws s3 cp --region ap-northeast-2 --acl private ./deploy-$IMAGE_TAG.zip s3://cs-broker-bucket
+
+            - name: start deploy
+              env:
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
+                --deployment-config-name CodeDeployDefault.OneAtATime \
+                --deployment-group-name csbroker-dev-api \
+                --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
