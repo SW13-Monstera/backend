@@ -1,9 +1,9 @@
-name: Deploy to dev env
+name: Deploy to prod env
 
 on:
     push:
         branches:
-            - dev
+            - main
 jobs:
     build-docker:
         runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
                 touch scripts/deploy.sh
                 echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
                 echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
-                echo "docker run -p 8080:8080 -e PROFILE=dev -d --restart always --name csbroker-api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+                echo "docker run -p 8080:8080 -e PROFILE=prod -d --restart always --name csbroker-api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
 
             - name: upload to s3
               env:
@@ -61,7 +61,7 @@ jobs:
               env:
                 IMAGE_TAG: ${{ github.sha }}
               run: |
-                aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
+                aws deploy create-deployment --application-name csbroker-prod-api-codedeploy \
                 --deployment-config-name CodeDeployDefault.OneAtATime \
-                --deployment-group-name csbroker-dev-api \
+                --deployment-group-name csbroker-prod-api \
                 --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
