@@ -55,7 +55,7 @@ jobs:
               env:
                 IMAGE_TAG: ${{ github.sha }}
               run: |
-                zip -r deploy-$IMAGE_TAG.zip ./scripts appespec.yml
+                zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
                 aws s3 cp --region ap-northeast-2 --acl private ./deploy-$IMAGE_TAG.zip s3://cs-broker-bucket
 
             - name: start deploy
