@@ -20,11 +20,12 @@ fun getCookie(request: HttpServletRequest, name: String): Cookie? {
     return null
 }
 
-fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge: Int) {
+fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge: Long) {
     val cookie = Cookie(name, value)
     cookie.path = "/"
     cookie.isHttpOnly = true
-    cookie.maxAge = maxAge
+    cookie.secure = true
+    cookie.maxAge = maxAge.toInt()
 
     response.addCookie(cookie)
 }

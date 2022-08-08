@@ -40,7 +40,7 @@ class AuthController(
     ): ApiResponse<UserLoginResponseDto> {
         val userLoginDto = this.authService.loginUser(userLoginRequestDto)
 
-        val cookieMaxAge = (appProperties.auth.refreshTokenExpiry / 60).toInt()
+        val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
 
         deleteCookie(request, response, REFRESH_TOKEN)
         addCookie(response, REFRESH_TOKEN, userLoginDto.refreshToken!!, cookieMaxAge)
@@ -56,7 +56,7 @@ class AuthController(
         val (accessToken, refreshToken) = this.authService.refreshUserToken(request)
 
         if (refreshToken != null) {
-            val cookieMaxAge = (appProperties.auth.refreshTokenExpiry / 60).toInt()
+            val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
 
             deleteCookie(request, response, REFRESH_TOKEN)
             addCookie(response, REFRESH_TOKEN, refreshToken, cookieMaxAge)

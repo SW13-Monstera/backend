@@ -89,7 +89,7 @@ class OAuth2AuthenticationSuccessHandler(
 
         redisRepository.setRefreshTokenByEmail(userInfo.getEmail(), refreshToken.token)
 
-        val cookieMaxAge = (refreshTokenExpiry / 60).toInt()
+        val cookieMaxAge = refreshTokenExpiry / 1000
 
         deleteCookie(request, response, REFRESH_TOKEN)
         addCookie(response, REFRESH_TOKEN, refreshToken.token, cookieMaxAge)
