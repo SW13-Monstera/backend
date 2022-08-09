@@ -7,7 +7,7 @@ import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.getAccessToken
 import com.csbroker.apiserver.common.util.getCookie
 import com.csbroker.apiserver.dto.auth.TokenDto
-import com.csbroker.apiserver.dto.user.UserLoginDto
+import com.csbroker.apiserver.dto.user.UserInfoDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
@@ -43,7 +43,14 @@ class AuthServiceImpl(
         return userRepository.save(user).id!!
     }
 
-    override fun loginUser(userLoginRequestDto: UserLoginRequestDto): UserLoginDto {
+    override fun getUserInfo(email: String): UserInfoDto {
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다. $email")
+
+        return UserInfoDto(findUser)
+    }
+
+    override fun loginUser(userLoginRequestDto: UserLoginRequestDto): UserInfoDto {
         val email = userLoginRequestDto.email
         val rawPassword = userLoginRequestDto.password
 
@@ -73,7 +80,7 @@ class AuthServiceImpl(
 
         redisRepository.setRefreshTokenByEmail(email, refreshToken)
 
-        return UserLoginDto(findUser, accessToken, refreshToken)
+        return UserInfoDto(findUser, accessToken, refreshToken)
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
