@@ -11,6 +11,7 @@ import com.csbroker.apiserver.common.handler.OAuth2AuthenticationSuccessHandler
 import com.csbroker.apiserver.common.handler.TokenAccessDeniedHandler
 import com.csbroker.apiserver.repository.OAuth2AuthorizationRequestBasedOnCookieRepository
 import com.csbroker.apiserver.repository.RedisRepository
+import com.csbroker.apiserver.repository.UserRepository
 import com.csbroker.apiserver.service.CustomOAuth2UserService
 import com.csbroker.apiserver.service.CustomUserDetailsService
 import org.springframework.context.annotation.Bean
@@ -41,7 +42,8 @@ class SecurityConfig(
     private val userDetailsService: CustomUserDetailsService,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val redisRepository: RedisRepository,
-    private val tokenAccessDeniedHandler: TokenAccessDeniedHandler
+    private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,
+    private val userRepository: UserRepository
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -123,7 +125,8 @@ class SecurityConfig(
             appProperties,
             oAuth2AuthorizationRequestBasedOnCookieRepository(),
             authTokenProvider,
-            redisRepository
+            redisRepository,
+            userRepository
         )
     }
 
