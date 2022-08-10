@@ -192,6 +192,7 @@ class ProblemApiControllerTest {
         val tags = "os,ds"
         val page = 0
         val size = 10
+        val type = "long"
 
         val now = Date()
         val email = "test2@test.com"
@@ -205,7 +206,10 @@ class ProblemApiControllerTest {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$PROBLEM_ENDPOINT?query=$query&isSolved=$isSolved&tags=$tags&page=$page&size=$size")
+                .get(
+                    "$PROBLEM_ENDPOINT?query=$query" +
+                        "&isSolved=$isSolved&tags=$tags&page=$page&size=$size&type=$type"
+                )
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
                 .accept(MediaType.APPLICATION_JSON)
         )
@@ -228,7 +232,8 @@ class ProblemApiControllerTest {
                         parameterWithName("isSolved").description("풀이 여부"),
                         parameterWithName("tags").description("문제의 태그들"),
                         parameterWithName("page").description("페이지"),
-                        parameterWithName("size").description("가져올 문제의 개수")
+                        parameterWithName("size").description("가져올 문제의 개수"),
+                        parameterWithName("type").description("문제의 type ( long, short, multiple )")
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
