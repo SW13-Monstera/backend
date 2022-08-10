@@ -42,6 +42,9 @@ class User(
     @Column(name = "provider_type")
     var providerType: ProviderType,
 
+    @Column(name = "provider_id")
+    var providerId: String? = null,
+
     @Column(name = "profile_image", columnDefinition = "TEXT")
     var profileImageUrl: String? = null,
 
