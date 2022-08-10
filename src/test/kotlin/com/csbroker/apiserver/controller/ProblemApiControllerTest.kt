@@ -102,8 +102,7 @@ class ProblemApiControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = user,
-                standardAnswer = "test",
-                isGradable = true
+                standardAnswer = "test"
             )
 
             problemRepository.save(problem)
@@ -193,6 +192,7 @@ class ProblemApiControllerTest {
         val page = 0
         val size = 10
         val type = "long"
+        val isGradable = false
 
         val now = Date()
         val email = "test2@test.com"
@@ -208,7 +208,7 @@ class ProblemApiControllerTest {
             RestDocumentationRequestBuilders
                 .get(
                     "$PROBLEM_ENDPOINT?query=$query" +
-                        "&isSolved=$isSolved&tags=$tags&page=$page&size=$size&type=$type"
+                        "&isSolved=$isSolved&tags=$tags&page=$page&size=$size&type=$type&isGradable=$isGradable"
                 )
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
                 .accept(MediaType.APPLICATION_JSON)
@@ -233,7 +233,8 @@ class ProblemApiControllerTest {
                         parameterWithName("tags").description("문제의 태그들"),
                         parameterWithName("page").description("페이지"),
                         parameterWithName("size").description("가져올 문제의 개수"),
-                        parameterWithName("type").description("문제의 type ( long, short, multiple )")
+                        parameterWithName("type").description("문제의 type ( long, short, multiple )"),
+                        parameterWithName("isGradable").description("채점 가능 여부")
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
