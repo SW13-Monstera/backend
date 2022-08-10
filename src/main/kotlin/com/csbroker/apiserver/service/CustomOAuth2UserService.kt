@@ -41,8 +41,6 @@ class CustomOAuth2UserService(
 
         val attributes = user.attributes.toMutableMap()
 
-        println(attributes)
-
         if (providerType == ProviderType.GITHUB && attributes["email"] == null) {
             val emailResponseDto = githubClient.getUserEmail("Bearer $accessToken").first { it.primary }
             attributes["email"] = emailResponseDto.email
