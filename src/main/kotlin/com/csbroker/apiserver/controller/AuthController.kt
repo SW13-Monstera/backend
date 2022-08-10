@@ -46,14 +46,14 @@ class AuthController(
         response: HttpServletResponse,
         @RequestBody userLoginRequestDto: UserLoginRequestDto
     ): ApiResponse<UserInfoResponseDto> {
-        val userLoginDto = this.authService.loginUser(userLoginRequestDto)
+        val userInfoDto = this.authService.loginUser(userLoginRequestDto)
 
         val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
 
         deleteCookie(request, response, REFRESH_TOKEN)
-        addCookie(response, REFRESH_TOKEN, userLoginDto.refreshToken!!, cookieMaxAge)
+        addCookie(response, REFRESH_TOKEN, userInfoDto.refreshToken!!, cookieMaxAge)
 
-        return ApiResponse.success(UserInfoResponseDto(userLoginDto))
+        return ApiResponse.success(UserInfoResponseDto(userInfoDto))
     }
 
     @GetMapping("/refresh")

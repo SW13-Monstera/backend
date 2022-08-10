@@ -87,9 +87,9 @@ class AuthServiceImpl(
         val accessToken = getAccessToken(request)
             ?: throw IllegalArgumentException("Access Token이 존재하지 않습니다.")
 
-        val convertAuthToken = authTokenProvider.convertAuthToken(accessToken)
+        val convertAccessToken = authTokenProvider.convertAuthToken(accessToken)
 
-        val claims = convertAuthToken.expiredTokenClaims
+        val claims = convertAccessToken.expiredTokenClaims
             ?: throw IllegalArgumentException("Access Token이 만료되지 않았거나 올바르지 않습니다.")
 
         val email = claims.subject
