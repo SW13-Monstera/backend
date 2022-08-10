@@ -195,4 +195,46 @@ class AuthControllerTest {
                 )
             )
     }
+
+    @Test
+    @Order(4)
+    fun `Get userInfo v1 200 OK`() {
+        // given
+        // 로그인 가정
+        val now = Date()
+        val email = "test@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 259200000),
+            role = Role.ROLE_USER.code
+        )
+
+        // when
+        val result = mockMvc.perform(
+            get("$AUTH_ENDPOINT/info")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(containsString("id")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "auth/getUserInfo",
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("Access 토큰 ( JWT )")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("회원의 UUID"),
+                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
+                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
+                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
+                    )
+                )
+            )
+    }
 }

@@ -163,6 +163,31 @@ response를 살펴보면 set-cookie 헤더에서 refresh-token 이라는 이름�
 만약, 요청에 포함되어 전송된 refresh token의 유효기간이 3일 이상이라면 새로운 refresh token을 전송하지 않습니다.
 include::{snippets}/auth/refresh/response-headers.adoc[]
 
+==== 유저 정보 조회
+
+.description
+[source]
+----
+토큰을 이용한 유저 정보 조회를 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/auth/info
+----
+
+.Sample Request
+include::{snippets}/auth/getUserInfo/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/auth/getUserInfo/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+include::{snippets}/auth/getUserInfo/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/auth/getUserInfo/response-body.adoc[]
+include::{snippets}/auth/getUserInfo/response-fields.adoc[]
+
 === Problem API ( /api/v1/problems )
 
 ==== 문제 단건 조회
