@@ -19,9 +19,6 @@ class LongProblem(
     description: String,
     creator: User,
 
-    @Column(name = "is_gradable")
-    var isGradable: Boolean = false,
-
     @Column(name = "standard_answer", columnDefinition = "VARCHAR(300)")
     var standardAnswer: String,
 
@@ -30,7 +27,7 @@ class LongProblem(
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     var userAnswers: MutableList<UserAnswer> = mutableListOf()
-) : Problem(title = title, description = description, creator = creator, dtype = "long") {
+) : Problem(title = title, description = description, creator = creator, dtype = "long", isGradable = false) {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
     }

@@ -36,6 +36,9 @@ abstract class Problem(
     @Column(name = "is_active")
     var isActive: Boolean = true,
 
+    @Column(name = "is_gradable")
+    var isGradable: Boolean = true,
+
     @Column(name = "dtype", insertable = false, updatable = false)
     var dtype: String,
 

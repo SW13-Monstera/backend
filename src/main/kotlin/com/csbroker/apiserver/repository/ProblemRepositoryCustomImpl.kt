@@ -27,12 +27,17 @@ class ProblemRepositoryCustomImpl(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
                 this.solvedBy(problemSearchDto.solvedBy),
-                this.isType(problemSearchDto.type)
+                this.isType(problemSearchDto.type),
+                this.isGradable(problemSearchDto.isGradable)
             )
             .orderBy(problem.updatedAt.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
+    }
+
+    private fun isGradable(isGradable: Boolean?): BooleanExpression? {
+        return if (isGradable == null) null else problem.isGradable.eq(isGradable)
     }
 
     private fun isType(type: String): BooleanExpression? {
