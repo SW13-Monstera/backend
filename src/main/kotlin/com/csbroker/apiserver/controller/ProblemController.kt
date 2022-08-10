@@ -23,6 +23,7 @@ class ProblemController(
         @RequestParam("query", required = false, defaultValue = "") query: String,
         @RequestParam("isSolved", required = false, defaultValue = "false") isSolved: Boolean,
         @RequestParam("tags", required = false, defaultValue = "") tags: List<String>,
+        @RequestParam("type", required = false, defaultValue = "") type: String,
         pageable: Pageable
     ): ApiResponse<List<ProblemResponseDto>> {
         var solvedBy: String? = null
@@ -37,7 +38,7 @@ class ProblemController(
             }
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, query)
+        val searchDto = ProblemSearchDto(tags, solvedBy, query, type)
         val foundProblems = this.problemService.findProblems(searchDto, pageable)
 
         return ApiResponse.success(foundProblems)

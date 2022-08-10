@@ -26,12 +26,17 @@ class ProblemRepositoryCustomImpl(
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy)
+                this.solvedBy(problemSearchDto.solvedBy),
+                this.isType(problemSearchDto.type)
             )
             .orderBy(problem.updatedAt.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
+    }
+
+    private fun isType(type: String): BooleanExpression? {
+        return if (type.isBlank()) null else problem.dtype.eq(type)
     }
 
     private fun likeTitle(title: String): BooleanExpression? {
