@@ -88,7 +88,7 @@ class OAuth2AuthenticationSuccessHandler(
             Date(now.time + refreshTokenExpiry)
         )
 
-        redisRepository.setRefreshTokenByEmail(userInfo.getEmail(), refreshToken.token)
+        redisRepository.setRefreshTokenByEmail(findUser.email, refreshToken.token)
 
         val cookieMaxAge = refreshTokenExpiry / 1000
 
