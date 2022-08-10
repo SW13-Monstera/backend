@@ -30,7 +30,7 @@ class LongProblem(
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     var userAnswers: MutableList<UserAnswer> = mutableListOf()
-) : Problem(title = title, description = description, creator = creator) {
+) : Problem(title = title, description = description, creator = creator, dtype = "long") {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
     }

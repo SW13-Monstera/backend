@@ -36,6 +36,9 @@ abstract class Problem(
     @Column(name = "is_active")
     var isActive: Boolean = true,
 
+    @Column(name = "dtype", insertable = false, updatable = false)
+    var dtype: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val creator: User,
