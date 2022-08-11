@@ -9,7 +9,7 @@ class GithubOAuth2UserInfo(
     }
 
     override fun getName(): String {
-        return attributes["name"] as String
+        return attributes["login"] as String
     }
 
     override fun getEmail(): String {

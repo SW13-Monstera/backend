@@ -4,7 +4,6 @@ import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
-import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.common.util.getCookie
@@ -12,6 +11,7 @@ import com.csbroker.apiserver.repository.OAuth2AuthorizationRequestBasedOnCookie
 import com.csbroker.apiserver.repository.REDIRECT_URI_PARAM_COOKIE_NAME
 import com.csbroker.apiserver.repository.REFRESH_TOKEN
 import com.csbroker.apiserver.repository.RedisRepository
+import com.csbroker.apiserver.repository.UserRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
@@ -30,7 +30,8 @@ class OAuth2AuthenticationSuccessHandler(
     private val appProperties: AppProperties,
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository,
     private val tokenProvider: AuthTokenProvider,
-    private val redisRepository: RedisRepository
+    private val redisRepository: RedisRepository,
+    private val userRepository: UserRepository
 ) : SimpleUrlAuthenticationSuccessHandler() {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
@@ -68,26 +69,26 @@ class OAuth2AuthenticationSuccessHandler(
 
         val user = authentication.principal as OidcUser
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
-        val authorities = user.authorities
 
-        val roleType = if (this.hasAuthority(authorities, Role.ROLE_ADMIN.code)) Role.ROLE_ADMIN else Role.ROLE_USER
+        val findUser = this.userRepository.findUserByProviderId(userInfo.getId())
+            ?: throw IllegalArgumentException("")
 
         val now = Date()
         val tokenExpiry = appProperties.auth.tokenExpiry
         val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
 
         val accessToken = tokenProvider.createAuthToken(
-            userInfo.getEmail(),
+            findUser.email,
             Date(now.time + tokenExpiry),
-            roleType.code
+            findUser.role.code
         )
 
         val refreshToken = tokenProvider.createAuthToken(
-            userInfo.getEmail(),
+            findUser.email,
             Date(now.time + refreshTokenExpiry)
         )
 
-        redisRepository.setRefreshTokenByEmail(userInfo.getEmail(), refreshToken.token)
+        redisRepository.setRefreshTokenByEmail(findUser.email, refreshToken.token)
 
         val cookieMaxAge = refreshTokenExpiry / 1000
 

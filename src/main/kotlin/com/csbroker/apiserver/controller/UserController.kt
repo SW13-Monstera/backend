@@ -8,8 +8,8 @@ import com.csbroker.apiserver.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -41,7 +41,7 @@ class UserController(
         return ApiResponse.success(result)
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'BUSINESS')")
     fun updateUser(
         @LoginUser loginUser: User,

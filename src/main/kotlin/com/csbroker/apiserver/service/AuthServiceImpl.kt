@@ -2,6 +2,7 @@ package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.common.auth.AUTHORITIES_KEY
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
+import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.util.getAccessToken
@@ -56,6 +57,10 @@ class AuthServiceImpl(
 
         val findUser = userRepository.findByEmail(email)
             ?: throw IllegalArgumentException("존재하지 않는 이메일입니다. $email")
+
+        if (findUser.providerType != ProviderType.LOCAL) {
+            throw IllegalArgumentException("${findUser.providerType} 를 통해 가입한 계정입니다.")
+        }
 
         if (!passwordEncoder.matches(rawPassword, findUser.password)) {
             throw IllegalArgumentException("비밀번호가 일치하지 않습니다!")

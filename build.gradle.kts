@@ -40,6 +40,7 @@ repositories {
 
 val snippetsDir by extra { file("build/generated-snippets") }
 val querydslVersion = "5.0.0"
+extra["springCloudVersion"] = "2021.0.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -68,6 +69,13 @@ dependencies {
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
 }
 
 idea {

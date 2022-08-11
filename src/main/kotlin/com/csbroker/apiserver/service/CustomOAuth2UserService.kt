@@ -4,6 +4,7 @@ import com.csbroker.apiserver.common.auth.OAuth2UserInfo
 import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.auth.UserPrincipal
+import com.csbroker.apiserver.common.util.GithubClient
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
 import org.springframework.security.authentication.InternalAuthenticationServiceException
@@ -16,7 +17,8 @@ import java.util.Locale
 
 @Service
 class CustomOAuth2UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val githubClient: GithubClient
 ) : DefaultOAuth2UserService() {
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
         val user = super.loadUser(userRequest)
@@ -34,8 +36,18 @@ class CustomOAuth2UserService(
     private fun process(userRequest: OAuth2UserRequest, user: OAuth2User): OAuth2User {
         val providerType =
             ProviderType.valueOf(userRequest.clientRegistration.registrationId.uppercase(Locale.getDefault()))
-        val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
-        var savedUser = userRepository.findByEmail(userInfo.getEmail())
+
+        val accessToken = userRequest.accessToken.tokenValue
+
+        val attributes = user.attributes.toMutableMap()
+
+        if (providerType == ProviderType.GITHUB && attributes["email"] == null) {
+            val emailResponseDto = githubClient.getUserEmail("Bearer $accessToken").first { it.primary }
+            attributes["email"] = emailResponseDto.email
+        }
+
+        val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, attributes)
+        var savedUser = this.userRepository.findUserByProviderId(userInfo.getId())
 
         if (savedUser != null) {
             if (providerType != savedUser.providerType) {
@@ -47,7 +59,7 @@ class CustomOAuth2UserService(
             savedUser = this.createUser(userInfo, providerType)
         }
 
-        return UserPrincipal.create(savedUser, user.attributes)
+        return UserPrincipal.create(savedUser, attributes)
     }
 
     private fun createUser(userInfo: OAuth2UserInfo, providerType: ProviderType): User {
@@ -55,7 +67,8 @@ class CustomOAuth2UserService(
             email = userInfo.getEmail(),
             username = userInfo.getName(),
             providerType = providerType,
-            profileImageUrl = userInfo.getImageUrl()
+            profileImageUrl = userInfo.getImageUrl(),
+            providerId = userInfo.getId()
         )
 
         return userRepository.saveAndFlush(user)
