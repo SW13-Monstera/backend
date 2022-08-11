@@ -36,7 +36,8 @@ class LongProblem(
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description
         this.standardAnswer = upsertRequestDto.standardAnswer
-        this.isGradable = false
+        this.isGradable = upsertRequestDto.isGradable
+        this.isActive = upsertRequestDto.isActive
     }
 
     fun toLongProblemResponseDto(): LongProblemResponseDto {

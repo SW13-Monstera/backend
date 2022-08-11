@@ -9,7 +9,9 @@ data class MultipleChoiceProblemUpsertRequestDto(
     val description: String,
     val tags: MutableList<String>,
     val choices: MutableList<ChoiceData>,
-    val score: Double
+    val score: Double,
+    val isGradable: Boolean = true,
+    val isActive: Boolean = true
 ) {
     data class ChoiceData(
         val content: String,
