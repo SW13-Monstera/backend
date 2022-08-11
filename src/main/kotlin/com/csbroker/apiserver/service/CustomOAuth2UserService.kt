@@ -4,11 +4,12 @@ import com.csbroker.apiserver.common.auth.OAuth2UserInfo
 import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.auth.UserPrincipal
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.InternalServiceException
+import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
 import com.csbroker.apiserver.common.util.GithubClient
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
-import org.springframework.security.authentication.InternalAuthenticationServiceException
-import org.springframework.security.core.AuthenticationException
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -25,11 +26,10 @@ class CustomOAuth2UserService(
 
         try {
             return this.process(userRequest!!, user)
-        } catch (e: AuthenticationException) {
+        } catch (e: OAuthProviderMissMatchException) {
             throw e
         } catch (e: Exception) {
-            e.printStackTrace()
-            throw InternalAuthenticationServiceException(e.message)
+            throw InternalServiceException(ErrorCode.SERVER_ERROR, e.message.toString())
         }
     }
 
@@ -51,8 +51,8 @@ class CustomOAuth2UserService(
 
         if (savedUser != null) {
             if (providerType != savedUser.providerType) {
-                throw IllegalArgumentException(
-                    "This user signed up with ${savedUser.providerType} account not ${providerType.name}"
+                throw OAuthProviderMissMatchException(
+                    "${attributes["email"]} 유저는 ${savedUser.providerType} 로 가입하였습니다."
                 )
             }
         } else {

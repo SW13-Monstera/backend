@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.LoginUser
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.user.UserResponseDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
@@ -21,13 +22,12 @@ class UserController(
     private val userService: UserService
 ) {
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'BUSINESS')")
     fun getUser(@LoginUser loginUser: User, @PathVariable("id") id: UUID): ApiResponse<UserResponseDto> {
         val findUser = this.userService.findUserById(id)
-            ?: throw IllegalArgumentException("$id is not appropriate id")
+            ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
         if (findUser.email != loginUser.username) {
-            throw IllegalArgumentException("${loginUser.username} is not appropriate email")
+            throw EntityNotFoundException("${loginUser.username}을 가진 유저를 찾을 수 없습니다.")
         }
 
         return ApiResponse.success(findUser.toUserResponseDto())
@@ -49,13 +49,13 @@ class UserController(
         @RequestBody userUpdateRequestDto: UserUpdateRequestDto
     ): ApiResponse<UserResponseDto> {
         val findUser = this.userService.findUserById(id)
+            ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
-        if (findUser == null || findUser.email != loginUser.username) {
-            throw IllegalArgumentException("옳지 않은 권한 혹은 id입니다.")
+        if (findUser.email != loginUser.username) {
+            throw EntityNotFoundException("${loginUser.username}을 가진 유저를 찾을 수 없습니다.")
         }
 
         val user = this.userService.modifyUser(id, userUpdateRequestDto)
-            ?: throw IllegalArgumentException("문제가 생겨 업데이트를 하지 못하였습니다.")
 
         return ApiResponse.success(user.toUserResponseDto())
     }

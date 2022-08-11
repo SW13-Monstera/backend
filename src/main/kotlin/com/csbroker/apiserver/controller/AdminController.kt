@@ -1,6 +1,8 @@
 package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.LoginUser
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
@@ -155,9 +157,6 @@ class AdminController(
         @RequestBody userAnswers: UserAnswerBatchInsertDto
     ): ApiResponse<UpsertSuccessResponseDto> {
         val size = this.userAnswerService.createUserAnswers(userAnswers.userAnswers)
-        if (size != userAnswers.size) {
-            throw IllegalArgumentException("버그 발생!!!!")
-        }
         return ApiResponse.success(UpsertSuccessResponseDto(size = size))
     }
 
@@ -196,7 +195,10 @@ class AdminController(
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds
                 )
-            else -> throw IllegalArgumentException("존재하지 않는 uri ( $type ) 입니다. ")
+            else -> throw ConditionConflictException(
+                ErrorCode.CONDITION_NOT_FULFILLED,
+                "존재하지 않는 uri ( $type ) 입니다."
+            )
         }
         return ApiResponse.success(UpsertSuccessResponseDto(id = answerId))
     }

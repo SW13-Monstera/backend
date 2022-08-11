@@ -1,5 +1,8 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.ConditionConflictException
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
@@ -101,19 +104,19 @@ class ProblemServiceImpl(
 
     override fun findLongProblemById(id: Long): LongProblemResponseDto {
         val longProblem = this.longProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
         return longProblem.toLongProblemResponseDto()
     }
 
     override fun findShortProblemById(id: Long): ShortProblemResponseDto {
         val shortProblem = this.shortProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
         return shortProblem.toShortProblemResponseDto()
     }
 
     override fun findMultipleProblemById(id: Long): MultipleProblemResponseDto {
         val multipleChoiceProblem = this.multipleChoiceProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
         return multipleChoiceProblem.toMultipleChoiceProblemResponseDto()
     }
 
@@ -129,7 +132,8 @@ class ProblemServiceImpl(
 
     @Transactional
     override fun createLongProblem(createRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findUser = this.userRepository.findByEmail(email) ?: throw IllegalArgumentException("에러 발생")
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val longProblem = createRequestDto.toLongProblem(findUser)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
 
@@ -141,7 +145,8 @@ class ProblemServiceImpl(
 
     @Transactional
     override fun createShortProblem(createRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
-        val findUser = userRepository.findByEmail(email) ?: throw IllegalArgumentException("에러 발생")
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val shortProblem = createRequestDto.toShortProblem(findUser)
 
         this.setTags(shortProblem, createRequestDto.tags)
@@ -154,14 +159,16 @@ class ProblemServiceImpl(
         createRequestDto: MultipleChoiceProblemUpsertRequestDto,
         email: String
     ): Long {
-        val findUser = userRepository.findByEmail(email) ?: throw IllegalArgumentException("에러 발생")
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
         val multipleChoiceProblem = createRequestDto.toMultipleChoiceProblem(findUser)
         val choiceDataList = createRequestDto.getChoiceList(multipleChoiceProblem)
 
         this.setTags(multipleChoiceProblem, createRequestDto.tags)
 
         if (choiceDataList.count { it.isAnswer } == 0) {
-            throw IllegalArgumentException("답의 개수는 1개 이상이여야합니다.")
+            throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "답의 개수는 1개 이상이여야합니다.")
         }
 
         multipleChoiceProblem.addChoices(choiceDataList)
@@ -172,7 +179,7 @@ class ProblemServiceImpl(
     @Transactional
     override fun updateLongProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
         val findProblem = this.longProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("에러 발생")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         findProblem.gradingStandards.forEach {
             this.gradingStandardRepository.delete(it)
@@ -194,7 +201,7 @@ class ProblemServiceImpl(
     @Transactional
     override fun updateShortProblem(id: Long, updateRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
         val findProblem = this.shortProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("에러 발생")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
 
         this.updateTags(findProblem, updateRequestDto.tags)
         findProblem.updateFromDto(updateRequestDto)
@@ -209,11 +216,12 @@ class ProblemServiceImpl(
         email: String
     ): Long {
         val findProblem = this.multipleChoiceProblemRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("에러 발생")
+            ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
+
         val choiceDataList = updateRequestDto.getChoiceList(findProblem)
 
         if (choiceDataList.count { it.isAnswer } == 0) {
-            throw IllegalArgumentException("답의 개수는 1개 이상이여야합니다.")
+            throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "답의 개수는 1개 이상이여야합니다.")
         }
 
         findProblem.choicesList.forEach {
@@ -232,7 +240,7 @@ class ProblemServiceImpl(
         val tags = this.tagRepository.findTagsByNameIn(tagNames)
 
         if (tags.isEmpty()) {
-            throw IllegalArgumentException("에러 발생")
+            throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "태그의 개수는 1개 이상이여야합니다.")
         }
 
         val problemTags = tags.map {
