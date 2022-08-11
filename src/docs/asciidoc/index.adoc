@@ -227,7 +227,7 @@ include::{snippets}/problems/inquire/response-fields.adoc[]
 
 HTTP Method : GET
 End-Point   : /api/v1/problems
-Req Params  : query, tags, isSolved, page, size
+Req Params  : query, tags, isSolved, page, size, type, isGradable
 ----
 
 .Sample Request

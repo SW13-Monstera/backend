@@ -20,14 +20,16 @@ class ProblemController(
 ) {
     @GetMapping
     fun getAllProblemsByQuery(
-        @RequestParam("query", required = false, defaultValue = "") query: String,
-        @RequestParam("isSolved", required = false, defaultValue = "false") isSolved: Boolean,
-        @RequestParam("tags", required = false, defaultValue = "") tags: List<String>,
+        @RequestParam("query", required = false) query: String?,
+        @RequestParam("isSolved", required = false) isSolved: Boolean?,
+        @RequestParam("tags", required = false) tags: List<String>?,
+        @RequestParam("type", required = false) type: String?,
+        @RequestParam("isGradable", required = false) isGradable: Boolean?,
         pageable: Pageable
     ): ApiResponse<List<ProblemResponseDto>> {
         var solvedBy: String? = null
 
-        if (isSolved) {
+        if (isSolved != null && isSolved) {
             try {
                 val principal = SecurityContextHolder.getContext().authentication.principal
                     as org.springframework.security.core.userdetails.User
@@ -37,7 +39,7 @@ class ProblemController(
             }
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, query)
+        val searchDto = ProblemSearchDto(tags, solvedBy, query, type, isGradable)
         val foundProblems = this.problemService.findProblems(searchDto, pageable)
 
         return ApiResponse.success(foundProblems)

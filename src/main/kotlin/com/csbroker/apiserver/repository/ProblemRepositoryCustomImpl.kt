@@ -26,7 +26,9 @@ class ProblemRepositoryCustomImpl(
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy)
+                this.solvedBy(problemSearchDto.solvedBy),
+                this.isType(problemSearchDto.type),
+                this.isGradable(problemSearchDto.isGradable)
             )
             .orderBy(problem.updatedAt.desc())
             .offset(pageable.offset)
@@ -34,12 +36,20 @@ class ProblemRepositoryCustomImpl(
             .fetch()
     }
 
-    private fun likeTitle(title: String): BooleanExpression? {
-        return if (title.isBlank()) null else problem.title.containsIgnoreCase(title)
+    private fun isGradable(isGradable: Boolean?): BooleanExpression? {
+        return if (isGradable == null) null else problem.isGradable.eq(isGradable)
     }
 
-    private fun inTags(tags: List<String>): BooleanExpression? {
-        if (tags.isEmpty()) {
+    private fun isType(type: String?): BooleanExpression? {
+        return if (type == null || type.isBlank()) null else problem.dtype.eq(type)
+    }
+
+    private fun likeTitle(title: String?): BooleanExpression? {
+        return if (title == null || title.isBlank()) null else problem.title.containsIgnoreCase(title)
+    }
+
+    private fun inTags(tags: List<String>?): BooleanExpression? {
+        if (tags == null || tags.isEmpty()) {
             return null
         }
 
