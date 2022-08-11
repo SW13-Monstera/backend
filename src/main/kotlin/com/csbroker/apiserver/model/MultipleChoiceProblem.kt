@@ -42,6 +42,9 @@ class MultipleChoiceProblem(
     fun updateFromDto(upsertRequestDto: MultipleChoiceProblemUpsertRequestDto) {
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description
+        this.isGradable = upsertRequestDto.isGradable
+        this.isActive = upsertRequestDto.isActive
+        this.score = upsertRequestDto.score
     }
 
     fun toMultipleChoiceProblemResponseDto(): MultipleProblemResponseDto {
@@ -59,7 +62,9 @@ class MultipleChoiceProblem(
                     it.isAnswer
                 )
             },
-            this.score
+            this.score,
+            this.isActive,
+            this.isGradable
         )
     }
 

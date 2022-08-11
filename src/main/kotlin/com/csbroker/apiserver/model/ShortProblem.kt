@@ -26,6 +26,9 @@ class ShortProblem(
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description
         this.answer = upsertRequestDto.answer
+        this.isGradable = upsertRequestDto.isGradable
+        this.isActive = upsertRequestDto.isActive
+        this.score = upsertRequestDto.score
     }
 
     fun toShortProblemResponseDto(): ShortProblemResponseDto {
@@ -35,7 +38,9 @@ class ShortProblem(
             this.description,
             this.problemTags.map { it.tag.name },
             this.answer,
-            this.score
+            this.score,
+            this.isActive,
+            this.isGradable
         )
     }
 

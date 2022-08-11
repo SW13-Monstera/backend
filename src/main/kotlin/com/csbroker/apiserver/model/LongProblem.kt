@@ -36,7 +36,8 @@ class LongProblem(
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description
         this.standardAnswer = upsertRequestDto.standardAnswer
-        this.isGradable = false
+        this.isGradable = upsertRequestDto.isGradable
+        this.isActive = upsertRequestDto.isActive
     }
 
     fun toLongProblemResponseDto(): LongProblemResponseDto {
@@ -46,7 +47,9 @@ class LongProblem(
             this.description,
             this.standardAnswer,
             this.problemTags.map { it.tag.name },
-            this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) }
+            this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) },
+            this.isActive,
+            this.isGradable
         )
     }
 

@@ -8,7 +8,9 @@ data class ShortProblemUpsertRequestDto(
     val description: String,
     val tags: MutableList<String>,
     val answer: String,
-    val score: Double
+    val score: Double,
+    val isGradable: Boolean = true,
+    val isActive: Boolean = true
 ) {
     fun toShortProblem(creator: User): ShortProblem {
         return ShortProblem(
