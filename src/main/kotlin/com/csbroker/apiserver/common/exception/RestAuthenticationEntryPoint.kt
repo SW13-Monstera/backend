@@ -1,6 +1,8 @@
 package com.csbroker.apiserver.common.exception
 
+import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.util.log
+import net.minidev.json.JSONObject
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import javax.servlet.http.HttpServletRequest
@@ -12,11 +14,16 @@ class RestAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException
     ) {
-        authException.printStackTrace()
         log.info("Responding with unauthorized error. Message ${authException.message}")
-        response.sendError(
-            HttpServletResponse.SC_UNAUTHORIZED,
-            authException.localizedMessage
-        )
+        this.setResponse(response)
+    }
+
+    private fun setResponse(response: HttpServletResponse) {
+        response.contentType = "application/json;charset=UTF-8"
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        val responseJson = JSONObject()
+        responseJson["status"] = "fail"
+        responseJson["data"] = ErrorCode.UNAUTHORIZED.message
+        response.writer.print(responseJson)
     }
 }
