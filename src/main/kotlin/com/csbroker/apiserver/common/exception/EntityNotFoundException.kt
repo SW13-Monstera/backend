@@ -2,4 +2,4 @@ package com.csbroker.apiserver.common.exception
 
 import com.csbroker.apiserver.common.enums.ErrorCode
 
-class OAuthProviderMissMatchException(log: String) : BizException(ErrorCode.PROVIDER_MISS_MATCH, log)
+class EntityNotFoundException(log: String) : BizException(ErrorCode.NOT_FOUND_ENTITY, log)

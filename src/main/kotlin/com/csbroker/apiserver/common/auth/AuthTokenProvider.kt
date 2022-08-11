@@ -1,5 +1,7 @@
 package com.csbroker.apiserver.common.auth
 
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -32,8 +34,7 @@ class AuthTokenProvider(
 
             return UsernamePasswordAuthenticationToken(principal, authToken, authorities)
         } else {
-            throw IllegalArgumentException("올바르지 않은 Token입니다.")
-            TODO("Exception 구체화 필요")
+            throw UnAuthorizedException(ErrorCode.TOKEN_INVALID, "올바르지 않은 Token입니다.")
         }
     }
 }
