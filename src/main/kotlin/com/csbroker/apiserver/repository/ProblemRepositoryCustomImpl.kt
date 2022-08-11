@@ -40,16 +40,16 @@ class ProblemRepositoryCustomImpl(
         return if (isGradable == null) null else problem.isGradable.eq(isGradable)
     }
 
-    private fun isType(type: String): BooleanExpression? {
-        return if (type.isBlank()) null else problem.dtype.eq(type)
+    private fun isType(type: String?): BooleanExpression? {
+        return if (type == null || type.isBlank()) null else problem.dtype.eq(type)
     }
 
-    private fun likeTitle(title: String): BooleanExpression? {
-        return if (title.isBlank()) null else problem.title.containsIgnoreCase(title)
+    private fun likeTitle(title: String?): BooleanExpression? {
+        return if (title == null || title.isBlank()) null else problem.title.containsIgnoreCase(title)
     }
 
-    private fun inTags(tags: List<String>): BooleanExpression? {
-        if (tags.isEmpty()) {
+    private fun inTags(tags: List<String>?): BooleanExpression? {
+        if (tags == null || tags.isEmpty()) {
             return null
         }
 
