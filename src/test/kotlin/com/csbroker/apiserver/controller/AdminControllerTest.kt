@@ -208,7 +208,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )")
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 false )"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -357,7 +361,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )")
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -508,7 +516,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("answer").type(JsonFieldType.STRING)
                             .description("정답"),
                         PayloadDocumentation.fieldWithPath("score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수")
+                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 true )"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -566,7 +578,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("answer").type(JsonFieldType.STRING)
                             .description("문제 정답"),
                         PayloadDocumentation.fieldWithPath("score")
-                            .type(JsonFieldType.NUMBER).description("문제 점수")
+                            .type(JsonFieldType.NUMBER).description("문제 점수"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -685,7 +701,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("choices.[].isAnswer").type(JsonFieldType.BOOLEAN)
                             .description("선지 정답 여부"),
                         PayloadDocumentation.fieldWithPath("score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수")
+                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 true )"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -759,7 +779,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("choices.[].isAnswer").type(JsonFieldType.BOOLEAN)
                             .description("선지 정답 여부"),
                         PayloadDocumentation.fieldWithPath("score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수")
+                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
+                        PayloadDocumentation.fieldWithPath("isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
