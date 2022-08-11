@@ -469,7 +469,11 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("data.gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )")
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                        PayloadDocumentation.fieldWithPath("data.isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("data.isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     )
                 )
             )
@@ -642,6 +646,10 @@ class AdminControllerTest {
                             .description("문제 정답"),
                         PayloadDocumentation.fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 점수"),
+                        PayloadDocumentation.fieldWithPath("data.isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("data.isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     )
                 )
             )
@@ -861,6 +869,10 @@ class AdminControllerTest {
                             .type(JsonFieldType.BOOLEAN).description("선지 정답 여부"),
                         PayloadDocumentation.fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 점수"),
+                        PayloadDocumentation.fieldWithPath("data.isGradable")
+                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
+                        PayloadDocumentation.fieldWithPath("data.isActive")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     )
                 )
             )

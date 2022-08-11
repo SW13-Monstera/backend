@@ -38,7 +38,9 @@ class ShortProblem(
             this.description,
             this.problemTags.map { it.tag.name },
             this.answer,
-            this.score
+            this.score,
+            this.isActive,
+            this.isGradable
         )
     }
 

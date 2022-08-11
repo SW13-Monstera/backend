@@ -6,5 +6,7 @@ data class ShortProblemResponseDto(
     val description: String,
     val tags: List<String>,
     val answer: String,
-    val score: Double
+    val score: Double,
+    val isActive: Boolean,
+    val isGradable: Boolean
 )

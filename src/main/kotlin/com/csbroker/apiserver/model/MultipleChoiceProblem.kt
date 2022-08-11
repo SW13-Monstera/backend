@@ -62,7 +62,9 @@ class MultipleChoiceProblem(
                     it.isAnswer
                 )
             },
-            this.score
+            this.score,
+            this.isActive,
+            this.isGradable
         )
     }
 
