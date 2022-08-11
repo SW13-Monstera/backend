@@ -186,7 +186,7 @@ class UserControllerTest {
 
         // when
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.patch(urlTemplate)
+            MockMvcRequestBuilders.put(urlTemplate)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userUpdateRequestDtoString)
