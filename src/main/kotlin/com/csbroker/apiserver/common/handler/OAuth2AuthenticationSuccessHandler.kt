@@ -4,6 +4,9 @@ import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.common.util.getCookie
@@ -57,8 +60,9 @@ class OAuth2AuthenticationSuccessHandler(
         val redirectUri = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value
 
         if (redirectUri != null && !this.isAuthorizedRedirectUri(redirectUri)) {
-            throw IllegalArgumentException(
-                "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication"
+            throw UnAuthorizedException(
+                ErrorCode.INVALID_REDIRECT_URI,
+                "올바르지 않은 redirect uri ( $redirectUri ) 입니다."
             )
         }
 
@@ -71,7 +75,7 @@ class OAuth2AuthenticationSuccessHandler(
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
 
         val findUser = this.userRepository.findUserByProviderId(userInfo.getId())
-            ?: throw IllegalArgumentException("")
+            ?: throw EntityNotFoundException("유저를 찾을 수 없습니다. ( ${userInfo.getId()} )")
 
         val now = Date()
         val tokenExpiry = appProperties.auth.tokenExpiry

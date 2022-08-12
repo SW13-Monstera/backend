@@ -1,5 +1,7 @@
 package com.csbroker.apiserver.common.auth
 
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
@@ -36,7 +38,7 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         }
 
         if (authentication == null || principal is String) {
-            throw IllegalArgumentException("로그인이 필요합니다.?>")
+            throw UnAuthorizedException(ErrorCode.UN_AUTHENTICATE, "로그인이 필요합니다.")
         }
 
         return principal

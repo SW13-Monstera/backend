@@ -4,7 +4,12 @@ import com.csbroker.apiserver.common.auth.AUTHORITIES_KEY
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
+import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.common.exception.ConditionConflictException
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.common.util.getAccessToken
 import com.csbroker.apiserver.common.util.getCookie
 import com.csbroker.apiserver.dto.auth.TokenDto
@@ -34,7 +39,14 @@ class AuthServiceImpl(
         val findUser = userRepository.findByEmailOrUsername(userDto.email, userDto.username)
 
         if (findUser != null) {
-            throw IllegalArgumentException("User already exists with email or id")
+            if (findUser.email == userDto.email) {
+                throw ConditionConflictException(ErrorCode.EMAIL_DUPLICATED, "${userDto.email}은 중복 이메일입니다.")
+            } else {
+                throw ConditionConflictException(
+                    ErrorCode.USERNAME_DUPLICATED,
+                    "${userDto.username}은 중복 이메일입니다."
+                )
+            }
         }
 
         val user = userDto.toUser()
@@ -46,7 +58,7 @@ class AuthServiceImpl(
 
     override fun getUserInfo(email: String): UserInfoDto {
         val findUser = this.userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다. $email")
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         return UserInfoDto(findUser)
     }
@@ -56,14 +68,16 @@ class AuthServiceImpl(
         val rawPassword = userLoginRequestDto.password
 
         val findUser = userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다. $email")
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         if (findUser.providerType != ProviderType.LOCAL) {
-            throw IllegalArgumentException("${findUser.providerType} 를 통해 가입한 계정입니다.")
+            throw OAuthProviderMissMatchException(
+                "${findUser.email} 유저는 ${findUser.providerType} 를 통해 가입한 계정입니다."
+            )
         }
 
         if (!passwordEncoder.matches(rawPassword, findUser.password)) {
-            throw IllegalArgumentException("비밀번호가 일치하지 않습니다!")
+            throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
         }
 
         val role = findUser.role
@@ -90,29 +104,29 @@ class AuthServiceImpl(
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
         val accessToken = getAccessToken(request)
-            ?: throw IllegalArgumentException("Access Token이 존재하지 않습니다.")
+            ?: throw UnAuthorizedException(ErrorCode.ACCESS_TOKEN_NOT_EXIST, "Access Token이 존재하지 않습니다.")
 
         val convertAccessToken = authTokenProvider.convertAuthToken(accessToken)
 
         val claims = convertAccessToken.expiredTokenClaims
-            ?: throw IllegalArgumentException("Access Token이 만료되지 않았거나 올바르지 않습니다.")
+            ?: throw UnAuthorizedException(ErrorCode.TOKEN_NOT_EXPIRED, "Access Token이 만료되지 않았거나 올바르지 않습니다.")
 
         val email = claims.subject
         val role = Role.of(claims.get(AUTHORITIES_KEY, String::class.java))
 
         val refreshToken = getCookie(request, REFRESH_TOKEN)?.value
-            ?: throw IllegalArgumentException("Refresh Token이 존재하지 않습니다.")
+            ?: throw UnAuthorizedException(ErrorCode.REFRESH_TOKEN_NOT_EXIST, "Refresh Token이 존재하지 않습니다.")
 
         val convertRefreshToken = authTokenProvider.convertAuthToken(refreshToken)
 
         if (!convertRefreshToken.isValid) {
-            throw IllegalArgumentException("Refresh Token이 올바르지 않습니다.")
+            throw UnAuthorizedException(ErrorCode.TOKEN_INVALID, "올바르지 않은 토큰입니다. ( $refreshToken )")
         }
 
         val savedRefreshToken = redisRepository.getRefreshTokenByEmail(email)
 
         if (savedRefreshToken == null || savedRefreshToken != refreshToken) {
-            throw IllegalArgumentException("Refresh Token이 올바르지 않습니다.")
+            throw UnAuthorizedException(ErrorCode.TOKEN_MISS_MATCH, "Refresh Token이 올바르지 않습니다.")
         }
 
         val now = Date()

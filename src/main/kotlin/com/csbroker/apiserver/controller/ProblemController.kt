@@ -1,5 +1,8 @@
 package com.csbroker.apiserver.controller
 
+import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
@@ -35,7 +38,7 @@ class ProblemController(
                     as org.springframework.security.core.userdetails.User
                 solvedBy = principal.username
             } catch (e: Exception) {
-                throw IllegalArgumentException("사용자 권한이 없습니다.")
+                throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
             }
         }
 
@@ -48,7 +51,7 @@ class ProblemController(
     @GetMapping("/{id}")
     fun getProblemById(@PathVariable("id") id: Long): ApiResponse<ProblemDetailResponseDto> {
         val findProblem = this.problemService.findProblemById(id)
-            ?: throw IllegalArgumentException("$id is not appropriate id")
+            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
 
         return ApiResponse.success(findProblem)
     }

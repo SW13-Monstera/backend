@@ -1,6 +1,7 @@
 package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
@@ -24,9 +25,9 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User? {
+    override fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User {
         val findUser = this.userRepository.findByIdOrNull(uuid)
-            ?: return null
+            ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
 
         if (userUpdateRequestDto.password != null) {
             val encodedPassword = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
