@@ -47,7 +47,8 @@ class CustomOAuth2UserService(
         }
 
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, attributes)
-        var savedUser = this.userRepository.findUserByProviderId(userInfo.getId())
+        var savedUser = this.userRepository.findByEmail(userInfo.getEmail())
+            ?: this.userRepository.findUserByProviderId(userInfo.getId())
 
         if (savedUser != null) {
             if (providerType != savedUser.providerType) {
