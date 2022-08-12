@@ -48,11 +48,11 @@ class GlobalExceptionHandler {
         log.error(exception.message)
 
         if (exception is AccessDeniedException) {
-            return ResponseEntity.status(401)
-                .body(ApiResponse.fail("접근을 위한 권한이 없습니다."))
+            return ResponseEntity.status(ErrorCode.UNAUTHORIZED.code)
+                .body(ApiResponse.fail(ErrorCode.UNAUTHORIZED.message))
         }
 
-        return ResponseEntity.status(500)
-            .body(ApiResponse.error("현재 서버에서 문제가 생겼습니다."))
+        return ResponseEntity.status(ErrorCode.SERVER_ERROR.code)
+            .body(ApiResponse.error(ErrorCode.SERVER_ERROR.message))
     }
 }

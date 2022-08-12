@@ -38,7 +38,7 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         }
 
         if (authentication == null || principal is String) {
-            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
+            throw UnAuthorizedException(ErrorCode.UN_AUTHENTICATE, "로그인이 필요합니다.")
         }
 
         return principal
