@@ -1,4 +1,4 @@
-package com.csbroker.apiserver.controller
+package com.csbroker.apiserver.e2e
 
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.enums.Role

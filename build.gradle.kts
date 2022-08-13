@@ -20,6 +20,7 @@ plugins {
     kotlin("kapt") version "1.3.61" // QueryDsl
     idea // QueryDsl
     id("org.sonarqube") version "3.4.0.2513"
+    jacoco
 }
 
 sonarqube {
@@ -70,6 +71,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    testImplementation("io.mockk:mockk:1.9.3")
 }
 
 dependencyManagement {
@@ -97,8 +100,31 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        html.isEnabled = true
+        html.destination = file("$buildDir/reports/myReport.html")
+        csv.isEnabled = true
+        xml.isEnabled = true
+    }
+
+    var excludes = mutableListOf<String>()
+    excludes.add("com/csbroker/apiserver/model")
+    excludes.add("com/csbroker/apiserver/common")
+    excludes.add("com/csbroker/apiserver/dto")
+    excludes.add("com/csbroker/apiserver/ApiServerApplication.kt")
+
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude(excludes)
+        }
+    )
+}
+
 tasks.test {
     outputs.dir(snippetsDir)
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.register("copyYml", Copy::class) {
