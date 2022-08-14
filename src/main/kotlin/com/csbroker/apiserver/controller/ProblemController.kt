@@ -1,17 +1,23 @@
 package com.csbroker.apiserver.controller
 
+import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.ApiResponse
+import com.csbroker.apiserver.dto.problem.LongProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -54,5 +60,15 @@ class ProblemController(
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
 
         return ApiResponse.success(findProblem)
+    }
+
+    @PostMapping("/long/{id}/grade")
+    fun gradeLongProblem(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+        @RequestBody longProblemAnswerDto: LongProblemAnswerDto
+    ): ApiResponse<LongProblemGradingHistoryDto> {
+        val gradeHistory = this.problemService.gradingLongProblem(loginUser.username, id, longProblemAnswerDto.answer)
+        return ApiResponse.success(gradeHistory)
     }
 }

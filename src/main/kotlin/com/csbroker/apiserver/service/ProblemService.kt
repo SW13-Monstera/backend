@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
@@ -54,4 +55,10 @@ interface ProblemService {
         updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
         email: String
     ): Long
+
+    fun gradingLongProblem(
+        email: String,
+        problemId: Long,
+        answer: String
+    ): LongProblemGradingHistoryDto
 }
