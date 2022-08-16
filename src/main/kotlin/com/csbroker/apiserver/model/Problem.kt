@@ -1,6 +1,5 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -78,34 +77,8 @@ abstract class Problem(
             this.title,
             tags,
             avgScore,
-            totalSolved
-        )
-    }
-
-    fun toProblemDetailResponseDto(): ProblemDetailResponseDto {
-        val tags = this.problemTags.map {
-            it.tag
-        }.map {
-            it.name
-        }
-
-        val scoreList = this.gradingHistory.map {
-            it.score
-        }.toList().sorted()
-
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
-
-        return ProblemDetailResponseDto(
-            this.id!!,
-            this.title,
-            tags,
-            this.description,
-            if (scoreList.isEmpty()) null else scoreList.average(),
-            if (scoreList.isEmpty()) null else scoreList.first(),
-            if (scoreList.isEmpty()) null else scoreList.last(),
-            totalSolved
+            totalSolved,
+            this.dtype
         )
     }
 }
