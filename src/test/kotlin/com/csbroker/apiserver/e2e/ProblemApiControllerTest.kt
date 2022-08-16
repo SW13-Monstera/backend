@@ -379,7 +379,7 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.[].totalSolved").type(JsonFieldType.NUMBER)
                             .description("문제를 푼 사람 수"),
                         fieldWithPath("data.[].type").type(JsonFieldType.STRING)
-                            .description("문제의 타입 ( short, multiple, choice )"),
+                            .description("문제의 타입 ( short, multiple, choice )")
                     )
                 )
             )
