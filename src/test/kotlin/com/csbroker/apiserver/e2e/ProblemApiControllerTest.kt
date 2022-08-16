@@ -3,9 +3,12 @@ package com.csbroker.apiserver.e2e
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.model.Choice
 import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.LongProblem
+import com.csbroker.apiserver.model.MultipleChoiceProblem
 import com.csbroker.apiserver.model.ProblemTag
+import com.csbroker.apiserver.model.ShortProblem
 import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.GradingHistoryRepository
@@ -73,7 +76,11 @@ class ProblemApiControllerTest {
     @Autowired
     private lateinit var tokenProvider: AuthTokenProvider
 
-    private var problemId: Long? = null
+    private var longProblemId: Long? = null
+
+    private var multipleChoiceProblemId: Long? = null
+
+    private var shortProblemId: Long? = null
 
     private val PROBLEM_ENDPOINT = "/api/v1/problems"
 
@@ -108,7 +115,7 @@ class ProblemApiControllerTest {
             problemRepository.save(problem)
 
             if (i == 1) {
-                this.problemId = problem.id
+                this.longProblemId = problem.id
             }
 
             if (i <= 2) {
@@ -136,17 +143,48 @@ class ProblemApiControllerTest {
                 problemTagRepository.save(problemTagDs)
             }
         }
+
+        val shortProblem = ShortProblem(
+            title = "test11",
+            description = "test",
+            creator = user,
+            answer = "test",
+            score = 5.0
+        )
+
+        val multipleProblem = MultipleChoiceProblem(
+            title = "test12",
+            description = "test",
+            creator = user,
+            isMultiple = false,
+            score = 5.0
+        )
+
+        for (i in 1..3) {
+            val choice = Choice(
+                content = "choice$i",
+                isAnswer = i == 3,
+                multipleChoiceProblem = multipleProblem
+            )
+            multipleProblem.addChoice(choice)
+        }
+
+        problemRepository.save(shortProblem)
+        problemRepository.save(multipleProblem)
+
+        this.shortProblemId = shortProblem.id
+        this.multipleChoiceProblemId = multipleProblem.id
     }
 
     @Test
     @Order(1)
-    fun `problem 단건 조회`() {
+    fun `Long problem 단건 조회`() {
         // given
-        val urlString = "$PROBLEM_ENDPOINT/{problem_id}"
+        val urlString = "$PROBLEM_ENDPOINT/long/{problem_id}"
 
         // when
         val result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(urlString, problemId)
+            RestDocumentationRequestBuilders.get(urlString, longProblemId)
                 .accept(MediaType.APPLICATION_JSON)
         )
 
@@ -155,7 +193,7 @@ class ProblemApiControllerTest {
             .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
             .andDo(
                 document(
-                    "problems/inquire",
+                    "problems/long/inquire",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
@@ -184,6 +222,100 @@ class ProblemApiControllerTest {
 
     @Test
     @Order(2)
+    fun `Short problem 단건 조회`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/short/{problem_id}"
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(urlString, shortProblemId)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/short/inquire",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING)
+                            .description("문제 설명"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.topScore").type(JsonFieldType.NUMBER)
+                            .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
+                            .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
+                            .description("정답 글자수 ( 힌트 )")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(3)
+    fun `Multiple Choice problem 단건 조회`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/multiple/{problem_id}"
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(urlString, multipleChoiceProblemId)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/multiple/inquire",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING)
+                            .description("문제 설명"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.topScore").type(JsonFieldType.NUMBER)
+                            .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
+                            .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.choices.[].id").type(JsonFieldType.NUMBER)
+                            .description("선지 id"),
+                        fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
+                            .description("선지 내용")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(4)
     fun `problem 검색`() {
         // given
         val query = "test"
@@ -245,7 +377,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.[].avgScore").type(JsonFieldType.NUMBER)
                             .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
                         fieldWithPath("data.[].totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수")
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.[].type").type(JsonFieldType.STRING)
+                            .description("문제의 타입 ( short, multiple, choice )"),
                     )
                 )
             )
