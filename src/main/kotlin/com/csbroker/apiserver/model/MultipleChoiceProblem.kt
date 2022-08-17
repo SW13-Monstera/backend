@@ -106,8 +106,8 @@ class MultipleChoiceProblem(
             tags,
             this.description,
             if (scoreList.isEmpty()) null else scoreList.average(),
-            if (scoreList.isEmpty()) null else scoreList.first(),
             if (scoreList.isEmpty()) null else scoreList.last(),
+            if (scoreList.isEmpty()) null else scoreList.first(),
             totalSolved,
             this.choicesList.map { it.toChoiceResponseDto() }
         )
