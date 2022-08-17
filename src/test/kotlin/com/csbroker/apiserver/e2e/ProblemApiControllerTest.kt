@@ -196,7 +196,7 @@ class ProblemApiControllerTest {
 
         this.shortProblemId = shortProblem.id
         this.multipleChoiceProblemId = multipleProblem.id
-        this.choiceId = multipleProblem.choicesList.find { it.id == 3L }!!.id!!
+        this.choiceId = multipleProblem.choicesList.find { it.content == "choice3" }!!.id!!
         mockWebServer = MockWebServer()
         mockWebServer.start(8081)
     }
