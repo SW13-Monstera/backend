@@ -2,9 +2,15 @@ package com.csbroker.apiserver.e2e
 
 import com.csbroker.apiserver.common.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.dto.problem.GradingResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.ShortProblemAnswerDto
 import com.csbroker.apiserver.model.Choice
 import com.csbroker.apiserver.model.GradingHistory
+import com.csbroker.apiserver.model.GradingStandard
 import com.csbroker.apiserver.model.LongProblem
 import com.csbroker.apiserver.model.MultipleChoiceProblem
 import com.csbroker.apiserver.model.ProblemTag
@@ -17,6 +23,8 @@ import com.csbroker.apiserver.repository.ProblemTagRepository
 import com.csbroker.apiserver.repository.TagRepository
 import com.csbroker.apiserver.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order
@@ -76,11 +84,17 @@ class ProblemApiControllerTest {
     @Autowired
     private lateinit var tokenProvider: AuthTokenProvider
 
+    lateinit var mockWebServer: MockWebServer
+
     private var longProblemId: Long? = null
 
     private var multipleChoiceProblemId: Long? = null
 
     private var shortProblemId: Long? = null
+
+    private var keywordStandardId: Long? = null
+
+    private var choiceId: Long? = null
 
     private val PROBLEM_ENDPOINT = "/api/v1/problems"
 
@@ -112,10 +126,18 @@ class ProblemApiControllerTest {
                 standardAnswer = "test"
             )
 
+            val gradingStandard = GradingStandard(
+                content = "test",
+                score = 10.0,
+                type = GradingStandardType.KEYWORD,
+                problem = problem
+            )
+            problem.gradingStandards.add(gradingStandard)
             problemRepository.save(problem)
 
             if (i == 1) {
                 this.longProblemId = problem.id
+                this.keywordStandardId = gradingStandard.id
             }
 
             if (i <= 2) {
@@ -174,6 +196,9 @@ class ProblemApiControllerTest {
 
         this.shortProblemId = shortProblem.id
         this.multipleChoiceProblemId = multipleProblem.id
+        this.choiceId = multipleProblem.choicesList.find { it.id == 3L }!!.id!!
+        mockWebServer = MockWebServer()
+        mockWebServer.start(8081)
     }
 
     @Test
@@ -380,6 +405,266 @@ class ProblemApiControllerTest {
                             .description("문제를 푼 사람 수"),
                         fieldWithPath("data.[].type").type(JsonFieldType.STRING)
                             .description("문제의 타입 ( short, multiple, choice )")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(5)
+    fun `Long problem 채점`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/long/{problem_id}/grade"
+
+        val userAnswer = "정답의 키워드는 test를 포함해야합니다."
+        val userAnswerDto = LongProblemAnswerDto(userAnswer)
+        val userAnswerDtoString = objectMapper.writeValueAsString(userAnswerDto)
+
+        val now = Date()
+        val email = "test2@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 600000),
+            role = Role.ROLE_USER.code
+        )
+
+        val mockGradingResponse = GradingResponseDto(
+            longProblemId!!,
+            listOf(
+                GradingResponseDto.CorrectKeyword(
+                    keywordStandardId!!,
+                    "test",
+                    listOf(9, 13),
+                    "test"
+                )
+            )
+        )
+
+        val mockGradingResponseString = objectMapper.writeValueAsString(mockGradingResponse)
+
+        mockWebServer.enqueue(
+            MockResponse().setBody(mockGradingResponseString)
+                .addHeader("Content-Type", "application/json")
+        )
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(urlString, longProblemId!!)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userAnswerDtoString)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/long/grade",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional()
+                    ),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.gradingHistoryId").type(JsonFieldType.NUMBER).description("채점 결과 id"),
+                        fieldWithPath("data.problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING)
+                            .description("문제 설명"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.topScore").type(JsonFieldType.NUMBER)
+                            .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
+                            .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER)
+                            .description("채점 된 유저 답안의 점수"),
+                        fieldWithPath("data.userAnswer").type(JsonFieldType.STRING)
+                            .description("채점 된 유저 답안"),
+                        fieldWithPath("data.standardAnswer").type(JsonFieldType.STRING)
+                            .description("문제의 모범 답안"),
+                        fieldWithPath("data.keywords").type(JsonFieldType.ARRAY)
+                            .description("답안에 들어가야하는 키워드"),
+                        fieldWithPath("data.keywords.[].id").type(JsonFieldType.NUMBER)
+                            .description("키워드 id"),
+                        fieldWithPath("data.keywords.[].content").type(JsonFieldType.STRING)
+                            .description("키워드 내용"),
+                        fieldWithPath("data.keywords.[].isExist").type(JsonFieldType.BOOLEAN)
+                            .description("키워드가 유저답안에 존재하는지 유무"),
+                        fieldWithPath("data.keywords.[].idx").type(JsonFieldType.ARRAY)
+                            .description("키워드가 유저답안에 존재 할 때, 시작 index와 끝 index ( 존재하지 않으면 빈 배열 )")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(6)
+    fun `Short problem 채점`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/short/{problem_id}/grade"
+
+        val userAnswer = "test"
+        val userAnswerDto = ShortProblemAnswerDto(userAnswer)
+        val userAnswerDtoString = objectMapper.writeValueAsString(userAnswerDto)
+
+        val now = Date()
+        val email = "test2@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 600000),
+            role = Role.ROLE_USER.code
+        )
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(urlString, shortProblemId!!)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userAnswerDtoString)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/short/grade",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional()
+                    ),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.gradingHistoryId").type(JsonFieldType.NUMBER).description("채점 결과 id"),
+                        fieldWithPath("data.problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING)
+                            .description("문제 설명"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.topScore").type(JsonFieldType.NUMBER)
+                            .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
+                            .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER)
+                            .description("채점 된 유저 답안의 점수"),
+                        fieldWithPath("data.userAnswer").type(JsonFieldType.STRING)
+                            .description("채점 된 유저 답안"),
+                        fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
+                            .description("모범 답안의 글자 수"),
+                        fieldWithPath("data.isAnswer").type(JsonFieldType.BOOLEAN)
+                            .description("유저 답안의 정답 여부")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(7)
+    fun `Multiple choice problem 채점`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/multiple/{problem_id}/grade"
+
+        val answerIds = listOf(this.choiceId!!)
+        val userAnswerDto = MultipleChoiceProblemAnswerDto(answerIds)
+        val userAnswerDtoString = objectMapper.writeValueAsString(userAnswerDto)
+
+        val now = Date()
+        val email = "test2@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 600000),
+            role = Role.ROLE_USER.code
+        )
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(urlString, multipleChoiceProblemId!!)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userAnswerDtoString)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/multiple/grade",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional()
+                    ),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.gradingHistoryId").type(JsonFieldType.NUMBER).description("채점 결과 id"),
+                        fieldWithPath("data.problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING)
+                            .description("문제 설명"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.topScore").type(JsonFieldType.NUMBER)
+                            .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
+                            .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
+                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER)
+                            .description("채점 된 유저 답안의 점수"),
+                        fieldWithPath("data.userAnswerIds").type(JsonFieldType.ARRAY)
+                            .description("채점 된 유저 답안 ( 고른 선지의 id 배열 )"),
+                        fieldWithPath("data.isAnswer").type(JsonFieldType.BOOLEAN)
+                            .description("유저 답안의 정답 여부"),
+                        fieldWithPath("data.choices").type(JsonFieldType.ARRAY)
+                            .description("문제의 선지"),
+                        fieldWithPath("data.choices").type(JsonFieldType.ARRAY)
+                            .description("문제의 선지"),
+                        fieldWithPath("data.choices").type(JsonFieldType.ARRAY)
+                            .description("문제의 선지"),
+                        fieldWithPath("data.choices.[].id").type(JsonFieldType.NUMBER)
+                            .description("선지 id"),
+                        fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
+                            .description("선지 내용")
                     )
                 )
             )
