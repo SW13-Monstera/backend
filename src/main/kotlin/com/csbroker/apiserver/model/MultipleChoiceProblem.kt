@@ -105,9 +105,8 @@ class MultipleChoiceProblem(
             this.title,
             tags,
             this.description,
-            if (scoreList.isEmpty()) null else scoreList.average(),
-            if (scoreList.isEmpty()) null else scoreList.first(),
-            if (scoreList.isEmpty()) null else scoreList.last(),
+            scoreList.count { it == this.score },
+            scoreList.count { it != this.score },
             totalSolved,
             this.choicesList.map { it.toChoiceResponseDto() }
         )

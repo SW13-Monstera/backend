@@ -5,9 +5,8 @@ data class ShortProblemDetailResponseDto(
     val title: String,
     val tags: List<String>,
     val description: String,
-    val avgScore: Double?,
-    val topScore: Double?,
-    val bottomScore: Double?,
+    val correctCnt: Int,
+    val wrongCnt: Int,
     val totalSolved: Int,
     val answerLength: Int
 )
