@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
-@FeignClient(name = "ai", url = "http://monstera-ai-nlb-f2edf7b47553e838.elb.ap-northeast-2.amazonaws.com")
+@FeignClient(name = "ai", url = "\${feign.ai.url}")
 interface AIServerClient {
 
     @PostMapping("/keyword_predict")
