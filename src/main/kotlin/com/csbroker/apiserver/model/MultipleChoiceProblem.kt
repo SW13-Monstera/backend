@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
@@ -81,6 +82,34 @@ class MultipleChoiceProblem(
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
             answerCnt,
             this.isActive
+        )
+    }
+
+    fun toDetailResponseDto(): MultipleChoiceProblemDetailResponseDto {
+        val tags = this.problemTags.map {
+            it.tag
+        }.map {
+            it.name
+        }
+
+        val scoreList = this.gradingHistory.map {
+            it.score
+        }.toList().sorted()
+
+        val totalSolved = this.gradingHistory.map {
+            it.user.username
+        }.distinct().size
+
+        return MultipleChoiceProblemDetailResponseDto(
+            this.id!!,
+            this.title,
+            tags,
+            this.description,
+            if (scoreList.isEmpty()) null else scoreList.average(),
+            if (scoreList.isEmpty()) null else scoreList.first(),
+            if (scoreList.isEmpty()) null else scoreList.last(),
+            totalSolved,
+            this.choicesList.map { it.toChoiceResponseDto() }
         )
     }
 }

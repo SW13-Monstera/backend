@@ -2,14 +2,15 @@ package com.csbroker.apiserver.controller
 
 import com.csbroker.apiserver.common.auth.LoginUser
 import com.csbroker.apiserver.common.enums.ErrorCode
-import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.problem.LongProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
-import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
@@ -54,12 +55,25 @@ class ProblemController(
         return ApiResponse.success(foundProblems)
     }
 
-    @GetMapping("/{id}")
-    fun getProblemById(@PathVariable("id") id: Long): ApiResponse<ProblemDetailResponseDto> {
-        val findProblem = this.problemService.findProblemById(id)
-            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
+    @GetMapping("/long/{id}")
+    fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
+        val findProblemDetail = this.problemService.findLongProblemDetailById(id)
 
-        return ApiResponse.success(findProblem)
+        return ApiResponse.success(findProblemDetail)
+    }
+
+    @GetMapping("/multiple/{id}")
+    fun getMultipleProblemById(@PathVariable("id") id: Long): ApiResponse<MultipleChoiceProblemDetailResponseDto> {
+        val findProblemDetail = this.problemService.findMultipleChoiceProblemDetailById(id)
+
+        return ApiResponse.success(findProblemDetail)
+    }
+
+    @GetMapping("/short/{id}")
+    fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseDto> {
+        val findProblemDetail = this.problemService.findShortProblemDetailById(id)
+
+        return ApiResponse.success(findProblemDetail)
     }
 
     @PostMapping("/long/{id}/grade")

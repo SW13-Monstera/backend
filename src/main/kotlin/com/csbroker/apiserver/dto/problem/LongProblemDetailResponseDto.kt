@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.dto.problem
 
-data class ProblemDetailResponseDto(
+data class LongProblemDetailResponseDto(
     val id: Long,
     val title: String,
     val tags: List<String>,

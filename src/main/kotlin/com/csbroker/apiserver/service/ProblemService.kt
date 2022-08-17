@@ -1,15 +1,17 @@
 package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
+import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
@@ -38,7 +40,9 @@ interface ProblemService {
         pageable: Pageable
     ): MultipleChoiceProblemSearchResponseDto
 
-    fun findProblemById(id: Long): ProblemDetailResponseDto?
+    fun findLongProblemDetailById(id: Long): LongProblemDetailResponseDto
+    fun findShortProblemDetailById(id: Long): ShortProblemDetailResponseDto
+    fun findMultipleChoiceProblemDetailById(id: Long): MultipleChoiceProblemDetailResponseDto
     fun findLongProblemById(id: Long): LongProblemResponseDto
     fun findShortProblemById(id: Long): ShortProblemResponseDto
     fun findMultipleProblemById(id: Long): MultipleProblemResponseDto
