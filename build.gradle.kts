@@ -73,6 +73,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     testImplementation("io.mockk:mockk:1.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
 }
 
 dependencyManagement {
