@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
@@ -70,6 +71,32 @@ class LongProblem(
             if (promptScores.isEmpty()) null else promptScores.average(),
             this.userAnswers.size,
             this.isActive
+        )
+    }
+    fun toDetailResponseDto(): LongProblemDetailResponseDto {
+        val tags = this.problemTags.map {
+            it.tag
+        }.map {
+            it.name
+        }
+
+        val scoreList = this.gradingHistory.map {
+            it.score
+        }.toList().sorted()
+
+        val totalSolved = this.gradingHistory.map {
+            it.user.username
+        }.distinct().size
+
+        return LongProblemDetailResponseDto(
+            this.id!!,
+            this.title,
+            tags,
+            this.description,
+            if (scoreList.isEmpty()) null else scoreList.average(),
+            if (scoreList.isEmpty()) null else scoreList.first(),
+            if (scoreList.isEmpty()) null else scoreList.last(),
+            totalSolved
         )
     }
 }

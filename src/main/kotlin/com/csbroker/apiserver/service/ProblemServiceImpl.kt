@@ -3,15 +3,17 @@ package com.csbroker.apiserver.service
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
@@ -98,8 +100,19 @@ class ProblemServiceImpl(
         )
     }
 
-    override fun findProblemById(id: Long): ProblemDetailResponseDto? {
-        return problemRepository.findByIdOrNull(id)?.toProblemDetailResponseDto()
+    override fun findLongProblemDetailById(id: Long): LongProblemDetailResponseDto {
+        return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
+    }
+
+    override fun findShortProblemDetailById(id: Long): ShortProblemDetailResponseDto {
+        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
+    }
+
+    override fun findMultipleChoiceProblemDetailById(id: Long): MultipleChoiceProblemDetailResponseDto {
+        return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
     override fun findLongProblemById(id: Long): LongProblemResponseDto {

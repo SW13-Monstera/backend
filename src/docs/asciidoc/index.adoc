@@ -190,33 +190,89 @@ include::{snippets}/auth/getUserInfo/response-fields.adoc[]
 
 === Problem API ( /api/v1/problems )
 
-==== 문제 단건 조회
+==== 서술형 문제 단건 조회
 
 
 .description
 [source]
 ----
-문제 단건 조회를 위한 API입니다.
+서술형 문제 단건 조회를 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/v1/problems/{problem_id:Long}
+End-Point   : /api/v1/problems/long/{problem_id:Long}
 ----
 
 .Sample Request
-include::{snippets}/problems/inquire/http-request.adoc[]
+include::{snippets}/problems/long/inquire/http-request.adoc[]
 
 .Sample Response
-include::{snippets}/problems/inquire/http-response.adoc[]
+include::{snippets}/problems/long/inquire/http-response.adoc[]
 
 .Path parameters
-include::{snippets}/problems/inquire/path-parameters.adoc[]
+include::{snippets}/problems/long/inquire/path-parameters.adoc[]
 
-문제 단건 조회를 위한 path parameter의 설명입니다.
+서술형 문제 단건 조회를 위한 path parameter의 설명입니다.
 
 
 .Response Body
-include::{snippets}/problems/inquire/response-body.adoc[]
-include::{snippets}/problems/inquire/response-fields.adoc[]
+include::{snippets}/problems/long/inquire/response-body.adoc[]
+include::{snippets}/problems/long/inquire/response-fields.adoc[]
+
+==== 단답형 문제 단건 조회
+
+
+.description
+[source]
+----
+단답형 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/problems/short/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/problems/short/inquire/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/short/inquire/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/short/inquire/path-parameters.adoc[]
+
+객관식 문제 단건 조회를 위한 path parameter의 설명입니다.
+
+
+.Response Body
+include::{snippets}/problems/short/inquire/response-body.adoc[]
+include::{snippets}/problems/short/inquire/response-fields.adoc[]
+
+==== 객관식 문제 단건 조회
+
+
+.description
+[source]
+----
+객관식 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/problems/multiple/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/problems/multiple/inquire/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/multiple/inquire/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/multiple/inquire/path-parameters.adoc[]
+
+객관식 문제 단건 조회를 위한 path parameter의 설명입니다.
+
+
+.Response Body
+include::{snippets}/problems/multiple/inquire/response-body.adoc[]
+include::{snippets}/problems/multiple/inquire/response-fields.adoc[]
 
 ==== 문제 검색
 

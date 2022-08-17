@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.ChoiceResponseDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -27,4 +28,11 @@ class Choice(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
     var multipleChoiceProblem: MultipleChoiceProblem
-)
+) {
+    fun toChoiceResponseDto(): ChoiceResponseDto {
+        return ChoiceResponseDto(
+            this.id!!,
+            this.content
+        )
+    }
+}
