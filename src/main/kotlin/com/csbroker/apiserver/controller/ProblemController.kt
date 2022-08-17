@@ -5,12 +5,16 @@ import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.ApiResponse
 import com.csbroker.apiserver.dto.problem.LongProblemAnswerDto
-import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.ShortProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ShortProblemGradingHistoryDto
 import com.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
@@ -80,9 +84,29 @@ class ProblemController(
     fun gradeLongProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody longProblemAnswerDto: LongProblemAnswerDto
+        @RequestBody answerDto: LongProblemAnswerDto
     ): ApiResponse<LongProblemGradingHistoryDto> {
-        val gradeHistory = this.problemService.gradingLongProblem(loginUser.username, id, longProblemAnswerDto.answer)
+        val gradeHistory = this.problemService.gradingLongProblem(loginUser.username, id, answerDto.answer)
+        return ApiResponse.success(gradeHistory)
+    }
+
+    @PostMapping("/short/{id}/grade")
+    fun gradeShortProblem(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+        @RequestBody answerDto: ShortProblemAnswerDto
+    ): ApiResponse<ShortProblemGradingHistoryDto> {
+        val gradeHistory = this.problemService.gradingShortProblem(loginUser.username, id, answerDto.answer)
+        return ApiResponse.success(gradeHistory)
+    }
+
+    @PostMapping("/multiple/{id}/grade")
+    fun gradeMultipleChoiceProblem(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+        @RequestBody answerDto: MultipleChoiceProblemAnswerDto
+    ): ApiResponse<MultipleChoiceProblemGradingHistoryDto> {
+        val gradeHistory = this.problemService.gradingMultipleChoiceProblem(loginUser.username, id, answerDto.answerIds)
         return ApiResponse.success(gradeHistory)
     }
 }

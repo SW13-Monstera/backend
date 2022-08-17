@@ -7,18 +7,20 @@ import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.common.util.AIServerClient
 import com.csbroker.apiserver.dto.problem.GradingRequestDto
 import com.csbroker.apiserver.dto.problem.KeywordDto
-import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.ShortProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
@@ -299,6 +301,7 @@ class ProblemServiceImpl(
         problem.problemTags.addAll(problemTags)
     }
 
+    @Transactional
     override fun gradingLongProblem(
         email: String,
         problemId: Long,
@@ -356,6 +359,80 @@ class ProblemServiceImpl(
             userAnswer = answer,
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto
+        )
+    }
+
+    @Transactional
+    override fun gradingShortProblem(email: String, problemId: Long, answer: String): ShortProblemGradingHistoryDto {
+        // get entities
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        val findProblem = this.shortProblemRepository.findByIdOrNull(problemId)
+            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
+
+        // check score
+        val isAnswer = findProblem.answer == answer
+        val score = if (isAnswer) findProblem.score else 0.0
+
+        // create grading-history
+        val gradingHistory = GradingHistory(
+            problem = findProblem,
+            user = findUser,
+            userAnswer = answer,
+            score = score
+        )
+        this.gradingHistoryRepository.save(gradingHistory)
+
+        // create dto
+        return ShortProblemGradingHistoryDto.createDto(
+            gradingHistoryId = gradingHistory.gradingHistoryId!!,
+            problem = findProblem,
+            userAnswer = answer,
+            score = score,
+            isAnswer = isAnswer
+        )
+    }
+
+    @Transactional
+    override fun gradingMultipleChoiceProblem(
+        email: String,
+        problemId: Long,
+        answerIds: List<Long>
+    ): MultipleChoiceProblemGradingHistoryDto {
+        // get entities
+        val findUser = this.userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        val findProblem = this.multipleChoiceProblemRepository.findByIdOrNull(problemId)
+            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
+
+        // check score
+        val correctAnswer = findProblem.choicesList.filter {
+            it.isAnswer
+        }.map {
+            it.id!!
+        }
+
+        val isAnswer = correctAnswer.size == answerIds.size && correctAnswer.containsAll(answerIds)
+        val score = if (isAnswer) findProblem.score else 0.0
+
+        // create grading-history
+        val gradingHistory = GradingHistory(
+            problem = findProblem,
+            user = findUser,
+            userAnswer = answerIds.joinToString(","),
+            score = score
+        )
+        this.gradingHistoryRepository.save(gradingHistory)
+
+        // create dto
+        return MultipleChoiceProblemGradingHistoryDto.createDto(
+            gradingHistoryId = gradingHistory.gradingHistoryId!!,
+            problem = findProblem,
+            userAnswerIds = answerIds,
+            score = score,
+            isAnswer = isAnswer
         )
     }
 }
