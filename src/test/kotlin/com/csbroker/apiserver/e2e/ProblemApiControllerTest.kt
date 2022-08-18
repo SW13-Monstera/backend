@@ -52,6 +52,7 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParamete
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 
 @SpringBootTest
@@ -59,6 +60,7 @@ import java.util.Date
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class ProblemApiControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -404,6 +406,8 @@ class ProblemApiControllerTest {
                             .description("문제를 푼 사람 수"),
                         fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
                             .description("문제의 타입 ( short, multiple, choice )"),
+                        fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                            .description("현재 페이지 번호"),
                         fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
                             .description("검색된 페이지 수"),
                         fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
