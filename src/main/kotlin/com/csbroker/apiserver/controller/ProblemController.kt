@@ -10,12 +10,14 @@ import com.csbroker.apiserver.dto.problem.LongProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemGradingHistoryDto
+import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.ShortProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemGradingHistoryDto
 import com.csbroker.apiserver.service.ProblemService
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
@@ -40,7 +42,7 @@ class ProblemController(
         @RequestParam("type", required = false) type: String?,
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
         pageable: Pageable
-    ): ApiResponse<List<ProblemResponseDto>> {
+    ): ApiResponse<ProblemPageResponseDto> {
         var solvedBy: String? = null
 
         if (isSolved != null && isSolved) {

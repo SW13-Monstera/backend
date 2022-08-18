@@ -17,7 +17,7 @@ import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemGradingHistoryDto
@@ -61,9 +61,8 @@ class ProblemServiceImpl(
     private val aiServerClient: AIServerClient
 ) : ProblemService {
 
-    override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<ProblemResponseDto> {
-        return this.problemRepository.findProblemsByQuery(problemSearchDto, pageable)
-            .map(Problem::toProblemResponseDto)
+    override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
+        return ProblemPageResponseDto(this.problemRepository.findProblemsByQuery(problemSearchDto, pageable))
     }
 
     override fun findLongProblems(
