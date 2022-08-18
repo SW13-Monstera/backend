@@ -21,24 +21,6 @@ class ProblemRepositoryCustomImpl(
         problemSearchDto: ProblemSearchDto,
         pageable: Pageable
     ): Page<ProblemResponseDto> {
-//        val queryResult = queryFactory.selectFrom(problem)
-//            .distinct()
-//            .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
-//            .leftJoin(gradingHistory.user, user).fetchJoin()
-//            .leftJoin(problem.problemTags, problemTag).fetchJoin()
-//            .leftJoin(problemTag.tag, tag).fetchJoin()
-//            .groupBy()
-//            .where(
-//                this.likeTitle(problemSearchDto.query),
-//                this.inTags(problemSearchDto.tags),
-//                this.solvedBy(problemSearchDto.solvedBy),
-//                this.isType(problemSearchDto.type),
-//                this.isGradable(problemSearchDto.isGradable)
-//            )
-//            .orderBy(problem.updatedAt.desc())
-//            .offset(pageable.offset)
-//            .limit(pageable.pageSize.toLong())
-//            .fetchResults()
         val result = this.queryFactory.selectFrom(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
