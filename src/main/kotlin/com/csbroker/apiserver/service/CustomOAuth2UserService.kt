@@ -1,13 +1,13 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.common.auth.OAuth2UserInfo
-import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
-import com.csbroker.apiserver.common.auth.ProviderType
-import com.csbroker.apiserver.common.auth.UserPrincipal
+import com.csbroker.apiserver.auth.OAuth2UserInfo
+import com.csbroker.apiserver.auth.OAuth2UserInfoFactory
+import com.csbroker.apiserver.auth.ProviderType
+import com.csbroker.apiserver.auth.UserPrincipal
+import com.csbroker.apiserver.common.client.GithubClient
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.InternalServiceException
 import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
-import com.csbroker.apiserver.common.util.GithubClient
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService

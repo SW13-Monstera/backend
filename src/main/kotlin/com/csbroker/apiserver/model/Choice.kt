@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.problem.ChoiceResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.ChoiceResponseDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType

@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.dto.user.UserResponseDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto

@@ -1,9 +1,9 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemDetailResponseDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
-import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
@@ -48,8 +48,8 @@ class MultipleChoiceProblem(
         this.score = upsertRequestDto.score
     }
 
-    fun toMultipleChoiceProblemResponseDto(): MultipleProblemResponseDto {
-        return MultipleProblemResponseDto(
+    fun toMultipleChoiceProblemResponseDto(): MultipleChoiceProblemResponseDto {
+        return MultipleChoiceProblemResponseDto(
             this.id!!,
             this.title,
             this.description,

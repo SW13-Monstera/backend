@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.common.handler
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.OAuth2UserInfoFactory
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.OAuth2UserInfoFactory
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
@@ -10,11 +10,11 @@ import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
 import com.csbroker.apiserver.common.util.getCookie
-import com.csbroker.apiserver.repository.OAuth2AuthorizationRequestBasedOnCookieRepository
-import com.csbroker.apiserver.repository.REDIRECT_URI_PARAM_COOKIE_NAME
-import com.csbroker.apiserver.repository.REFRESH_TOKEN
-import com.csbroker.apiserver.repository.RedisRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
+import com.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
+import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
+import com.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken

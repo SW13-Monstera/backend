@@ -1,26 +1,26 @@
 package com.csbroker.apiserver.controller
 
-import com.csbroker.apiserver.common.auth.LoginUser
+import com.csbroker.apiserver.auth.LoginUser
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.ConditionConflictException
-import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
-import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
-import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
-import com.csbroker.apiserver.dto.UserAnswerResponseDto
-import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
-import com.csbroker.apiserver.dto.UserAnswerUpsertDto
-import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
-import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
+import com.csbroker.apiserver.dto.common.ApiResponse
+import com.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
-import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.user.AdminUserInfoResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import com.csbroker.apiserver.service.ProblemService
 import com.csbroker.apiserver.service.UserAnswerService
 import com.csbroker.apiserver.service.UserService
@@ -93,7 +93,7 @@ class AdminController(
     @GetMapping("/problems/multiple/{id}")
     fun getMultipleChoiceProblem(
         @PathVariable("id") id: Long
-    ): ApiResponse<MultipleProblemResponseDto> {
+    ): ApiResponse<MultipleChoiceProblemResponseDto> {
         val multipleProblemResponseDto = this.problemService.findMultipleProblemById(id)
         return ApiResponse.success(multipleProblemResponseDto)
     }

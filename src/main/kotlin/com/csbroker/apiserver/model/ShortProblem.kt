@@ -1,9 +1,9 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
-import com.csbroker.apiserver.dto.problem.ShortProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ShortProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity

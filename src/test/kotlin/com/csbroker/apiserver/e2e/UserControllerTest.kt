@@ -1,7 +1,7 @@
 package com.csbroker.apiserver.e2e
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User

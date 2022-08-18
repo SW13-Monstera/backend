@@ -1,9 +1,9 @@
 package com.csbroker.apiserver.model
 
-import com.csbroker.apiserver.dto.problem.LongProblemDetailResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemSearchResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column

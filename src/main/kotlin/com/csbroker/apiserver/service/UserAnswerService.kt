@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.dto.UserAnswerResponseDto
-import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
-import com.csbroker.apiserver.dto.UserAnswerUpsertDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import org.springframework.data.domain.Pageable
 
 interface UserAnswerService {
@@ -11,7 +11,6 @@ interface UserAnswerService {
     fun findUserAnswerById(id: Long): UserAnswerResponseDto
     fun labelUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long
     fun validateUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long
-
     fun findUserAnswersByQuery(
         id: Long?,
         assignedBy: String?,

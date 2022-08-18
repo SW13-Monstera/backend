@@ -1,16 +1,16 @@
 package com.csbroker.apiserver.controller
 
-import com.csbroker.apiserver.common.auth.LoginUser
+import com.csbroker.apiserver.auth.LoginUser
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.util.addCookie
 import com.csbroker.apiserver.common.util.deleteCookie
-import com.csbroker.apiserver.dto.ApiResponse
-import com.csbroker.apiserver.dto.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.auth.TokenResponseDto
+import com.csbroker.apiserver.dto.common.ApiResponse
+import com.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.user.UserInfoResponseDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
-import com.csbroker.apiserver.repository.REFRESH_TOKEN
+import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import com.csbroker.apiserver.service.AuthService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
