@@ -1,7 +1,7 @@
 package com.csbroker.apiserver.repository
 
+import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
-import com.csbroker.apiserver.model.Problem
 import com.csbroker.apiserver.model.QGradingHistory.gradingHistory
 import com.csbroker.apiserver.model.QProblem.problem
 import com.csbroker.apiserver.model.QProblemTag.problemTag
@@ -9,20 +9,25 @@ import com.csbroker.apiserver.model.QTag.tag
 import com.csbroker.apiserver.model.QUser.user
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 class ProblemRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory
 ) : ProblemRepositoryCustom {
 
-    override fun findProblemsByQuery(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<Problem> {
-        return queryFactory.selectFrom(problem)
+    override fun findProblemsByQuery(
+        problemSearchDto: ProblemSearchDto,
+        pageable: Pageable
+    ): Page<ProblemResponseDto> {
+        val result = this.queryFactory.selectFrom(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
             .leftJoin(gradingHistory.user, user).fetchJoin()
             .leftJoin(problem.problemTags, problemTag).fetchJoin()
             .leftJoin(problemTag.tag, tag).fetchJoin()
-            .groupBy()
+            .groupBy(problem.id)
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
@@ -34,6 +39,24 @@ class ProblemRepositoryCustomImpl(
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
+
+        val totalCnt = this.queryFactory.select(problem.id.count())
+            .from(problem)
+            .leftJoin(problem.gradingHistory, gradingHistory)
+            .leftJoin(gradingHistory.user, user)
+            .leftJoin(problem.problemTags, problemTag)
+            .leftJoin(problemTag.tag, tag)
+            .groupBy(problem.id)
+            .where(
+                this.likeTitle(problemSearchDto.query),
+                this.inTags(problemSearchDto.tags),
+                this.solvedBy(problemSearchDto.solvedBy),
+                this.isType(problemSearchDto.type),
+                this.isGradable(problemSearchDto.isGradable)
+            )
+            .fetch().size.toLong()
+
+        return PageImpl(result.map { it.toProblemResponseDto() }, pageable, totalCnt)
     }
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {

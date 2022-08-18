@@ -10,7 +10,7 @@ import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemGradingHistoryDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.MultipleProblemResponseDto
-import com.csbroker.apiserver.dto.problem.ProblemResponseDto
+import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.ShortProblemGradingHistoryDto
@@ -20,7 +20,7 @@ import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
 import org.springframework.data.domain.Pageable
 
 interface ProblemService {
-    fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<ProblemResponseDto>
+    fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto
     fun findLongProblems(
         id: Long?,
         title: String?,

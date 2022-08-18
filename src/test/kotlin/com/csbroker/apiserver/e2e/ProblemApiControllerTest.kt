@@ -52,6 +52,7 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParamete
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 
 @SpringBootTest
@@ -59,6 +60,7 @@ import java.util.Date
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class ProblemApiControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -393,16 +395,27 @@ class ProblemApiControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.[].id").type(JsonFieldType.NUMBER).description("문제 id"),
-                        fieldWithPath("data.[].title").type(JsonFieldType.STRING)
+                        fieldWithPath("data.contents").type(JsonFieldType.ARRAY).description("문제 데이터"),
+                        fieldWithPath("data.contents.[].id").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.contents.[].title").type(JsonFieldType.STRING)
                             .description("문제 제목"),
-                        fieldWithPath("data.[].tags").type(JsonFieldType.ARRAY).description("태그"),
-                        fieldWithPath("data.[].avgScore").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.contents.[].tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.contents.[].avgScore").type(JsonFieldType.NUMBER)
                             .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
-                        fieldWithPath("data.[].totalSolved").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.contents.[].totalSolved").type(JsonFieldType.NUMBER)
                             .description("문제를 푼 사람 수"),
-                        fieldWithPath("data.[].type").type(JsonFieldType.STRING)
-                            .description("문제의 타입 ( short, multiple, choice )")
+                        fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
+                            .description("문제의 타입 ( short, multiple, choice )"),
+                        fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                            .description("현재 페이지 번호"),
+                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                            .description("검색된 페이지 수"),
+                        fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                            .description("검색된 전체 데이터 수"),
+                        fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+                            .description("전체 데이터 중 현재 페이지의 데이터 수"),
+                        fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                            .description("요청한 데이터 수")
                     )
                 )
             )
