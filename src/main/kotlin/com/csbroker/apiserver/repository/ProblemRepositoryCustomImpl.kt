@@ -21,13 +21,31 @@ class ProblemRepositoryCustomImpl(
         problemSearchDto: ProblemSearchDto,
         pageable: Pageable
     ): Page<ProblemResponseDto> {
-        val queryResult = queryFactory.selectFrom(problem)
+//        val queryResult = queryFactory.selectFrom(problem)
+//            .distinct()
+//            .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
+//            .leftJoin(gradingHistory.user, user).fetchJoin()
+//            .leftJoin(problem.problemTags, problemTag).fetchJoin()
+//            .leftJoin(problemTag.tag, tag).fetchJoin()
+//            .groupBy()
+//            .where(
+//                this.likeTitle(problemSearchDto.query),
+//                this.inTags(problemSearchDto.tags),
+//                this.solvedBy(problemSearchDto.solvedBy),
+//                this.isType(problemSearchDto.type),
+//                this.isGradable(problemSearchDto.isGradable)
+//            )
+//            .orderBy(problem.updatedAt.desc())
+//            .offset(pageable.offset)
+//            .limit(pageable.pageSize.toLong())
+//            .fetchResults()
+        val result = this.queryFactory.selectFrom(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
             .leftJoin(gradingHistory.user, user).fetchJoin()
             .leftJoin(problem.problemTags, problemTag).fetchJoin()
             .leftJoin(problemTag.tag, tag).fetchJoin()
-            .groupBy()
+            .groupBy(problem.id)
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
@@ -38,9 +56,25 @@ class ProblemRepositoryCustomImpl(
             .orderBy(problem.updatedAt.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
-            .fetchResults()
+            .fetch()
 
-        return PageImpl(queryResult.results.map { it.toProblemResponseDto() }, pageable, queryResult.total)
+        val totalCnt = this.queryFactory.select(problem.id.count())
+            .from(problem)
+            .leftJoin(problem.gradingHistory, gradingHistory)
+            .leftJoin(gradingHistory.user, user)
+            .leftJoin(problem.problemTags, problemTag)
+            .leftJoin(problemTag.tag, tag)
+            .groupBy(problem.id)
+            .where(
+                this.likeTitle(problemSearchDto.query),
+                this.inTags(problemSearchDto.tags),
+                this.solvedBy(problemSearchDto.solvedBy),
+                this.isType(problemSearchDto.type),
+                this.isGradable(problemSearchDto.isGradable)
+            )
+            .fetch().size.toLong()
+
+        return PageImpl(result.map { it.toProblemResponseDto() }, pageable, totalCnt)
     }
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {
