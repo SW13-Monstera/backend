@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.common.auth.UserPrincipal
+import com.csbroker.apiserver.auth.UserPrincipal
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails

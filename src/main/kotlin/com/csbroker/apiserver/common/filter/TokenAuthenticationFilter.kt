@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.common.filter
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.util.getAccessToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter

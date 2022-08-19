@@ -4,7 +4,7 @@ import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.BizException
 import com.csbroker.apiserver.common.exception.InternalServiceException
 import com.csbroker.apiserver.common.util.log
-import com.csbroker.apiserver.dto.ApiResponse
+import com.csbroker.apiserver.dto.common.ApiResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpRequestMethodNotSupportedException

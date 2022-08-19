@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.common.config.security
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.config.properties.CorsProperties
 import com.csbroker.apiserver.common.enums.Role
@@ -9,9 +9,9 @@ import com.csbroker.apiserver.common.filter.TokenAuthenticationFilter
 import com.csbroker.apiserver.common.handler.OAuth2AuthenticationFailureHandler
 import com.csbroker.apiserver.common.handler.OAuth2AuthenticationSuccessHandler
 import com.csbroker.apiserver.common.handler.TokenAccessDeniedHandler
-import com.csbroker.apiserver.repository.OAuth2AuthorizationRequestBasedOnCookieRepository
-import com.csbroker.apiserver.repository.RedisRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.csbroker.apiserver.service.CustomOAuth2UserService
 import com.csbroker.apiserver.service.CustomUserDetailsService
 import org.springframework.context.annotation.Bean

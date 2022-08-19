@@ -3,9 +3,9 @@ package com.csbroker.apiserver.service
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
-import com.csbroker.apiserver.dto.UserAnswerResponseDto
-import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
-import com.csbroker.apiserver.dto.UserAnswerUpsertDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import com.csbroker.apiserver.model.UserAnswer
 import com.csbroker.apiserver.repository.GradingStandardRepository
 import com.csbroker.apiserver.repository.LongProblemRepository

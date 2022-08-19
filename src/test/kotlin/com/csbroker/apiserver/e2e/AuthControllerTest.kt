@@ -1,11 +1,11 @@
 package com.csbroker.apiserver.e2e
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
-import com.csbroker.apiserver.repository.REFRESH_TOKEN
-import com.csbroker.apiserver.repository.RedisRepository
+import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.Order

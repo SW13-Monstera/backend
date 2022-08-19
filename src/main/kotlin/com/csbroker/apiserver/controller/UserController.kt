@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.controller
 
-import com.csbroker.apiserver.common.auth.LoginUser
+import com.csbroker.apiserver.auth.LoginUser
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
-import com.csbroker.apiserver.dto.ApiResponse
+import com.csbroker.apiserver.dto.common.ApiResponse
 import com.csbroker.apiserver.dto.user.UserResponseDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.service.UserService

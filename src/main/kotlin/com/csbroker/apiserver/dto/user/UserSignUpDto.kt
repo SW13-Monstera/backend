@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.dto.user
 
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.model.User
 
 data class UserSignUpDto(

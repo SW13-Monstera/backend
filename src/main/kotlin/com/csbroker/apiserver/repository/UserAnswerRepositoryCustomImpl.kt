@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.repository
 
-import com.csbroker.apiserver.dto.UserAnswerUpsertDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
 import java.nio.ByteBuffer

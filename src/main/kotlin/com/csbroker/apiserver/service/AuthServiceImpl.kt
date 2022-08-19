@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.service
 
-import com.csbroker.apiserver.common.auth.AUTHORITIES_KEY
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AUTHORITIES_KEY
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
@@ -16,9 +16,9 @@ import com.csbroker.apiserver.dto.auth.TokenDto
 import com.csbroker.apiserver.dto.user.UserInfoDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
-import com.csbroker.apiserver.repository.REFRESH_TOKEN
-import com.csbroker.apiserver.repository.RedisRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
+import com.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.Date

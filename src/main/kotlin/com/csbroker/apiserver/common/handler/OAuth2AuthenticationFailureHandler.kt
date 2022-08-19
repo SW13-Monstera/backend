@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.common.handler
 
 import com.csbroker.apiserver.common.util.getCookie
-import com.csbroker.apiserver.repository.OAuth2AuthorizationRequestBasedOnCookieRepository
-import com.csbroker.apiserver.repository.REDIRECT_URI_PARAM_COOKIE_NAME
+import com.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
+import com.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.stereotype.Component

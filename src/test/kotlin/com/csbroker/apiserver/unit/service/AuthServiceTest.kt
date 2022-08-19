@@ -1,8 +1,8 @@
 package com.csbroker.apiserver.unit.service
 
-import com.csbroker.apiserver.common.auth.AUTHORITIES_KEY
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AUTHORITIES_KEY
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
@@ -13,7 +13,7 @@ import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.model.User
-import com.csbroker.apiserver.repository.RedisRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.csbroker.apiserver.repository.UserRepository
 import com.csbroker.apiserver.service.AuthServiceImpl
 import io.jsonwebtoken.Jwts

@@ -1,7 +1,7 @@
 package com.csbroker.apiserver.model
 
 import com.csbroker.apiserver.common.enums.GradingStandardType
-import com.csbroker.apiserver.dto.UserAnswerSearchResponseDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity

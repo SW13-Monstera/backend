@@ -1,13 +1,13 @@
 package com.csbroker.apiserver.e2e
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.enums.Role
-import com.csbroker.apiserver.dto.problem.GradingResponseDto
-import com.csbroker.apiserver.dto.problem.LongProblemAnswerDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemAnswerDto
-import com.csbroker.apiserver.dto.problem.ShortProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.grade.GradingResponseDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemAnswerDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemAnswerDto
 import com.csbroker.apiserver.model.Choice
 import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.GradingStandard

@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.common.config.security
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.AuthTokenProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

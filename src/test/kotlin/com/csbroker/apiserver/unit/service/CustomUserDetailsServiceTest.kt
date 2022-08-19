@@ -1,6 +1,6 @@
 package com.csbroker.apiserver.unit.service
 
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.model.User

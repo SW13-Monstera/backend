@@ -1,16 +1,16 @@
 package com.csbroker.apiserver.e2e
 
-import com.csbroker.apiserver.common.auth.AuthTokenProvider
-import com.csbroker.apiserver.common.auth.ProviderType
+import com.csbroker.apiserver.auth.AuthTokenProvider
+import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.enums.Role
-import com.csbroker.apiserver.dto.UserAnswerBatchInsertDto
-import com.csbroker.apiserver.dto.UserAnswerLabelRequestDto
-import com.csbroker.apiserver.dto.UserAnswerUpsertDto
-import com.csbroker.apiserver.dto.problem.LongProblemUpsertRequestDto
-import com.csbroker.apiserver.dto.problem.MultipleChoiceProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
+import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
+import com.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
-import com.csbroker.apiserver.dto.problem.ShortProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.LongProblemRepository
