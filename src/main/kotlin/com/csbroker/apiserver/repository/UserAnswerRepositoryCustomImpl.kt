@@ -1,8 +1,19 @@
 package com.csbroker.apiserver.repository
 
 import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
+import com.csbroker.apiserver.model.QLongProblem.longProblem
+import com.csbroker.apiserver.model.QProblem
+import com.csbroker.apiserver.model.QUser.user
+import com.csbroker.apiserver.model.QUserAnswer.userAnswer
+import com.csbroker.apiserver.model.UserAnswer
+import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.transaction.annotation.Transactional
 import java.nio.ByteBuffer
 import java.sql.PreparedStatement
 import java.sql.Timestamp
@@ -10,7 +21,8 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class UserAnswerRepositoryCustomImpl(
-    private val jdbcTemplate: JdbcTemplate
+    private val jdbcTemplate: JdbcTemplate,
+    private val queryFactory: JPAQueryFactory
 ) : UserAnswerRepositoryCustom {
     override fun batchInsert(userAnswers: List<UserAnswerUpsertDto>) {
         val sql = """
@@ -40,6 +52,86 @@ class UserAnswerRepositoryCustomImpl(
                 }
             }
         )
+    }
+
+    override fun findUserAnswersByQuery(
+        id: Long?,
+        assignedBy: String?,
+        validatedBy: String?,
+        problemTitle: String?,
+        answer: String?,
+        isLabeled: Boolean?,
+        isValidated: Boolean?,
+        pageable: Pageable
+    ): Page<UserAnswer> {
+        val result = this.queryFactory.selectFrom(userAnswer)
+            .distinct()
+            .leftJoin(userAnswer.assignedUser, user).fetchJoin()
+            .leftJoin(userAnswer.validatingUser, user).fetchJoin()
+            .leftJoin(userAnswer.problem, longProblem).fetchJoin()
+            .groupBy(userAnswer.id)
+            .where(
+                this.findById(id),
+                this.isAssignedBy(assignedBy),
+                this.isValidatedBy(validatedBy),
+                this.likeProblemTitle(problemTitle),
+                this.likeAnswer(answer),
+                this.userAnswerLabeled(isLabeled),
+                this.userAnswerValidated(isValidated)
+            )
+            .orderBy(userAnswer.updatedAt.desc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetch()
+
+        println(result)
+
+        val totalCnt = this.queryFactory.selectFrom(userAnswer)
+            .distinct()
+            .leftJoin(userAnswer.assignedUser, user)
+            .leftJoin(userAnswer.validatingUser, user)
+            .leftJoin(userAnswer.problem, longProblem)
+            .groupBy(userAnswer.id)
+            .where(
+                this.findById(id),
+                this.isAssignedBy(assignedBy),
+                this.isValidatedBy(validatedBy),
+                this.likeProblemTitle(problemTitle),
+                this.likeAnswer(answer),
+                this.userAnswerLabeled(isLabeled),
+                this.userAnswerValidated(isValidated)
+            )
+            .fetch().size.toLong()
+
+        return PageImpl(result, pageable, totalCnt)
+    }
+
+    private fun findById(id: Long?): BooleanExpression? {
+        return if(id == null) null else userAnswer.id.eq(id)
+    }
+
+    private fun isAssignedBy(assignedBy: String?) : BooleanExpression? {
+        return if(assignedBy == null) null else userAnswer.assignedUser.username.eq(assignedBy)
+    }
+
+    private fun isValidatedBy(validatedBy: String?) : BooleanExpression? {
+        return if(validatedBy == null) null else userAnswer.validatingUser.username.eq(validatedBy)
+    }
+
+    private fun likeProblemTitle(problemTitle: String?) : BooleanExpression? {
+        return if(problemTitle == null) null else longProblem.title.contains(problemTitle)
+    }
+
+    private fun likeAnswer(answer: String?): BooleanExpression? {
+        return if(answer == null) null else userAnswer.answer.contains(answer)
+    }
+
+    private fun userAnswerLabeled(isLabeled: Boolean?): BooleanExpression?  {
+        return if(isLabeled == null) null else userAnswer.isLabeled.eq(isLabeled)
+    }
+
+    private fun userAnswerValidated(isValidated: Boolean?): BooleanExpression?  {
+        return if(isValidated == null) null else userAnswer.isValidated.eq(isValidated)
     }
 
     private fun uuidAsByte(uuid: UUID?): ByteArray? {
