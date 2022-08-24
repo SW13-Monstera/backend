@@ -2,7 +2,6 @@ package com.csbroker.apiserver.repository
 
 import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import com.csbroker.apiserver.model.QLongProblem.longProblem
-import com.csbroker.apiserver.model.QProblem
 import com.csbroker.apiserver.model.QUser.user
 import com.csbroker.apiserver.model.QUserAnswer.userAnswer
 import com.csbroker.apiserver.model.UserAnswer
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.transaction.annotation.Transactional
 import java.nio.ByteBuffer
 import java.sql.PreparedStatement
 import java.sql.Timestamp
@@ -107,31 +105,31 @@ class UserAnswerRepositoryCustomImpl(
     }
 
     private fun findById(id: Long?): BooleanExpression? {
-        return if(id == null) null else userAnswer.id.eq(id)
+        return if (id == null) null else userAnswer.id.eq(id)
     }
 
-    private fun isAssignedBy(assignedBy: String?) : BooleanExpression? {
-        return if(assignedBy == null) null else userAnswer.assignedUser.username.eq(assignedBy)
+    private fun isAssignedBy(assignedBy: String?): BooleanExpression? {
+        return if (assignedBy == null) null else userAnswer.assignedUser.username.eq(assignedBy)
     }
 
-    private fun isValidatedBy(validatedBy: String?) : BooleanExpression? {
-        return if(validatedBy == null) null else userAnswer.validatingUser.username.eq(validatedBy)
+    private fun isValidatedBy(validatedBy: String?): BooleanExpression? {
+        return if (validatedBy == null) null else userAnswer.validatingUser.username.eq(validatedBy)
     }
 
-    private fun likeProblemTitle(problemTitle: String?) : BooleanExpression? {
-        return if(problemTitle == null) null else longProblem.title.contains(problemTitle)
+    private fun likeProblemTitle(problemTitle: String?): BooleanExpression? {
+        return if (problemTitle == null) null else longProblem.title.contains(problemTitle)
     }
 
     private fun likeAnswer(answer: String?): BooleanExpression? {
-        return if(answer == null) null else userAnswer.answer.contains(answer)
+        return if (answer == null) null else userAnswer.answer.contains(answer)
     }
 
-    private fun userAnswerLabeled(isLabeled: Boolean?): BooleanExpression?  {
-        return if(isLabeled == null) null else userAnswer.isLabeled.eq(isLabeled)
+    private fun userAnswerLabeled(isLabeled: Boolean?): BooleanExpression? {
+        return if (isLabeled == null) null else userAnswer.isLabeled.eq(isLabeled)
     }
 
-    private fun userAnswerValidated(isValidated: Boolean?): BooleanExpression?  {
-        return if(isValidated == null) null else userAnswer.isValidated.eq(isValidated)
+    private fun userAnswerValidated(isValidated: Boolean?): BooleanExpression? {
+        return if (isValidated == null) null else userAnswer.isValidated.eq(isValidated)
     }
 
     private fun uuidAsByte(uuid: UUID?): ByteArray? {
