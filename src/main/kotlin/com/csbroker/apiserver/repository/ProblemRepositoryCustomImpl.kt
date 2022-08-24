@@ -63,8 +63,8 @@ class ProblemRepositoryCustomImpl(
         return if (isGradable == null) null else problem.isGradable.eq(isGradable)
     }
 
-    private fun isType(type: String?): BooleanExpression? {
-        return if (type == null || type.isBlank()) null else problem.dtype.eq(type)
+    private fun isType(type: List<String>?): BooleanExpression? {
+        return if (type == null || type.isEmpty()) null else problem.dtype.`in`(type)
     }
 
     private fun likeTitle(title: String?): BooleanExpression? {

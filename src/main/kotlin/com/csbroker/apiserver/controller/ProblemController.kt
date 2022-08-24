@@ -37,7 +37,7 @@ class ProblemController(
         @RequestParam("query", required = false) query: String?,
         @RequestParam("isSolved", required = false) isSolved: Boolean?,
         @RequestParam("tags", required = false) tags: List<String>?,
-        @RequestParam("type", required = false) type: String?,
+        @RequestParam("type", required = false) type: List<String>?,
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
         pageable: Pageable
     ): ApiResponse<ProblemPageResponseDto> {
@@ -46,7 +46,7 @@ class ProblemController(
         if (isSolved != null && isSolved) {
             try {
                 val principal = SecurityContextHolder.getContext().authentication.principal
-                    as org.springframework.security.core.userdetails.User
+                    as User
                 solvedBy = principal.username
             } catch (e: Exception) {
                 throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
