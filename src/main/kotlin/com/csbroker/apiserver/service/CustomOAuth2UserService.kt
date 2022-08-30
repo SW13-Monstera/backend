@@ -10,6 +10,7 @@ import com.csbroker.apiserver.common.exception.InternalServiceException
 import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.UserRepository
+import io.sentry.Sentry
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -27,8 +28,10 @@ class CustomOAuth2UserService(
         try {
             return this.process(userRequest!!, user)
         } catch (e: OAuthProviderMissMatchException) {
+            Sentry.captureException(e)
             throw e
         } catch (e: Exception) {
+            Sentry.captureException(e)
             throw InternalServiceException(ErrorCode.SERVER_ERROR, e.message.toString())
         }
     }
