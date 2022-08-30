@@ -1,0 +1,39 @@
+1661321815219|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists choice CASCADE |     drop table if exists choice CASCADE 
+1661321815225|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_history CASCADE |     drop table if exists grading_history CASCADE 
+1661321815226|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_standard CASCADE |     drop table if exists grading_standard CASCADE 
+1661321815227|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists long_problem CASCADE |     drop table if exists long_problem CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists multiple_choice_problem CASCADE |     drop table if exists multiple_choice_problem CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem CASCADE |     drop table if exists problem CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem_tag CASCADE |     drop table if exists problem_tag CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists short_problem CASCADE |     drop table if exists short_problem CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists tag CASCADE |     drop table if exists tag CASCADE 
+1661321815228|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer CASCADE |     drop table if exists user_answer CASCADE 
+1661321815230|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer_grading_standard CASCADE |     drop table if exists user_answer_grading_standard CASCADE 
+1661321815230|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists users CASCADE |     drop table if exists users CASCADE 
+1661321815232|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop sequence if exists hibernate_sequence|     drop sequence if exists hibernate_sequence
+1661324582053|2|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists choice CASCADE |     drop table if exists choice CASCADE 
+1661324582059|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_history CASCADE |     drop table if exists grading_history CASCADE 
+1661324582061|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_standard CASCADE |     drop table if exists grading_standard CASCADE 
+1661324582063|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists long_problem CASCADE |     drop table if exists long_problem CASCADE 
+1661324582063|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists multiple_choice_problem CASCADE |     drop table if exists multiple_choice_problem CASCADE 
+1661324582063|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem CASCADE |     drop table if exists problem CASCADE 
+1661324582063|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem_tag CASCADE |     drop table if exists problem_tag CASCADE 
+1661324582063|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists short_problem CASCADE |     drop table if exists short_problem CASCADE 
+1661324582064|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists tag CASCADE |     drop table if exists tag CASCADE 
+1661324582064|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer CASCADE |     drop table if exists user_answer CASCADE 
+1661324582066|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer_grading_standard CASCADE |     drop table if exists user_answer_grading_standard CASCADE 
+1661324582067|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists users CASCADE |     drop table if exists users CASCADE 
+1661324582067|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop sequence if exists hibernate_sequence|     drop sequence if exists hibernate_sequence
+1661359037856|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists choice CASCADE |     drop table if exists choice CASCADE 
+1661359037860|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_history CASCADE |     drop table if exists grading_history CASCADE 
+1661359037860|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists grading_standard CASCADE |     drop table if exists grading_standard CASCADE 
+1661359037862|1|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists long_problem CASCADE |     drop table if exists long_problem CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists multiple_choice_problem CASCADE |     drop table if exists multiple_choice_problem CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem CASCADE |     drop table if exists problem CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists problem_tag CASCADE |     drop table if exists problem_tag CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists short_problem CASCADE |     drop table if exists short_problem CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists tag CASCADE |     drop table if exists tag CASCADE 
+1661359037862|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer CASCADE |     drop table if exists user_answer CASCADE 
+1661359037863|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists user_answer_grading_standard CASCADE |     drop table if exists user_answer_grading_standard CASCADE 
+1661359037863|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop table if exists users CASCADE |     drop table if exists users CASCADE 
+1661359037863|0|statement|connection 151|url jdbc:h2:mem:test-mvc|     drop sequence if exists hibernate_sequence|     drop sequence if exists hibernate_sequence
