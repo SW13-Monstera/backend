@@ -285,7 +285,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
                             .description("문제를 푼 사람 수"),
                         fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
-                            .description("정답 글자수 ( 힌트 )")
+                            .description("정답 글자수 ( 힌트 )"),
+                        fieldWithPath("data.isEnglish").type(JsonFieldType.BOOLEAN)
+                            .description("정답 언어 ( 영어면 true, 한국어면 false )")
                     )
                 )
             )
