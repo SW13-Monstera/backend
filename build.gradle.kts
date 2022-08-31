@@ -75,6 +75,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.9.3")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+
+    implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
 }
 
 dependencyManagement {

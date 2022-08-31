@@ -8,6 +8,7 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.SignatureException
+import io.sentry.Sentry
 import java.security.Key
 import java.util.Date
 
@@ -34,16 +35,22 @@ class AuthToken(
                     .parseClaimsJws(this.token)
                     .body
             } catch (e: SecurityException) {
+                Sentry.captureException(e)
                 log.error("Invalid JWT signature.")
             } catch (e: MalformedJwtException) {
+                Sentry.captureException(e)
                 log.error("Invalid Jwt token.")
             } catch (e: ExpiredJwtException) {
+                Sentry.captureException(e)
                 log.error("Expired JWT token.")
             } catch (e: UnsupportedJwtException) {
+                Sentry.captureException(e)
                 log.error("Unsupported JWT token.")
             } catch (e: java.lang.IllegalArgumentException) {
+                Sentry.captureException(e)
                 log.error("Jwt token compact of handler are invalid.")
             } catch (e: SignatureException) {
+                Sentry.captureException(e)
                 log.error("Jwt signature does not match.")
             }
             return null
@@ -61,14 +68,19 @@ class AuthToken(
                 log.info("Expired JWT token.")
                 return e.claims
             } catch (e: SecurityException) {
+                Sentry.captureException(e)
                 log.error("Invalid JWT signature.")
             } catch (e: MalformedJwtException) {
+                Sentry.captureException(e)
                 log.error("Invalid Jwt token.")
             } catch (e: UnsupportedJwtException) {
+                Sentry.captureException(e)
                 log.error("Unsupported JWT token.")
             } catch (e: java.lang.IllegalArgumentException) {
+                Sentry.captureException(e)
                 log.error("Jwt token compact of handler are invalid.")
             } catch (e: SignatureException) {
+                Sentry.captureException(e)
                 log.error("Jwt signature does not match.")
             }
             return null
