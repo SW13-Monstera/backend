@@ -90,7 +90,7 @@ class ShortProblem(
     }
 
     private fun isEnglish(): Boolean {
-        for (c in this.answer) {
+        for (c in this.answer.replace("\\s".toRegex(), "")) {
             if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
                 return false
             }
