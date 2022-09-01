@@ -75,7 +75,12 @@ class UserControllerTest {
             email = "test-admin@test.com",
             username = "test-admin",
             role = Role.ROLE_ADMIN,
-            providerType = ProviderType.LOCAL
+            providerType = ProviderType.LOCAL,
+            major = "컴퓨터공학",
+            job = "백엔드 개발자",
+            tech = "Spring, Docker, Kotlin",
+            githubUrl = "https://github.com/kshired",
+            linkedinUrl = "https://www.linkedin.com/in/seongil-kim-40773b23b/"
         )
 
         userRepository.save(admin)
@@ -121,7 +126,17 @@ class UserControllerTest {
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
+                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
+                        fieldWithPath("data.major")
+                            .type(JsonFieldType.STRING).description("전공").optional(),
+                        fieldWithPath("data.job")
+                            .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.techs")
+                            .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.githubUrl")
+                            .type(JsonFieldType.STRING).description("Github url").optional(),
+                        fieldWithPath("data.linkedinUrl")
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
                     )
                 )
             )
@@ -160,7 +175,17 @@ class UserControllerTest {
                         fieldWithPath("data.[].id").type(JsonFieldType.STRING).description("UUID"),
                         fieldWithPath("data.[].email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.[].username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("data.[].role").type(JsonFieldType.STRING).description("권한")
+                        fieldWithPath("data.[].role").type(JsonFieldType.STRING).description("권한"),
+                        fieldWithPath("data.[].major")
+                            .type(JsonFieldType.STRING).description("전공").optional(),
+                        fieldWithPath("data.[].job")
+                            .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.[].techs")
+                            .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.[].githubUrl")
+                            .type(JsonFieldType.STRING).description("Github url").optional(),
+                        fieldWithPath("data.[].linkedinUrl")
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
                     )
                 )
             )
@@ -179,7 +204,12 @@ class UserControllerTest {
         val userUpdateRequestDto = UserUpdateRequestDto(
             username = "test-admin-update",
             profileImageUrl = "https://test.com/test.png",
-            password = "changePassword123!"
+            password = "changePassword123!",
+            major = "환경공학",
+            job = "프론트엔드 개발자",
+            techs = listOf("react", "typescript"),
+            githubUrl = "https://github.com/Kim-Hyunjo",
+            linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211"
         )
 
         val userUpdateRequestDtoString = objectMapper.writeValueAsString(userUpdateRequestDto)
@@ -211,14 +241,34 @@ class UserControllerTest {
                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
                             .description("수정할 프로필 이미지 url ( 필수 X )").optional(),
                         fieldWithPath("password").type(JsonFieldType.STRING)
-                            .description("수정할 비밀번호 ( 필수 X )").optional()
+                            .description("수정할 비밀번호 ( 필수 X )").optional(),
+                        fieldWithPath("major").type(JsonFieldType.STRING)
+                            .description("수정할 전공 ( 필수 X )").optional(),
+                        fieldWithPath("job").type(JsonFieldType.STRING)
+                            .description("수정할 직업 ( 필수 X )").optional(),
+                        fieldWithPath("techs").type(JsonFieldType.ARRAY)
+                            .description("수정할 사용 기술 ( 필수 X )").optional(),
+                        fieldWithPath("githubUrl").type(JsonFieldType.STRING)
+                            .description("수정할 github url ( 필수 X )").optional(),
+                        fieldWithPath("linkedinUrl").type(JsonFieldType.STRING)
+                            .description("수정할 linkedin url ( 필수 X )").optional()
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
+                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
+                        fieldWithPath("data.major")
+                            .type(JsonFieldType.STRING).description("전공").optional(),
+                        fieldWithPath("data.job")
+                            .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.techs")
+                            .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.githubUrl")
+                            .type(JsonFieldType.STRING).description("Github url").optional(),
+                        fieldWithPath("data.linkedinUrl")
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
                     )
                 )
             )
