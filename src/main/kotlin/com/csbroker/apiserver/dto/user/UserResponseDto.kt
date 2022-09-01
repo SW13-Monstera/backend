@@ -7,5 +7,8 @@ data class UserResponseDto(
     val id: UUID,
     val email: String,
     val username: String,
-    val role: Role
+    val role: Role,
+    val major: String?,
+    val job: String?,
+    val techs: List<String>
 )
