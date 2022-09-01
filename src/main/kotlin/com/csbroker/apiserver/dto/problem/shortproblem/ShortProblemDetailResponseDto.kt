@@ -8,5 +8,6 @@ data class ShortProblemDetailResponseDto(
     val correctCnt: Int,
     val wrongCnt: Int,
     val totalSolved: Int,
-    val answerLength: Int
+    val answerLength: Int,
+    val isEnglish: Boolean
 )

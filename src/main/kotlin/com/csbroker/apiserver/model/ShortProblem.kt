@@ -84,7 +84,17 @@ class ShortProblem(
             scoreList.count { it == this.score },
             scoreList.count { it != this.score },
             totalSolved,
-            this.answer.length
+            this.answer.length,
+            this.isEnglish()
         )
+    }
+
+    private fun isEnglish(): Boolean {
+        for (c in this.answer.replace("\\s".toRegex(), "")) {
+            if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
+                return false
+            }
+        }
+        return true
     }
 }
