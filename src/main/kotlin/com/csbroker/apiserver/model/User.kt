@@ -91,7 +91,9 @@ class User(
             role = this.role,
             job = this.job,
             techs = this.tech?.split(", ") ?: emptyList(),
-            major = this.major
+            major = this.major,
+            githubUrl = this.githubUrl,
+            linkedinUrl = this.linkedinUrl
         )
     }
 

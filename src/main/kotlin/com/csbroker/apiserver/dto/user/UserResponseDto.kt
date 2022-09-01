@@ -10,5 +10,7 @@ data class UserResponseDto(
     val role: Role,
     val major: String?,
     val job: String?,
-    val techs: List<String>
+    val techs: List<String>,
+    var githubUrl: String?,
+    var linkedinUrl: String?
 )
