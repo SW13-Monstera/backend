@@ -63,6 +63,9 @@ class User(
     @Column(name = "linkedin_url")
     var linkedinUrl: String? = null,
 
+    @Column(name = "is_deleted", columnDefinition = "boolean default 0")
+    var isDeleted: Boolean = false,
+
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     val problems: MutableList<Problem> = mutableListOf(),
 
@@ -70,7 +73,7 @@ class User(
     val assignedAnswers: MutableList<UserAnswer> = mutableListOf(),
 
     @OneToMany(mappedBy = "validatingUser", fetch = FetchType.LAZY)
-    val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf(),
+    val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf()
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
         this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl
