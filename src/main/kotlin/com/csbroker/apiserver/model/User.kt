@@ -48,6 +48,21 @@ class User(
     @Column(name = "profile_image", columnDefinition = "TEXT")
     var profileImageUrl: String? = null,
 
+    @Column(name = "major")
+    var major: String? = null,
+
+    @Column(name = "job")
+    var job: String? = null,
+
+    @Column(name = "tech")
+    var tech: String? = null,
+
+    @Column(name = "github_url")
+    var githubUrl: String? = null,
+
+    @Column(name = "linkedin_url")
+    var linkedinUrl: String? = null,
+
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     val problems: MutableList<Problem> = mutableListOf(),
 
@@ -61,6 +76,11 @@ class User(
         this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl
         this.username = userUpdateRequestDto.username ?: this.username
         this.password = userUpdateRequestDto.password ?: this.password
+        this.major = userUpdateRequestDto.major ?: this.major
+        this.job = userUpdateRequestDto.job ?: this.job
+        this.tech = userUpdateRequestDto.techs?.joinToString() ?: this.tech
+        this.githubUrl = userUpdateRequestDto.githubUrl ?: this.githubUrl
+        this.linkedinUrl = userUpdateRequestDto.linkedinUrl ?: this.linkedinUrl
     }
 
     fun toUserResponseDto(): UserResponseDto {
@@ -68,7 +88,12 @@ class User(
             id = this.id!!,
             email = this.email,
             username = this.username,
-            role = this.role
+            role = this.role,
+            job = this.job,
+            techs = this.tech?.split(", ") ?: emptyList(),
+            major = this.major,
+            githubUrl = this.githubUrl,
+            linkedinUrl = this.linkedinUrl
         )
     }
 
