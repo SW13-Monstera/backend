@@ -14,4 +14,6 @@ interface UserService {
     fun findUsers(): List<User>
 
     fun findAdminUsers(): List<User>
+
+    fun deleteUser(email: String, id: UUID): Boolean
 }

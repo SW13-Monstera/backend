@@ -70,13 +70,13 @@ class UserServiceTest {
     @Test
     fun `유저 정보 ID 조회 성공 테스트`() {
         // given
-        every { userRepository.findByIdOrNull(user.id) } returns user
+        every { userRepository.findByIdOrNull(user.id!!) } returns user
 
         // when
         val userInfo = userService.findUserById(user.id!!)
 
         // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(user.id) }
+        verify(exactly = 1) { userRepository.findByIdOrNull(user.id!!) }
         Assertions.assertThat(userInfo).isNotNull
         Assertions.assertThat(user.id).isEqualTo(userInfo!!.id)
     }
@@ -143,7 +143,7 @@ class UserServiceTest {
     @Test
     fun `유저 수정 성공 without password 테스트`() {
         // given
-        val id = user.id
+        val id = user.id!!
         val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", null)
         every { userRepository.findByIdOrNull(id) } returns user
 
@@ -163,7 +163,7 @@ class UserServiceTest {
     @Test
     fun `유저 수정 성공 with password 테스트`() {
         // given
-        val id = user.id
+        val id = user.id!!
         val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", "test123!")
         every { userRepository.findByIdOrNull(id) } returns user
         every { passwordEncoder.encode("test123!") } returns "some-encrypted-password"
