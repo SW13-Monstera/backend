@@ -38,6 +38,7 @@ class LongProblem(
 ) {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
+        this.score = gradingStandards.sumOf { it.score }
     }
 
     fun updateFromDto(upsertRequestDto: LongProblemUpsertRequestDto) {

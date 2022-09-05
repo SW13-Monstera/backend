@@ -10,8 +10,8 @@ interface GradingHistoryRepository : JpaRepository<GradingHistory, Long> {
     @Query(
         "select gh from GradingHistory gh " +
             "join fetch gh.problem p " +
-            "join fetch p.problemTags pt " +
-            "join fetch pt.tag where gh.user.id = :id"
+            "left join fetch p.problemTags pt " +
+            "left join fetch pt.tag where gh.user.id = :id"
     )
     fun findGradingHistoriesByUserId(@Param("id") id: UUID): List<GradingHistory>
 }
