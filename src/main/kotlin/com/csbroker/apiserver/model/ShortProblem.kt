@@ -16,13 +16,11 @@ class ShortProblem(
     title: String,
     description: String,
     creator: User,
+    score: Double,
 
     @Column(name = "answer")
-    var answer: String,
-
-    @Column(name = "score")
-    var score: Double
-) : Problem(title = title, description = description, creator = creator, dtype = "short") {
+    var answer: String
+) : Problem(title = title, description = description, creator = creator, dtype = "short", score = score) {
     fun updateFromDto(upsertRequestDto: ShortProblemUpsertRequestDto) {
         this.title = upsertRequestDto.title
         this.description = upsertRequestDto.description

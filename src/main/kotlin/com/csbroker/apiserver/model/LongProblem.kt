@@ -28,7 +28,14 @@ class LongProblem(
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     var userAnswers: MutableList<UserAnswer> = mutableListOf()
-) : Problem(title = title, description = description, creator = creator, dtype = "long", isGradable = false) {
+) : Problem(
+    title = title,
+    description = description,
+    creator = creator,
+    dtype = "long",
+    isGradable = false,
+    score = gradingStandards.sumOf { it.score }
+) {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
     }
@@ -73,6 +80,7 @@ class LongProblem(
             this.isActive
         )
     }
+
     fun toDetailResponseDto(): LongProblemDetailResponseDto {
         val tags = this.problemTags.map {
             it.tag
