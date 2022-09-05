@@ -19,6 +19,7 @@ import com.csbroker.apiserver.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -188,6 +189,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Order(1)
     fun `GetUser v1 200 OK`() {
         // given
         val now = Date()
@@ -242,6 +244,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Order(2)
     fun `GetUsers v1 200 OK`() {
         // given
         val now = Date()
@@ -291,6 +294,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Order(3)
     fun `UpdateUser v1 200 OK`() {
         // given
         val now = Date()
@@ -374,15 +378,60 @@ class UserControllerTest {
     }
 
     @Test
-    fun `Get User Stat v1 200 OK`() {
+    @Order(4)
+    fun `Delete User v1 200 OK`() {
         // given
         val now = Date()
+        val urlTemplate = "$USER_ENDPOINT/{user_id}"
+
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
             role = Role.ROLE_ADMIN.code
         )
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.delete(urlTemplate, "$adminId")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(status().isOk)
+            .andExpect(content().string(containsString("success")))
+            .andDo(
+                document(
+                    "users/deleteOne",
+                    preprocessResponse(Preprocessors.prettyPrint()),
+                    pathParameters(
+                        parameterWithName("user_id").description("회원 UUID")
+                    ),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("Access 토큰 ( JWT )")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
+                        fieldWithPath("data.result").type(JsonFieldType.BOOLEAN).description("삭제 결과")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(5)
+    fun `Get User Stat v1 200 OK`() {
+        // given
+        val now = Date()
         val urlTemplate = "$USER_ENDPOINT/{user_id}/stats"
+
+        val accessToken = tokenProvider.createAuthToken(
+            "test-admin@test.com",
+            expiry = Date(now.time + 6000000),
+            role = Role.ROLE_ADMIN.code
+        )
 
         // when
         val result = mockMvc.perform(

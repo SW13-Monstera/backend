@@ -1,14 +1,15 @@
 package com.csbroker.apiserver.service
 
+import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.user.UserStatsDto
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.GradingHistoryRepository
 import com.csbroker.apiserver.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -111,5 +112,18 @@ class UserServiceImpl(
             partialAnswered,
             counter
         )
+    }
+
+    override fun deleteUser(email: String, id: UUID): Boolean {
+        val findUserById = this.findUserById(id)
+            ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
+
+        if (findUserById.email != email) {
+            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "해당 유저를 삭제할 권한이 없습니다.")
+        }
+
+        findUserById.isDeleted = true
+
+        return true
     }
 }
