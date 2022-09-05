@@ -6,6 +6,7 @@ import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
+import com.csbroker.apiserver.repository.GradingHistoryRepository
 import com.csbroker.apiserver.repository.UserRepository
 import com.csbroker.apiserver.service.UserServiceImpl
 import io.mockk.every
@@ -21,7 +22,9 @@ import java.util.UUID
 class UserServiceTest {
     private val userRepository: UserRepository = mockk()
     private val passwordEncoder: BCryptPasswordEncoder = mockk()
-    private val userService: UserServiceImpl = UserServiceImpl(userRepository, passwordEncoder)
+    private val gradingHistoryRepository: GradingHistoryRepository = mockk()
+    private val userService: UserServiceImpl =
+        UserServiceImpl(userRepository, passwordEncoder, gradingHistoryRepository)
 
     private val user: User = User(
         id = UUID.randomUUID(),
