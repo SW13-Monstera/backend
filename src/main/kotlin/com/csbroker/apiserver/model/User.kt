@@ -55,6 +55,9 @@ class User(
     @Column(name = "job")
     var job: String? = null,
 
+    @Column(name = "job_objective")
+    var jobObjective: String? = null,
+
     @Column(name = "tech")
     var tech: String? = null,
 
@@ -85,6 +88,7 @@ class User(
         this.password = userUpdateRequestDto.password ?: this.password
         this.major = userUpdateRequestDto.major ?: this.major
         this.job = userUpdateRequestDto.job ?: this.job
+        this.jobObjective = userUpdateRequestDto.jobObjective ?: this.jobObjective
         this.tech = userUpdateRequestDto.techs?.joinToString() ?: this.tech
         this.githubUrl = userUpdateRequestDto.githubUrl ?: this.githubUrl
         this.linkedinUrl = userUpdateRequestDto.linkedinUrl ?: this.linkedinUrl
@@ -97,6 +101,7 @@ class User(
             username = this.username,
             role = this.role,
             job = this.job,
+            jobObjective = this.jobObjective,
             techs = this.tech?.split(", ") ?: emptyList(),
             major = this.major,
             githubUrl = this.githubUrl,
