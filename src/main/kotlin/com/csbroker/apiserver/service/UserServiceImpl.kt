@@ -62,7 +62,7 @@ class UserServiceImpl(
 
         val gradingHistories = this.gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
 
-        val resultMap: MutableMap<Long, GradingHistory> = mutableMapOf()
+        val resultMap = mutableMapOf<Long, GradingHistory>()
 
         for (gradingHistory in gradingHistories) {
             if (resultMap[gradingHistory.problem.id!!] == null) {
