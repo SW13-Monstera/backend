@@ -78,17 +78,13 @@ class UserServiceImpl(
             it.value.score == it.value.problem.score
         }
 
-        val counter = mutableMapOf<String, Int>()
-
-        correctAnsweredMap.forEach { correctAnswer ->
-            correctAnswer.value.problem.problemTags.forEach {
-                if (counter[it.tag.name] == null) {
-                    counter[it.tag.name] = 1
-                } else {
-                    counter[it.tag.name] = counter[it.tag.name]!! + 1
-                }
-            }
-        }
+        val tagCounterMap = correctAnsweredMap.values.flatMap {
+            it.problem.problemTags
+        }.map {
+            it.tag
+        }.groupingBy {
+            it.name
+        }.eachCount()
 
         val correctAnswered = correctAnsweredMap.map {
             UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
@@ -110,7 +106,7 @@ class UserServiceImpl(
             correctAnswered,
             wrongAnswered,
             partialAnswered,
-            counter
+            tagCounterMap
         )
     }
 
