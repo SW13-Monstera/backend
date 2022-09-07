@@ -2,9 +2,19 @@ package com.csbroker.apiserver.e2e
 
 import com.csbroker.apiserver.auth.AuthTokenProvider
 import com.csbroker.apiserver.auth.ProviderType
+import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
+import com.csbroker.apiserver.model.GradingHistory
+import com.csbroker.apiserver.model.GradingStandard
+import com.csbroker.apiserver.model.LongProblem
+import com.csbroker.apiserver.model.ProblemTag
+import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.model.User
+import com.csbroker.apiserver.repository.GradingHistoryRepository
+import com.csbroker.apiserver.repository.ProblemRepository
+import com.csbroker.apiserver.repository.ProblemTagRepository
+import com.csbroker.apiserver.repository.TagRepository
 import com.csbroker.apiserver.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
@@ -55,7 +65,19 @@ class UserControllerTest {
     private lateinit var tokenProvider: AuthTokenProvider
 
     @Autowired
+    private lateinit var problemRepository: ProblemRepository
+
+    @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var tagRepository: TagRepository
+
+    @Autowired
+    private lateinit var problemTagRepository: ProblemTagRepository
+
+    @Autowired
+    private lateinit var gradingHistoryRepository: GradingHistoryRepository
 
     private val USER_ENDPOINT = "/api/v1/users"
 
@@ -87,6 +109,83 @@ class UserControllerTest {
         userRepository.save(admin)
 
         adminId = admin.id!!
+
+        val osTag = Tag(
+            name = "os"
+        )
+        tagRepository.save(osTag)
+
+        val dsTag = Tag(
+            name = "ds"
+        )
+        tagRepository.save(dsTag)
+
+        val networkTag = Tag(
+            name = "network"
+        )
+        tagRepository.save(networkTag)
+
+        val dbTag = Tag(
+            name = "db"
+        )
+        tagRepository.save(dbTag)
+
+        for (i in 0..10) {
+            val problem = LongProblem(
+                title = "test$i",
+                description = "test",
+                creator = admin,
+                standardAnswer = "test"
+            )
+
+            val gradingStandard = GradingStandard(
+                content = "test",
+                score = 10.0,
+                type = GradingStandardType.KEYWORD,
+                problem = problem
+            )
+
+            problem.addGradingStandards(listOf(gradingStandard))
+            problemRepository.save(problem)
+
+            println(problem.id)
+
+            val gradingHistory = GradingHistory(
+                problem = problem,
+                user = admin,
+                userAnswer = "test",
+                score = i.toDouble()
+            )
+
+            gradingHistoryRepository.save(gradingHistory)
+
+            if (i == 10) {
+                val problemTagOS = ProblemTag(
+                    problem = problem,
+                    tag = osTag
+                )
+
+                val problemTagDB = ProblemTag(
+                    problem = problem,
+                    tag = dbTag
+                )
+
+                val problemTagDs = ProblemTag(
+                    problem = problem,
+                    tag = dsTag
+                )
+
+                val problemTagNetwork = ProblemTag(
+                    problem = problem,
+                    tag = networkTag
+                )
+
+                problemTagRepository.save(problemTagOS)
+                problemTagRepository.save(problemTagDB)
+                problemTagRepository.save(problemTagDs)
+                problemTagRepository.save(problemTagNetwork)
+            }
+        }
     }
 
     @Test
@@ -316,6 +415,71 @@ class UserControllerTest {
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
                         fieldWithPath("data.result").type(JsonFieldType.BOOLEAN).description("삭제 결과")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(5)
+    fun `Get User Stat v1 200 OK`() {
+        // given
+        val now = Date()
+        val urlTemplate = "$USER_ENDPOINT/{user_id}/stats"
+
+        val accessToken = tokenProvider.createAuthToken(
+            "test-admin@test.com",
+            expiry = Date(now.time + 6000000),
+            role = Role.ROLE_ADMIN.code
+        )
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(status().isOk)
+            .andExpect(content().string(containsString("success")))
+            .andDo(
+                document(
+                    "users/statsOne",
+                    preprocessResponse(Preprocessors.prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("Admin 권한의 Access 토큰 ( JWT )")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.correctAnsweredProblem").type(JsonFieldType.ARRAY).description("맞은 문제"),
+                        fieldWithPath("data.correctAnsweredProblem.[].id").type(JsonFieldType.NUMBER)
+                            .description("문제 id"),
+                        fieldWithPath("data.correctAnsweredProblem.[].type").type(JsonFieldType.STRING)
+                            .description("문제 타입"),
+                        fieldWithPath("data.correctAnsweredProblem.[].title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.wrongAnsweredProblem").type(JsonFieldType.ARRAY).description("틀린 문제"),
+                        fieldWithPath("data.wrongAnsweredProblem.[].id").type(JsonFieldType.NUMBER)
+                            .description("문제 id"),
+                        fieldWithPath("data.wrongAnsweredProblem.[].type").type(JsonFieldType.STRING)
+                            .description("문제 타입"),
+                        fieldWithPath("data.wrongAnsweredProblem.[].title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.partialAnsweredProblem").type(JsonFieldType.ARRAY)
+                            .description("부분 점수를 받은 문제"),
+                        fieldWithPath("data.partialAnsweredProblem.[].id").type(JsonFieldType.NUMBER)
+                            .description("문제 id"),
+                        fieldWithPath("data.partialAnsweredProblem.[].type").type(JsonFieldType.STRING)
+                            .description("문제 타입"),
+                        fieldWithPath("data.partialAnsweredProblem.[].title").type(JsonFieldType.STRING)
+                            .description("문제 제목"),
+                        fieldWithPath("data.count").type(JsonFieldType.OBJECT).description("푼 문제 수 통계"),
+                        fieldWithPath("data.count.os").type(JsonFieldType.NUMBER).description("맞은 운영체제 문제 수 통계"),
+                        fieldWithPath("data.count.network").type(JsonFieldType.NUMBER).description("맞은 네트워크 문제 수 통계"),
+                        fieldWithPath("data.count.ds").type(JsonFieldType.NUMBER).description("맞은 자료구조 문제 수 통계"),
+                        fieldWithPath("data.count.db").type(JsonFieldType.NUMBER).description("맞은 데이터베이스 문제 수 통계")
                     )
                 )
             )

@@ -45,10 +45,13 @@ abstract class Problem(
     @JoinColumn(name = "user_id")
     val creator: User,
 
-    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
+    @Column(name = "score")
+    var score: Double,
+
+    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val problemTags: MutableSet<ProblemTag> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
     fun toProblemResponseDto(): ProblemResponseDto {

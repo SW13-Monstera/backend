@@ -5,6 +5,7 @@ import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.dto.common.ApiResponse
 import com.csbroker.apiserver.dto.common.DeleteResponseDto
 import com.csbroker.apiserver.dto.user.UserResponseDto
+import com.csbroker.apiserver.dto.user.UserStatsDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -60,6 +61,15 @@ class UserController(
         val user = this.userService.modifyUser(id, userUpdateRequestDto)
 
         return ApiResponse.success(user.toUserResponseDto())
+    }
+
+    @GetMapping("/{id}/stats")
+    fun getUserStats(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: UUID
+    ): ApiResponse<UserStatsDto> {
+        val result: UserStatsDto = this.userService.getStats(id, loginUser.username)
+        return ApiResponse.success(result)
     }
 
     @DeleteMapping("/{id}")

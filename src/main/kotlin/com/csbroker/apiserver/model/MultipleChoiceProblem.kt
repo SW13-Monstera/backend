@@ -18,16 +18,14 @@ class MultipleChoiceProblem(
     title: String,
     description: String,
     creator: User,
+    score: Double,
 
     @Column(name = "is_multiple")
     var isMultiple: Boolean,
 
-    @Column(name = "score")
-    var score: Double,
-
     @OneToMany(mappedBy = "multipleChoiceProblem", cascade = [CascadeType.ALL])
     val choicesList: MutableList<Choice> = arrayListOf()
-) : Problem(title = title, description = description, creator = creator, dtype = "multiple") {
+) : Problem(title = title, description = description, creator = creator, dtype = "multiple", score = score) {
     fun addChoice(choice: Choice) {
         this.choicesList.add(choice)
         choice.multipleChoiceProblem = this

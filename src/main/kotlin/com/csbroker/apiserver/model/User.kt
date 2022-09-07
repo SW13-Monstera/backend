@@ -6,6 +6,7 @@ import com.csbroker.apiserver.dto.user.UserResponseDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -73,7 +74,10 @@ class User(
     val assignedAnswers: MutableList<UserAnswer> = mutableListOf(),
 
     @OneToMany(mappedBy = "validatingUser", fetch = FetchType.LAZY)
-    val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf()
+    val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val gradingHistories: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
         this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl
