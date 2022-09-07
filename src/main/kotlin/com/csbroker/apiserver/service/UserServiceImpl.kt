@@ -97,7 +97,7 @@ class UserServiceImpl(
         }.toList()
 
         val partialAnswered = resultMap.filter {
-            it.value.score != 0.0 && it.value.score != it.value.problem.score && it.value.problem.dtype == "long"
+            it.value.score != 0.0 && it.value.score != it.value.problem.score
         }.map {
             UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
         }.toList()
