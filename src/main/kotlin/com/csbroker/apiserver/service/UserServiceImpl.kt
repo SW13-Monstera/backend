@@ -3,11 +3,13 @@ package com.csbroker.apiserver.service
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.dto.user.UserStatsDto
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
+import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.User
+import com.csbroker.apiserver.repository.GradingHistoryRepository
 import com.csbroker.apiserver.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -16,7 +18,8 @@ import javax.transaction.Transactional
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val gradingHistoryRepository: GradingHistoryRepository
 ) : UserService {
     override fun findUserByEmail(email: String): User? {
         return this.userRepository.findByEmail(email)
@@ -47,6 +50,64 @@ class UserServiceImpl(
 
     override fun findAdminUsers(): List<User> {
         return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
+    }
+
+    override fun getStats(id: UUID, email: String): UserStatsDto {
+        val findUser = this.userRepository.findByIdOrNull(id)
+            ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
+
+        if (findUser.email != email) {
+            throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
+        }
+
+        val gradingHistories = this.gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
+
+        val resultMap = mutableMapOf<Long, GradingHistory>()
+
+        for (gradingHistory in gradingHistories) {
+            if (resultMap[gradingHistory.problem.id!!] == null) {
+                resultMap[gradingHistory.problem.id!!] = gradingHistory
+            } else {
+                if (resultMap[gradingHistory.problem.id!!]!!.score < gradingHistory.score) {
+                    resultMap[gradingHistory.problem.id!!] = gradingHistory
+                }
+            }
+        }
+
+        val correctAnsweredMap = resultMap.filter {
+            it.value.score == it.value.problem.score
+        }
+
+        val tagCounterMap = correctAnsweredMap.values.flatMap {
+            it.problem.problemTags
+        }.map {
+            it.tag
+        }.groupingBy {
+            it.name
+        }.eachCount()
+
+        val correctAnswered = correctAnsweredMap.map {
+            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
+        }.toList()
+
+        val wrongAnswered = resultMap.filter {
+            it.value.score == 0.0
+        }.map {
+            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
+        }.toList()
+
+        val partialAnswered = resultMap.filter {
+            it.value.score != 0.0 && it.value.score != it.value.problem.score
+        }.map {
+            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
+        }.toList()
+
+        return UserStatsDto(
+            correctAnswered,
+            wrongAnswered,
+            partialAnswered,
+            tagCounterMap
+        )
     }
 
     override fun deleteUser(email: String, id: UUID): Boolean {
