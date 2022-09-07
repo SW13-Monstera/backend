@@ -40,8 +40,9 @@ out/
 **/.DS_Store
 
 
-### Yml ###
+### Config ###
 src/main/resources/*.yml
+src/main/resources/*.xml
 
 ### static ###
 src/main/resources/static/
