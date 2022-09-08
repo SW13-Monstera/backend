@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequestWrapper
 
 class RequestWrapper(request: HttpServletRequest) : HttpServletRequestWrapper(request) {
-    private var cachedInputStream : ByteArray
+    private var cachedInputStream: ByteArray
 
     init {
         val reqInputStream = request.inputStream
@@ -27,7 +27,7 @@ class RequestWrapper(request: HttpServletRequest) : HttpServletRequestWrapper(re
             override fun isFinished(): Boolean {
                 try {
                     return cachedBodyInputStream.available() == 0
-                } catch (e: IOException){
+                } catch (e: IOException) {
                     e.printStackTrace()
                 }
                 return false
@@ -42,5 +42,4 @@ class RequestWrapper(request: HttpServletRequest) : HttpServletRequestWrapper(re
             }
         }
     }
-
 }
