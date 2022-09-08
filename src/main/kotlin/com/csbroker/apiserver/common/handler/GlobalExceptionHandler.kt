@@ -17,7 +17,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 class GlobalExceptionHandler {
     @ExceptionHandler(value = [BizException::class])
     fun handlingBizException(bizException: BizException): ResponseEntity<ApiResponse<String>> {
-        Sentry.captureException(bizException)
         log.error(bizException.log)
         return ResponseEntity.status(bizException.errorCode.code)
             .body(ApiResponse.fail(bizException.errorCode.message))
@@ -31,7 +30,6 @@ class GlobalExceptionHandler {
         ]
     )
     fun handlingBizException(exception: Exception): ResponseEntity<ApiResponse<String>> {
-        Sentry.captureException(exception)
         log.error(exception.message)
         return ResponseEntity.status(ErrorCode.CONDITION_NOT_FULFILLED.code)
             .body(ApiResponse.fail(ErrorCode.CONDITION_NOT_FULFILLED.message))
