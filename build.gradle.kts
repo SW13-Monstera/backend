@@ -77,6 +77,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
 
     implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:4.11")
 }
 
 dependencyManagement {
@@ -134,7 +136,7 @@ tasks.test {
 tasks.register("copyYml", Copy::class) {
     copy {
         from("./backend-config")
-        include("*.yml")
+        include("*.yml", "*.xml")
         into("src/main/resources")
     }
 }
