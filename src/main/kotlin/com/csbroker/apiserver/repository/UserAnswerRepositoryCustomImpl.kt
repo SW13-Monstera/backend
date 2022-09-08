@@ -67,7 +67,6 @@ class UserAnswerRepositoryCustomImpl(
             .leftJoin(userAnswer.assignedUser, user).fetchJoin()
             .leftJoin(userAnswer.validatingUser, user).fetchJoin()
             .leftJoin(userAnswer.problem, longProblem).fetchJoin()
-            .groupBy(userAnswer.id)
             .where(
                 this.findById(id),
                 this.isAssignedBy(assignedBy),
@@ -89,7 +88,6 @@ class UserAnswerRepositoryCustomImpl(
             .leftJoin(userAnswer.assignedUser, user)
             .leftJoin(userAnswer.validatingUser, user)
             .leftJoin(userAnswer.problem, longProblem)
-            .groupBy(userAnswer.id)
             .where(
                 this.findById(id),
                 this.isAssignedBy(assignedBy),
