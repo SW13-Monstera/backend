@@ -45,6 +45,7 @@ class ProblemRepositoryCustomImpl(
             .leftJoin(gradingHistory.user, user)
             .leftJoin(problem.problemTags, problemTag)
             .leftJoin(problemTag.tag, tag)
+            .groupBy(problem.id)
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),

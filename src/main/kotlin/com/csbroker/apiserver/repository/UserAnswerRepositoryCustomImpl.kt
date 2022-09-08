@@ -81,13 +81,12 @@ class UserAnswerRepositoryCustomImpl(
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        println(result)
-
         val totalCnt = this.queryFactory.selectFrom(userAnswer)
             .distinct()
             .leftJoin(userAnswer.assignedUser, user)
             .leftJoin(userAnswer.validatingUser, user)
             .leftJoin(userAnswer.problem, longProblem)
+            .groupBy(userAnswer.id)
             .where(
                 this.findById(id),
                 this.isAssignedBy(assignedBy),
