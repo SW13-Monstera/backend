@@ -19,4 +19,7 @@ interface UserRepository : JpaRepository<User, UUID> {
     fun findUsersByRole(role: Role): List<User>
 
     fun findUserByProviderId(providerId: String): User?
+
+    @Query("select count(u) from User u where u.isDeleted = FALSE")
+    fun countUser(): Long
 }
