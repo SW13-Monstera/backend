@@ -19,4 +19,7 @@ interface UserRepository : JpaRepository<User, UUID> {
     fun findUsersByRole(role: Role): List<User>
 
     fun findUserByProviderId(providerId: String): User?
+
+    @Query("select count(u.id) > 0 from User u where u.email = :email")
+    fun existsUserByEmail(@Param("email") email: String): Boolean
 }

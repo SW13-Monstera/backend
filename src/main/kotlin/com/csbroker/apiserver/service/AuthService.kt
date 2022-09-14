@@ -12,4 +12,6 @@ interface AuthService {
     fun loginUser(userLoginRequestDto: UserLoginRequestDto): UserInfoDto
     fun refreshUserToken(request: HttpServletRequest): TokenDto
     fun getUserInfo(email: String): UserInfoDto
+
+    fun changePassword(code: String, password: String): Boolean
 }
