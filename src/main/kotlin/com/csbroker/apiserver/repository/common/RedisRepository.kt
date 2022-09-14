@@ -13,7 +13,7 @@ class RedisRepository(
     }
 
     fun setRefreshTokenByEmail(email: String, refreshToken: String) {
-        redisTemplate.opsForValue().set(email, refreshToken)
+        redisTemplate.opsForValue().set(email, refreshToken, 7, TimeUnit.DAYS)
     }
 
     fun setPasswordVerification(code: String, email: String) {
