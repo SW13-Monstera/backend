@@ -79,6 +79,10 @@ dependencies {
     implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
 
     implementation("net.logstash.logback:logstash-logback-encoder:4.11")
+
+    // mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }
 
 dependencyManagement {
