@@ -188,6 +188,30 @@ include::{snippets}/auth/getUserInfo/request-headers.adoc[]
 include::{snippets}/auth/getUserInfo/response-body.adoc[]
 include::{snippets}/auth/getUserInfo/response-fields.adoc[]
 
+=== Common API ( /api/v1 )
+
+==== 메인페이지 통계 API
+
+.description
+[source]
+----
+메인페이지 통계 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/stats
+----
+
+.Sample Request
+include::{snippets}/common/stats/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/common/stats/http-response.adoc[]
+
+.Response Body
+include::{snippets}/common/stats/response-body.adoc[]
+include::{snippets}/common/stats/response-fields.adoc[]
+
+
 === Problem API ( /api/v1/problems )
 
 ==== 서술형 문제 단건 조회
