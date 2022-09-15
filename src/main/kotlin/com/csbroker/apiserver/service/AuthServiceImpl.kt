@@ -21,6 +21,7 @@ import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import com.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.UUID
 import javax.servlet.http.HttpServletRequest
@@ -151,5 +152,19 @@ class AuthServiceImpl(
         }
 
         return TokenDto(newAccessToken, null)
+    }
+
+    @Transactional
+    override fun changePassword(code: String, password: String): Boolean {
+        val email = redisRepository.getEmailByCode(code)
+            ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "비밀번호를 변경할 수 없습니다.")
+
+        val findUser = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        findUser.encodePassword(passwordEncoder.encode(password))
+        redisRepository.removePasswordVerification(code)
+
+        return true
     }
 }

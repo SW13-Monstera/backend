@@ -2,6 +2,8 @@ package com.csbroker.apiserver.e2e
 
 import com.csbroker.apiserver.auth.AuthTokenProvider
 import com.csbroker.apiserver.common.enums.Role
+import com.csbroker.apiserver.dto.auth.PasswordChangeMailRequestDto
+import com.csbroker.apiserver.dto.auth.PasswordChangeRequestDto
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
@@ -31,9 +33,11 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.Date
+import java.util.UUID
 import javax.servlet.http.Cookie
 
 @SpringBootTest
@@ -233,6 +237,72 @@ class AuthControllerTest {
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(5)
+    fun `Send password mail 200 OK`() {
+        // given
+        val email = "test@test.com"
+        val passwordChangeMailRequestDto = PasswordChangeMailRequestDto(email)
+        val passwordChangeMailRequestDtoString = objectMapper.writeValueAsString(passwordChangeMailRequestDto)
+
+        // when
+        val result = mockMvc.perform(
+            post("$AUTH_ENDPOINT/password/code")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(passwordChangeMailRequestDtoString)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "password/code",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data").type(JsonFieldType.STRING).description("메일 전송 결과")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(6)
+    fun `Change password 200 OK`() {
+        // given
+        val email = "test@test.com"
+        val code = UUID.randomUUID().toString()
+        redisRepository.setPasswordVerification(code, email)
+        val passwordChangeRequestDto = PasswordChangeRequestDto(code, "Test123@!")
+        val passwordChangeRequestDtoString = objectMapper.writeValueAsString(passwordChangeRequestDto)
+
+        // when
+        val result = mockMvc.perform(
+            put("$AUTH_ENDPOINT/password/change")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(passwordChangeRequestDtoString)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "password/change",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data").type(JsonFieldType.STRING).description("비밀번호 변경 결과")
                     )
                 )
             )

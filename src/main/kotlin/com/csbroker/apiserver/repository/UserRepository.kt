@@ -20,6 +20,9 @@ interface UserRepository : JpaRepository<User, UUID> {
 
     fun findUserByProviderId(providerId: String): User?
 
+    @Query("select count(u.id) > 0 from User u where u.email = :email")
+    fun existsUserByEmail(@Param("email") email: String): Boolean
+
     @Query("select count(u) from User u where u.isDeleted = FALSE")
     fun countUser(): Long
 }

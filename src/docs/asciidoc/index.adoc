@@ -188,6 +188,60 @@ include::{snippets}/auth/getUserInfo/request-headers.adoc[]
 include::{snippets}/auth/getUserInfo/response-body.adoc[]
 include::{snippets}/auth/getUserInfo/response-fields.adoc[]
 
+==== 비밀번호 변경 메일 전송
+
+.description
+[source]
+----
+비밀번호 변경 메일 전송을 위한 API입니다.
+비밀번호 변경 메일에는 "프론트엔드주소/password-change/코드" 와 같은 값이 전달됩니다.
+즉, 프론트엔드에서는 위 링크에 해당하는 비밀번호 변경 창을 만들어줘야합니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/password/code
+----
+
+.Sample Request
+include::{snippets}/password/code/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/password/code/http-response.adoc[]
+
+.Request Body
+include::{snippets}/password/code/request-body.adoc[]
+
+.Response Body
+include::{snippets}/password/code/response-body.adoc[]
+include::{snippets}/password/code/response-fields.adoc[]
+
+==== 비밀번호 변경
+
+.description
+[source]
+----
+비밀번호 변경을 위한 API입니다.
+유저가 "프론트엔드주소/password-change/코드" 와 같은 값으로 접근 하였을 때,
+코드와 새로운 비밀번호를 함께 전송하면 비밀번호가 새로운 비밀번호로 변경됩니다.
+
+코드는 5분동안 유효하며, 코드와 새로운 비밀번호를 전송해야 새로운 비밀번호로 성공적으로 변경됩니다.
+
+HTTP Method : PUT
+End-Point   : /api/v1/password/change
+----
+
+.Sample Request
+include::{snippets}/password/change/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/password/change/http-response.adoc[]
+
+.Request Body
+include::{snippets}/password/change/request-body.adoc[]
+
+.Response Body
+include::{snippets}/password/change/response-body.adoc[]
+include::{snippets}/password/change/response-fields.adoc[]
+
 === Common API ( /api/v1 )
 
 ==== 메인페이지 통계 API
