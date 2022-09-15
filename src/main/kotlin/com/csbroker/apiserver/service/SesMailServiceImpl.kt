@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.service
 
+import aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider
 import aws.sdk.kotlin.services.ses.SesClient
 import aws.sdk.kotlin.services.ses.model.Body
 import aws.sdk.kotlin.services.ses.model.Content
@@ -18,12 +19,17 @@ import java.util.UUID
 
 @Service
 class SesMailServiceImpl(
-    private val sesClient: SesClient,
     private val templateEngine: SpringTemplateEngine,
     private val userRepository: UserRepository,
 
     @Value("\${spring.mail.url}")
-    private val url: String
+    private val url: String,
+
+    @Value("\${aws.access-key}")
+    private val accessKey: String,
+
+    @Value("\${aws.secret-key}")
+    private val secretKey: String
 ) : MailService {
 
     override suspend fun sendPasswordChangeMail(to: String) {
@@ -57,7 +63,13 @@ class SesMailServiceImpl(
             source = "no-reply@csbroker.io"
         }
 
-        sesClient.use {
+        SesClient {
+            region = "ap-northeast-2"
+            credentialsProvider = StaticCredentialsProvider {
+                accessKeyId = accessKey
+                secretAccessKey = secretKey
+            }
+        }.use {
             it.sendEmail(emailRequest)
         }
     }
