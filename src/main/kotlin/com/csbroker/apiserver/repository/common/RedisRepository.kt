@@ -28,4 +28,8 @@ class RedisRepository(
     fun getEmailByCode(code: String): String? {
         return redisTemplate.opsForValue().get(code)
     }
+
+    fun removePasswordVerification(code: String) {
+        redisTemplate.delete(code)
+    }
 }

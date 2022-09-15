@@ -163,6 +163,7 @@ class AuthServiceImpl(
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         findUser.encodePassword(passwordEncoder.encode(password))
+        redisRepository.removePasswordVerification(code)
 
         return true
     }
