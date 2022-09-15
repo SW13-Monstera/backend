@@ -15,6 +15,7 @@ import com.csbroker.apiserver.dto.user.UserSignUpDto
 import com.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import com.csbroker.apiserver.service.AuthService
 import com.csbroker.apiserver.service.MailService
+import kotlinx.coroutines.runBlocking
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -82,8 +83,10 @@ class AuthController(
     fun sendPasswordChangeMail(
         @RequestBody passwordChangeMailRequestDto: PasswordChangeMailRequestDto
     ): ApiResponse<String> {
-        mailService.sendPasswordChangeMail(passwordChangeMailRequestDto.email)
-        return ApiResponse.success("success")
+        return runBlocking {
+            mailService.sendPasswordChangeMail(passwordChangeMailRequestDto.email)
+            ApiResponse.success("success")
+        }
     }
 
     @PutMapping("/password/change")

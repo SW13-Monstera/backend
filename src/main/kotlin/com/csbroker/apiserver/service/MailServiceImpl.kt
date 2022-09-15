@@ -6,12 +6,10 @@ import com.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
-import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
 import java.util.UUID
 
-@Service
 class MailServiceImpl(
     private val redisRepository: RedisRepository,
     private val templateEngine: SpringTemplateEngine,
@@ -22,7 +20,7 @@ class MailServiceImpl(
     private val url: String
 ) : MailService {
 
-    override fun sendPasswordChangeMail(to: String) {
+    override suspend fun sendPasswordChangeMail(to: String) {
         val isExist = userRepository.existsUserByEmail(to)
 
         if (!isExist) {
