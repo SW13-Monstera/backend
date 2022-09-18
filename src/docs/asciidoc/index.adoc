@@ -1195,7 +1195,7 @@ include::{snippets}/admin/userAnswer/validate/response-fields.adoc[]
 ----
 유저 답안 라벨링 유저 할당을 위한 API입니다.
 
-HTTP Method : POST
+HTTP Method : PUT
 End-Point   : /api/admin/user-answers/assign/validate
 ----
 
@@ -1221,7 +1221,7 @@ include::{snippets}/admin/userAnswer/assign/label/response-fields.adoc[]
 ----
 유저 답안 검수자 할당을 위한 API입니다.
 
-HTTP Method : POST
+HTTP Method : PUT
 End-Point   : /api/admin/user-answers/assign/validate
 ----
 
