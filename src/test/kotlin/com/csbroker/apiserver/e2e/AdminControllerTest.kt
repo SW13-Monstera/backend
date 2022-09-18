@@ -11,6 +11,7 @@ import com.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDt
 import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import com.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import com.csbroker.apiserver.model.Tag
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.LongProblemRepository
@@ -2021,6 +2022,208 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.[].username")
                             .type(JsonFieldType.STRING)
                             .description("유저 닉네임")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(22)
+    fun `Assign Labeler to User Answer 200`() {
+        // given
+        val userAnswerIds = mutableListOf<Long>()
+        val problemInsertDto = LongProblemUpsertRequestDto(
+            "test",
+            """
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has survived not only five centuries, but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+                like Aldus PageMaker including versions of Lorem Ipsum.
+            """.trimIndent(),
+            """
+                It is a long established fact that a reader will be distracted by the readable content of
+                a page when looking at its layout.
+            """.trimIndent(),
+            mutableListOf("db"),
+            mutableListOf(
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-1",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-2",
+                    3.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-3",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "prompt-1",
+                    2.0,
+                    GradingStandardType.PROMPT
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "prompt-2",
+                    3.0,
+                    GradingStandardType.PROMPT
+                )
+            )
+        )
+
+        val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
+
+        for (i in 1..10) {
+            val userAnswerUpsertDto = UserAnswerUpsertDto(
+                user.id!!,
+                user.id!!,
+                "test",
+                problemId
+            )
+
+            val userAnswerId = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+
+            userAnswerIds.add(userAnswerId)
+        }
+
+        val assignUserAnswerDto = AssignUserAnswerDto(userAnswerIds, user.id!!)
+        val assignUserAnswerDtoStr = objectMapper.writeValueAsString(assignUserAnswerDto)
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.put("$ADMIN_ENDPOINT/user-answers/assign/label")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(assignUserAnswerDtoStr)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "admin/userAnswer/assign/label",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    PayloadDocumentation.requestFields(
+                        PayloadDocumentation.fieldWithPath("userAnswerIds")
+                            .type(JsonFieldType.ARRAY).description("유저 답안 id 리스트"),
+                        PayloadDocumentation.fieldWithPath("assigneeId")
+                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id")
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data.size")
+                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(23)
+    fun `Assign Validator to User Answer 200`() {
+        // given
+        val userAnswerIds = mutableListOf<Long>()
+        val problemInsertDto = LongProblemUpsertRequestDto(
+            "test",
+            """
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has survived not only five centuries, but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+                like Aldus PageMaker including versions of Lorem Ipsum.
+            """.trimIndent(),
+            """
+                It is a long established fact that a reader will be distracted by the readable content of
+                a page when looking at its layout.
+            """.trimIndent(),
+            mutableListOf("db"),
+            mutableListOf(
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-1",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-2",
+                    3.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-3",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "prompt-1",
+                    2.0,
+                    GradingStandardType.PROMPT
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "prompt-2",
+                    3.0,
+                    GradingStandardType.PROMPT
+                )
+            )
+        )
+
+        val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
+
+        for (i in 1..10) {
+            val userAnswerUpsertDto = UserAnswerUpsertDto(
+                user.id!!,
+                user.id!!,
+                "test",
+                problemId
+            )
+
+            val userAnswerId = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+
+            userAnswerIds.add(userAnswerId)
+        }
+
+        val assignUserAnswerDto = AssignUserAnswerDto(userAnswerIds, user.id!!)
+        val assignUserAnswerDtoStr = objectMapper.writeValueAsString(assignUserAnswerDto)
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.put("$ADMIN_ENDPOINT/user-answers/assign/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(assignUserAnswerDtoStr)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "admin/userAnswer/assign/validate",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    PayloadDocumentation.requestFields(
+                        PayloadDocumentation.fieldWithPath("userAnswerIds")
+                            .type(JsonFieldType.ARRAY).description("유저 답안 id 리스트"),
+                        PayloadDocumentation.fieldWithPath("assigneeId")
+                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id")
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data.size")
+                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size")
                     )
                 )
             )
