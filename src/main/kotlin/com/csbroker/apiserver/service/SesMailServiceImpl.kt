@@ -9,6 +9,7 @@ import aws.sdk.kotlin.services.ses.model.Message
 import aws.sdk.kotlin.services.ses.model.SendEmailRequest
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Value
@@ -21,6 +22,7 @@ import java.util.UUID
 class SesMailServiceImpl(
     private val templateEngine: SpringTemplateEngine,
     private val userRepository: UserRepository,
+    private val redisRepository: RedisRepository,
 
     @Value("\${spring.mail.url}")
     private val url: String,
@@ -72,5 +74,7 @@ class SesMailServiceImpl(
         }.use {
             it.sendEmail(emailRequest)
         }
+
+        redisRepository.setPasswordVerification(code, to)
     }
 }
