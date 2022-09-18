@@ -16,6 +16,7 @@ import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import com.csbroker.apiserver.dto.user.AdminUserInfoResponseDto
+import com.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
@@ -189,12 +190,14 @@ class AdminController(
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds
                 )
+
             "validate" ->
                 this.userAnswerService.validateUserAnswer(
                     loginUser.username,
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds
                 )
+
             else -> throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
                 "존재하지 않는 uri ( $type ) 입니다."
@@ -256,5 +259,36 @@ class AdminController(
                 pageable
             )
         )
+    }
+
+    @PutMapping("/user-answers/assign/{type:label|validate}")
+    fun assignUserAnswer(
+        @PathVariable("type") type: String,
+        @RequestBody assignUserAnswerDto: AssignUserAnswerDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        if (assignUserAnswerDto.userAnswerIds.isEmpty()) {
+            throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "할당 할 user answer가 없습니다.")
+        }
+
+        when (type) {
+            "label" ->
+                this.userAnswerService.assignLabelUserAnswer(
+                    assignUserAnswerDto.userAnswerIds,
+                    assignUserAnswerDto.assigneeId
+                )
+
+            "validate" ->
+                this.userAnswerService.assignValidationUserAnswer(
+                    assignUserAnswerDto.userAnswerIds,
+                    assignUserAnswerDto.assigneeId
+                )
+
+            else -> throw ConditionConflictException(
+                ErrorCode.CONDITION_NOT_FULFILLED,
+                "존재하지 않는 uri ( $type ) 입니다."
+            )
+        }
+
+        return ApiResponse.success(UpsertSuccessResponseDto(size = assignUserAnswerDto.userAnswerIds.size))
     }
 }

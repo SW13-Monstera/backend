@@ -4,6 +4,7 @@ import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import org.springframework.data.domain.Pageable
+import java.util.UUID
 
 interface UserAnswerService {
     fun createUserAnswers(userAnswers: List<UserAnswerUpsertDto>): Int
@@ -21,4 +22,14 @@ interface UserAnswerService {
         isValidated: Boolean?,
         pageable: Pageable
     ): UserAnswerSearchResponseDto
+
+    fun assignLabelUserAnswer(
+        userAnswerIds: List<Long>,
+        userId: UUID
+    )
+
+    fun assignValidationUserAnswer(
+        userAnswerIds: List<Long>,
+        userId: UUID
+    )
 }
