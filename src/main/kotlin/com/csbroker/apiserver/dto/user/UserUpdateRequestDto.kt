@@ -6,6 +6,7 @@ data class UserUpdateRequestDto(
     var password: String?,
     var major: String? = null,
     var job: String? = null,
+    var jobObjective: String? = null,
     var techs: List<String>? = null,
     var githubUrl: String? = null,
     var linkedinUrl: String? = null

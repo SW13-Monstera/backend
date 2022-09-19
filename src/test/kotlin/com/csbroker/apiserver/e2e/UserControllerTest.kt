@@ -232,6 +232,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("전공").optional(),
                         fieldWithPath("data.job")
                             .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.jobObjective")
+                            .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
                         fieldWithPath("data.githubUrl")
@@ -282,6 +284,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("전공").optional(),
                         fieldWithPath("data.[].job")
                             .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.[].jobObjective")
+                            .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.[].techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
                         fieldWithPath("data.[].githubUrl")
@@ -309,7 +313,8 @@ class UserControllerTest {
             profileImageUrl = "https://test.com/test.png",
             password = "changePassword123!",
             major = "환경공학",
-            job = "프론트엔드 개발자",
+            job = "대학생",
+            jobObjective = "프론트엔드 개발자",
             techs = listOf("react", "typescript"),
             githubUrl = "https://github.com/Kim-Hyunjo",
             linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211"
@@ -349,6 +354,8 @@ class UserControllerTest {
                             .description("수정할 전공 ( 필수 X )").optional(),
                         fieldWithPath("job").type(JsonFieldType.STRING)
                             .description("수정할 직업 ( 필수 X )").optional(),
+                        fieldWithPath("jobObjective")
+                            .type(JsonFieldType.STRING).description("수정할 희망 직무 ( 필수 X )").optional(),
                         fieldWithPath("techs").type(JsonFieldType.ARRAY)
                             .description("수정할 사용 기술 ( 필수 X )").optional(),
                         fieldWithPath("githubUrl").type(JsonFieldType.STRING)
@@ -366,6 +373,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("전공").optional(),
                         fieldWithPath("data.job")
                             .type(JsonFieldType.STRING).description("직업").optional(),
+                        fieldWithPath("data.jobObjective")
+                            .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
                         fieldWithPath("data.githubUrl")
