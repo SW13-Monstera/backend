@@ -69,7 +69,12 @@ class LoggingFilter : OncePerRequestFilter() {
         if (visible) {
             val content: ByteArray = StreamUtils.copyToByteArray(inputStream)
             if (content.isNotEmpty()) {
-                val contentString = String(content)
+                var contentString = String(content)
+
+                if (contentString.contains("password")) {
+                    contentString = contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
+                }
+
                 log.info("{} Payload: {}", prefix, contentString)
             }
         } else {
