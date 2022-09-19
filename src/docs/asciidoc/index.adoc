@@ -1188,6 +1188,58 @@ include::{snippets}/admin/userAnswer/validate/request-fields.adoc[]
 include::{snippets}/admin/userAnswer/validate/response-body.adoc[]
 include::{snippets}/admin/userAnswer/validate/response-fields.adoc[]
 
+==== 유저 답안 라벨링 유저 할당
+
+.description
+[source]
+----
+유저 답안 라벨링 유저 할당을 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/admin/user-answers/assign/validate
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/assign/label/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/assign/label/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/userAnswer/assign/label/request-body.adoc[]
+include::{snippets}/admin/userAnswer/assign/label/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/assign/label/response-body.adoc[]
+include::{snippets}/admin/userAnswer/assign/label/response-fields.adoc[]
+
+
+==== 유저 답안 검수자 할당
+
+.description
+[source]
+----
+유저 답안 검수자 할당을 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/admin/user-answers/assign/validate
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/assign/validate/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/assign/validate/http-response.adoc[]
+
+.Request Body
+include::{snippets}/admin/userAnswer/assign/validate/request-body.adoc[]
+include::{snippets}/admin/userAnswer/assign/validate/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/assign/validate/response-body.adoc[]
+include::{snippets}/admin/userAnswer/assign/validate/response-fields.adoc[]
+
+
 === User API ( /api/admin/users )
 
 ==== ADMIN 유저 조회

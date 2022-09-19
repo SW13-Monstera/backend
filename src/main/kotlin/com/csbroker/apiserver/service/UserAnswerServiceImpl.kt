@@ -1,8 +1,10 @@
 package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.common.enums.ErrorCode
+import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import com.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Service
 class UserAnswerServiceImpl(
@@ -155,5 +158,31 @@ class UserAnswerServiceImpl(
             pagedUserAnswers.totalPages,
             pagedUserAnswers.totalElements
         )
+    }
+
+    @Transactional
+    override fun assignLabelUserAnswer(userAnswerIds: List<Long>, userId: UUID) {
+        validateAssignCondition(userAnswerIds, userId)
+        this.userAnswerRepository.updateLabelerId(userAnswerIds, userId)
+    }
+
+    @Transactional
+    override fun assignValidationUserAnswer(userAnswerIds: List<Long>, userId: UUID) {
+        validateAssignCondition(userAnswerIds, userId)
+        this.userAnswerRepository.updateValidatorId(userAnswerIds, userId)
+    }
+
+    private fun validateAssignCondition(userAnswerIds: List<Long>, userId: UUID) {
+        val cnt = this.userAnswerRepository.cntUserAnswer(userAnswerIds)
+        if (cnt != userAnswerIds.size) {
+            throw EntityNotFoundException("존재하지 않는 user answer를 업데이트 할 수 없습니다.")
+        }
+
+        val findUser = this.userRepository.findByIdOrNull(userId)
+            ?: throw EntityNotFoundException("${userId}를 가진 유저를 찾을 수 없습니다.")
+
+        if (findUser.role != Role.ROLE_ADMIN) {
+            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "권한이 없는 유저를 할당하려 하였습니다.")
+        }
     }
 }
