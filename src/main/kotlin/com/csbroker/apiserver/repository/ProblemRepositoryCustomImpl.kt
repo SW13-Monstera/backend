@@ -36,7 +36,6 @@ class ProblemRepositoryCustomImpl(
                 this.isType(problemSearchDto.type),
                 this.isGradable(problemSearchDto.isGradable)
             )
-            .orderBy(problem.updatedAt.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
