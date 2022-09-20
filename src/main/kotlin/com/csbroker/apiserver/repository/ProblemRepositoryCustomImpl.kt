@@ -46,14 +46,7 @@ class ProblemRepositoryCustomImpl(
             .leftJoin(gradingHistory.user, user).fetchJoin()
             .leftJoin(problem.problemTags, problemTag).fetchJoin()
             .leftJoin(problemTag.tag, tag).fetchJoin()
-            .where(
-                this.likeTitle(problemSearchDto.query),
-                this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy),
-                this.isType(problemSearchDto.type),
-                this.isGradable(problemSearchDto.isGradable),
-                problem.id.`in`(ids)
-            )
+            .where(problem.id.`in`(ids))
             .fetch()
 
         val gradingHistories = this.queryFactory.selectFrom(gradingHistory)
