@@ -76,7 +76,7 @@ class ProblemRepositoryCustomImpl(
             )
             .fetch().size.toLong()
 
-        return PageImpl(result.map { it.toProblemResponseDto(stats[it.id]!!) }, pageable, totalCnt)
+        return PageImpl(result.map { it.toProblemResponseDto(stats[it.id]) }, pageable, totalCnt)
     }
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {

@@ -55,7 +55,7 @@ abstract class Problem(
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
-    fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats): ProblemResponseDto {
+    fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats?): ProblemResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
@@ -66,8 +66,8 @@ abstract class Problem(
             this.id!!,
             this.title,
             tags,
-            gradingHistoryStats.avgScore,
-            gradingHistoryStats.totalSolved,
+            gradingHistoryStats?.avgScore,
+            gradingHistoryStats?.totalSolved ?: 0,
             this.dtype
         )
     }
