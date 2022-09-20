@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.GradingHistoryStats
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -54,33 +55,19 @@ abstract class Problem(
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
-    fun toProblemResponseDto(): ProblemResponseDto {
+    fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats): ProblemResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
             it.name
         }
 
-        val avgScore = this.gradingHistory.map {
-            it.score
-        }.average().let {
-            if (it.isNaN()) {
-                null
-            } else {
-                it
-            }
-        }
-
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
-
         return ProblemResponseDto(
             this.id!!,
             this.title,
             tags,
-            avgScore,
-            totalSolved,
+            gradingHistoryStats.avgScore,
+            gradingHistoryStats.totalSolved,
             this.dtype
         )
     }

@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.repository
 
+import com.csbroker.apiserver.dto.problem.GradingHistoryStats
 import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.model.QGradingHistory.gradingHistory
@@ -21,12 +22,13 @@ class ProblemRepositoryCustomImpl(
         problemSearchDto: ProblemSearchDto,
         pageable: Pageable
     ): Page<ProblemResponseDto> {
-        val result = this.queryFactory.selectFrom(problem)
+        val ids = this.queryFactory.select(problem.id)
+            .from(problem)
             .distinct()
-            .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
-            .leftJoin(gradingHistory.user, user).fetchJoin()
-            .leftJoin(problem.problemTags, problemTag).fetchJoin()
-            .leftJoin(problemTag.tag, tag).fetchJoin()
+            .leftJoin(problem.gradingHistory, gradingHistory)
+            .leftJoin(gradingHistory.user, user)
+            .leftJoin(problem.problemTags, problemTag)
+            .leftJoin(problemTag.tag, tag)
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
@@ -38,6 +40,33 @@ class ProblemRepositoryCustomImpl(
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
+
+        val result = this.queryFactory.selectFrom(problem)
+            .distinct()
+            .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
+            .leftJoin(gradingHistory.user, user).fetchJoin()
+            .leftJoin(problem.problemTags, problemTag).fetchJoin()
+            .leftJoin(problemTag.tag, tag).fetchJoin()
+            .where(
+                this.likeTitle(problemSearchDto.query),
+                this.inTags(problemSearchDto.tags),
+                this.solvedBy(problemSearchDto.solvedBy),
+                this.isType(problemSearchDto.type),
+                this.isGradable(problemSearchDto.isGradable),
+                problem.id.`in`(ids)
+            )
+            .fetch()
+
+        val gradingHistories = this.queryFactory.selectFrom(gradingHistory)
+            .distinct()
+            .where(gradingHistory.problem.id.`in`(result.map { it.id }))
+            .fetch()
+
+        val stats = gradingHistories.groupBy {
+            it.problem.id
+        }.map {
+            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
+        }.toMap()
 
         val totalCnt = this.queryFactory.select(problem.id.count())
             .from(problem)
@@ -55,7 +84,7 @@ class ProblemRepositoryCustomImpl(
             )
             .fetch().size.toLong()
 
-        return PageImpl(result.map { it.toProblemResponseDto() }, pageable, totalCnt)
+        return PageImpl(result.map { it.toProblemResponseDto(stats[it.id]!!) }, pageable, totalCnt)
     }
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {
@@ -63,15 +92,15 @@ class ProblemRepositoryCustomImpl(
     }
 
     private fun isType(type: List<String>?): BooleanExpression? {
-        return if (type == null || type.isEmpty()) null else problem.dtype.`in`(type)
+        return if (type.isNullOrEmpty()) null else problem.dtype.`in`(type)
     }
 
     private fun likeTitle(title: String?): BooleanExpression? {
-        return if (title == null || title.isBlank()) null else problem.title.containsIgnoreCase(title)
+        return if (title.isNullOrBlank()) null else problem.title.containsIgnoreCase(title)
     }
 
     private fun inTags(tags: List<String>?): BooleanExpression? {
-        if (tags == null || tags.isEmpty()) {
+        if (tags.isNullOrEmpty()) {
             return null
         }
 
