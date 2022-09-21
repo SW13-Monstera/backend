@@ -122,4 +122,12 @@ class UserServiceImpl(
 
         return true
     }
+
+    @Transactional
+    override fun updateUserProfileImg(email: String, imgUrl: String) {
+        val findUser = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
+
+        findUser.profileImageUrl = imgUrl
+    }
 }
