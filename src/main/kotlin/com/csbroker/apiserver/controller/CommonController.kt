@@ -5,6 +5,7 @@ import com.csbroker.apiserver.dto.common.ApiResponse
 import com.csbroker.apiserver.service.CommonService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -15,5 +16,10 @@ class CommonController(
     @GetMapping("/stats")
     fun getStats(): ApiResponse<StatsDto> {
         return ApiResponse.success(commonService.getStats())
+    }
+
+    @GetMapping("/techs")
+    fun getTechs(@RequestParam("query", required = true) query: String): ApiResponse<List<String>> {
+        return ApiResponse.success(commonService.findTechByQuery(query))
     }
 }

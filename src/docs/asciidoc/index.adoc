@@ -265,6 +265,33 @@ include::{snippets}/common/stats/http-response.adoc[]
 include::{snippets}/common/stats/response-body.adoc[]
 include::{snippets}/common/stats/response-fields.adoc[]
 
+==== 기술 스택 데이터 API
+
+.description
+[source]
+----
+기술 스택 데이터 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/techs
+----
+
+.Sample Request
+include::{snippets}/common/techs/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/common/techs/http-response.adoc[]
+
+.Request parameters
+
+조회를 위한 request parameter의 설명입니다.
+include::{snippets}/common/techs/request-parameters.adoc[]
+
+.Response Body
+include::{snippets}/common/techs/response-body.adoc[]
+include::{snippets}/common/techs/response-fields.adoc[]
+
+
 
 === Problem API ( /api/v1/problems )
 
