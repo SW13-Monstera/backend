@@ -16,6 +16,7 @@ import com.csbroker.apiserver.repository.ProblemRepository
 import com.csbroker.apiserver.repository.ProblemTagRepository
 import com.csbroker.apiserver.repository.TagRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.BeforeAll
@@ -78,6 +79,9 @@ class UserControllerTest {
 
     @Autowired
     private lateinit var gradingHistoryRepository: GradingHistoryRepository
+
+    @Autowired
+    private lateinit var redisRepository: RedisRepository
 
     private val USER_ENDPOINT = "/api/v1/users"
 
@@ -147,8 +151,6 @@ class UserControllerTest {
 
             problem.addGradingStandards(listOf(gradingStandard))
             problemRepository.save(problem)
-
-            println(problem.id)
 
             val gradingHistory = GradingHistory(
                 problem = problem,
@@ -448,6 +450,8 @@ class UserControllerTest {
             role = Role.ROLE_ADMIN.code
         )
 
+        redisRepository.setRank(mapOf(adminId to 100.0))
+
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
@@ -494,7 +498,9 @@ class UserControllerTest {
                         fieldWithPath("data.count.os").type(JsonFieldType.NUMBER).description("맞은 운영체제 문제 수 통계"),
                         fieldWithPath("data.count.network").type(JsonFieldType.NUMBER).description("맞은 네트워크 문제 수 통계"),
                         fieldWithPath("data.count.ds").type(JsonFieldType.NUMBER).description("맞은 자료구조 문제 수 통계"),
-                        fieldWithPath("data.count.db").type(JsonFieldType.NUMBER).description("맞은 데이터베이스 문제 수 통계")
+                        fieldWithPath("data.count.db").type(JsonFieldType.NUMBER).description("맞은 데이터베이스 문제 수 통계"),
+                        fieldWithPath("data.rank").type(JsonFieldType.NUMBER).description("랭킹"),
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("점수")
                     )
                 )
             )
