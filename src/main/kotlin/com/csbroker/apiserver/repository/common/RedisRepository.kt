@@ -48,9 +48,7 @@ class RedisRepository(
         val rankKeys = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)
 
         if (rankKeys != null) {
-            println(rankKeys)
             for (rankKey in rankKeys) {
-                println(redisTemplate.opsForZSet().reverseRank("ranking", rankKey))
                 rank = redisTemplate.opsForZSet().reverseRank("ranking", rankKey!!)!!
             }
         }
