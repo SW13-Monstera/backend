@@ -29,7 +29,7 @@ class CommonServiceImpl(
     }
 
     override fun findTechByQuery(query: String): List<String> {
-        return this.techRepository.findByNameStartingWithIgnoreCase(query).map {
+        return this.techRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }
