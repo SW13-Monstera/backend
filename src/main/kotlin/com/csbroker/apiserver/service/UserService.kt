@@ -18,4 +18,6 @@ interface UserService {
     fun getStats(id: UUID, email: String): UserStatsDto
     fun deleteUser(email: String, id: UUID): Boolean
     fun updateUserProfileImg(email: String, imgUrl: String)
+
+    fun calculateRank()
 }

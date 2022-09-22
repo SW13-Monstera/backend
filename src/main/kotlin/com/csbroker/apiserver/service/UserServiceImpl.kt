@@ -10,16 +10,20 @@ import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.GradingHistoryRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
 import javax.transaction.Transactional
+import kotlin.math.max
 
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder,
-    private val gradingHistoryRepository: GradingHistoryRepository
+    private val gradingHistoryRepository: GradingHistoryRepository,
+    private val redisRepository: RedisRepository
 ) : UserService {
     override fun findUserByEmail(email: String): User? {
         return this.userRepository.findByEmail(email)
@@ -102,11 +106,15 @@ class UserServiceImpl(
             UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
         }.toList()
 
+        val rankResultDto = redisRepository.getRank(id)
+
         return UserStatsDto(
             correctAnswered,
             wrongAnswered,
             partialAnswered,
-            tagCounterMap
+            tagCounterMap,
+            rankResultDto.rank,
+            rankResultDto.score
         )
     }
 
@@ -129,5 +137,22 @@ class UserServiceImpl(
             ?: throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
 
         findUser.profileImageUrl = imgUrl
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 * * * * *")
+    override fun calculateRank() {
+        val findUsers = userRepository.findAll()
+        val allUserScoreMap = mutableMapOf<UUID, Double>()
+
+        for (findUser in findUsers) {
+            val scoreMap = mutableMapOf<Long, Double>()
+            findUser.gradingHistories.forEach {
+                scoreMap[it.problem.id!!] = max(scoreMap[it.problem.id!!] ?: 0.0, it.score)
+            }
+            allUserScoreMap[findUser.id!!] = scoreMap.values.sum()
+        }
+
+        redisRepository.setRank(allUserScoreMap)
     }
 }

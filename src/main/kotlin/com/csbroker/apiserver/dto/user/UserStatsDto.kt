@@ -4,7 +4,9 @@ data class UserStatsDto(
     val correctAnsweredProblem: List<ProblemStatsDto>,
     val wrongAnsweredProblem: List<ProblemStatsDto>,
     val partialAnsweredProblem: List<ProblemStatsDto>,
-    val count: Map<String, Int>
+    val count: Map<String, Int>,
+    val rank: Long,
+    val score: Double
 ) {
     data class ProblemStatsDto(
         val id: Long,
