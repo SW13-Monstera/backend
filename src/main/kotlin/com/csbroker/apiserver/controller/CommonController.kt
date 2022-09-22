@@ -27,7 +27,7 @@ class CommonController(
         return ApiResponse.success(commonService.getStats())
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/image")
     fun uploadImg(@RequestPart("image") multipartFile: MultipartFile, @LoginUser loginUser: User): ApiResponse<String> {
         return runBlocking {
             val imgUrl = s3Service.uploadProfileImg(multipartFile)
