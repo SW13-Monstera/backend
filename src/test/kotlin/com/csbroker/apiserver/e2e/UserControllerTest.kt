@@ -236,6 +236,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.profileImgUrl")
+                            .type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
                         fieldWithPath("data.githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.linkedinUrl")
@@ -288,6 +290,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.[].techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.[].profileImgUrl")
+                            .type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
                         fieldWithPath("data.[].githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.[].linkedinUrl")
@@ -377,6 +381,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("희망 직무").optional(),
                         fieldWithPath("data.techs")
                             .type(JsonFieldType.ARRAY).description("사용 기술").optional(),
+                        fieldWithPath("data.profileImgUrl")
+                            .type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
                         fieldWithPath("data.githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.linkedinUrl")

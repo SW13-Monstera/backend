@@ -3,8 +3,8 @@ package com.csbroker.apiserver.service
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
-import com.csbroker.apiserver.dto.user.UserStatsDto
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
+import com.csbroker.apiserver.dto.user.UserStatsDto
 import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.GradingHistory
 import com.csbroker.apiserver.model.User
@@ -121,5 +121,13 @@ class UserServiceImpl(
         findUserById.isDeleted = true
 
         return true
+    }
+
+    @Transactional
+    override fun updateUserProfileImg(email: String, imgUrl: String) {
+        val findUser = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
+
+        findUser.profileImageUrl = imgUrl
     }
 }

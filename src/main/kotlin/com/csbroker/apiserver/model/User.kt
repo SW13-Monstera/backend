@@ -104,6 +104,7 @@ class User(
             jobObjective = this.jobObjective,
             techs = this.tech?.split(", ") ?: emptyList(),
             major = this.major,
+            profileImgUrl = this.profileImageUrl,
             githubUrl = this.githubUrl,
             linkedinUrl = this.linkedinUrl
         )
