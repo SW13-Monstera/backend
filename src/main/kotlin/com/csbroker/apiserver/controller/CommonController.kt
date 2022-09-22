@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
@@ -27,12 +28,17 @@ class CommonController(
         return ApiResponse.success(commonService.getStats())
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/image")
     fun uploadImg(@RequestPart("image") multipartFile: MultipartFile, @LoginUser loginUser: User): ApiResponse<String> {
         return runBlocking {
             val imgUrl = s3Service.uploadProfileImg(multipartFile)
             userService.updateUserProfileImg(loginUser.username, imgUrl)
             ApiResponse.success(imgUrl)
         }
+    }
+
+    @GetMapping("/techs")
+    fun getTechs(@RequestParam("query", required = true) query: String): ApiResponse<List<String>> {
+        return ApiResponse.success(commonService.findTechByQuery(query))
     }
 }
