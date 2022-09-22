@@ -8,6 +8,7 @@ import com.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import com.csbroker.apiserver.model.User
 import com.csbroker.apiserver.repository.GradingHistoryRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.csbroker.apiserver.service.UserServiceImpl
 import io.mockk.every
 import io.mockk.mockk
@@ -23,8 +24,9 @@ class UserServiceTest {
     private val userRepository: UserRepository = mockk()
     private val passwordEncoder: BCryptPasswordEncoder = mockk()
     private val gradingHistoryRepository: GradingHistoryRepository = mockk()
+    private val redisRepository: RedisRepository = mockk()
     private val userService: UserServiceImpl =
-        UserServiceImpl(userRepository, passwordEncoder, gradingHistoryRepository)
+        UserServiceImpl(userRepository, passwordEncoder, gradingHistoryRepository, redisRepository)
 
     private val user: User = User(
         id = UUID.randomUUID(),
