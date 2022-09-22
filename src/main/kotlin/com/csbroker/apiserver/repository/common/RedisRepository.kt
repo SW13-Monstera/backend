@@ -42,17 +42,15 @@ class RedisRepository(
     }
 
     fun getRank(userId: UUID): RankResultDto {
-        var rank = 0L
+        var rank: Long? = null
 
         val score = redisTemplate.opsForZSet().score("ranking", userId.toString()) ?: 0.0
-        val rankKeys = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)
+        val rankKey = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)?.first()
 
-        if (rankKeys != null) {
-            for (rankKey in rankKeys) {
-                rank = redisTemplate.opsForZSet().reverseRank("ranking", rankKey!!)!!
-            }
+        if (rankKey != null) {
+            rank = redisTemplate.opsForZSet().reverseRank("ranking", rankKey)?.plus(1)
         }
 
-        return RankResultDto(rank + 1, score)
+        return RankResultDto(rank, score)
     }
 }

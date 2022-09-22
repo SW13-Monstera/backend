@@ -499,7 +499,8 @@ class UserControllerTest {
                         fieldWithPath("data.count.network").type(JsonFieldType.NUMBER).description("맞은 네트워크 문제 수 통계"),
                         fieldWithPath("data.count.ds").type(JsonFieldType.NUMBER).description("맞은 자료구조 문제 수 통계"),
                         fieldWithPath("data.count.db").type(JsonFieldType.NUMBER).description("맞은 데이터베이스 문제 수 통계"),
-                        fieldWithPath("data.rank").type(JsonFieldType.NUMBER).description("랭킹"),
+                        fieldWithPath("data.rank").type(JsonFieldType.NUMBER).description("랭킹 ( 랭킹이 집계되지 않았다면, null )")
+                            .optional(),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("점수")
                     )
                 )
