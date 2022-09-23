@@ -96,6 +96,8 @@ class ProblemApiControllerTest {
 
     private var keywordStandardId: Long? = null
 
+    private var promptStandardId: Long? = null
+
     private var choiceId: Long? = null
 
     private val PROBLEM_ENDPOINT = "/api/v1/problems"
@@ -128,18 +130,27 @@ class ProblemApiControllerTest {
                 standardAnswer = "test"
             )
 
-            val gradingStandard = GradingStandard(
+            val keywordGradingStandard = GradingStandard(
                 content = "test",
-                score = 10.0,
+                score = 5.0,
                 type = GradingStandardType.KEYWORD,
                 problem = problem
             )
-            problem.gradingStandards.add(gradingStandard)
+
+            val promptGradingStandard = GradingStandard(
+                content = "test",
+                score = 5.0,
+                type = GradingStandardType.PROMPT,
+                problem = problem
+            )
+
+            problem.gradingStandards.addAll(listOf(keywordGradingStandard, promptGradingStandard))
             problemRepository.save(problem)
 
             if (i == 1) {
                 this.longProblemId = problem.id
-                this.keywordStandardId = gradingStandard.id
+                this.keywordStandardId = keywordGradingStandard.id
+                this.promptStandardId = promptGradingStandard.id
             }
 
             if (i <= 2) {
@@ -451,6 +462,9 @@ class ProblemApiControllerTest {
                     listOf(9, 13),
                     "test"
                 )
+            ),
+            listOf(
+                promptStandardId!!
             )
         )
 
