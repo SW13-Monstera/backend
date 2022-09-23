@@ -42,9 +42,9 @@ interface ProblemService {
         pageable: Pageable
     ): MultipleChoiceProblemSearchResponseDto
 
-    fun findLongProblemDetailById(id: Long): LongProblemDetailResponseDto
-    fun findShortProblemDetailById(id: Long): ShortProblemDetailResponseDto
-    fun findMultipleChoiceProblemDetailById(id: Long): MultipleChoiceProblemDetailResponseDto
+    fun findLongProblemDetailById(id: Long, email: String?): LongProblemDetailResponseDto
+    fun findShortProblemDetailById(id: Long, email: String?): ShortProblemDetailResponseDto
+    fun findMultipleChoiceProblemDetailById(id: Long, email: String?): MultipleChoiceProblemDetailResponseDto
     fun findLongProblemById(id: Long): LongProblemResponseDto
     fun findShortProblemById(id: Long): ShortProblemResponseDto
     fun findMultipleProblemById(id: Long): MultipleChoiceProblemResponseDto

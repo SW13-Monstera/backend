@@ -59,7 +59,7 @@ class ShortProblem(
         )
     }
 
-    fun toDetailResponseDto(): ShortProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?): ShortProblemDetailResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
@@ -80,6 +80,8 @@ class ShortProblem(
             }
         }
 
+        val isSolved = this.gradingHistory.any { it.user.email == email }
+
         return ShortProblemDetailResponseDto(
             this.id!!,
             this.title,
@@ -89,7 +91,8 @@ class ShortProblem(
             correctUserCnt,
             scoreList.size,
             this.answer.length,
-            this.isEnglish()
+            this.isEnglish(),
+            isSolved
         )
     }
 

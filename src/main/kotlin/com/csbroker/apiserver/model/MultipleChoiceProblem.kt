@@ -83,7 +83,7 @@ class MultipleChoiceProblem(
         )
     }
 
-    fun toDetailResponseDto(): MultipleChoiceProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?): MultipleChoiceProblemDetailResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
@@ -104,6 +104,8 @@ class MultipleChoiceProblem(
             }
         }
 
+        val isSolved = this.gradingHistory.any { it.user.email == email }
+
         return MultipleChoiceProblemDetailResponseDto(
             this.id!!,
             this.title,
@@ -112,7 +114,8 @@ class MultipleChoiceProblem(
             scoreList.count { it == this.score },
             correctUserCnt,
             scoreList.size,
-            this.choicesList.map { it.toChoiceResponseDto() }
+            this.choicesList.map { it.toChoiceResponseDto() },
+            isSolved
         )
     }
 }

@@ -32,7 +32,7 @@ class ProblemRepositoryCustomImpl(
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy),
+                this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 this.isType(problemSearchDto.type),
                 this.isGradable(problemSearchDto.isGradable)
             )
@@ -70,7 +70,7 @@ class ProblemRepositoryCustomImpl(
             .where(
                 this.likeTitle(problemSearchDto.query),
                 this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy),
+                this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 this.isType(problemSearchDto.type),
                 this.isGradable(problemSearchDto.isGradable)
             )
@@ -99,11 +99,11 @@ class ProblemRepositoryCustomImpl(
         return tag.name.`in`(tags)
     }
 
-    private fun solvedBy(email: String?): BooleanExpression? {
-        if (email == null) {
+    private fun solvedBy(email: String?, isSolved: Boolean?): BooleanExpression? {
+        if (email == null || isSolved == null) {
             return null
         }
 
-        return user.email.eq(email)
+        return if (isSolved) user.email.eq(email) else user.email.ne(email)
     }
 }

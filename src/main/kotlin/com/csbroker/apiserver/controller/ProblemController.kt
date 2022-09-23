@@ -43,17 +43,11 @@ class ProblemController(
     ): ApiResponse<ProblemPageResponseDto> {
         var solvedBy: String? = null
 
-        if (isSolved != null && isSolved) {
-            try {
-                val principal = SecurityContextHolder.getContext().authentication.principal
-                    as User
-                solvedBy = principal.username
-            } catch (e: Exception) {
-                throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
-            }
+        if (isSolved != null) {
+            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, query, type, isGradable)
+        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)
         val foundProblems = this.problemService.findProblems(searchDto, pageable)
 
         return ApiResponse.success(foundProblems)
@@ -61,21 +55,21 @@ class ProblemController(
 
     @GetMapping("/long/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findLongProblemDetailById(id)
+        val findProblemDetail = this.problemService.findLongProblemDetailById(id, this.getEmail())
 
         return ApiResponse.success(findProblemDetail)
     }
 
     @GetMapping("/multiple/{id}")
     fun getMultipleProblemById(@PathVariable("id") id: Long): ApiResponse<MultipleChoiceProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findMultipleChoiceProblemDetailById(id)
+        val findProblemDetail = this.problemService.findMultipleChoiceProblemDetailById(id, this.getEmail())
 
         return ApiResponse.success(findProblemDetail)
     }
 
     @GetMapping("/short/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findShortProblemDetailById(id)
+        val findProblemDetail = this.problemService.findShortProblemDetailById(id, this.getEmail())
 
         return ApiResponse.success(findProblemDetail)
     }
@@ -108,5 +102,15 @@ class ProblemController(
     ): ApiResponse<MultipleChoiceProblemGradingHistoryDto> {
         val gradeHistory = this.problemService.gradingMultipleChoiceProblem(loginUser.username, id, answerDto.answerIds)
         return ApiResponse.success(gradeHistory)
+    }
+
+    fun getEmail(): String? {
+        return try {
+            val principal = SecurityContextHolder.getContext().authentication.principal
+                as User
+            principal.username
+        } catch (e: Exception) {
+            null
+        }
     }
 }

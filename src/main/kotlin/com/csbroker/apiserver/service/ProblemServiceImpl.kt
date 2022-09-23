@@ -113,18 +113,18 @@ class ProblemServiceImpl(
         )
     }
 
-    override fun findLongProblemDetailById(id: Long): LongProblemDetailResponseDto {
-        return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+    override fun findLongProblemDetailById(id: Long, email: String?): LongProblemDetailResponseDto {
+        return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
-    override fun findShortProblemDetailById(id: Long): ShortProblemDetailResponseDto {
-        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+    override fun findShortProblemDetailById(id: Long, email: String?): ShortProblemDetailResponseDto {
+        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
-    override fun findMultipleChoiceProblemDetailById(id: Long): MultipleChoiceProblemDetailResponseDto {
-        return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto()
+    override fun findMultipleChoiceProblemDetailById(id: Long, email: String?): MultipleChoiceProblemDetailResponseDto {
+        return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
