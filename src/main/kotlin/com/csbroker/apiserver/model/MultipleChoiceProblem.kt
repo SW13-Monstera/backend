@@ -94,9 +94,15 @@ class MultipleChoiceProblem(
             it.score
         }.toList().sorted()
 
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
+        var correctUserCnt = 0
+
+        this.gradingHistory.groupBy {
+            it.user.id
+        }.forEach {
+            if (it.value.any { gh -> gh.score == gh.problem.score }) {
+                correctUserCnt++
+            }
+        }
 
         return MultipleChoiceProblemDetailResponseDto(
             this.id!!,
@@ -104,8 +110,8 @@ class MultipleChoiceProblem(
             tags,
             this.description,
             scoreList.count { it == this.score },
-            scoreList.count { it != this.score },
-            totalSolved,
+            correctUserCnt,
+            scoreList.size,
             this.choicesList.map { it.toChoiceResponseDto() }
         )
     }

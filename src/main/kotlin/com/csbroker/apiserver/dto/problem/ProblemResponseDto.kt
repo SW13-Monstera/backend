@@ -5,6 +5,6 @@ data class ProblemResponseDto(
     val title: String,
     val tags: List<String>,
     val avgScore: Double?,
-    val totalSolved: Int,
+    val totalSubmission: Int,
     val type: String
 )

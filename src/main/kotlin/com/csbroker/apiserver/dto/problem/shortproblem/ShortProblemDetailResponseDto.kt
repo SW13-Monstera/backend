@@ -5,9 +5,9 @@ data class ShortProblemDetailResponseDto(
     val title: String,
     val tags: List<String>,
     val description: String,
-    val correctCnt: Int,
-    val wrongCnt: Int,
-    val totalSolved: Int,
+    val correctSubmission: Int,
+    val correctUserCnt: Int,
+    val totalSubmission: Int,
     val answerLength: Int,
     val isEnglish: Boolean
 )

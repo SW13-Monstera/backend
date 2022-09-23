@@ -93,10 +93,6 @@ class LongProblem(
             it.score
         }.toList().sorted()
 
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
-
         return LongProblemDetailResponseDto(
             this.id!!,
             this.title,
@@ -105,7 +101,7 @@ class LongProblem(
             if (scoreList.isEmpty()) null else scoreList.average(),
             if (scoreList.isEmpty()) null else scoreList.last(),
             if (scoreList.isEmpty()) null else scoreList.first(),
-            totalSolved
+            scoreList.size
         )
     }
 }

@@ -8,9 +8,9 @@ data class MultipleChoiceProblemGradingHistoryDto(
     val title: String,
     val tags: List<String>,
     val description: String,
-    val correctCnt: Int,
-    val wrongCnt: Int,
-    val totalSolved: Int,
+    val correctSubmission: Int,
+    val correctUserCnt: Int,
+    val totalSubmission: Int,
     val choices: List<ChoiceResponseDto>,
     val userAnswerIds: List<Long>,
     val isAnswer: Boolean,
@@ -35,9 +35,15 @@ data class MultipleChoiceProblemGradingHistoryDto(
                 it.score
             }.toList().sorted()
 
-            val totalSolved = problem.gradingHistory.map {
-                it.user.username
-            }.distinct().size
+            var correctUserCnt = 0
+
+            problem.gradingHistory.groupBy {
+                it.user.id
+            }.forEach {
+                if (it.value.any { gh -> gh.score == gh.problem.score }) {
+                    correctUserCnt++
+                }
+            }
 
             val choices = problem.choicesList.map {
                 ChoiceResponseDto(
@@ -53,8 +59,8 @@ data class MultipleChoiceProblemGradingHistoryDto(
                 tags,
                 problem.description,
                 scoreList.count { it == problem.score },
-                scoreList.count { it != problem.score },
-                totalSolved,
+                correctUserCnt,
+                scoreList.size,
                 choices,
                 userAnswerIds,
                 isAnswer,

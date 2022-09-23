@@ -251,8 +251,8 @@ class ProblemApiControllerTest {
                             .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
                         fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
                             .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수")
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수")
                     )
                 )
             )
@@ -289,12 +289,12 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
-                        fieldWithPath("data.correctCnt").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.correctUserCnt").type(JsonFieldType.NUMBER)
                             .description("맞은 사람 수"),
-                        fieldWithPath("data.wrongCnt").type(JsonFieldType.NUMBER)
-                            .description("틀린 사람 수"),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.correctSubmission").type(JsonFieldType.NUMBER)
+                            .description("맞은 제출 수"),
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
                             .description("정답 글자수 ( 힌트 )"),
                         fieldWithPath("data.isEnglish").type(JsonFieldType.BOOLEAN)
@@ -337,12 +337,12 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
                         fieldWithPath("data.avgScore").type(JsonFieldType.NUMBER)
                             .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
-                        fieldWithPath("data.correctCnt").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.correctUserCnt").type(JsonFieldType.NUMBER)
                             .description("맞은 사람 수"),
-                        fieldWithPath("data.wrongCnt").type(JsonFieldType.NUMBER)
-                            .description("틀린 사람 수"),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.correctSubmission").type(JsonFieldType.NUMBER)
+                            .description("맞은 제출 수"),
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.choices.[].id").type(JsonFieldType.NUMBER)
                             .description("선지 id"),
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
@@ -415,8 +415,8 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.contents.[].tags").type(JsonFieldType.ARRAY).description("태그"),
                         fieldWithPath("data.contents.[].avgScore").type(JsonFieldType.NUMBER)
                             .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
-                        fieldWithPath("data.contents.[].totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.contents.[].totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
                             .description("문제의 타입 ( short, multiple, choice )"),
                         fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
@@ -516,8 +516,8 @@ class ProblemApiControllerTest {
                             .description("최고 점수 ( 푼 사람이 없는 경우 null return )").optional(),
                         fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
                             .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("채점 된 유저 답안의 점수"),
                         fieldWithPath("data.userAnswer").type(JsonFieldType.STRING)
@@ -593,12 +593,12 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
-                        fieldWithPath("data.correctCnt").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.correctUserCnt").type(JsonFieldType.NUMBER)
                             .description("맞은 사람 수"),
-                        fieldWithPath("data.wrongCnt").type(JsonFieldType.NUMBER)
-                            .description("틀린 사람 수"),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.correctSubmission").type(JsonFieldType.NUMBER)
+                            .description("맞은 제출 수"),
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("채점 된 유저 답안의 점수"),
                         fieldWithPath("data.userAnswer").type(JsonFieldType.STRING)
@@ -666,12 +666,12 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
-                        fieldWithPath("data.correctCnt").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.correctUserCnt").type(JsonFieldType.NUMBER)
                             .description("맞은 사람 수"),
-                        fieldWithPath("data.wrongCnt").type(JsonFieldType.NUMBER)
-                            .description("틀린 사람 수"),
-                        fieldWithPath("data.totalSolved").type(JsonFieldType.NUMBER)
-                            .description("문제를 푼 사람 수"),
+                        fieldWithPath("data.correctSubmission").type(JsonFieldType.NUMBER)
+                            .description("맞은 제출 수"),
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("채점 된 유저 답안의 점수"),
                         fieldWithPath("data.userAnswerIds").type(JsonFieldType.ARRAY)

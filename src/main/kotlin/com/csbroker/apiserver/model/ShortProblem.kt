@@ -70,9 +70,15 @@ class ShortProblem(
             it.score
         }.toList().sorted()
 
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
+        var correctUserCnt = 0
+
+        this.gradingHistory.groupBy {
+            it.user.id
+        }.forEach {
+            if (it.value.any { gh -> gh.score == gh.problem.score }) {
+                correctUserCnt++
+            }
+        }
 
         return ShortProblemDetailResponseDto(
             this.id!!,
@@ -80,8 +86,8 @@ class ShortProblem(
             tags,
             this.description,
             scoreList.count { it == this.score },
-            scoreList.count { it != this.score },
-            totalSolved,
+            correctUserCnt,
+            scoreList.size,
             this.answer.length,
             this.isEnglish()
         )

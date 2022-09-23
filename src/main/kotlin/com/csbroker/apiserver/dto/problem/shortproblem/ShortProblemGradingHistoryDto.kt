@@ -8,9 +8,9 @@ data class ShortProblemGradingHistoryDto(
     val title: String,
     val tags: List<String>,
     val description: String,
-    val correctCnt: Int,
-    val wrongCnt: Int,
-    val totalSolved: Int,
+    val correctSubmission: Int,
+    val correctUserCnt: Int,
+    val totalSubmission: Int,
     val userAnswer: String,
     val answerLength: Int,
     val isAnswer: Boolean,
@@ -35,9 +35,15 @@ data class ShortProblemGradingHistoryDto(
                 it.score
             }.toList().sorted()
 
-            val totalSolved = problem.gradingHistory.map {
-                it.user.username
-            }.distinct().size
+            var correctUserCnt = 0
+
+            problem.gradingHistory.groupBy {
+                it.user.id
+            }.forEach {
+                if (it.value.any { gh -> gh.score == gh.problem.score }) {
+                    correctUserCnt++
+                }
+            }
 
             return ShortProblemGradingHistoryDto(
                 gradingHistoryId,
@@ -46,8 +52,8 @@ data class ShortProblemGradingHistoryDto(
                 tags,
                 problem.description,
                 scoreList.count { it == problem.score },
-                scoreList.count { it != problem.score },
-                totalSolved,
+                correctUserCnt,
+                scoreList.size,
                 userAnswer,
                 problem.answer.length,
                 isAnswer,
