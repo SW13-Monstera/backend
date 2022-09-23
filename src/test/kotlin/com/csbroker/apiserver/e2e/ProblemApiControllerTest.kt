@@ -252,7 +252,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.bottomScore").type(JsonFieldType.NUMBER)
                             .description("최저 점수 ( 푼 사람이 없는 경우 null return )").optional(),
                         fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
-                            .description("총 제출 수")
+                            .description("총 제출 수"),
+                        fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
+                            .description("푼 문제 여부")
                     )
                 )
             )
@@ -298,7 +300,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
                             .description("정답 글자수 ( 힌트 )"),
                         fieldWithPath("data.isEnglish").type(JsonFieldType.BOOLEAN)
-                            .description("정답 언어 ( 영어면 true, 한국어면 false )")
+                            .description("정답 언어 ( 영어면 true, 한국어면 false )"),
+                        fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
+                            .description("푼 문제 여부")
                     )
                 )
             )
@@ -346,7 +350,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.choices.[].id").type(JsonFieldType.NUMBER)
                             .description("선지 id"),
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
-                            .description("선지 내용")
+                            .description("선지 내용"),
+                        fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
+                            .description("푼 문제 여부"),
                     )
                 )
             )
