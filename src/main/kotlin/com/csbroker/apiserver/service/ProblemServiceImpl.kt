@@ -317,6 +317,7 @@ class ProblemServiceImpl(
         val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
         val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
         val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
+        val correctPromptIds = gradingResponseDto.correct_prompt_ids
         var userGradedScore = 0.0
 
         // get keywords
@@ -337,6 +338,19 @@ class ProblemServiceImpl(
         }.map {
             KeywordDto(it.id!!, it.content)
         }.toList()
+
+        // get score from prompts
+        val promptScores = findProblem.gradingStandards.filter {
+            it.type == GradingStandardType.PROMPT && it.id in correctPromptIds
+        }.map {
+            it.score
+        }
+
+        if (promptScores.size != correctPromptIds.size) {
+            throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
+        }
+
+        userGradedScore += promptScores.sum()
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)

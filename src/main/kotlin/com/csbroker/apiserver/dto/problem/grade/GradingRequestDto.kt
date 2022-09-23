@@ -6,8 +6,14 @@ import com.csbroker.apiserver.model.LongProblem
 data class GradingRequestDto(
     val problem_id: Long,
     val user_answer: String,
-    val keywords: List<GradingKeyword>
+    val keywords: List<GradingKeyword>,
+    val prompts: List<GradingPrompt>
 ) {
+    data class GradingPrompt(
+        val id: Long,
+        val content: String
+    )
+
     data class GradingKeyword(
         val id: Long,
         val content: String
@@ -22,6 +28,14 @@ data class GradingRequestDto(
                     it.type == GradingStandardType.KEYWORD
                 }.map {
                     GradingKeyword(
+                        it.id!!,
+                        it.content
+                    )
+                },
+                problem.gradingStandards.filter {
+                    it.type == GradingStandardType.PROMPT
+                }.map {
+                    GradingPrompt(
                         it.id!!,
                         it.content
                     )
