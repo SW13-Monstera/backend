@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import com.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
@@ -59,31 +60,20 @@ class ShortProblem(
         )
     }
 
-    fun toDetailResponseDto(): ShortProblemDetailResponseDto {
-        val tags = this.problemTags.map {
-            it.tag
-        }.map {
-            it.name
-        }
-
-        val scoreList = this.gradingHistory.map {
-            it.score
-        }.toList().sorted()
-
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
+    fun toDetailResponseDto(email: String?): ShortProblemDetailResponseDto {
+        val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseDto(
             this.id!!,
             this.title,
-            tags,
+            commonDetail.tags,
             this.description,
-            scoreList.count { it == this.score },
-            scoreList.count { it != this.score },
-            totalSolved,
+            commonDetail.correctSubmission,
+            commonDetail.correctUserCnt,
+            commonDetail.totalSubmission,
             this.answer.length,
-            this.isEnglish()
+            this.isEnglish(),
+            this.gradingHistory.any { it.user.email == email }
         )
     }
 

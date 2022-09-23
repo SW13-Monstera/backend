@@ -11,7 +11,7 @@ data class LongProblemGradingHistoryDto(
     val avgScore: Double?,
     val topScore: Double?,
     val bottomScore: Double?,
-    val totalSolved: Int,
+    val totalSubmission: Int,
     val score: Double,
     val keywords: List<KeywordDto>,
     val userAnswer: String,
@@ -36,10 +36,6 @@ data class LongProblemGradingHistoryDto(
                 it.score
             }.toList().sorted()
 
-            val totalSolved = problem.gradingHistory.map {
-                it.user.username
-            }.distinct().size
-
             return LongProblemGradingHistoryDto(
                 gradingHistoryId,
                 problem.id!!,
@@ -49,7 +45,7 @@ data class LongProblemGradingHistoryDto(
                 if (scoreList.isEmpty()) null else scoreList.average(),
                 if (scoreList.isEmpty()) null else scoreList.last(),
                 if (scoreList.isEmpty()) null else scoreList.first(),
-                totalSolved,
+                scoreList.size,
                 score,
                 keywords,
                 userAnswer,

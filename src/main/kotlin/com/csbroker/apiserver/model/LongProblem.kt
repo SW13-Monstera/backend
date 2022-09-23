@@ -82,7 +82,7 @@ class LongProblem(
         )
     }
 
-    fun toDetailResponseDto(): LongProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?): LongProblemDetailResponseDto {
         val tags = this.problemTags.map {
             it.tag
         }.map {
@@ -93,9 +93,7 @@ class LongProblem(
             it.score
         }.toList().sorted()
 
-        val totalSolved = this.gradingHistory.map {
-            it.user.username
-        }.distinct().size
+        val isSolved = this.gradingHistory.any { it.user.email == email }
 
         return LongProblemDetailResponseDto(
             this.id!!,
@@ -105,7 +103,8 @@ class LongProblem(
             if (scoreList.isEmpty()) null else scoreList.average(),
             if (scoreList.isEmpty()) null else scoreList.last(),
             if (scoreList.isEmpty()) null else scoreList.first(),
-            totalSolved
+            scoreList.size,
+            isSolved
         )
     }
 }

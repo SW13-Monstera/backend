@@ -18,9 +18,7 @@ data class GradingHistoryStats(
                         it
                     }
                 },
-                gradingHistories.map {
-                    it.user.username
-                }.distinct().size
+                gradingHistories.size
             )
         }
     }

@@ -8,5 +8,6 @@ data class LongProblemDetailResponseDto(
     val avgScore: Double?,
     val topScore: Double?,
     val bottomScore: Double?,
-    val totalSolved: Int
+    val totalSubmission: Int,
+    val isSolved: Boolean
 )
