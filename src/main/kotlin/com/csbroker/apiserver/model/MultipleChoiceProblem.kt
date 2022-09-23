@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.model
 
+import com.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
 import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
 import com.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
@@ -84,38 +85,18 @@ class MultipleChoiceProblem(
     }
 
     fun toDetailResponseDto(email: String?): MultipleChoiceProblemDetailResponseDto {
-        val tags = this.problemTags.map {
-            it.tag
-        }.map {
-            it.name
-        }
-
-        val scoreList = this.gradingHistory.map {
-            it.score
-        }.toList().sorted()
-
-        var correctUserCnt = 0
-
-        this.gradingHistory.groupBy {
-            it.user.id
-        }.forEach {
-            if (it.value.any { gh -> gh.score == gh.problem.score }) {
-                correctUserCnt++
-            }
-        }
-
-        val isSolved = this.gradingHistory.any { it.user.email == email }
+        val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return MultipleChoiceProblemDetailResponseDto(
             this.id!!,
             this.title,
-            tags,
+            commonDetail.tags,
             this.description,
-            scoreList.count { it == this.score },
-            correctUserCnt,
-            scoreList.size,
+            commonDetail.correctSubmission,
+            commonDetail.correctUserCnt,
+            commonDetail.totalSubmission,
             this.choicesList.map { it.toChoiceResponseDto() },
-            isSolved
+            this.gradingHistory.any { it.user.email == email }
         )
     }
 }

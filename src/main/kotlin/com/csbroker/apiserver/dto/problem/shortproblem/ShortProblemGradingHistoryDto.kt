@@ -1,5 +1,6 @@
 package com.csbroker.apiserver.dto.problem.shortproblem
 
+import com.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
 import com.csbroker.apiserver.model.ShortProblem
 
 data class ShortProblemGradingHistoryDto(
@@ -25,35 +26,17 @@ data class ShortProblemGradingHistoryDto(
             score: Double,
             isAnswer: Boolean
         ): ShortProblemGradingHistoryDto {
-            val tags = problem.problemTags.map {
-                it.tag
-            }.map {
-                it.name
-            }
-
-            val scoreList = problem.gradingHistory.map {
-                it.score
-            }.toList().sorted()
-
-            var correctUserCnt = 0
-
-            problem.gradingHistory.groupBy {
-                it.user.id
-            }.forEach {
-                if (it.value.any { gh -> gh.score == gh.problem.score }) {
-                    correctUserCnt++
-                }
-            }
+            val commonDetail = ProblemCommonDetailResponse.getCommonDetail(problem)
 
             return ShortProblemGradingHistoryDto(
                 gradingHistoryId,
                 problem.id!!,
                 problem.title,
-                tags,
+                commonDetail.tags,
                 problem.description,
-                scoreList.count { it == problem.score },
-                correctUserCnt,
-                scoreList.size,
+                commonDetail.correctSubmission,
+                commonDetail.correctUserCnt,
+                commonDetail.totalSubmission,
                 userAnswer,
                 problem.answer.length,
                 isAnswer,
