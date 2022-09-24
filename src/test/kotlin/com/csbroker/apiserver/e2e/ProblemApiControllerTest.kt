@@ -470,7 +470,10 @@ class ProblemApiControllerTest {
                 )
             ),
             listOf(
-                promptStandardId!!
+                GradingResponseDto.CorrectContent(
+                    promptStandardId!!,
+                    "test"
+                )
             )
         )
 
