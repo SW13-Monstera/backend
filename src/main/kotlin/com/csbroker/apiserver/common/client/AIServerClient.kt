@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody
 @FeignClient(name = "ai", url = "\${feign.ai.url}")
 interface AIServerClient {
 
-    @PostMapping("/keyword_predict")
+    @PostMapping("/integrate_predict")
     fun getGrade(@RequestBody gradingRequestDto: GradingRequestDto): GradingResponseDto
 }

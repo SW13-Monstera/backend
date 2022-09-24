@@ -39,6 +39,7 @@ import com.csbroker.apiserver.repository.ShortProblemRepository
 import com.csbroker.apiserver.repository.TagRepository
 import com.csbroker.apiserver.repository.UserAnswerRepository
 import com.csbroker.apiserver.repository.UserRepository
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -315,9 +316,12 @@ class ProblemServiceImpl(
 
         // check score
         val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
+
+        println("\n\n\n" + jacksonObjectMapper().writeValueAsString(gradingRequestDto))
         val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
+        println("\n\n\n" + jacksonObjectMapper().writeValueAsString(gradingResponseDto))
         val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
-        val correctPromptIds = gradingResponseDto.correct_prompt_ids
+        val correctPromptIds = gradingResponseDto.correct_contents.map { it.id }
         var userGradedScore = 0.0
 
         // get keywords
