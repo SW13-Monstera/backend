@@ -5,6 +5,7 @@ import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.util.log
 import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
 import com.csbroker.apiserver.dto.problem.grade.GradingRequestDto
@@ -317,9 +318,10 @@ class ProblemServiceImpl(
         // check score
         val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
 
-        println("\n\n\n" + jacksonObjectMapper().writeValueAsString(gradingRequestDto))
         val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
-        println("\n\n\n" + jacksonObjectMapper().writeValueAsString(gradingResponseDto))
+
+        log.info("Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
+
         val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
         val correctPromptIds = gradingResponseDto.correct_contents.map { it.id }
         var userGradedScore = 0.0

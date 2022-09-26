@@ -21,7 +21,11 @@ class LoggingFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         MDC.put("traceId", UUID.randomUUID().toString())
-        if (isAsyncDispatch(request) || request.requestURI.contains("upload")) {
+        if (
+            isAsyncDispatch(request) ||
+            request.requestURI.contains("upload") ||
+            request.requestURI.contains("actuator")
+        ) {
             filterChain.doFilter(request, response)
         } else {
             doFilterWrapped(
