@@ -31,8 +31,8 @@ class CommonServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getRanks(start: Long, end: Long): RankListDto {
-        return redisRepository.getRanks(start - 1, end - 1)
+    override fun getRanks(size: Long, page: Long): RankListDto {
+        return redisRepository.getRanks(size, page)
     }
 
     override fun findTechByQuery(query: String): List<String> {

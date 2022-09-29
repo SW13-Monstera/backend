@@ -39,6 +39,10 @@ class RedisRepository(
     }
 
     fun setRank(scoreMap: Map<String, Double>) {
+        scoreMap.forEach { (t, u) ->
+            println(t)
+            println(u)
+        }
         redisTemplate.opsForZSet().add(
             "ranking",
             scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet()
@@ -58,10 +62,12 @@ class RedisRepository(
         return RankResultDto(rank, score)
     }
 
-    fun getRanks(start: Long, end: Long): RankListDto {
+    fun getRanks(size: Long, page: Long): RankListDto {
+        val start = size * page
+        val end = size * (page + 1) - 1
+
         val keyWithScores = redisTemplate.opsForZSet().reverseRangeWithScores("ranking", start, end)
         val totalElements = redisTemplate.opsForZSet().size("ranking") ?: 0
-        val size = end - start + 1
         val totalPage = if (totalElements % size > 0) totalElements / size + 1 else totalElements / size
         val result = mutableListOf<RankListDto.RankDetail>()
         var rank = 1L
@@ -101,7 +107,7 @@ class RedisRepository(
         return RankListDto(
             size = size,
             totalPage = totalPage,
-            currentPage = start / size + 1,
+            currentPage = page,
             numberOfElements = result.size.toLong(),
             contents = result
         )

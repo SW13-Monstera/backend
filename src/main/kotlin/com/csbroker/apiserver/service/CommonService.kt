@@ -7,6 +7,6 @@ import com.csbroker.apiserver.dto.problem.ProblemResponseDto
 interface CommonService {
     fun getStats(): StatsDto
     fun getTodayProblems(): List<ProblemResponseDto>
-    fun getRanks(start: Long, end: Long): RankListDto
+    fun getRanks(size: Long, page: Long): RankListDto
     fun findTechByQuery(query: String): List<String>
 }
