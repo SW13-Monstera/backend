@@ -113,7 +113,7 @@ class CommonControllerTest {
             mapOf(
                 "${UUID.randomUUID()}@test1" to 100.0,
                 "${UUID.randomUUID()}@test2" to 99.0,
-                "${UUID.randomUUID()}@test3" to 99.0,
+                "${UUID.randomUUID()}@test3" to 99.0
             )
         )
 

@@ -48,7 +48,7 @@ class CommonController(
     @GetMapping("/ranks")
     fun getRanks(
         @RequestParam("size", required = false, defaultValue = "10") size: Long,
-        @RequestParam("page", required = false, defaultValue = "0") page: Long,
+        @RequestParam("page", required = false, defaultValue = "0") page: Long
     ): ApiResponse<RankListDto> {
         return ApiResponse.success(commonService.getRanks(size, page))
     }
