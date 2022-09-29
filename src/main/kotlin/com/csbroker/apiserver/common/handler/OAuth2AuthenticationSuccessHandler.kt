@@ -74,7 +74,8 @@ class OAuth2AuthenticationSuccessHandler(
         val user = authentication.principal as OidcUser
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
 
-        val findUser = this.userRepository.findUserByProviderId(userInfo.getId())
+        val findUser = this.userRepository.findByEmail(userInfo.getEmail())
+            ?: this.userRepository.findUserByProviderId(userInfo.getId())
             ?: throw EntityNotFoundException("유저를 찾을 수 없습니다. ( ${userInfo.getId()} )")
 
         val now = Date()
