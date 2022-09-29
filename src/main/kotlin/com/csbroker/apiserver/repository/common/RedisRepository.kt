@@ -39,10 +39,6 @@ class RedisRepository(
     }
 
     fun setRank(scoreMap: Map<String, Double>) {
-        scoreMap.forEach { (t, u) ->
-            println(t)
-            println(u)
-        }
         redisTemplate.opsForZSet().add(
             "ranking",
             scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet()
