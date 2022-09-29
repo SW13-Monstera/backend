@@ -56,13 +56,9 @@ class UserServiceImpl(
         return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
     }
 
-    override fun getStats(id: UUID, email: String): UserStatsDto {
+    override fun getStats(id: UUID): UserStatsDto {
         val findUser = this.userRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
-
-        if (findUser.email != email) {
-            throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
-        }
 
         val gradingHistories = this.gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
 
@@ -106,7 +102,7 @@ class UserServiceImpl(
             UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
         }.toList()
 
-        val rankResultDto = redisRepository.getRank(id)
+        val rankResultDto = redisRepository.getRank(id.toString() + '@' + findUser.username)
 
         return UserStatsDto(
             correctAnswered,
@@ -140,17 +136,17 @@ class UserServiceImpl(
     }
 
     @Transactional
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     override fun calculateRank() {
         val findUsers = userRepository.findAll()
-        val allUserScoreMap = mutableMapOf<UUID, Double>()
+        val allUserScoreMap = mutableMapOf<String, Double>()
 
         for (findUser in findUsers) {
             val scoreMap = mutableMapOf<Long, Double>()
             findUser.gradingHistories.forEach {
                 scoreMap[it.problem.id!!] = max(scoreMap[it.problem.id!!] ?: 0.0, it.score)
             }
-            allUserScoreMap[findUser.id!!] = scoreMap.values.sum()
+            allUserScoreMap[findUser.id!!.toString() + '@' + findUser.username] = scoreMap.values.sum()
         }
 
         redisRepository.setRank(allUserScoreMap)

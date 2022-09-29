@@ -3,6 +3,8 @@ package com.csbroker.apiserver.controller
 import com.csbroker.apiserver.auth.LoginUser
 import com.csbroker.apiserver.dto.StatsDto
 import com.csbroker.apiserver.dto.common.ApiResponse
+import com.csbroker.apiserver.dto.common.RankListDto
+import com.csbroker.apiserver.repository.common.RedisRepository
 import com.csbroker.apiserver.service.CommonService
 import com.csbroker.apiserver.service.S3Service
 import com.csbroker.apiserver.service.UserService
@@ -21,7 +23,8 @@ import org.springframework.web.multipart.MultipartFile
 class CommonController(
     private val commonService: CommonService,
     private val s3Service: S3Service,
-    private val userService: UserService
+    private val userService: UserService,
+    private val redisRepository: RedisRepository
 ) {
     @GetMapping("/stats")
     fun getStats(): ApiResponse<StatsDto> {
@@ -40,5 +43,13 @@ class CommonController(
     @GetMapping("/techs")
     fun getTechs(@RequestParam("query", required = true) query: String): ApiResponse<List<String>> {
         return ApiResponse.success(commonService.findTechByQuery(query))
+    }
+
+    @GetMapping("/ranks")
+    fun getRanks(
+        @RequestParam("start", required = false, defaultValue = "1") start: Long,
+        @RequestParam("end", required = false, defaultValue = "10") end: Long,
+    ): ApiResponse<RankListDto> {
+        return ApiResponse.success(commonService.getRanks(start, end))
     }
 }

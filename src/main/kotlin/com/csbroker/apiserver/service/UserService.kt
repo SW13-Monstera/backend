@@ -15,7 +15,7 @@ interface UserService {
     fun findUsers(): List<User>
 
     fun findAdminUsers(): List<User>
-    fun getStats(id: UUID, email: String): UserStatsDto
+    fun getStats(id: UUID): UserStatsDto
     fun deleteUser(email: String, id: UUID): Boolean
     fun updateUserProfileImg(email: String, imgUrl: String)
 

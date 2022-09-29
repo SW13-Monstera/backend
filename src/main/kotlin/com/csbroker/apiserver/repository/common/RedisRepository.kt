@@ -1,8 +1,11 @@
 package com.csbroker.apiserver.repository.common
 
+import aws.smithy.kotlin.runtime.util.push
 import com.csbroker.apiserver.common.config.properties.AppProperties
+import com.csbroker.apiserver.dto.common.RankListDto
 import com.csbroker.apiserver.dto.user.RankResultDto
 import org.springframework.data.redis.core.StringRedisTemplate
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple
 import org.springframework.stereotype.Repository
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -35,16 +38,17 @@ class RedisRepository(
         redisTemplate.delete(code)
     }
 
-    fun setRank(scoreMap: Map<UUID, Double>) {
-        scoreMap.forEach {
-            redisTemplate.opsForZSet().add("ranking", it.key.toString(), it.value)
-        }
+    fun setRank(scoreMap: Map<String, Double>) {
+        redisTemplate.opsForZSet().add(
+            "ranking",
+            scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet()
+        )
     }
 
-    fun getRank(userId: UUID): RankResultDto {
+    fun getRank(key: String): RankResultDto {
         var rank: Long? = null
 
-        val score = redisTemplate.opsForZSet().score("ranking", userId.toString()) ?: 0.0
+        val score = redisTemplate.opsForZSet().score("ranking", key) ?: 0.0
         val rankKey = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)?.first()
 
         if (rankKey != null) {
@@ -52,5 +56,54 @@ class RedisRepository(
         }
 
         return RankResultDto(rank, score)
+    }
+
+    fun getRanks(start: Long, end: Long): RankListDto {
+        val keyWithScores = redisTemplate.opsForZSet().reverseRangeWithScores("ranking", start, end)
+        val totalElements = redisTemplate.opsForZSet().size("ranking") ?: 0
+        val size = end - start + 1
+        val totalPage = if (totalElements % size > 0) totalElements / size + 1 else totalElements / size
+        val result = mutableListOf<RankListDto.RankDetail>()
+        var rank = 1L
+        var cnt = 0
+
+        if (keyWithScores != null) {
+            for ((index, keyWithScore) in keyWithScores.withIndex()) {
+                if (index == 0) {
+                    val score = keyWithScore.score!!
+                    val key = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)!!.first()
+                    rank = redisTemplate.opsForZSet().reverseRank("ranking", key)!!.plus(1)
+                } else {
+                    if (result.last().score == keyWithScore.score) {
+                        cnt += 1
+                    } else {
+                        rank += cnt
+                        cnt = 1
+                    }
+                }
+
+                val keys = keyWithScore.value!!.split('@')
+
+                val id = UUID.fromString(keys[0])
+                val username = keys[1]
+
+                result.push(
+                    RankListDto.RankDetail(
+                        id,
+                        username,
+                        rank,
+                        keyWithScore.score!!
+                    )
+                )
+            }
+        }
+
+        return RankListDto(
+            size = size,
+            totalPage = totalPage,
+            currentPage = start / size + 1,
+            numberOfElements = result.size.toLong(),
+            contents = result
+        )
     }
 }
