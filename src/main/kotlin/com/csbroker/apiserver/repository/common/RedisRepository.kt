@@ -71,21 +71,19 @@ class RedisRepository(
         val totalPage = if (totalElements % size > 0) totalElements / size + 1 else totalElements / size
         val result = mutableListOf<RankListDto.RankDetail>()
         var rank = 1L
-        var cnt = 0
+        var isFirst = true
 
         if (keyWithScores != null) {
-            for ((index, keyWithScore) in keyWithScores.withIndex()) {
-                if (index == 0) {
+            for (keyWithScore in keyWithScores) {
+                if (!isFirst && result.last().score != keyWithScore.score) {
+                    isFirst = true
+                }
+
+                if (isFirst) {
                     val score = keyWithScore.score!!
                     val key = redisTemplate.opsForZSet().reverseRangeByScore("ranking", score, score, 0, 1)!!.first()
                     rank = redisTemplate.opsForZSet().reverseRank("ranking", key)!!.plus(1)
-                } else {
-                    if (result.last().score == keyWithScore.score) {
-                        cnt += 1
-                    } else {
-                        rank += cnt
-                        cnt = 1
-                    }
+                    isFirst = false
                 }
 
                 val keys = keyWithScore.value!!.split('@')
