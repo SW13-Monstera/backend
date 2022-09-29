@@ -22,7 +22,7 @@ class UserAnswer(
     @Column(name = "user_answer_id")
     val id: Long? = null,
 
-    @Column(name = "answer")
+    @Column(name = "answer", columnDefinition = "VARCHAR(300)")
     val answer: String,
 
     @Column(name = "is_labeled")
