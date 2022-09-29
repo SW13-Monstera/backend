@@ -2,13 +2,11 @@ package com.csbroker.apiserver.service
 
 import com.csbroker.apiserver.auth.AUTHORITIES_KEY
 import com.csbroker.apiserver.auth.AuthTokenProvider
-import com.csbroker.apiserver.auth.ProviderType
 import com.csbroker.apiserver.common.config.properties.AppProperties
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
-import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.common.util.getAccessToken
 import com.csbroker.apiserver.common.util.getCookie
@@ -70,12 +68,6 @@ class AuthServiceImpl(
 
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
-
-        if (findUser.providerType != ProviderType.LOCAL) {
-            throw OAuthProviderMissMatchException(
-                "${findUser.email} 유저는 ${findUser.providerType} 를 통해 가입한 계정입니다."
-            )
-        }
 
         if (!passwordEncoder.matches(rawPassword, findUser.password)) {
             throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
