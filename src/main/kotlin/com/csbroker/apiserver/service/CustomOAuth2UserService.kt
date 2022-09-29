@@ -53,13 +53,7 @@ class CustomOAuth2UserService(
         var savedUser = this.userRepository.findByEmail(userInfo.getEmail())
             ?: this.userRepository.findUserByProviderId(userInfo.getId())
 
-        if (savedUser != null) {
-            if (providerType != savedUser.providerType) {
-                throw OAuthProviderMissMatchException(
-                    "${attributes["email"]} 유저는 ${savedUser.providerType} 로 가입하였습니다."
-                )
-            }
-        } else {
+        if (savedUser == null) {
             savedUser = this.createUser(userInfo, providerType)
         }
 

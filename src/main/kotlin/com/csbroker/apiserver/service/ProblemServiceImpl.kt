@@ -391,7 +391,7 @@ class ProblemServiceImpl(
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
-        val isAnswer = findProblem.answer == answer
+        val isAnswer = findProblem.answer.lowercase() == answer.lowercase()
         val score = if (isAnswer) findProblem.score else 0.0
 
         // create grading-history

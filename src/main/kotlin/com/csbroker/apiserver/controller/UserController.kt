@@ -25,13 +25,9 @@ class UserController(
     private val userService: UserService
 ) {
     @GetMapping("/{id}")
-    fun getUser(@LoginUser loginUser: User, @PathVariable("id") id: UUID): ApiResponse<UserResponseDto> {
+    fun getUser(@PathVariable("id") id: UUID): ApiResponse<UserResponseDto> {
         val findUser = this.userService.findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
-
-        if (findUser.email != loginUser.username) {
-            throw EntityNotFoundException("${loginUser.username}을 가진 유저를 찾을 수 없습니다.")
-        }
 
         return ApiResponse.success(findUser.toUserResponseDto())
     }
@@ -65,11 +61,9 @@ class UserController(
 
     @GetMapping("/{id}/stats")
     fun getUserStats(
-        @LoginUser loginUser: User,
         @PathVariable("id") id: UUID
     ): ApiResponse<UserStatsDto> {
-        val result: UserStatsDto = this.userService.getStats(id, loginUser.username)
-        return ApiResponse.success(result)
+        return ApiResponse.success(this.userService.getStats(id))
     }
 
     @DeleteMapping("/{id}")

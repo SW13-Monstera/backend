@@ -450,7 +450,7 @@ class UserControllerTest {
             role = Role.ROLE_ADMIN.code
         )
 
-        redisRepository.setRank(mapOf(adminId to 100.0))
+        redisRepository.setRank(mapOf("$adminId@test-admin" to 100.0))
 
         // when
         val result = mockMvc.perform(

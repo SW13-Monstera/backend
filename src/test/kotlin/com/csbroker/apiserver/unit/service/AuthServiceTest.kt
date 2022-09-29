@@ -8,7 +8,6 @@ import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.Role
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
-import com.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.user.UserLoginRequestDto
 import com.csbroker.apiserver.dto.user.UserSignUpDto
@@ -189,19 +188,19 @@ class AuthServiceTest {
         Assertions.assertThat(ErrorCode.NOT_FOUND_ENTITY).isEqualTo(exception.errorCode)
     }
 
-    @Test
-    fun `로그인 OAuth 유저 실패 테스트`() {
-        // given
-        every { userRepository.findByEmail("test@test.com") } returns githubAdminUser
-        // when
-        val exception = assertThrows<OAuthProviderMissMatchException> {
-            authService.loginUser(UserLoginRequestDto("test@test.com", "test1234!"))
-        }
-
-        // then
-        verify(exactly = 1) { userRepository.findByEmail("test@test.com") }
-        Assertions.assertThat(ErrorCode.PROVIDER_MISS_MATCH).isEqualTo(exception.errorCode)
-    }
+//    @Test
+//    fun `로그인 OAuth 유저 실패 테스트`() {
+//        // given
+//        every { userRepository.findByEmail("test@test.com") } returns githubAdminUser
+//        // when
+//        val exception = assertThrows<OAuthProviderMissMatchException> {
+//            authService.loginUser(UserLoginRequestDto("test@test.com", "test1234!"))
+//        }
+//
+//        // then
+//        verify(exactly = 1) { userRepository.findByEmail("test@test.com") }
+//        Assertions.assertThat(ErrorCode.PROVIDER_MISS_MATCH).isEqualTo(exception.errorCode)
+//    }
 
     @Test
     fun `로그인 비밀번호 불일치 실패 테스트`() {
