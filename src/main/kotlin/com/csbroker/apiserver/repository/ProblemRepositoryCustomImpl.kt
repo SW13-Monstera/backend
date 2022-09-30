@@ -34,7 +34,8 @@ class ProblemRepositoryCustomImpl(
                 this.inTags(problemSearchDto.tags),
                 this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 this.isType(problemSearchDto.type),
-                this.isGradable(problemSearchDto.isGradable)
+                this.isGradable(problemSearchDto.isGradable),
+                problem.isActive.isTrue
             )
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
@@ -72,7 +73,8 @@ class ProblemRepositoryCustomImpl(
                 this.inTags(problemSearchDto.tags),
                 this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 this.isType(problemSearchDto.type),
-                this.isGradable(problemSearchDto.isGradable)
+                this.isGradable(problemSearchDto.isGradable),
+                problem.isActive.isTrue
             )
             .fetch().size.toLong()
 
