@@ -8,6 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 @Entity
@@ -30,5 +31,9 @@ class GradingHistory(
     val userAnswer: String,
 
     @Column(name = "score")
-    val score: Double
+    val score: Double,
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grading_result_assessment_id")
+    var gradingResultAssessment: GradingResultAssessment? = null
 ) : BaseEntity()

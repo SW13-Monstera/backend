@@ -4,8 +4,10 @@ import com.csbroker.apiserver.auth.LoginUser
 import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.dto.common.ApiResponse
+import com.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import com.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import com.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import com.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -104,7 +106,24 @@ class ProblemController(
         return ApiResponse.success(gradeHistory)
     }
 
-    fun getEmail(): String? {
+    @PostMapping("/grade/{id}/assessment")
+    fun gradingAssessment(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+        @RequestBody assessmentRequestDto: AssessmentRequestDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        return ApiResponse.success(
+            UpsertSuccessResponseDto(
+                this.problemService.gradingAssessment(
+                    loginUser.username,
+                    id,
+                    assessmentRequestDto
+                )
+            )
+        )
+    }
+
+    private fun getEmail(): String? {
         return try {
             val principal = SecurityContextHolder.getContext().authentication.principal
                 as User

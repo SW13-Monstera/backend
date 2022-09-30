@@ -5,9 +5,11 @@ import com.csbroker.apiserver.common.enums.ErrorCode
 import com.csbroker.apiserver.common.enums.GradingStandardType
 import com.csbroker.apiserver.common.exception.ConditionConflictException
 import com.csbroker.apiserver.common.exception.EntityNotFoundException
+import com.csbroker.apiserver.common.exception.UnAuthorizedException
 import com.csbroker.apiserver.common.util.log
 import com.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import com.csbroker.apiserver.dto.problem.ProblemSearchDto
+import com.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import com.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import com.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import com.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
@@ -31,6 +33,7 @@ import com.csbroker.apiserver.model.ProblemTag
 import com.csbroker.apiserver.model.UserAnswer
 import com.csbroker.apiserver.repository.ChoiceRepository
 import com.csbroker.apiserver.repository.GradingHistoryRepository
+import com.csbroker.apiserver.repository.GradingResultAssessmentRepository
 import com.csbroker.apiserver.repository.GradingStandardRepository
 import com.csbroker.apiserver.repository.LongProblemRepository
 import com.csbroker.apiserver.repository.MultipleChoiceProblemRepository
@@ -60,7 +63,8 @@ class ProblemServiceImpl(
     private val gradingStandardRepository: GradingStandardRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val userAnswerRepository: UserAnswerRepository,
-    private val aiServerClient: AIServerClient
+    private val aiServerClient: AIServerClient,
+    private val gradingResultAssessmentRepository: GradingResultAssessmentRepository
 ) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
@@ -453,5 +457,36 @@ class ProblemServiceImpl(
             score = score,
             isAnswer = isAnswer
         )
+    }
+
+    @Transactional
+    override fun gradingAssessment(
+        email: String,
+        gradingHistoryId: Long,
+        assessmentRequestDto: AssessmentRequestDto
+    ): Long {
+        val gradingHistory = this.gradingHistoryRepository.findByIdOrNull(gradingHistoryId)
+            ?: throw EntityNotFoundException("$gradingHistoryId 번의 채점 기록은 찾을 수 없습니다.")
+
+        if (gradingHistory.gradingResultAssessment != null) {
+            throw ConditionConflictException(
+                ErrorCode.CONDITION_NOT_FULFILLED,
+                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!"
+            )
+        }
+
+        if (gradingHistory.user.email != email) {
+            throw UnAuthorizedException(
+                ErrorCode.UNAUTHORIZED,
+                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다."
+            )
+        }
+
+        val gradingResultAssessment =
+            this.gradingResultAssessmentRepository.save(assessmentRequestDto.toGradingResultAssessment(gradingHistory))
+
+        gradingHistory.gradingResultAssessment = gradingResultAssessment
+
+        return gradingResultAssessment.id!!
     }
 }
