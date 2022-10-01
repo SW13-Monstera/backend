@@ -31,7 +31,7 @@ sonarqube {
     }
 }
 
-group = "com.csbroker"
+group = "io.csbroker"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -123,10 +123,10 @@ tasks.jacocoTestReport {
     }
 
     var excludes = mutableListOf<String>()
-    excludes.add("com/csbroker/apiserver/model")
-    excludes.add("com/csbroker/apiserver/common")
-    excludes.add("com/csbroker/apiserver/dto")
-    excludes.add("com/csbroker/apiserver/ApiServerApplication.kt")
+    excludes.add("io/csbroker/apiserver/model")
+    excludes.add("io/csbroker/apiserver/common")
+    excludes.add("io/csbroker/apiserver/dto")
+    excludes.add("io/csbroker/apiserver/ApiServerApplication.kt")
 
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
