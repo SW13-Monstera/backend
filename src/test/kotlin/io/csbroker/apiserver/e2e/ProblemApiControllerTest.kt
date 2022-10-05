@@ -752,7 +752,7 @@ class ProblemApiControllerTest {
                         fieldWithPath("assessmentType").type(JsonFieldType.STRING)
                             .description("평가 의견 타입 ( 좋음 : GOOD, 나쁨 : BAD, 적당 : SOSO )"),
                         fieldWithPath("content").type(JsonFieldType.STRING)
-                            .description("평가 의견 내용 ( 없어도 상관 없음 )")
+                            .description("평가 의견 내용 ( 없어도 상관 없음, 최대 150자 )")
                     ),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
