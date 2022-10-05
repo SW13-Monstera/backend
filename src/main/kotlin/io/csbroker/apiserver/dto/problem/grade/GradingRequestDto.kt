@@ -7,9 +7,9 @@ data class GradingRequestDto(
     val problem_id: Long,
     val user_answer: String,
     val keyword_standards: List<GradingKeyword>,
-    val content_standards: List<GradingPrompt>
+    val content_standards: List<GradingContent>
 ) {
-    data class GradingPrompt(
+    data class GradingContent(
         val id: Long,
         val content: String
     )
@@ -33,9 +33,9 @@ data class GradingRequestDto(
                     )
                 },
                 problem.gradingStandards.filter {
-                    it.type == GradingStandardType.PROMPT
+                    it.type == GradingStandardType.CONTENT
                 }.map {
-                    GradingPrompt(
+                    GradingContent(
                         it.id!!,
                         it.content
                     )

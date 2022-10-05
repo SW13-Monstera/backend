@@ -327,7 +327,7 @@ class ProblemServiceImpl(
         log.info("Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
 
         val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
-        val correctPromptIds = gradingResponseDto.correct_contents.map { it.id }
+        val correctContentIds = gradingResponseDto.correct_contents.map { it.id }
         var userGradedScore = 0.0
 
         // get keywords
@@ -349,18 +349,18 @@ class ProblemServiceImpl(
             KeywordDto(it.id!!, it.content)
         }.toList()
 
-        // get score from prompts
-        val promptScores = findProblem.gradingStandards.filter {
-            it.type == GradingStandardType.PROMPT && it.id in correctPromptIds
+        // get score from content standards
+        val contentScores = findProblem.gradingStandards.filter {
+            it.type == GradingStandardType.CONTENT && it.id in correctContentIds
         }.map {
             it.score
         }
 
-        if (promptScores.size != correctPromptIds.size) {
+        if (contentScores.size != correctContentIds.size) {
             throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
         }
 
-        userGradedScore += promptScores.sum()
+        userGradedScore += contentScores.sum()
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)

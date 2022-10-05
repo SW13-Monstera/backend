@@ -153,7 +153,7 @@ class UserServiceTest {
 
         // when
         val modifyUser = userService.modifyUser(
-            id!!,
+            id,
             userUpdateRequestDto
         )
 
@@ -174,7 +174,7 @@ class UserServiceTest {
 
         // when
         val modifyUser = userService.modifyUser(
-            id!!,
+            id,
             userUpdateRequestDto
         )
 

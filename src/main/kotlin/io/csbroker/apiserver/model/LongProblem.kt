@@ -67,8 +67,8 @@ class LongProblem(
             it.getKeywordScore()
         }
 
-        val promptScores = this.userAnswers.map {
-            it.getPromptScore()
+        val contentScores = this.userAnswers.map {
+            it.getContentScore()
         }
 
         return LongProblemSearchResponseDto.LongProblemDataDto(
@@ -76,7 +76,7 @@ class LongProblem(
             this.title,
             this.creator.username,
             if (keywordScores.isEmpty()) null else keywordScores.average(),
-            if (promptScores.isEmpty()) null else promptScores.average(),
+            if (contentScores.isEmpty()) null else contentScores.average(),
             this.userAnswers.size,
             this.isActive
         )
