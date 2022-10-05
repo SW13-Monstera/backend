@@ -9,4 +9,5 @@ interface CommonService {
     fun getTodayProblems(): List<ProblemResponseDto>
     fun getRanks(size: Long, page: Long): RankListDto
     fun findTechByQuery(query: String): List<String>
+    fun findMajorByQuery(query: String): List<String>
 }
