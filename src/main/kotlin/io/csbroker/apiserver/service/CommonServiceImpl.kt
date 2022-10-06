@@ -3,6 +3,7 @@ package io.csbroker.apiserver.service
 import io.csbroker.apiserver.dto.StatsDto
 import io.csbroker.apiserver.dto.common.RankListDto
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
+import io.csbroker.apiserver.repository.MajorRepository
 import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.TechRepository
 import io.csbroker.apiserver.repository.UserRepository
@@ -16,6 +17,7 @@ class CommonServiceImpl(
     private val problemRepository: ProblemRepository,
     private val userRepository: UserRepository,
     private val techRepository: TechRepository,
+    private val majorRepository: MajorRepository,
     private val redisRepository: RedisRepository
 ) : CommonService {
 
@@ -37,6 +39,12 @@ class CommonServiceImpl(
 
     override fun findTechByQuery(query: String): List<String> {
         return this.techRepository.findByNameContainingIgnoreCase(query).map {
+            it.name
+        }
+    }
+
+    override fun findMajorByQuery(query: String): List<String> {
+        return this.majorRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }

@@ -63,7 +63,7 @@ class UserControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @Autowired
-    private lateinit var tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider
+    private lateinit var tokenProvider: AuthTokenProvider
 
     @Autowired
     private lateinit var problemRepository: ProblemRepository

@@ -182,7 +182,7 @@ class UserAnswerServiceImpl(
             ?: throw EntityNotFoundException("${userId}를 가진 유저를 찾을 수 없습니다.")
 
         if (findUser.role != Role.ROLE_ADMIN) {
-            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "권한이 없는 유저를 할당하려 하였습니다.")
+            throw UnAuthorizedException(ErrorCode.FORBIDDEN, "권한이 없는 유저를 할당하려 하였습니다.")
         }
     }
 }

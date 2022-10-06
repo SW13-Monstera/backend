@@ -526,6 +526,39 @@ include::{snippets}/problems/search/request-parameters.adoc[]
 include::{snippets}/problems/search/response-body.adoc[]
 include::{snippets}/problems/search/response-fields.adoc[]
 
+==== 문제 채점 결과 평가 의견
+.description
+[source]
+----
+문제 채점 결과에 대한 평가 의견을 남기기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/problems/grade/{problem_id:Long}/assessment
+----
+
+.Sample Request
+include::{snippets}/problems/grade/assessment/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/grade/assessment/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/grade/assessment/path-parameters.adoc[]
+
+객관식 문제 단건 조회를 위한 path parameter의 설명입니다.
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+include::{snippets}/problems/grade/assessment/request-headers.adoc[]
+
+.Request Body
+include::{snippets}/problems/grade/assessment/request-body.adoc[]
+include::{snippets}/problems/grade/assessment/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/problems/grade/assessment/response-body.adoc[]
+include::{snippets}/problems/grade/assessment/response-fields.adoc[]
+
 === User API ( /api/v1/users )
 
 ==== 유저 조회

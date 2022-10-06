@@ -13,7 +13,7 @@ data class UserAnswerResponseDto(
     val isLabeled: Boolean,
     val isValidated: Boolean,
     val keywordsGradingStandards: List<GradingStandardResponseDto>,
-    val promptGradingStandards: List<GradingStandardResponseDto>,
+    val contentGradingStandards: List<GradingStandardResponseDto>,
     val selectedGradingStandards: List<Long>
 ) {
     companion object {
@@ -22,8 +22,8 @@ data class UserAnswerResponseDto(
                 .gradingStandards.filter { it.type == GradingStandardType.KEYWORD }
                 .map { GradingStandardResponseDto.fromGradingStandard(it) }
 
-            val prompts = userAnswer.problem
-                .gradingStandards.filter { it.type == GradingStandardType.PROMPT }
+            val contents = userAnswer.problem
+                .gradingStandards.filter { it.type == GradingStandardType.CONTENT }
                 .map { GradingStandardResponseDto.fromGradingStandard(it) }
 
             val selectedGradingStandards = userAnswer.userAnswerGradingStandards.map {
@@ -39,7 +39,7 @@ data class UserAnswerResponseDto(
                 userAnswer.isLabeled,
                 userAnswer.isValidated,
                 keywords,
-                prompts,
+                contents,
                 selectedGradingStandards,
             )
         }

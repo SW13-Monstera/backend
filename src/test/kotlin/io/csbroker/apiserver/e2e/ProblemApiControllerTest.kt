@@ -23,6 +23,8 @@ import io.csbroker.apiserver.repository.ProblemTagRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.csbroker.apiserver.common.enums.AssessmentType
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers
@@ -45,6 +47,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors.preproces
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
@@ -84,7 +87,7 @@ class ProblemApiControllerTest {
     private lateinit var gradingHistoryRepository: GradingHistoryRepository
 
     @Autowired
-    private lateinit var tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider
+    private lateinit var tokenProvider: AuthTokenProvider
 
     lateinit var mockWebServer: MockWebServer
 
@@ -96,7 +99,9 @@ class ProblemApiControllerTest {
 
     private var keywordStandardId: Long? = null
 
-    private var promptStandardId: Long? = null
+    private var contentStandardId: Long? = null
+
+    private var gradingHistoryId: Long? = null
 
     private var choiceId: Long? = null
 
@@ -137,20 +142,20 @@ class ProblemApiControllerTest {
                 problem = problem
             )
 
-            val promptGradingStandard = GradingStandard(
+            val contentGradingStandard = GradingStandard(
                 content = "test",
                 score = 5.0,
-                type = GradingStandardType.PROMPT,
+                type = GradingStandardType.CONTENT,
                 problem = problem
             )
 
-            problem.gradingStandards.addAll(listOf(keywordGradingStandard, promptGradingStandard))
+            problem.gradingStandards.addAll(listOf(keywordGradingStandard, contentGradingStandard))
             problemRepository.save(problem)
 
             if (i == 1) {
                 this.longProblemId = problem.id
                 this.keywordStandardId = keywordGradingStandard.id
-                this.promptStandardId = promptGradingStandard.id
+                this.contentStandardId = contentGradingStandard.id
             }
 
             if (i <= 2) {
@@ -161,6 +166,7 @@ class ProblemApiControllerTest {
                     score = 9.5
                 )
                 gradingHistoryRepository.save(gradingHistory)
+                this.gradingHistoryId = gradingHistory.gradingHistoryId
             }
 
             if (i <= 5) {
@@ -471,7 +477,7 @@ class ProblemApiControllerTest {
             ),
             listOf(
                 GradingResponseDto.CorrectContent(
-                    promptStandardId!!,
+                    contentStandardId!!,
                     "test"
                 )
             )
@@ -697,6 +703,68 @@ class ProblemApiControllerTest {
                             .description("선지 id"),
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
                             .description("선지 내용")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(7)
+    fun `Assessment grading result`() {
+        // given
+        val urlString = "$PROBLEM_ENDPOINT/grade/{grading_history_id}/assessment"
+
+        val now = Date()
+        val email = "test2@test.com"
+
+        val accessToken = tokenProvider.createAuthToken(
+            email = email,
+            expiry = Date(now.time + 600000),
+            role = Role.ROLE_USER.code
+        )
+
+        val assessmentRequestDto = AssessmentRequestDto(
+            AssessmentType.BAD,
+            "키워드 채점 기준이 정확하게 적용되지 않은 것 같아요."
+        )
+
+        val assessmentRequestDtoString = objectMapper.writeValueAsString(assessmentRequestDto)
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post(urlString, gradingHistoryId!!)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(assessmentRequestDtoString)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                document(
+                    "problems/grade/assessment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                        fieldWithPath("assessmentType").type(JsonFieldType.STRING)
+                            .description("평가 의견 타입 ( 좋음 : GOOD, 나쁨 : BAD, 적당 : NORMAL )"),
+                        fieldWithPath("content").type(JsonFieldType.STRING)
+                            .description("평가 의견 내용 ( 없어도 상관 없음, 최대 150자 )")
+                    ),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional()
+                    ),
+                    pathParameters(
+                        parameterWithName("grading_history_id").description("문제 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("평가 의견 아이디")
                     )
                 )
             )

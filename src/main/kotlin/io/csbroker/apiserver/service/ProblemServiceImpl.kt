@@ -1,13 +1,16 @@
 package io.csbroker.apiserver.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.csbroker.apiserver.common.client.AIServerClient
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
+import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
@@ -31,6 +34,7 @@ import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.ChoiceRepository
 import io.csbroker.apiserver.repository.GradingHistoryRepository
+import io.csbroker.apiserver.repository.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.GradingStandardRepository
 import io.csbroker.apiserver.repository.LongProblemRepository
 import io.csbroker.apiserver.repository.MultipleChoiceProblemRepository
@@ -40,7 +44,6 @@ import io.csbroker.apiserver.repository.ShortProblemRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserAnswerRepository
 import io.csbroker.apiserver.repository.UserRepository
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -60,7 +63,8 @@ class ProblemServiceImpl(
     private val gradingStandardRepository: GradingStandardRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val userAnswerRepository: UserAnswerRepository,
-    private val aiServerClient: AIServerClient
+    private val aiServerClient: AIServerClient,
+    private val gradingResultAssessmentRepository: GradingResultAssessmentRepository
 ) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
@@ -323,7 +327,7 @@ class ProblemServiceImpl(
         log.info("Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
 
         val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
-        val correctPromptIds = gradingResponseDto.correct_contents.map { it.id }
+        val correctContentIds = gradingResponseDto.correct_contents.map { it.id }
         var userGradedScore = 0.0
 
         // get keywords
@@ -345,18 +349,18 @@ class ProblemServiceImpl(
             KeywordDto(it.id!!, it.content)
         }.toList()
 
-        // get score from prompts
-        val promptScores = findProblem.gradingStandards.filter {
-            it.type == GradingStandardType.PROMPT && it.id in correctPromptIds
+        // get score from content standards
+        val contentScores = findProblem.gradingStandards.filter {
+            it.type == GradingStandardType.CONTENT && it.id in correctContentIds
         }.map {
             it.score
         }
 
-        if (promptScores.size != correctPromptIds.size) {
+        if (contentScores.size != correctContentIds.size) {
             throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
         }
 
-        userGradedScore += promptScores.sum()
+        userGradedScore += contentScores.sum()
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)
@@ -453,5 +457,36 @@ class ProblemServiceImpl(
             score = score,
             isAnswer = isAnswer
         )
+    }
+
+    @Transactional
+    override fun gradingAssessment(
+        email: String,
+        gradingHistoryId: Long,
+        assessmentRequestDto: AssessmentRequestDto
+    ): Long {
+        val gradingHistory = this.gradingHistoryRepository.findByIdOrNull(gradingHistoryId)
+            ?: throw EntityNotFoundException("$gradingHistoryId 번의 채점 기록은 찾을 수 없습니다.")
+
+        if (gradingHistory.gradingResultAssessment != null) {
+            throw ConditionConflictException(
+                ErrorCode.CONDITION_NOT_FULFILLED,
+                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!"
+            )
+        }
+
+        if (gradingHistory.user.email != email) {
+            throw UnAuthorizedException(
+                ErrorCode.FORBIDDEN,
+                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다."
+            )
+        }
+
+        val gradingResultAssessment =
+            this.gradingResultAssessmentRepository.save(assessmentRequestDto.toGradingResultAssessment(gradingHistory))
+
+        gradingHistory.gradingResultAssessment = gradingResultAssessment
+
+        return gradingResultAssessment.id!!
     }
 }

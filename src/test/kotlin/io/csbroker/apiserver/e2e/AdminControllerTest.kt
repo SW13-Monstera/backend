@@ -162,14 +162,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -209,7 +209,7 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 false )"),
                         PayloadDocumentation.fieldWithPath("isActive")
@@ -262,14 +262,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -309,14 +309,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -362,7 +362,7 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("isActive")
@@ -415,14 +415,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -470,7 +470,7 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.gradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("data.gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'PROMPT' )"),
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
                         PayloadDocumentation.fieldWithPath("data.isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("data.isActive")
@@ -1036,14 +1036,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -1133,14 +1133,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -1241,14 +1241,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -1310,16 +1310,16 @@ class AdminControllerTest {
                             .type(JsonFieldType.NUMBER).description("채점기준 점수"),
                         PayloadDocumentation.fieldWithPath("data.keywordsGradingStandards.[].type")
                             .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' )"),
-                        PayloadDocumentation.fieldWithPath("data.promptGradingStandards")
+                        PayloadDocumentation.fieldWithPath("data.contentGradingStandards")
                             .type(JsonFieldType.ARRAY).description("내용 채점 기준"),
-                        PayloadDocumentation.fieldWithPath("data.promptGradingStandards.[].id")
+                        PayloadDocumentation.fieldWithPath("data.contentGradingStandards.[].id")
                             .type(JsonFieldType.NUMBER).description("내용 채점기준 ID"),
-                        PayloadDocumentation.fieldWithPath("data.promptGradingStandards.[].content")
+                        PayloadDocumentation.fieldWithPath("data.contentGradingStandards.[].content")
                             .type(JsonFieldType.STRING).description("내용 채점기준 내용"),
-                        PayloadDocumentation.fieldWithPath("data.promptGradingStandards.[].score")
+                        PayloadDocumentation.fieldWithPath("data.contentGradingStandards.[].score")
                             .type(JsonFieldType.NUMBER).description("내용 채점기준 점수"),
-                        PayloadDocumentation.fieldWithPath("data.promptGradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'PROMPT' )"),
+                        PayloadDocumentation.fieldWithPath("data.contentGradingStandards.[].type")
+                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'CONTENT' )"),
                         PayloadDocumentation.fieldWithPath("data.selectedGradingStandards")
                             .type(JsonFieldType.ARRAY).description("선택 된 채점 기준 IDs")
                     )
@@ -1364,14 +1364,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -1472,14 +1472,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -1583,14 +1583,14 @@ class AdminControllerTest {
                         GradingStandardType.KEYWORD
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
-                        "prompt-1",
+                        "CONTENT-1",
                         2.0,
-                        GradingStandardType.PROMPT
+                        GradingStandardType.CONTENT
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
-                        "prompt-2",
+                        "CONTENT-2",
                         3.0,
-                        GradingStandardType.PROMPT
+                        GradingStandardType.CONTENT
                     )
                 )
             )
@@ -1646,7 +1646,7 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.problems.[].avgKeywordScore")
                             .type(JsonFieldType.NUMBER)
                             .description("평균 키워드 점수 ( 푼 사람이 없으면 null )").optional(),
-                        PayloadDocumentation.fieldWithPath("data.problems.[].avgPromptScore")
+                        PayloadDocumentation.fieldWithPath("data.problems.[].avgContentScore")
                             .type(JsonFieldType.NUMBER)
                             .description("평균 내용 점수 ( 푼 사람이 없으면 null )").optional(),
                         PayloadDocumentation.fieldWithPath("data.problems.[].userAnswerCnt")
@@ -1879,14 +1879,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -2065,14 +2065,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )
@@ -2166,14 +2166,14 @@ class AdminControllerTest {
                     GradingStandardType.KEYWORD
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-1",
+                    "CONTENT-1",
                     2.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
-                    "prompt-2",
+                    "CONTENT-2",
                     3.0,
-                    GradingStandardType.PROMPT
+                    GradingStandardType.CONTENT
                 )
             )
         )

@@ -4,8 +4,10 @@ import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.common.ApiResponse
+import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -44,7 +46,7 @@ class ProblemController(
         var solvedBy: String? = null
 
         if (isSolved != null) {
-            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
+            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
         val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)
@@ -104,7 +106,24 @@ class ProblemController(
         return ApiResponse.success(gradeHistory)
     }
 
-    fun getEmail(): String? {
+    @PostMapping("/grade/{id}/assessment")
+    fun gradingAssessment(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+        @RequestBody assessmentRequestDto: AssessmentRequestDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        return ApiResponse.success(
+            UpsertSuccessResponseDto(
+                this.problemService.gradingAssessment(
+                    loginUser.username,
+                    id,
+                    assessmentRequestDto
+                )
+            )
+        )
+    }
+
+    private fun getEmail(): String? {
         return try {
             val principal = SecurityContextHolder.getContext().authentication.principal
                 as User

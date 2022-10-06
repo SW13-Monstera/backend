@@ -2,6 +2,7 @@ package io.csbroker.apiserver.service
 
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
@@ -78,4 +79,10 @@ interface ProblemService {
         problemId: Long,
         answerIds: List<Long>
     ): MultipleChoiceProblemGradingHistoryDto
+
+    fun gradingAssessment(
+        email: String,
+        gradingHistoryId: Long,
+        assessmentRequestDto: AssessmentRequestDto
+    ): Long
 }

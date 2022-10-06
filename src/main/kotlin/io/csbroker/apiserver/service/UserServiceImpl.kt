@@ -119,7 +119,7 @@ class UserServiceImpl(
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
         if (findUserById.email != email) {
-            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "해당 유저를 삭제할 권한이 없습니다.")
+            throw UnAuthorizedException(ErrorCode.FORBIDDEN, "해당 유저를 삭제할 권한이 없습니다.")
         }
 
         findUserById.isDeleted = true

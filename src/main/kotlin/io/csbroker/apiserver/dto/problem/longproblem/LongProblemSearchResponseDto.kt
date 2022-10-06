@@ -10,7 +10,7 @@ data class LongProblemSearchResponseDto(
         val title: String,
         val creator: String,
         val avgKeywordScore: Double?,
-        val avgPromptScore: Double?,
+        val avgContentScore: Double?,
         val userAnswerCnt: Int,
         val isActive: Boolean
     )

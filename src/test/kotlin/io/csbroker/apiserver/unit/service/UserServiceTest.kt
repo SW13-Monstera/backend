@@ -16,7 +16,6 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.UUID
 
@@ -154,7 +153,7 @@ class UserServiceTest {
 
         // when
         val modifyUser = userService.modifyUser(
-            id!!,
+            id,
             userUpdateRequestDto
         )
 
@@ -175,7 +174,7 @@ class UserServiceTest {
 
         // when
         val modifyUser = userService.modifyUser(
-            id!!,
+            id,
             userUpdateRequestDto
         )
 

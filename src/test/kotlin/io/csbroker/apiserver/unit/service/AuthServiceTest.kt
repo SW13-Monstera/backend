@@ -30,7 +30,7 @@ import java.util.UUID
 class AuthServiceTest {
     private val userRepository: UserRepository = mockk()
     private val redisRepository: RedisRepository = mockk(relaxed = true)
-    private val authTokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider = mockk()
+    private val authTokenProvider: AuthTokenProvider = mockk()
     private val appProperties: AppProperties = mockk()
     private val passwordEncoder: BCryptPasswordEncoder = mockk()
     private val authService: AuthServiceImpl =
@@ -58,7 +58,7 @@ class AuthServiceTest {
     private val accessToken = Jwts.builder()
         .setSubject("test@test.com")
         .signWith(Keys.hmacShaKeyFor("thisissecret1234secretsecedsaeasfafsfasfsaafssaffsasfas1314124".toByteArray()))
-        .claim(io.csbroker.apiserver.auth.AUTHORITIES_KEY, Role.ROLE_USER)
+        .claim(AUTHORITIES_KEY, Role.ROLE_USER)
         .setExpiration(Date(now.time + 1_800_000))
         .compact()
 

@@ -56,11 +56,11 @@ class UserAnswer(
         }
     }
 
-    fun getPromptScore(): Double {
+    fun getContentScore(): Double {
         return this.userAnswerGradingStandards.map {
             it.gradingStandard
         }.filter {
-            it.type == GradingStandardType.PROMPT
+            it.type == GradingStandardType.CONTENT
         }.sumOf {
             it.score
         }
