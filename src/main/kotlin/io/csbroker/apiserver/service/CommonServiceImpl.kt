@@ -20,6 +20,7 @@ class CommonServiceImpl(
     private val redisRepository: RedisRepository
 ) : CommonService {
 
+    @Cacheable(value = ["StatsDto"])
     override fun getStats(): StatsDto {
         val problemCnt = problemRepository.count()
         val gradableProblemCnt = problemRepository.countGradableProblem()

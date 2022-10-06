@@ -28,7 +28,7 @@ class RedisCacheConfig {
                     GenericJackson2JsonRedisSerializer()
                 )
             )
-            .entryTtl(Duration.ofMinutes(10L))
+            .entryTtl(Duration.ofMinutes(5L))
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory)
             .cacheDefaults(redisCacheConfiguration)
