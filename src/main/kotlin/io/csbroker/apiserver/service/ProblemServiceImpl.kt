@@ -477,7 +477,7 @@ class ProblemServiceImpl(
 
         if (gradingHistory.user.email != email) {
             throw UnAuthorizedException(
-                ErrorCode.UNAUTHORIZED,
+                ErrorCode.FORBIDDEN,
                 "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다."
             )
         }

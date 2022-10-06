@@ -46,7 +46,7 @@ class ProblemController(
         var solvedBy: String? = null
 
         if (isSolved != null) {
-            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "사용자 권한이 없습니다.")
+            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
         val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)

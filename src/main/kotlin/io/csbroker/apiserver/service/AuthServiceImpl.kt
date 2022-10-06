@@ -1,7 +1,5 @@
 package io.csbroker.apiserver.service
 
-import io.csbroker.apiserver.auth.AUTHORITIES_KEY
-import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
@@ -149,7 +147,7 @@ class AuthServiceImpl(
     @Transactional
     override fun changePassword(code: String, password: String): Boolean {
         val email = redisRepository.getEmailByCode(code)
-            ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "비밀번호를 변경할 수 없습니다.")
+            ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "비밀번호를 변경할 수 없습니다.")
 
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")

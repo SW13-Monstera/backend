@@ -51,8 +51,8 @@ class GlobalExceptionHandler {
         log.error(exception.message)
 
         if (exception is AccessDeniedException) {
-            return ResponseEntity.status(ErrorCode.UNAUTHORIZED.code)
-                .body(ApiResponse.fail(ErrorCode.UNAUTHORIZED.message))
+            return ResponseEntity.status(ErrorCode.FORBIDDEN.code)
+                .body(ApiResponse.fail(ErrorCode.FORBIDDEN.message))
         }
 
         return ResponseEntity.status(ErrorCode.SERVER_ERROR.code)

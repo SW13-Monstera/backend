@@ -23,7 +23,7 @@ class RestAuthenticationEntryPoint : AuthenticationEntryPoint {
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         val responseJson = JSONObject()
         responseJson["status"] = "fail"
-        responseJson["data"] = ErrorCode.UN_AUTHENTICATE.message
+        responseJson["data"] = ErrorCode.UNAUTHORIZED.message
         response.writer.print(responseJson)
     }
 }

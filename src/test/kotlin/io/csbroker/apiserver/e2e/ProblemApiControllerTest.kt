@@ -750,7 +750,7 @@ class ProblemApiControllerTest {
                     preprocessResponse(prettyPrint()),
                     requestFields(
                         fieldWithPath("assessmentType").type(JsonFieldType.STRING)
-                            .description("평가 의견 타입 ( 좋음 : GOOD, 나쁨 : BAD, 적당 : SOSO )"),
+                            .description("평가 의견 타입 ( 좋음 : GOOD, 나쁨 : BAD, 적당 : NORMAL )"),
                         fieldWithPath("content").type(JsonFieldType.STRING)
                             .description("평가 의견 내용 ( 없어도 상관 없음, 최대 150자 )")
                     ),
