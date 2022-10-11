@@ -31,7 +31,7 @@ sonarqube {
     }
 }
 
-group = "com.csbroker"
+group = "io.csbroker"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -73,6 +73,19 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     testImplementation("io.mockk:mockk:1.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+
+    implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:4.11")
+
+    // mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("aws.sdk.kotlin:ses:0.16.0")
+    implementation("aws.sdk.kotlin:s3:0.16.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 dependencyManagement {
@@ -110,10 +123,10 @@ tasks.jacocoTestReport {
     }
 
     var excludes = mutableListOf<String>()
-    excludes.add("com/csbroker/apiserver/model")
-    excludes.add("com/csbroker/apiserver/common")
-    excludes.add("com/csbroker/apiserver/dto")
-    excludes.add("com/csbroker/apiserver/ApiServerApplication.kt")
+    excludes.add("io/csbroker/apiserver/model")
+    excludes.add("io/csbroker/apiserver/common")
+    excludes.add("io/csbroker/apiserver/dto")
+    excludes.add("io/csbroker/apiserver/ApiServerApplication.kt")
 
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
@@ -130,7 +143,7 @@ tasks.test {
 tasks.register("copyYml", Copy::class) {
     copy {
         from("./backend-config")
-        include("*.yml")
+        include("*.yml", "*.xml")
         into("src/main/resources")
     }
 }

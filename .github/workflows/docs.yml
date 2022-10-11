@@ -3,9 +3,8 @@ name: deploy documentation
 on:
     push:
         branches:
-            - dev 
-    pull_request:
-        types: [opened]
+            - dev
+            - 'feat/*'
 
 jobs:
     deploy-docs:
