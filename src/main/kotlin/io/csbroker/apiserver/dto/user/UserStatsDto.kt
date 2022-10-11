@@ -8,9 +8,13 @@ data class UserStatsDto(
     val rank: Long?,
     val score: Double
 ) {
+    constructor() : this(arrayListOf(), arrayListOf(), arrayListOf(), mapOf(), null, 0.0)
+
     data class ProblemStatsDto(
         val id: Long,
         val type: String,
         val title: String
-    )
+    ) {
+        constructor() : this(0, "", "")
+    }
 }

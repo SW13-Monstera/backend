@@ -8,6 +8,7 @@ import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.TechRepository
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,6 +22,7 @@ class CommonServiceImpl(
     private val redisRepository: RedisRepository
 ) : CommonService {
 
+    @Cacheable(value = ["StatsDto"])
     override fun getStats(): StatsDto {
         val problemCnt = problemRepository.count()
         val gradableProblemCnt = problemRepository.countGradableProblem()
@@ -33,6 +35,7 @@ class CommonServiceImpl(
         TODO("Not yet implemented")
     }
 
+    @Cacheable(value = ["RankListDto"], key = "#size + '-' + #page")
     override fun getRanks(size: Long, page: Long): RankListDto {
         return redisRepository.getRanks(size, page)
     }
