@@ -11,7 +11,9 @@ import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
+import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
+import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -29,6 +31,7 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import io.csbroker.apiserver.model.GradingHistory
+import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.UserAnswer
@@ -320,43 +323,38 @@ class ProblemServiceImpl(
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
-        val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
+        val gradeResultDto = this.getCorrectStandards(findProblem, answer)
 
-        val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
-
-        log.info("Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
-
-        val correctKeywordIds = gradingResponseDto.correct_keywords.map { it.id }
-        val correctContentIds = gradingResponseDto.correct_contents.map { it.id }
         var userGradedScore = 0.0
 
         // get keywords
-        val correctKeywordListDto = gradingResponseDto.correct_keywords.map {
-            val keyword = findProblem.gradingStandards.find { gs -> gs.id!! == it.id }
-                ?: throw EntityNotFoundException("${it.id}번 채점 기준을 찾을 수 없습니다.")
+        val correctKeywordListDto = gradeResultDto.correctKeywordIds.map {
+            val keyword = findProblem.gradingStandards.find { gs -> gs.id!! == it }
+                ?: throw EntityNotFoundException("${it}번 채점 기준을 찾을 수 없습니다.")
             userGradedScore += keyword.score
             KeywordDto(
                 keyword.id!!,
                 keyword.content,
                 true,
-                it.predict_keyword_position
+                gradeResultDto.predictKeywordPositions[it]
+                    ?: throw EntityNotFoundException("키워드 위치를 찾을 수 없습니다.")
             )
         }.toList()
 
         val notCorrectKeywordListDto = findProblem.gradingStandards.filter {
-            it.type == GradingStandardType.KEYWORD && it.id !in correctKeywordIds
+            it.type == GradingStandardType.KEYWORD && it.id !in gradeResultDto.correctKeywordIds
         }.map {
             KeywordDto(it.id!!, it.content)
         }.toList()
 
         // get score from content standards
         val contentScores = findProblem.gradingStandards.filter {
-            it.type == GradingStandardType.CONTENT && it.id in correctContentIds
+            it.type == GradingStandardType.CONTENT && it.id in gradeResultDto.correctContentIds
         }.map {
             it.score
         }
 
-        if (contentScores.size != correctContentIds.size) {
+        if (contentScores.size != gradeResultDto.correctContentIds.size) {
             throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
         }
 
@@ -488,5 +486,23 @@ class ProblemServiceImpl(
         gradingHistory.gradingResultAssessment = gradingResultAssessment
 
         return gradingResultAssessment.id!!
+    }
+
+    private fun getCorrectStandards(findProblem: LongProblem, answer: String): GradeResultDto {
+        return if (findProblem.isGradable) {
+            val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
+            val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
+
+            log.info("Integrate Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
+
+            GradeResultDto(gradingResponseDto)
+        } else {
+            val gradingRequestDto = KeywordGradingRequestDto.createKeywordGradingRequestDto(findProblem, answer)
+            val gradingResponseDto = this.aiServerClient.getKeywordGrade(gradingRequestDto)
+
+            log.info("Keyword Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
+
+            GradeResultDto(gradingResponseDto)
+        }
     }
 }
