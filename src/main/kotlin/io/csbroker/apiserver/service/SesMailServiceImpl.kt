@@ -24,7 +24,7 @@ class SesMailServiceImpl(
     private val userRepository: UserRepository,
     private val redisRepository: RedisRepository,
 
-    @Value("\${spring.mail.url}")
+    @Value("\${aws.mail-url}")
     private val url: String,
 
     @Value("\${aws.access-key}")
