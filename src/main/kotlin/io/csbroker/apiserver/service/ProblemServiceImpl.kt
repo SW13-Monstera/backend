@@ -14,6 +14,7 @@ import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
+import io.csbroker.apiserver.dto.problem.longproblem.ContentDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -348,17 +349,22 @@ class ProblemServiceImpl(
         }.toList()
 
         // get score from content standards
-        val contentScores = findProblem.gradingStandards.filter {
+        val correctContentListDto = findProblem.gradingStandards.filter {
             it.type == GradingStandardType.CONTENT && it.id in gradeResultDto.correctContentIds
         }.map {
-            it.score
+            userGradedScore += it.score
+            ContentDto(it.id!!, it.content, true)
         }
 
-        if (contentScores.size != gradeResultDto.correctContentIds.size) {
+        val notCorrectContentListDto = findProblem.gradingStandards.filter {
+            it.type == GradingStandardType.CONTENT && it.id !in gradeResultDto.correctContentIds
+        }.map {
+            ContentDto(it.id!!, it.content)
+        }.toList()
+
+        if (correctContentListDto.size != gradeResultDto.correctContentIds.size) {
             throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
         }
-
-        userGradedScore += contentScores.sum()
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)
@@ -379,7 +385,8 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswer = answer,
             score = userGradedScore,
-            keywords = correctKeywordListDto + notCorrectKeywordListDto
+            keywords = correctKeywordListDto + notCorrectKeywordListDto,
+            contents = correctContentListDto + notCorrectContentListDto
         )
     }
 

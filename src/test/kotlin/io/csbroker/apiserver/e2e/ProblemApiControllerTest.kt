@@ -548,7 +548,15 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.keywords.[].isExist").type(JsonFieldType.BOOLEAN)
                             .description("키워드가 유저답안에 존재하는지 유무"),
                         fieldWithPath("data.keywords.[].idx").type(JsonFieldType.ARRAY)
-                            .description("키워드가 유저답안에 존재 할 때, 시작 index와 끝 index ( 존재하지 않으면 빈 배열 )")
+                            .description("키워드가 유저답안에 존재 할 때, 시작 index와 끝 index ( 존재하지 않으면 빈 배열 )"),
+                        fieldWithPath("data.contents").type(JsonFieldType.ARRAY)
+                            .description("답안에 들어가야하는 내용 채점 기준"),
+                        fieldWithPath("data.contents.[].id").type(JsonFieldType.NUMBER)
+                            .description("내용 채점 기준 id"),
+                        fieldWithPath("data.contents.[].content").type(JsonFieldType.STRING)
+                            .description("내용 채점 기준 내용"),
+                        fieldWithPath("data.contents.[].isExist").type(JsonFieldType.BOOLEAN)
+                            .description("내용 채점 기준이 유저답안에 존재하는지 유무")
                     )
                 )
             )
