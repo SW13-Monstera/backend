@@ -1,9 +1,12 @@
 package io.csbroker.apiserver.e2e
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
+import io.csbroker.apiserver.common.enums.AssessmentType
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradingResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemAnswerDto
@@ -22,9 +25,6 @@ import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.ProblemTagRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserRepository
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.csbroker.apiserver.common.enums.AssessmentType
-import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers
