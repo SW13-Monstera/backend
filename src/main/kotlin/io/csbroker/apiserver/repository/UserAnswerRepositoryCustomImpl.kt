@@ -1,22 +1,21 @@
 package io.csbroker.apiserver.repository
 
+import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.jpa.impl.JPAQueryFactory
+import io.csbroker.apiserver.common.util.uuidAsByte
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.model.QLongProblem.longProblem
 import io.csbroker.apiserver.model.QUser.user
 import io.csbroker.apiserver.model.QUserAnswer.userAnswer
 import io.csbroker.apiserver.model.UserAnswer
-import com.querydsl.core.types.dsl.BooleanExpression
-import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
-import java.nio.ByteBuffer
 import java.sql.PreparedStatement
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import java.util.UUID
 
 class UserAnswerRepositoryCustomImpl(
     private val jdbcTemplate: JdbcTemplate,
@@ -127,15 +126,5 @@ class UserAnswerRepositoryCustomImpl(
 
     private fun userAnswerValidated(isValidated: Boolean?): BooleanExpression? {
         return if (isValidated == null) null else userAnswer.isValidated.eq(isValidated)
-    }
-
-    private fun uuidAsByte(uuid: UUID?): ByteArray? {
-        if (uuid == null) {
-            return null
-        }
-        val byteBufferWrapper = ByteBuffer.wrap(ByteArray(16))
-        byteBufferWrapper.putLong(uuid.mostSignificantBits)
-        byteBufferWrapper.putLong(uuid.leastSignificantBits)
-        return byteBufferWrapper.array()
     }
 }

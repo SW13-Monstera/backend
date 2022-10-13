@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.common.handler
 
-import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.OAuth2UserInfoFactory
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.config.properties.AppProperties
