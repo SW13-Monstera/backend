@@ -66,8 +66,8 @@ class NotificationControllerTest {
     @BeforeAll
     fun setup() {
         val user = User(
-            email = "test-admin2@test.com",
-            username = "test-admin2",
+            email = "test-admin3@test.com",
+            username = "test-admin3",
             providerType = ProviderType.LOCAL,
             role = Role.ROLE_ADMIN
         )
@@ -79,7 +79,7 @@ class NotificationControllerTest {
         val now = Date()
 
         val accessToken = tokenProvider.createAuthToken(
-            "test-admin2@test.com",
+            "test-admin3@test.com",
             expiry = Date(now.time + 6000000),
             role = Role.ROLE_ADMIN.code
         )
