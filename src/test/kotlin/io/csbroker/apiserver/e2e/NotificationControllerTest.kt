@@ -255,7 +255,7 @@ class NotificationControllerTest {
                         PayloadDocumentation.fieldWithPath("data.numberOfElements")
                             .type(JsonFieldType.NUMBER).description("현재 페이지의 알림 개수"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("한 페이지에 보여줄 알림 개수"),
+                            .type(JsonFieldType.NUMBER).description("한 페이지에 보여줄 알림 개수")
                     )
                 )
             )
