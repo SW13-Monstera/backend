@@ -1324,6 +1324,26 @@ include::{snippets}/admin/userAnswer/assign/validate/request-fields.adoc[]
 include::{snippets}/admin/userAnswer/assign/validate/response-body.adoc[]
 include::{snippets}/admin/userAnswer/assign/validate/response-fields.adoc[]
 
+==== 유저 응답 삭제
+
+.description
+[source]
+----
+하나의 유저 응답을 삭제하기 위한 API입니다.
+
+HTTP Method : DELETE
+End-Point   : /api/admin/user-answers/{user_answer_id: Long}
+----
+
+.Sample Request
+include::{snippets}/admin/userAnswer/deleteOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/admin/userAnswer/deleteOne/http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/userAnswer/deleteOne/response-body.adoc[]
+include::{snippets}/admin/userAnswer/deleteOne/response-fields.adoc[]
 
 === User API ( /api/admin/users )
 

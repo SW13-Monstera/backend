@@ -261,6 +261,14 @@ class AdminController(
         )
     }
 
+    @DeleteMapping("/user-answers/{id}")
+    fun deleteUserAnswerById(
+        @PathVariable("id") id: Long
+    ): ApiResponse<Boolean> {
+        this.userAnswerService.removeUserAnswerById(id)
+        return ApiResponse.success(true)
+    }
+
     @PutMapping("/user-answers/assign/{type:label|validate}")
     fun assignUserAnswer(
         @PathVariable("type") type: String,

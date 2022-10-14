@@ -6,6 +6,7 @@ import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
+import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
@@ -14,6 +15,7 @@ import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
+import io.csbroker.apiserver.dto.problem.longproblem.ContentDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -331,6 +333,12 @@ class ProblemServiceImpl(
         val correctKeywordListDto = gradeResultDto.correctKeywordIds.map {
             val keyword = findProblem.gradingStandards.find { gs -> gs.id!! == it }
                 ?: throw EntityNotFoundException("${it}번 채점 기준을 찾을 수 없습니다.")
+            if (keyword.type != GradingStandardType.KEYWORD) {
+                throw InternalServiceException(
+                    ErrorCode.CONDITION_NOT_FULFILLED,
+                    "${it}번 기준은 키워드 채점 기준이 아닙니다."
+                )
+            }
             userGradedScore += keyword.score
             KeywordDto(
                 keyword.id!!,
@@ -348,17 +356,28 @@ class ProblemServiceImpl(
         }.toList()
 
         // get score from content standards
-        val contentScores = findProblem.gradingStandards.filter {
-            it.type == GradingStandardType.CONTENT && it.id in gradeResultDto.correctContentIds
+        val correctContentListDto = findProblem.gradingStandards.filter {
+            it.id in gradeResultDto.correctContentIds
         }.map {
-            it.score
+            if (it.type != GradingStandardType.CONTENT) {
+                throw InternalServiceException(
+                    ErrorCode.CONDITION_NOT_FULFILLED,
+                    "${it.id}번 기준은 내용 채점 기준이 아닙니다."
+                )
+            }
+            userGradedScore += it.score
+            ContentDto(it.id!!, it.content, true)
         }
 
-        if (contentScores.size != gradeResultDto.correctContentIds.size) {
+        val notCorrectContentListDto = findProblem.gradingStandards.filter {
+            it.type == GradingStandardType.CONTENT && it.id !in gradeResultDto.correctContentIds
+        }.map {
+            ContentDto(it.id!!, it.content)
+        }.toList()
+
+        if (correctContentListDto.size != gradeResultDto.correctContentIds.size) {
             throw EntityNotFoundException("채점 기준을 찾을 수 없습니다.")
         }
-
-        userGradedScore += contentScores.sum()
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)
@@ -379,7 +398,8 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswer = answer,
             score = userGradedScore,
-            keywords = correctKeywordListDto + notCorrectKeywordListDto
+            keywords = correctKeywordListDto + notCorrectKeywordListDto,
+            contents = correctContentListDto + notCorrectContentListDto
         )
     }
 
