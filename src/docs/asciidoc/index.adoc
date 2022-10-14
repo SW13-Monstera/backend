@@ -813,7 +813,6 @@ include::{snippets}/notifications/readBulk/response-fields.adoc[]
 
 HTTP Method : GET
 End-Point   : /api/v1/notifications/count
-Req Params : page, size
 ----
 
 .Sample Request
