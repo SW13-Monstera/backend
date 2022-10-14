@@ -5,6 +5,7 @@ import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
 import io.csbroker.apiserver.dto.notification.NotificationPageResponseDto
+import io.csbroker.apiserver.dto.notification.UnReadNotificationCountDto
 import io.csbroker.apiserver.service.NotificationService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
@@ -25,6 +26,12 @@ class NotificationController(
     fun getNotifications(@LoginUser loginUser: User, pageable: Pageable): ApiResponse<NotificationPageResponseDto> {
         val notifications = notificationService.getNotification(loginUser.username, pageable)
         return ApiResponse.success(NotificationPageResponseDto(notifications))
+    }
+
+    @GetMapping("/count")
+    fun getUnreadNotificationCount(@LoginUser loginUser: User): ApiResponse<UnReadNotificationCountDto> {
+        val count = notificationService.getUnreadNotificationCount(loginUser.username)
+        return ApiResponse.success(UnReadNotificationCountDto(count))
     }
 
     @PutMapping("/read")

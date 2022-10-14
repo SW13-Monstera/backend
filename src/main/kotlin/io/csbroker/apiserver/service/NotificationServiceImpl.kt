@@ -58,4 +58,11 @@ class NotificationServiceImpl(
 
         return id
     }
+
+    override fun getUnreadNotificationCount(email: String): Long {
+        val findUser = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
+
+        return notificationRepository.countUnReadByUserId(findUser.id!!)
+    }
 }

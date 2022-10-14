@@ -19,4 +19,7 @@ interface NotificationRepository : JpaRepository<Notification, Long>, Notificati
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = TRUE WHERE n.id = :id AND n.user.id = :userId")
     fun setIsReadById(@Param("userId") userId: UUID, @Param("id") id: Long)
+
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.user.id = :userId AND n.isRead = FALSE")
+    fun countUnReadByUserId(@Param("userId") userId: UUID): Long
 }

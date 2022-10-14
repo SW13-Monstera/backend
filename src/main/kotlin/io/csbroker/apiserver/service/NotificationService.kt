@@ -11,4 +11,5 @@ interface NotificationService {
     fun getNotification(email: String, page: Pageable): Page<Notification>
     fun readNotifications(email: String, notificationIds: List<Long>): Int
     fun readNotificationById(email: String, id: Long): Long
+    fun getUnreadNotificationCount(email: String): Long
 }
