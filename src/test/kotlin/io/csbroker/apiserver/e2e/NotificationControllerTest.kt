@@ -351,4 +351,49 @@ class NotificationControllerTest {
                 )
             )
     }
+
+    @Test
+    @Order(6)
+    fun `Get Un Read Notifications 200`() {
+        // given
+        notificationRepository.saveAll(
+            (1..10).map {
+                Notification(
+                    content = "test content $it",
+                    user = this.user,
+                    link = "https://dev.csbroker.io"
+                )
+            }.toList()
+        )
+
+        // when
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.get("$NOTIFICATION_ENDPOINT/count")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "notifications/count",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    HeaderDocumentation.requestHeaders(
+                        HeaderDocumentation.headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional()
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data.count")
+                            .type(JsonFieldType.NUMBER).description("읽지 않은 알림 개수")
+                    )
+                )
+            )
+    }
 }
