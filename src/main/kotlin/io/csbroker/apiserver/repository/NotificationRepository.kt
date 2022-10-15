@@ -14,11 +14,11 @@ interface NotificationRepository : JpaRepository<Notification, Long>, Notificati
 
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = TRUE WHERE n.id IN :notificationIds AND n.user.id = :userId")
-    fun setIsReadByIdIn(@Param("userId") userId: UUID, @Param("notificationIds") notificationIds: List<Long>)
+    fun setIsReadByIdIn(@Param("userId") userId: UUID, @Param("notificationIds") notificationIds: List<Long>): Int
 
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = TRUE WHERE n.id = :id AND n.user.id = :userId")
-    fun setIsReadById(@Param("userId") userId: UUID, @Param("id") id: Long)
+    fun setIsReadById(@Param("userId") userId: UUID, @Param("id") id: Long): Int
 
     @Query("SELECT COUNT(n) FROM Notification n WHERE n.user.id = :userId AND n.isRead = FALSE")
     fun countUnReadByUserId(@Param("userId") userId: UUID): Long

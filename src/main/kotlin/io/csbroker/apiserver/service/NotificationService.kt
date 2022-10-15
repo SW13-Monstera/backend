@@ -9,7 +9,7 @@ interface NotificationService {
     fun createNotification(notificationRequestDto: NotificationRequestDto): Long
     fun createBulkNotification(notificationRequestListDto: List<NotificationRequestDto>): Int
     fun getNotification(email: String, page: Pageable): Page<Notification>
-    fun readNotifications(email: String, notificationIds: List<Long>): Int
-    fun readNotificationById(email: String, id: Long): Long
+    fun readNotifications(email: String, notificationIds: List<Long>)
+    fun readNotificationById(email: String, id: Long)
     fun getUnreadNotificationCount(email: String): Long
 }

@@ -2,9 +2,9 @@ package io.csbroker.apiserver.controller
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.dto.common.ApiResponse
-import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
 import io.csbroker.apiserver.dto.notification.NotificationPageResponseDto
+import io.csbroker.apiserver.dto.notification.NotificationReadResponseDto
 import io.csbroker.apiserver.dto.notification.UnReadNotificationCountDto
 import io.csbroker.apiserver.service.NotificationService
 import org.springframework.data.domain.Pageable
@@ -38,29 +38,17 @@ class NotificationController(
     fun readNotifications(
         @LoginUser loginUser: User,
         @RequestBody notificationBulkReadDto: NotificationBulkReadDto
-    ): ApiResponse<UpsertSuccessResponseDto> {
-        return ApiResponse.success(
-            UpsertSuccessResponseDto(
-                size = notificationService.readNotifications(
-                    loginUser.username,
-                    notificationBulkReadDto.ids
-                )
-            )
-        )
+    ): ApiResponse<NotificationReadResponseDto> {
+        notificationService.readNotifications(loginUser.username, notificationBulkReadDto.ids)
+        return ApiResponse.success(NotificationReadResponseDto())
     }
 
     @PutMapping("/read/{id}")
     fun readNotificationById(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long
-    ): ApiResponse<UpsertSuccessResponseDto> {
-        return ApiResponse.success(
-            UpsertSuccessResponseDto(
-                id = notificationService.readNotificationById(
-                    loginUser.username,
-                    id
-                )
-            )
-        )
+    ): ApiResponse<NotificationReadResponseDto> {
+        notificationService.readNotificationById(loginUser.username, id)
+        return ApiResponse.success(NotificationReadResponseDto())
     }
 }

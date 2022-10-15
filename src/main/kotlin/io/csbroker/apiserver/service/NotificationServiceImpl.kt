@@ -40,23 +40,27 @@ class NotificationServiceImpl(
     }
 
     @Transactional
-    override fun readNotifications(email: String, notificationIds: List<Long>): Int {
+    override fun readNotifications(email: String, notificationIds: List<Long>) {
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
 
-        notificationRepository.setIsReadByIdIn(findUser.id!!, notificationIds)
+        val updatedCount = notificationRepository.setIsReadByIdIn(findUser.id!!, notificationIds)
 
-        return notificationIds.size
+        if (updatedCount != notificationIds.size) {
+            throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")
+        }
     }
 
     @Transactional
-    override fun readNotificationById(email: String, id: Long): Long {
+    override fun readNotificationById(email: String, id: Long) {
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
 
-        notificationRepository.setIsReadById(findUser.id!!, id)
+        val updatedCount = notificationRepository.setIsReadById(findUser.id!!, id)
 
-        return id
+        if (updatedCount == 0) {
+            throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")
+        }
     }
 
     override fun getUnreadNotificationCount(email: String): Long {
