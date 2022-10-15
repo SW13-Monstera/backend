@@ -292,8 +292,8 @@ class NotificationControllerTest {
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
-                        PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("알림 ID")
+                        PayloadDocumentation.fieldWithPath("data.success")
+                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부")
                     )
                 )
             )
@@ -345,8 +345,8 @@ class NotificationControllerTest {
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
-                        PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("읽음 처리된 알림 개수")
+                        PayloadDocumentation.fieldWithPath("data.success")
+                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부")
                     )
                 )
             )
