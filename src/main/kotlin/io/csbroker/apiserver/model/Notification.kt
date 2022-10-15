@@ -44,7 +44,8 @@ class Notification(
             this.id!!,
             this.content,
             this.link,
-            this.isRead
+            this.isRead,
+            this.createdAt!!
         )
     }
 }

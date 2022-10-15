@@ -8,6 +8,8 @@ import io.csbroker.apiserver.dto.notification.NotificationReadResponseDto
 import io.csbroker.apiserver.dto.notification.UnReadNotificationCountDto
 import io.csbroker.apiserver.service.NotificationService
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,7 +25,14 @@ class NotificationController(
 ) {
 
     @GetMapping
-    fun getNotifications(@LoginUser loginUser: User, pageable: Pageable): ApiResponse<NotificationPageResponseDto> {
+    fun getNotifications(
+        @LoginUser loginUser: User,
+        @PageableDefault(
+            size = 10,
+            sort = ["createdAt"],
+            direction = Sort.Direction.DESC
+        ) pageable: Pageable
+    ): ApiResponse<NotificationPageResponseDto> {
         val notifications = notificationService.getNotification(loginUser.username, pageable)
         return ApiResponse.success(NotificationPageResponseDto(notifications))
     }
