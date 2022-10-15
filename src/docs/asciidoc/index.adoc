@@ -706,13 +706,132 @@ include::{snippets}/users/statsOne/http-response.adoc[]
 .Request Header
 request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
 
-이 Access Token은 Admin 권한을 가진 유저의 Access Token이며, 인증을 위해 필수적으로 포함되어야 합니다.
+이 Access Token은 인증을 위해 필수적으로 포함되어야 합니다.
 
 include::{snippets}/users/statsOne/request-headers.adoc[]
 
 .Response Body
 include::{snippets}/users/statsOne/response-body.adoc[]
 include::{snippets}/users/statsOne/response-fields.adoc[]
+
+=== Notification API ( /api/v1/notifications )
+
+==== Notification 조회
+
+.description
+[source]
+----
+Notification 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/notifications
+Req Params : page, size
+----
+
+.Sample Request
+include::{snippets}/notifications/getAll/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/notifications/getAll/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/notifications/getAll/request-headers.adoc[]
+
+.Request Params
+include::{snippets}/notifications/getAll/request-parameters.adoc[]
+
+.Response Body
+include::{snippets}/notifications/getAll/response-body.adoc[]
+include::{snippets}/notifications/getAll/response-fields.adoc[]
+
+==== Notification 단건 읽음 처리
+
+.description
+[source]
+----
+Notification 읽음 처리를 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/v1/notifications/read/{notification_id}
+----
+
+.Sample Request
+include::{snippets}/notifications/readOne/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/notifications/readOne/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/notifications/getAll/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/notifications/readOne/response-body.adoc[]
+include::{snippets}/notifications/readOne/response-fields.adoc[]
+
+==== Notification 다건 읽음 처리
+
+.description
+[source]
+----
+Notification 여러건의 읽음 처리를 위한 API입니다.
+
+HTTP Method : PUT
+End-Point   : /api/v1/notifications/read
+----
+
+.Sample Request
+include::{snippets}/notifications/readBulk/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/notifications/readBulk/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/notifications/getAll/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/notifications/readBulk/response-body.adoc[]
+include::{snippets}/notifications/readBulk/response-fields.adoc[]
+
+==== 읽지않은 Notification 개수 조회
+
+.description
+[source]
+----
+읽지않은 Notification 개수 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/notifications/count
+----
+
+.Sample Request
+include::{snippets}/notifications/count/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/notifications/count/http-response.adoc[]
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+
+이 Access Token은 인증을 위해 필수적으로 포함되어야 합니다.
+
+include::{snippets}/notifications/count/request-headers.adoc[]
+
+.Response Body
+include::{snippets}/notifications/count/response-body.adoc[]
+include::{snippets}/notifications/count/response-fields.adoc[]
+
 
 == Back-Office APIs
 
@@ -1367,3 +1486,55 @@ include::{snippets}/admin/user/admin/search//http-response.adoc[]
 .Response Body
 include::{snippets}/admin/user/admin/search/response-body.adoc[]
 include::{snippets}/admin/user/admin/search/response-fields.adoc[]
+
+=== Notification API ( /api/admin/notification )
+
+==== Notification 생성
+
+.description
+[source]
+----
+Notification 생성을 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/notification
+----
+
+.Sample Request
+include::{snippets}/admin/notifications/insert/http-request.adoc[]
+
+.Request Body
+include::{snippets}/admin/notifications/insert/request-body.adoc[]
+include::{snippets}/admin/notifications/insert/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/admin/notifications/insert/http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/notifications/insert/response-body.adoc[]
+include::{snippets}/admin/notifications/insert/response-fields.adoc[]
+
+==== Notification 다중 생성
+
+.description
+[source]
+----
+Notification 다중 생성을 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/notifications
+----
+
+.Sample Request
+include::{snippets}/admin/notifications/bulkInsert/http-request.adoc[]
+
+.Request Body
+include::{snippets}/admin/notifications/bulkInsert/request-body.adoc[]
+include::{snippets}/admin/notifications/bulkInsert/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/admin/notifications/bulkInsert/http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/notifications/bulkInsert/response-body.adoc[]
+include::{snippets}/admin/notifications/bulkInsert/response-fields.adoc[]

@@ -1,17 +1,17 @@
 package io.csbroker.apiserver.e2e
 
-import io.csbroker.apiserver.auth.AuthTokenProvider
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
+import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
-import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
-import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.LongProblemRepository
@@ -22,7 +22,6 @@ import io.csbroker.apiserver.repository.UserAnswerRepository
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.service.ProblemService
 import io.csbroker.apiserver.service.UserAnswerService
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order

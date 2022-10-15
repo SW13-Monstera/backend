@@ -1,5 +1,7 @@
 package io.csbroker.apiserver.repository
 
+import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.jpa.impl.JPAQueryFactory
 import io.csbroker.apiserver.dto.problem.GradingHistoryStats
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
@@ -8,8 +10,6 @@ import io.csbroker.apiserver.model.QProblem.problem
 import io.csbroker.apiserver.model.QProblemTag.problemTag
 import io.csbroker.apiserver.model.QTag.tag
 import io.csbroker.apiserver.model.QUser.user
-import com.querydsl.core.types.dsl.BooleanExpression
-import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
