@@ -246,6 +246,8 @@ class NotificationControllerTest {
                             .type(JsonFieldType.STRING).description("알림 링크"),
                         PayloadDocumentation.fieldWithPath("data.contents.[].isRead")
                             .type(JsonFieldType.BOOLEAN).description("알림 읽음 여부"),
+                        PayloadDocumentation.fieldWithPath("data.contents.[].createdAt")
+                            .type(JsonFieldType.STRING).description("알림 생성 시간"),
                         PayloadDocumentation.fieldWithPath("data.currentPage")
                             .type(JsonFieldType.NUMBER).description("요청한 현재 페이지"),
                         PayloadDocumentation.fieldWithPath("data.totalPages")
