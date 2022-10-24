@@ -629,7 +629,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
                             .description("모범 답안의 글자 수"),
                         fieldWithPath("data.isAnswer").type(JsonFieldType.BOOLEAN)
-                            .description("유저 답안의 정답 여부")
+                            .description("유저 답안의 정답 여부"),
+                        fieldWithPath("data.correctAnswer").type(JsonFieldType.STRING)
+                            .description("모범 답안")
                     )
                 )
             )
