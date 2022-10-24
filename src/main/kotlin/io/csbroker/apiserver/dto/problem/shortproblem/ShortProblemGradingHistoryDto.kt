@@ -15,7 +15,8 @@ data class ShortProblemGradingHistoryDto(
     val userAnswer: String,
     val answerLength: Int,
     val isAnswer: Boolean,
-    val score: Double
+    val score: Double,
+    val correctAnswer: String
 ) {
 
     companion object {
@@ -40,7 +41,8 @@ data class ShortProblemGradingHistoryDto(
                 userAnswer,
                 problem.answer.length,
                 isAnswer,
-                score
+                score,
+                problem.answer
             )
         }
     }
