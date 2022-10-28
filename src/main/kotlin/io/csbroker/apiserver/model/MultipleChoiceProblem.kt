@@ -96,7 +96,8 @@ class MultipleChoiceProblem(
             commonDetail.correctUserCnt,
             commonDetail.totalSubmission,
             this.choicesList.map { it.toChoiceResponseDto() },
-            this.gradingHistory.any { it.user.email == email }
+            this.gradingHistory.any { it.user.email == email },
+            this.isMultiple
         )
     }
 }

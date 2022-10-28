@@ -104,7 +104,8 @@ class LongProblem(
             if (scoreList.isEmpty()) null else scoreList.last(),
             if (scoreList.isEmpty()) null else scoreList.first(),
             scoreList.size,
-            isSolved
+            isSolved,
+            this.isGradable
         )
     }
 }
