@@ -260,7 +260,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
                             .description("총 제출 수"),
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
-                            .description("푼 문제 여부")
+                            .description("푼 문제 여부"),
+                        fieldWithPath("data.isGradable").type(JsonFieldType.BOOLEAN)
+                            .description("문제 채점 가능 여부")
                     )
                 )
             )
@@ -358,7 +360,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
                             .description("선지 내용"),
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
-                            .description("푼 문제 여부")
+                            .description("푼 문제 여부"),
+                        fieldWithPath("data.isMultipleAnswer").type(JsonFieldType.BOOLEAN)
+                            .description("다중 답안 여부")
                     )
                 )
             )
