@@ -1,9 +1,12 @@
 package io.csbroker.apiserver.e2e
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
+import io.csbroker.apiserver.common.enums.AssessmentType
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradingResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemAnswerDto
@@ -22,9 +25,6 @@ import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.ProblemTagRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserRepository
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.csbroker.apiserver.common.enums.AssessmentType
-import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers
@@ -260,7 +260,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
                             .description("총 제출 수"),
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
-                            .description("푼 문제 여부")
+                            .description("푼 문제 여부"),
+                        fieldWithPath("data.isGradable").type(JsonFieldType.BOOLEAN)
+                            .description("문제 채점 가능 여부")
                     )
                 )
             )
@@ -358,7 +360,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
                             .description("선지 내용"),
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
-                            .description("푼 문제 여부")
+                            .description("푼 문제 여부"),
+                        fieldWithPath("data.isMultipleAnswer").type(JsonFieldType.BOOLEAN)
+                            .description("다중 답안 여부")
                     )
                 )
             )
@@ -548,7 +552,15 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.keywords.[].isExist").type(JsonFieldType.BOOLEAN)
                             .description("키워드가 유저답안에 존재하는지 유무"),
                         fieldWithPath("data.keywords.[].idx").type(JsonFieldType.ARRAY)
-                            .description("키워드가 유저답안에 존재 할 때, 시작 index와 끝 index ( 존재하지 않으면 빈 배열 )")
+                            .description("키워드가 유저답안에 존재 할 때, 시작 index와 끝 index ( 존재하지 않으면 빈 배열 )"),
+                        fieldWithPath("data.contents").type(JsonFieldType.ARRAY)
+                            .description("답안에 들어가야하는 내용 채점 기준"),
+                        fieldWithPath("data.contents.[].id").type(JsonFieldType.NUMBER)
+                            .description("내용 채점 기준 id"),
+                        fieldWithPath("data.contents.[].content").type(JsonFieldType.STRING)
+                            .description("내용 채점 기준 내용"),
+                        fieldWithPath("data.contents.[].isExist").type(JsonFieldType.BOOLEAN)
+                            .description("내용 채점 기준이 유저답안에 존재하는지 유무")
                     )
                 )
             )
@@ -621,7 +633,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.answerLength").type(JsonFieldType.NUMBER)
                             .description("모범 답안의 글자 수"),
                         fieldWithPath("data.isAnswer").type(JsonFieldType.BOOLEAN)
-                            .description("유저 답안의 정답 여부")
+                            .description("유저 답안의 정답 여부"),
+                        fieldWithPath("data.correctAnswer").type(JsonFieldType.STRING)
+                            .description("모범 답안")
                     )
                 )
             )

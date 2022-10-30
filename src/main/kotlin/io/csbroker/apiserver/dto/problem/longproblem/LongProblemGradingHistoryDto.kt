@@ -14,6 +14,7 @@ data class LongProblemGradingHistoryDto(
     val totalSubmission: Int,
     val score: Double,
     val keywords: List<KeywordDto>,
+    val contents: List<ContentDto>,
     val userAnswer: String,
     val standardAnswer: String
 ) {
@@ -24,7 +25,8 @@ data class LongProblemGradingHistoryDto(
             problem: LongProblem,
             userAnswer: String,
             score: Double,
-            keywords: List<KeywordDto>
+            keywords: List<KeywordDto>,
+            contents: List<ContentDto>
         ): LongProblemGradingHistoryDto {
             val tags = problem.problemTags.map {
                 it.tag
@@ -48,6 +50,7 @@ data class LongProblemGradingHistoryDto(
                 scoreList.size,
                 score,
                 keywords,
+                contents,
                 userAnswer,
                 problem.standardAnswer
             )

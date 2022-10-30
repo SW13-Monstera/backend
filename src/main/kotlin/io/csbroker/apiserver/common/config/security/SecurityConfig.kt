@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.common.config.security
 
-import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.config.properties.CorsProperties
 import io.csbroker.apiserver.common.enums.Role

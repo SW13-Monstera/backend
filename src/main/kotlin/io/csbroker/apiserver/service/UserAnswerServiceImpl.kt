@@ -172,6 +172,11 @@ class UserAnswerServiceImpl(
         this.userAnswerRepository.updateValidatorId(userAnswerIds, userId)
     }
 
+    @Transactional
+    override fun removeUserAnswerById(userAnswerId: Long) {
+        this.userAnswerRepository.deleteById(userAnswerId)
+    }
+
     private fun validateAssignCondition(userAnswerIds: List<Long>, userId: UUID) {
         val cnt = this.userAnswerRepository.cntUserAnswer(userAnswerIds)
         if (cnt != userAnswerIds.size) {

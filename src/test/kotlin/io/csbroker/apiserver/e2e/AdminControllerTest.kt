@@ -1,17 +1,17 @@
 package io.csbroker.apiserver.e2e
 
-import io.csbroker.apiserver.auth.AuthTokenProvider
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
+import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
-import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
-import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.LongProblemRepository
@@ -22,7 +22,6 @@ import io.csbroker.apiserver.repository.UserAnswerRepository
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.service.ProblemService
 import io.csbroker.apiserver.service.UserAnswerService
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order
@@ -2224,6 +2223,95 @@ class AdminControllerTest {
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.size")
                             .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size")
+                    )
+                )
+            )
+    }
+
+    @Test
+    @Order(24)
+    fun `Delete User Answer By Id 200`() {
+        // given
+        val problemInsertDto = LongProblemUpsertRequestDto(
+            "test",
+            """
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has survived not only five centuries, but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+                like Aldus PageMaker including versions of Lorem Ipsum.
+            """.trimIndent(),
+            """
+                It is a long established fact that a reader will be distracted by the readable content of
+                a page when looking at its layout.
+            """.trimIndent(),
+            mutableListOf("db"),
+            mutableListOf(
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-1",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-2",
+                    3.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "keyword-3",
+                    1.0,
+                    GradingStandardType.KEYWORD
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "CONTENT-1",
+                    2.0,
+                    GradingStandardType.CONTENT
+                ),
+                LongProblemUpsertRequestDto.GradingStandardData(
+                    "CONTENT-2",
+                    3.0,
+                    GradingStandardType.CONTENT
+                )
+            )
+        )
+
+        val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
+
+        val userAnswerUpsertDto = UserAnswerUpsertDto(
+            user.id!!,
+            user.id!!,
+            "test",
+            problemId
+        )
+
+        val id = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+
+        // when
+        val result = mockMvc.perform(
+            RestDocumentationRequestBuilders.delete("$ADMIN_ENDPOINT/user-answers/{user_answer_id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+
+        // then
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
+            .andDo(
+                MockMvcRestDocumentation.document(
+                    "admin/userAnswer/deleteOne",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 응답 id")
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data")
+                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )")
                     )
                 )
             )

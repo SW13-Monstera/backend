@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.e2e
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.GradingStandardType
@@ -17,7 +18,6 @@ import io.csbroker.apiserver.repository.ProblemTagRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order

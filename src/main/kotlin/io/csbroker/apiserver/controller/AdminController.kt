@@ -5,6 +5,8 @@ import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
+import io.csbroker.apiserver.dto.notification.NotificationBulkInsertDto
+import io.csbroker.apiserver.dto.notification.NotificationRequestDto
 import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
@@ -22,6 +24,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
+import io.csbroker.apiserver.service.NotificationService
 import io.csbroker.apiserver.service.ProblemService
 import io.csbroker.apiserver.service.UserAnswerService
 import io.csbroker.apiserver.service.UserService
@@ -42,7 +45,8 @@ import org.springframework.web.bind.annotation.RestController
 class AdminController(
     private val problemService: ProblemService,
     private val userAnswerService: UserAnswerService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val notificationService: NotificationService
 ) {
     @GetMapping("/users/admin")
     fun findAdminUsers(): ApiResponse<List<AdminUserInfoResponseDto>> {
@@ -261,6 +265,14 @@ class AdminController(
         )
     }
 
+    @DeleteMapping("/user-answers/{id}")
+    fun deleteUserAnswerById(
+        @PathVariable("id") id: Long
+    ): ApiResponse<Boolean> {
+        this.userAnswerService.removeUserAnswerById(id)
+        return ApiResponse.success(true)
+    }
+
     @PutMapping("/user-answers/assign/{type:label|validate}")
     fun assignUserAnswer(
         @PathVariable("type") type: String,
@@ -290,5 +302,27 @@ class AdminController(
         }
 
         return ApiResponse.success(UpsertSuccessResponseDto(size = assignUserAnswerDto.userAnswerIds.size))
+    }
+
+    @PostMapping("/notification")
+    fun createNotification(
+        @RequestBody createNotificationDto: NotificationRequestDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        return ApiResponse.success(
+            UpsertSuccessResponseDto(
+                id = notificationService.createNotification(createNotificationDto)
+            )
+        )
+    }
+
+    @PostMapping("/notifications")
+    fun createBulkNotifications(
+        @RequestBody notificationBulkInsertDto: NotificationBulkInsertDto
+    ): ApiResponse<UpsertSuccessResponseDto> {
+        return ApiResponse.success(
+            UpsertSuccessResponseDto(
+                size = notificationService.createBulkNotification(notificationBulkInsertDto.content)
+            )
+        )
     }
 }

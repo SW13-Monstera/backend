@@ -32,4 +32,8 @@ interface UserAnswerService {
         userAnswerIds: List<Long>,
         userId: UUID
     )
+
+    fun removeUserAnswerById(
+        userAnswerId: Long
+    )
 }

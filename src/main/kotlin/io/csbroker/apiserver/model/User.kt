@@ -80,7 +80,10 @@ class User(
     val assignedToValidateAnswers: MutableList<UserAnswer> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val gradingHistories: MutableList<GradingHistory> = mutableListOf()
+    val gradingHistories: MutableList<GradingHistory> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val notifications: MutableList<Notification> = mutableListOf()
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
         this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl

@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.e2e
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.dto.auth.PasswordChangeMailRequestDto
@@ -8,7 +9,6 @@ import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
