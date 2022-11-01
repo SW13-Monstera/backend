@@ -57,7 +57,6 @@ class UserServiceImpl(
         return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
     }
 
-    @Cacheable(value = ["UserStatsDto"], key = "#id")
     override fun getStats(id: UUID): UserStatsDto {
         val findUser = this.userRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
