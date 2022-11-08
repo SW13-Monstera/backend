@@ -11,7 +11,6 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -57,7 +56,6 @@ class UserServiceImpl(
         return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
     }
 
-    @Cacheable(value = ["UserStatsDto"], key = "#id")
     override fun getStats(id: UUID): UserStatsDto {
         val findUser = this.userRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
