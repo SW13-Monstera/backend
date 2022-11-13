@@ -20,7 +20,7 @@ class LongProblem(
     description: String,
     creator: User,
 
-    @Column(name = "standard_answer", columnDefinition = "VARCHAR(300)")
+    @Column(name = "standard_answer", columnDefinition = "LONGTEXT")
     var standardAnswer: String,
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
