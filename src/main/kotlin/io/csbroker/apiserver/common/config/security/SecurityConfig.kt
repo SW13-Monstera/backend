@@ -75,6 +75,7 @@ class SecurityConfig(
             )
             .permitAll()
             .antMatchers("/api/v1/**").permitAll()
+            .antMatchers("/api/v2/**").permitAll()
             .antMatchers("/actuator/**").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(Role.ROLE_ADMIN.code)
             .anyRequest().authenticated()
