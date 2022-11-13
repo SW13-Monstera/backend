@@ -18,7 +18,8 @@ class ProblemControllerV2(
     @GetMapping("/short/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseV2Dto> {
         val findProblemDetail = this.problemService.findShortProblemDetailByIdV2(
-            id, getEmailFromSecurityContextHolder()
+            id,
+            getEmailFromSecurityContextHolder()
         )
 
         return ApiResponse.success(findProblemDetail)

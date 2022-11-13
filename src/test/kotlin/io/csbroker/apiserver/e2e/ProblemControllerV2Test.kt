@@ -53,8 +53,8 @@ class ProblemControllerV2Test {
     @BeforeAll
     fun setUpData() {
         val user = User(
-            email = "test2@test.com",
-            username = "test2",
+            email = "test50@test.com",
+            username = "test50",
             providerType = ProviderType.LOCAL
         )
 
