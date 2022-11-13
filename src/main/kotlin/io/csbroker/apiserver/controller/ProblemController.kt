@@ -80,9 +80,15 @@ class ProblemController(
     fun gradeLongProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody answerDto: LongProblemAnswerDto
+        @RequestBody answerDto: LongProblemAnswerDto,
+        @RequestParam("isGrading", required = false) isGrading: Boolean?,
     ): ApiResponse<LongProblemGradingHistoryDto> {
-        val gradeHistory = this.problemService.gradingLongProblem(loginUser.username, id, answerDto.answer)
+        val gradeHistory = this.problemService.gradingLongProblem(
+            loginUser.username,
+            id,
+            answerDto.answer,
+            isGrading ?: true
+        )
         return ApiResponse.success(gradeHistory)
     }
 
