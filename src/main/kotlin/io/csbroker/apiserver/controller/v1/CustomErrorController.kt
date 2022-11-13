@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.controller
+package io.csbroker.apiserver.controller.v1
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.error.ErrorController

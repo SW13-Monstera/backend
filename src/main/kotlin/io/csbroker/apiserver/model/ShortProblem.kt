@@ -1,5 +1,7 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.controller.v2.response.ShortProblemAnswerType
+import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
@@ -77,9 +79,45 @@ class ShortProblem(
         )
     }
 
+    fun toDetailResponseV2Dto(email: String?): ShortProblemDetailResponseV2Dto {
+        val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
+
+        return ShortProblemDetailResponseV2Dto(
+            this.id!!,
+            this.title,
+            commonDetail.tags,
+            this.description,
+            commonDetail.correctSubmission,
+            commonDetail.correctUserCnt,
+            commonDetail.totalSubmission,
+            this.answer.length,
+            this.getTypeOfAnswer(),
+            this.gradingHistory.any { it.user.email == email }
+        )
+    }
+
+    private fun getTypeOfAnswer(): ShortProblemAnswerType {
+        return if (this.isEnglish()) {
+            ShortProblemAnswerType.ENGLISH
+        } else if (this.isNumeric()) {
+            ShortProblemAnswerType.NUMERIC
+        } else {
+            ShortProblemAnswerType.KOREAN
+        }
+    }
+
     private fun isEnglish(): Boolean {
         for (c in this.answer.replace("\\s".toRegex(), "")) {
             if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun isNumeric(): Boolean {
+        for (c in this.answer.replace("\\s".toRegex(), "")) {
+            if (c !in '0'..'9') {
                 return false
             }
         }

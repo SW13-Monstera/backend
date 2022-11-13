@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.controller
+package io.csbroker.apiserver.controller.v1
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.config.properties.AppProperties
