@@ -373,6 +373,9 @@ include::{snippets}/problems/long/grade/path-parameters.adoc[]
 request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
 include::{snippets}/problems/long/grade/request-headers.adoc[]
 
+.Request Params
+include::{snippets}/problems/long/grade/request-parameters.adoc[]
+
 .Response Body
 include::{snippets}/problems/long/grade/response-body.adoc[]
 include::{snippets}/problems/long/grade/response-fields.adoc[]
@@ -558,6 +561,36 @@ include::{snippets}/problems/grade/assessment/request-fields.adoc[]
 .Response Body
 include::{snippets}/problems/grade/assessment/response-body.adoc[]
 include::{snippets}/problems/grade/assessment/response-fields.adoc[]
+
+
+=== Problems API V2 ( /api/v2/problems )
+==== 단답형 문제 단건 조회
+
+
+.description
+[source]
+----
+단답형 문제 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v2/problems/short/{problem_id:Long}
+----
+
+.Sample Request
+include::{snippets}/problems/v2/short/inquire/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/v2/short/inquire/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/v2/short/inquire/path-parameters.adoc[]
+
+객관식 문제 단건 조회를 위한 path parameter의 설명입니다.
+
+
+.Response Body
+include::{snippets}/problems/v2/short/inquire/response-body.adoc[]
+include::{snippets}/problems/v2/short/inquire/response-fields.adoc[]
 
 === User API ( /api/v1/users )
 

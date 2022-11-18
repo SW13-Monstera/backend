@@ -454,7 +454,7 @@ class ProblemApiControllerTest {
     @Order(5)
     fun `Long problem 채점`() {
         // given
-        val urlString = "$PROBLEM_ENDPOINT/long/{problem_id}/grade"
+        val urlString = "$PROBLEM_ENDPOINT/long/{problem_id}/grade?isGrading=true"
 
         val userAnswer = "정답의 키워드는 test를 포함해야합니다."
         val userAnswerDto = LongProblemAnswerDto(userAnswer)
@@ -516,6 +516,9 @@ class ProblemApiControllerTest {
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
                             .optional()
+                    ),
+                    requestParameters(
+                        parameterWithName("isGrading").description("실제 채점 진행 여부 ( default = true )")
                     ),
                     pathParameters(
                         parameterWithName("problem_id").description("문제 id")

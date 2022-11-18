@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.service
 
+import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
@@ -45,6 +46,7 @@ interface ProblemService {
 
     fun findLongProblemDetailById(id: Long, email: String?): LongProblemDetailResponseDto
     fun findShortProblemDetailById(id: Long, email: String?): ShortProblemDetailResponseDto
+    fun findShortProblemDetailByIdV2(id: Long, email: String?): ShortProblemDetailResponseV2Dto
     fun findMultipleChoiceProblemDetailById(id: Long, email: String?): MultipleChoiceProblemDetailResponseDto
     fun findLongProblemById(id: Long): LongProblemResponseDto
     fun findShortProblemById(id: Long): ShortProblemResponseDto
@@ -65,7 +67,8 @@ interface ProblemService {
     fun gradingLongProblem(
         email: String,
         problemId: Long,
-        answer: String
+        answer: String,
+        isGrading: Boolean
     ): LongProblemGradingHistoryDto
 
     fun gradingShortProblem(
