@@ -1,5 +1,7 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.common.enums.ErrorCode
+import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.controller.v2.response.ShortProblemAnswerType
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
@@ -97,18 +99,26 @@ class ShortProblem(
     }
 
     private fun getTypeOfAnswer(): ShortProblemAnswerType {
-        return if (this.isEnglish()) {
-            ShortProblemAnswerType.ENGLISH
-        } else if (this.isNumeric()) {
-            ShortProblemAnswerType.NUMERIC
-        } else {
-            ShortProblemAnswerType.KOREAN
+        return when {
+            this.isEnglish() -> ShortProblemAnswerType.ENGLISH
+            this.isKorean() -> ShortProblemAnswerType.KOREAN
+            this.isNumeric() -> ShortProblemAnswerType.NUMERIC
+            else -> throw InternalServiceException(ErrorCode.SERVER_ERROR, "문제 답변이 영어, 한글, 숫자가 아닙니다.")
         }
+    }
+
+    private fun isKorean(): Boolean {
+        for (c in this.answer.replace("\\s".toRegex(), "")) {
+            if (c !in 'ㄱ'..'ㅣ' && c !in '가'..'힣') {
+                return false
+            }
+        }
+        return true
     }
 
     private fun isEnglish(): Boolean {
         for (c in this.answer.replace("\\s".toRegex(), "")) {
-            if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
+            if (c !in 'A'..'Z' && c !in 'a'..'z') {
                 return false
             }
         }
