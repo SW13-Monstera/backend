@@ -315,7 +315,8 @@ class ProblemServiceImpl(
     override fun gradingLongProblem(
         email: String,
         problemId: Long,
-        answer: String
+        answer: String,
+        isGrading: Boolean
     ): LongProblemGradingHistoryDto {
         // get entities
         val findUser = this.userRepository.findByEmail(email)
@@ -325,8 +326,12 @@ class ProblemServiceImpl(
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
-        val gradeResultDto = this.getCorrectStandards(findProblem, answer)
-
+        val gradeResultDto = when (isGrading) {
+            true -> this.getCorrectStandards(findProblem, answer)
+            false -> GradeResultDto(
+                correctKeywordIds = emptyList()
+            )
+        }
         var userGradedScore = 0.0
 
         // get keywords
