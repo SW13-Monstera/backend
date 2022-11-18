@@ -9,6 +9,7 @@ import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.common.util.log
+import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
@@ -131,6 +132,11 @@ class ProblemServiceImpl(
 
     override fun findShortProblemDetailById(id: Long, email: String?): ShortProblemDetailResponseDto {
         return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
+            ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
+    }
+
+    override fun findShortProblemDetailByIdV2(id: Long, email: String?): ShortProblemDetailResponseV2Dto {
+        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseV2Dto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 

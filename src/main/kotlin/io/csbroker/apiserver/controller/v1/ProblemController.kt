@@ -1,8 +1,9 @@
-package io.csbroker.apiserver.controller
+package io.csbroker.apiserver.controller.v1
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
+import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
 import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
@@ -19,7 +20,6 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponse
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistoryDto
 import io.csbroker.apiserver.service.ProblemService
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -46,7 +46,8 @@ class ProblemController(
         var solvedBy: String? = null
 
         if (isSolved != null) {
-            solvedBy = this.getEmail() ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
+            solvedBy = getEmailFromSecurityContextHolder()
+                ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
         val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)
@@ -57,21 +58,22 @@ class ProblemController(
 
     @GetMapping("/long/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findLongProblemDetailById(id, this.getEmail())
+        val findProblemDetail = this.problemService.findLongProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
 
     @GetMapping("/multiple/{id}")
     fun getMultipleProblemById(@PathVariable("id") id: Long): ApiResponse<MultipleChoiceProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findMultipleChoiceProblemDetailById(id, this.getEmail())
+        val findProblemDetail =
+            this.problemService.findMultipleChoiceProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
 
     @GetMapping("/short/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findShortProblemDetailById(id, this.getEmail())
+        val findProblemDetail = this.problemService.findShortProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
@@ -127,15 +129,5 @@ class ProblemController(
                 )
             )
         )
-    }
-
-    private fun getEmail(): String? {
-        return try {
-            val principal = SecurityContextHolder.getContext().authentication.principal
-                as User
-            principal.username
-        } catch (e: Exception) {
-            null
-        }
     }
 }
