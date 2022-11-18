@@ -373,6 +373,9 @@ include::{snippets}/problems/long/grade/path-parameters.adoc[]
 request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
 include::{snippets}/problems/long/grade/request-headers.adoc[]
 
+.Request Params
+include::{snippets}/problems/long/grade/request-parameters.adoc[]
+
 .Response Body
 include::{snippets}/problems/long/grade/response-body.adoc[]
 include::{snippets}/problems/long/grade/response-fields.adoc[]

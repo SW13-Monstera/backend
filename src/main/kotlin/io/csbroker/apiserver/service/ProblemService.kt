@@ -67,7 +67,8 @@ interface ProblemService {
     fun gradingLongProblem(
         email: String,
         problemId: Long,
-        answer: String
+        answer: String,
+        isGrading: Boolean
     ): LongProblemGradingHistoryDto
 
     fun gradingShortProblem(
