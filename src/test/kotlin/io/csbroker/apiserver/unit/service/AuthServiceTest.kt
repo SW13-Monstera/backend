@@ -44,15 +44,6 @@ class AuthServiceTest {
         providerType = ProviderType.LOCAL
     )
 
-    private val githubAdminUser: User = User(
-        id = UUID.randomUUID(),
-        email = "test@test.com",
-        password = "test1234!",
-        username = "test",
-        role = Role.ROLE_ADMIN,
-        providerType = ProviderType.GITHUB
-    )
-
     private val now = Date()
 
     private val accessToken = Jwts.builder()
@@ -187,20 +178,6 @@ class AuthServiceTest {
         verify(exactly = 1) { userRepository.findByEmail("test@test.com") }
         Assertions.assertThat(ErrorCode.NOT_FOUND_ENTITY).isEqualTo(exception.errorCode)
     }
-
-//    @Test
-//    fun `로그인 OAuth 유저 실패 테스트`() {
-//        // given
-//        every { userRepository.findByEmail("test@test.com") } returns githubAdminUser
-//        // when
-//        val exception = assertThrows<OAuthProviderMissMatchException> {
-//            authService.loginUser(UserLoginRequestDto("test@test.com", "test1234!"))
-//        }
-//
-//        // then
-//        verify(exactly = 1) { userRepository.findByEmail("test@test.com") }
-//        Assertions.assertThat(ErrorCode.PROVIDER_MISS_MATCH).isEqualTo(exception.errorCode)
-//    }
 
     @Test
     fun `로그인 비밀번호 불일치 실패 테스트`() {
