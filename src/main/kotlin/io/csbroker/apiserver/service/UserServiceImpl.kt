@@ -5,8 +5,8 @@ import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.user.UserStatsDto
+import io.csbroker.apiserver.dto.user.UserStatsDto.ProblemStatsDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
-import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.UserRepository
@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
 import javax.transaction.Transactional
-import kotlin.math.max
 
 @Service
 class UserServiceImpl(
@@ -38,7 +37,7 @@ class UserServiceImpl(
         val findUser = this.userRepository.findByIdOrNull(uuid)
             ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
 
-        if (userUpdateRequestDto.password != null) {
+        userUpdateRequestDto.password?.let {
             val encodedPassword = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
             userUpdateRequestDto.password = encodedPassword
         }
@@ -62,16 +61,10 @@ class UserServiceImpl(
 
         val gradingHistories = this.gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
 
-        val resultMap = mutableMapOf<Long, GradingHistory>()
-
-        for (gradingHistory in gradingHistories) {
-            if (resultMap[gradingHistory.problem.id!!] == null) {
-                resultMap[gradingHistory.problem.id!!] = gradingHistory
-            } else {
-                if (resultMap[gradingHistory.problem.id!!]!!.score < gradingHistory.score) {
-                    resultMap[gradingHistory.problem.id!!] = gradingHistory
-                }
-            }
+        val resultMap = gradingHistories.groupBy {
+            it.problem.id!!
+        }.mapValues { v ->
+            v.value.maxByOrNull { it.score } ?: v.value.first()
         }
 
         val correctAnsweredMap = resultMap.filter {
@@ -87,22 +80,22 @@ class UserServiceImpl(
         }.eachCount()
 
         val correctAnswered = correctAnsweredMap.map {
-            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
-        }.toList()
+            ProblemStatsDto.from(it.key, it.value)
+        }
 
         val wrongAnswered = resultMap.filter {
             it.value.score == 0.0
         }.map {
-            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
-        }.toList()
+            ProblemStatsDto.from(it.key, it.value)
+        }
 
         val partialAnswered = resultMap.filter {
             it.value.score != 0.0 && it.value.score != it.value.problem.score
         }.map {
-            UserStatsDto.ProblemStatsDto(it.key, it.value.problem.dtype, it.value.problem.title)
-        }.toList()
+            ProblemStatsDto.from(it.key, it.value)
+        }
 
-        val rankResultDto = redisRepository.getRank(id.toString() + '@' + findUser.username)
+        val rankResultDto = redisRepository.getRank(makeRankKey(id, findUser.username))
 
         return UserStatsDto(
             correctAnswered,
@@ -138,17 +131,17 @@ class UserServiceImpl(
     @Transactional
     @Scheduled(cron = "0 0 * * * *")
     override fun calculateRank() {
-        val findUsers = userRepository.findAll()
-        val allUserScoreMap = mutableMapOf<String, Double>()
-
-        for (findUser in findUsers) {
-            val scoreMap = mutableMapOf<Long, Double>()
-            findUser.gradingHistories.forEach {
-                scoreMap[it.problem.id!!] = max(scoreMap[it.problem.id!!] ?: 0.0, it.score)
+        val userScoreMap = userRepository.findAll().associate {
+            val scoreMap = it.gradingHistories.groupBy { gradingHistory ->
+                gradingHistory.problem.id!!
+            }.mapValues { map ->
+                map.value.maxOfOrNull { gradingHistory -> gradingHistory.score } ?: 0.0
             }
-            allUserScoreMap[findUser.id!!.toString() + '@' + findUser.username] = scoreMap.values.sum()
+            makeRankKey(it.id!!, it.username) to scoreMap.values.sum()
         }
 
-        redisRepository.setRank(allUserScoreMap)
+        redisRepository.setRank(userScoreMap)
     }
+
+    private fun makeRankKey(id: UUID, username: String) = "$id@$username"
 }
