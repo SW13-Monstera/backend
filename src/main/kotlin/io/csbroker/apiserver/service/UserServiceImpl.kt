@@ -25,16 +25,16 @@ class UserServiceImpl(
     private val redisRepository: RedisRepository
 ) : UserService {
     override fun findUserByEmail(email: String): User? {
-        return this.userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
     }
 
     override fun findUserById(uuid: UUID): User? {
-        return this.userRepository.findByIdOrNull(uuid)
+        return userRepository.findByIdOrNull(uuid)
     }
 
     @Transactional
     override fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User {
-        val findUser = this.userRepository.findByIdOrNull(uuid)
+        val findUser = userRepository.findByIdOrNull(uuid)
             ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
 
         userUpdateRequestDto.password?.let {
@@ -48,18 +48,18 @@ class UserServiceImpl(
     }
 
     override fun findUsers(): List<User> {
-        return this.userRepository.findAll()
+        return userRepository.findAll()
     }
 
     override fun findAdminUsers(): List<User> {
-        return this.userRepository.findUsersByRole(Role.ROLE_ADMIN)
+        return userRepository.findUsersByRole(Role.ROLE_ADMIN)
     }
 
     override fun getStats(id: UUID): UserStatsDto {
-        val findUser = this.userRepository.findByIdOrNull(id)
+        val findUser = userRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
-        val gradingHistories = this.gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
+        val gradingHistories = gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
 
         val resultMap = gradingHistories.groupBy {
             it.problem.id!!
@@ -108,7 +108,7 @@ class UserServiceImpl(
     }
 
     override fun deleteUser(email: String, id: UUID): Boolean {
-        val findUserById = this.findUserById(id)
+        val findUserById = findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
         if (findUserById.email != email) {

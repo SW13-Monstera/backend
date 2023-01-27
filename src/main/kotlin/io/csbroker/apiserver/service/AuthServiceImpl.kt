@@ -53,7 +53,7 @@ class AuthServiceImpl(
     }
 
     override fun getUserInfo(email: String): UserInfoDto {
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         return UserInfoDto(findUser)

@@ -22,23 +22,23 @@ class UserPrincipal(
     private lateinit var attributes: MutableMap<String, Any>
 
     override fun getName(): String {
-        return this.userId
+        return userId
     }
 
     override fun getAttributes(): MutableMap<String, Any> {
-        return this.attributes
+        return attributes
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return this.authorities
+        return authorities
     }
 
     override fun getPassword(): String {
-        return this.password
+        return password
     }
 
     override fun getUsername(): String {
-        return this.userId
+        return userId
     }
 
     override fun isAccountNonExpired(): Boolean {

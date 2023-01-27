@@ -41,13 +41,13 @@ class CommonServiceImpl(
     }
 
     override fun findTechByQuery(query: String): List<String> {
-        return this.techRepository.findByNameContainingIgnoreCase(query).map {
+        return techRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }
 
     override fun findMajorByQuery(query: String): List<String> {
-        return this.majorRepository.findByNameContainingIgnoreCase(query).map {
+        return majorRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }

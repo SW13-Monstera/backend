@@ -22,7 +22,7 @@ class ProblemRepositoryCustomImpl(
         problemSearchDto: ProblemSearchDto,
         pageable: Pageable
     ): Page<ProblemResponseDto> {
-        val ids = this.queryFactory.select(problem.id)
+        val ids = queryFactory.select(problem.id)
             .from(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory)
@@ -30,18 +30,18 @@ class ProblemRepositoryCustomImpl(
             .leftJoin(problem.problemTags, problemTag)
             .leftJoin(problemTag.tag, tag)
             .where(
-                this.likeTitle(problemSearchDto.query),
-                this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
-                this.isType(problemSearchDto.type),
-                this.isGradable(problemSearchDto.isGradable),
+                likeTitle(problemSearchDto.query),
+                inTags(problemSearchDto.tags),
+                solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
+                isType(problemSearchDto.type),
+                isGradable(problemSearchDto.isGradable),
                 problem.isActive.isTrue
             )
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        val result = this.queryFactory.selectFrom(problem)
+        val result = queryFactory.selectFrom(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
             .leftJoin(gradingHistory.user, user).fetchJoin()
@@ -50,7 +50,7 @@ class ProblemRepositoryCustomImpl(
             .where(problem.id.`in`(ids))
             .fetch()
 
-        val gradingHistories = this.queryFactory.selectFrom(gradingHistory)
+        val gradingHistories = queryFactory.selectFrom(gradingHistory)
             .distinct()
             .where(gradingHistory.problem.id.`in`(result.map { it.id }))
             .fetch()
@@ -61,7 +61,7 @@ class ProblemRepositoryCustomImpl(
             it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
         }.toMap()
 
-        val totalCnt = this.queryFactory.select(problem.id.count())
+        val totalCnt = queryFactory.select(problem.id.count())
             .from(problem)
             .leftJoin(problem.gradingHistory, gradingHistory)
             .leftJoin(gradingHistory.user, user)
@@ -69,11 +69,11 @@ class ProblemRepositoryCustomImpl(
             .leftJoin(problemTag.tag, tag)
             .groupBy(problem.id)
             .where(
-                this.likeTitle(problemSearchDto.query),
-                this.inTags(problemSearchDto.tags),
-                this.solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
-                this.isType(problemSearchDto.type),
-                this.isGradable(problemSearchDto.isGradable),
+                likeTitle(problemSearchDto.query),
+                inTags(problemSearchDto.tags),
+                solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
+                isType(problemSearchDto.type),
+                isGradable(problemSearchDto.isGradable),
                 problem.isActive.isTrue
             )
             .fetch().size.toLong()

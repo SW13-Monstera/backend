@@ -16,7 +16,7 @@ class AuthTokenProvider(
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
 
     fun createAuthToken(email: String, expiry: Date, role: String? = null): AuthToken {
-        return AuthToken(email, expiry, this.key, role)
+        return AuthToken(email, expiry, key, role)
     }
 
     fun convertAuthToken(token: String): AuthToken {

@@ -43,10 +43,10 @@ class LoggingFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         try {
-            this.logRequest(requestWrapper)
+            logRequest(requestWrapper)
             filterChain.doFilter(requestWrapper, responseWrapper)
         } finally {
-            this.logResponse(responseWrapper)
+            logResponse(responseWrapper)
             responseWrapper.copyBodyToResponse()
         }
     }

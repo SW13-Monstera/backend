@@ -61,39 +61,39 @@ class UserAnswerRepositoryCustomImpl(
         isValidated: Boolean?,
         pageable: Pageable
     ): Page<UserAnswer> {
-        val result = this.queryFactory.selectFrom(userAnswer)
+        val result = queryFactory.selectFrom(userAnswer)
             .distinct()
             .leftJoin(userAnswer.assignedUser, user).fetchJoin()
             .leftJoin(userAnswer.validatingUser, user).fetchJoin()
             .leftJoin(userAnswer.problem, longProblem).fetchJoin()
             .where(
-                this.findById(id),
-                this.isAssignedBy(assignedBy),
-                this.isValidatedBy(validatedBy),
-                this.likeProblemTitle(problemTitle),
-                this.likeAnswer(answer),
-                this.userAnswerLabeled(isLabeled),
-                this.userAnswerValidated(isValidated)
+                findById(id),
+                isAssignedBy(assignedBy),
+                isValidatedBy(validatedBy),
+                likeProblemTitle(problemTitle),
+                likeAnswer(answer),
+                userAnswerLabeled(isLabeled),
+                userAnswerValidated(isValidated)
             )
             .orderBy(userAnswer.updatedAt.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        val totalCnt = this.queryFactory.selectFrom(userAnswer)
+        val totalCnt = queryFactory.selectFrom(userAnswer)
             .distinct()
             .leftJoin(userAnswer.assignedUser, user)
             .leftJoin(userAnswer.validatingUser, user)
             .leftJoin(userAnswer.problem, longProblem)
             .groupBy(userAnswer.id)
             .where(
-                this.findById(id),
-                this.isAssignedBy(assignedBy),
-                this.isValidatedBy(validatedBy),
-                this.likeProblemTitle(problemTitle),
-                this.likeAnswer(answer),
-                this.userAnswerLabeled(isLabeled),
-                this.userAnswerValidated(isValidated)
+                findById(id),
+                isAssignedBy(assignedBy),
+                isValidatedBy(validatedBy),
+                likeProblemTitle(problemTitle),
+                likeAnswer(answer),
+                userAnswerLabeled(isLabeled),
+                userAnswerValidated(isValidated)
             )
             .fetch().size.toLong()
 

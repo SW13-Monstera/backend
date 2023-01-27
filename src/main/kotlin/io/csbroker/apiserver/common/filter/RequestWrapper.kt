@@ -13,7 +13,7 @@ class RequestWrapper(request: HttpServletRequest) : HttpServletRequestWrapper(re
 
     init {
         val reqInputStream = request.inputStream
-        this.cachedInputStream = StreamUtils.copyToByteArray(reqInputStream)
+        cachedInputStream = StreamUtils.copyToByteArray(reqInputStream)
     }
 
     override fun getInputStream(): ServletInputStream {

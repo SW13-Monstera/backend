@@ -47,7 +47,7 @@ class UserAnswer(
     var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
 ) : BaseEntity() {
     fun getKeywordScore(): Double {
-        return this.userAnswerGradingStandards.map {
+        return userAnswerGradingStandards.map {
             it.gradingStandard
         }.filter {
             it.type == GradingStandardType.KEYWORD
@@ -57,7 +57,7 @@ class UserAnswer(
     }
 
     fun getContentScore(): Double {
-        return this.userAnswerGradingStandards.map {
+        return userAnswerGradingStandards.map {
             it.gradingStandard
         }.filter {
             it.type == GradingStandardType.CONTENT
@@ -68,13 +68,13 @@ class UserAnswer(
 
     fun toUserAnswerDataDto(): UserAnswerSearchResponseDto.UserAnswerDataDto {
         return UserAnswerSearchResponseDto.UserAnswerDataDto(
-            this.id!!,
-            this.problem.title,
-            this.assignedUser?.username,
-            this.validatingUser?.username,
-            this.updatedAt!!,
-            this.isLabeled,
-            this.isValidated
+            id!!,
+            problem.title,
+            assignedUser?.username,
+            validatingUser?.username,
+            updatedAt!!,
+            isLabeled,
+            isValidated
         )
     }
 }

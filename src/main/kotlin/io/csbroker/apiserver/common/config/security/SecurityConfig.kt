@@ -81,7 +81,7 @@ class SecurityConfig(
             .oauth2Login()
             .authorizationEndpoint()
             .baseUri("/oauth2/authorization")
-            .authorizationRequestRepository(this.oAuth2AuthorizationRequestBasedOnCookieRepository())
+            .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
             .and()
             .redirectionEndpoint()
             .baseUri("/*/oauth2/code/*")
@@ -89,8 +89,8 @@ class SecurityConfig(
             .userInfoEndpoint()
             .userService(oAuth2UserService)
             .and()
-            .successHandler(this.oAuth2AuthenticationSuccessHandler())
-            .failureHandler(this.oAuth2AuthenticationFailureHandler())
+            .successHandler(oAuth2AuthenticationSuccessHandler())
+            .failureHandler(oAuth2AuthenticationFailureHandler())
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
 

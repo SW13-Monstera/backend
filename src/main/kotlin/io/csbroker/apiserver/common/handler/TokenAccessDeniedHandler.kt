@@ -15,7 +15,7 @@ class TokenAccessDeniedHandler : AccessDeniedHandler {
         response: HttpServletResponse,
         accessDeniedException: AccessDeniedException
     ) {
-        this.setResponse(response)
+        setResponse(response)
     }
 
     private fun setResponse(response: HttpServletResponse) {

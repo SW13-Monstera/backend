@@ -50,7 +50,7 @@ class AdminController(
 ) {
     @GetMapping("/users/admin")
     fun findAdminUsers(): ApiResponse<List<AdminUserInfoResponseDto>> {
-        val adminUserInfoResponseDtoList = this.userService.findAdminUsers().map {
+        val adminUserInfoResponseDtoList = userService.findAdminUsers().map {
             AdminUserInfoResponseDto(
                 it.id!!,
                 it.username
@@ -65,7 +65,7 @@ class AdminController(
         @RequestBody createRequestDto: LongProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createProblemId = this.problemService.createLongProblem(createRequestDto, loginUser.username)
+        val createProblemId = problemService.createLongProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
     }
 
@@ -75,7 +75,7 @@ class AdminController(
         @RequestBody updateRequestDto: LongProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val updateProblemId = this.problemService.updateLongProblem(id, updateRequestDto, loginUser.username)
+        val updateProblemId = problemService.updateLongProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 
@@ -83,7 +83,7 @@ class AdminController(
     fun getLongProblem(
         @PathVariable("id") id: Long
     ): ApiResponse<LongProblemResponseDto> {
-        val longProblemResponseDto = this.problemService.findLongProblemById(id)
+        val longProblemResponseDto = problemService.findLongProblemById(id)
         return ApiResponse.success(longProblemResponseDto)
     }
 
@@ -91,7 +91,7 @@ class AdminController(
     fun getShortProblem(
         @PathVariable("id") id: Long
     ): ApiResponse<ShortProblemResponseDto> {
-        val shortProblemResponseDto = this.problemService.findShortProblemById(id)
+        val shortProblemResponseDto = problemService.findShortProblemById(id)
         return ApiResponse.success(shortProblemResponseDto)
     }
 
@@ -99,7 +99,7 @@ class AdminController(
     fun getMultipleChoiceProblem(
         @PathVariable("id") id: Long
     ): ApiResponse<MultipleChoiceProblemResponseDto> {
-        val multipleProblemResponseDto = this.problemService.findMultipleProblemById(id)
+        val multipleProblemResponseDto = problemService.findMultipleProblemById(id)
         return ApiResponse.success(multipleProblemResponseDto)
     }
 
@@ -108,7 +108,7 @@ class AdminController(
         @RequestBody createRequestDto: ShortProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createProblemId = this.problemService.createShortProblem(createRequestDto, loginUser.username)
+        val createProblemId = problemService.createShortProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
     }
 
@@ -118,7 +118,7 @@ class AdminController(
         @RequestBody updateRequestDto: ShortProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val updateProblemId = this.problemService.updateShortProblem(id, updateRequestDto, loginUser.username)
+        val updateProblemId = problemService.updateShortProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 
@@ -127,7 +127,7 @@ class AdminController(
         @RequestBody createRequestDto: MultipleChoiceProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createProblemId = this.problemService.createMultipleChoiceProblem(createRequestDto, loginUser.username)
+        val createProblemId = problemService.createMultipleChoiceProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
     }
 
@@ -137,7 +137,7 @@ class AdminController(
         @RequestBody updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
         @LoginUser loginUser: User
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val updateProblemId = this.problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
+        val updateProblemId = problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 
@@ -145,7 +145,7 @@ class AdminController(
     fun deleteProblem(
         @PathVariable("id") id: Long
     ): ApiResponse<Boolean> {
-        this.problemService.removeProblemById(id)
+        problemService.removeProblemById(id)
         return ApiResponse.success(true)
     }
 
@@ -153,7 +153,7 @@ class AdminController(
     fun deleteProblems(
         @RequestBody deleteRequestDto: ProblemDeleteRequestDto
     ): ApiResponse<Boolean> {
-        this.problemService.removeProblemsById(deleteRequestDto.ids)
+        problemService.removeProblemsById(deleteRequestDto.ids)
         return ApiResponse.success(true)
     }
 
@@ -161,7 +161,7 @@ class AdminController(
     fun createUserAnswers(
         @RequestBody userAnswers: UserAnswerBatchInsertDto
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val size = this.userAnswerService.createUserAnswers(userAnswers.userAnswers)
+        val size = userAnswerService.createUserAnswers(userAnswers.userAnswers)
         return ApiResponse.success(UpsertSuccessResponseDto(size = size))
     }
 
@@ -169,7 +169,7 @@ class AdminController(
     fun createUserAnswer(
         @RequestBody userAnswer: UserAnswerUpsertDto
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createUserAnswerId = this.userAnswerService.createUserAnswer(userAnswer)
+        val createUserAnswerId = userAnswerService.createUserAnswer(userAnswer)
         return ApiResponse.success(UpsertSuccessResponseDto(id = createUserAnswerId))
     }
 
@@ -177,7 +177,7 @@ class AdminController(
     fun getUserAnswerById(
         @PathVariable("id") id: Long
     ): ApiResponse<UserAnswerResponseDto> {
-        return ApiResponse.success(this.userAnswerService.findUserAnswerById(id))
+        return ApiResponse.success(userAnswerService.findUserAnswerById(id))
     }
 
     @PostMapping("/user-answers/{id}/{type:label|validate}")
@@ -189,14 +189,14 @@ class AdminController(
     ): ApiResponse<UpsertSuccessResponseDto> {
         val answerId = when (type) {
             "label" ->
-                this.userAnswerService.labelUserAnswer(
+                userAnswerService.labelUserAnswer(
                     loginUser.username,
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds
                 )
 
             "validate" ->
-                this.userAnswerService.validateUserAnswer(
+                userAnswerService.validateUserAnswer(
                     loginUser.username,
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds
@@ -217,7 +217,7 @@ class AdminController(
         @RequestParam("description", required = false) description: String?,
         pageable: Pageable
     ): ApiResponse<LongProblemSearchResponseDto> {
-        return ApiResponse.success(this.problemService.findLongProblems(id, title, description, pageable))
+        return ApiResponse.success(problemService.findLongProblems(id, title, description, pageable))
     }
 
     @GetMapping("/problems/short")
@@ -227,7 +227,7 @@ class AdminController(
         @RequestParam("description", required = false) description: String?,
         pageable: Pageable
     ): ApiResponse<ShortProblemSearchResponseDto> {
-        return ApiResponse.success(this.problemService.findShortProblems(id, title, description, pageable))
+        return ApiResponse.success(problemService.findShortProblems(id, title, description, pageable))
     }
 
     @GetMapping("/problems/multiple")
@@ -237,7 +237,7 @@ class AdminController(
         @RequestParam("description", required = false) description: String?,
         pageable: Pageable
     ): ApiResponse<MultipleChoiceProblemSearchResponseDto> {
-        return ApiResponse.success(this.problemService.findMultipleProblems(id, title, description, pageable))
+        return ApiResponse.success(problemService.findMultipleProblems(id, title, description, pageable))
     }
 
     @GetMapping("/user-answers")
@@ -252,7 +252,7 @@ class AdminController(
         pageable: Pageable
     ): ApiResponse<UserAnswerSearchResponseDto> {
         return ApiResponse.success(
-            this.userAnswerService.findUserAnswersByQuery(
+            userAnswerService.findUserAnswersByQuery(
                 id,
                 assignedBy,
                 validatedBy,
@@ -269,7 +269,7 @@ class AdminController(
     fun deleteUserAnswerById(
         @PathVariable("id") id: Long
     ): ApiResponse<Boolean> {
-        this.userAnswerService.removeUserAnswerById(id)
+        userAnswerService.removeUserAnswerById(id)
         return ApiResponse.success(true)
     }
 
@@ -284,13 +284,13 @@ class AdminController(
 
         when (type) {
             "label" ->
-                this.userAnswerService.assignLabelUserAnswer(
+                userAnswerService.assignLabelUserAnswer(
                     assignUserAnswerDto.userAnswerIds,
                     assignUserAnswerDto.assigneeId
                 )
 
             "validate" ->
-                this.userAnswerService.assignValidationUserAnswer(
+                userAnswerService.assignValidationUserAnswer(
                     assignUserAnswerDto.userAnswerIds,
                     assignUserAnswerDto.assigneeId
                 )

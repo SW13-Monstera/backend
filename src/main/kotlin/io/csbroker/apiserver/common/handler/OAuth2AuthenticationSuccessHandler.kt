@@ -46,8 +46,8 @@ class OAuth2AuthenticationSuccessHandler(
             return
         }
 
-        this.clearAuthenticationAttributes(request, response)
-        this.redirectStrategy.sendRedirect(request, response, targetUrl)
+        clearAuthenticationAttributes(request, response)
+        redirectStrategy.sendRedirect(request, response, targetUrl)
     }
 
     override fun determineTargetUrl(
@@ -58,7 +58,7 @@ class OAuth2AuthenticationSuccessHandler(
         val redirectUri = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value
 
         redirectUri?.let {
-            if (!this.isAuthorizedRedirectUri(it)) {
+            if (!isAuthorizedRedirectUri(it)) {
                 throw UnAuthorizedException(
                     ErrorCode.INVALID_REDIRECT_URI,
                     "올바르지 않은 redirect uri ( $redirectUri ) 입니다.",
@@ -74,8 +74,8 @@ class OAuth2AuthenticationSuccessHandler(
         val user = authentication.principal as OidcUser
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
 
-        val findUser = this.userRepository.findByEmail(userInfo.getEmail())
-            ?: this.userRepository.findUserByProviderId(userInfo.getId())
+        val findUser = userRepository.findByEmail(userInfo.getEmail())
+            ?: userRepository.findUserByProviderId(userInfo.getId())
             ?: throw EntityNotFoundException("유저를 찾을 수 없습니다. ( ${userInfo.getId()} )")
 
         val now = Date()

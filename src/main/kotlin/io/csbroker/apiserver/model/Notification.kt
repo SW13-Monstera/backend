@@ -41,11 +41,11 @@ class Notification(
 
     fun toNotificationResponseDto(): NotificationResponseDto {
         return NotificationResponseDto(
-            this.id!!,
-            this.content,
-            this.link,
-            this.isRead,
-            this.createdAt!!
+            id!!,
+            content,
+            link,
+            isRead,
+            createdAt!!
         )
     }
 }

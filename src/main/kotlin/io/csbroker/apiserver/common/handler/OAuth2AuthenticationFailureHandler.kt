@@ -29,6 +29,6 @@ class OAuth2AuthenticationFailureHandler(
 
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
 
-        this.redirectStrategy.sendRedirect(request, response, targetUrl)
+        redirectStrategy.sendRedirect(request, response, targetUrl)
     }
 }
