@@ -35,15 +35,14 @@ class AuthServiceImpl(
     override fun saveUser(userDto: UserSignUpDto): UUID {
         val findUser = userRepository.findByEmailOrUsername(userDto.email, userDto.username)
 
-        if (findUser != null) {
-            if (findUser.email == userDto.email) {
+        findUser?.let {
+            if (it.email == userDto.email) {
                 throw ConditionConflictException(ErrorCode.EMAIL_DUPLICATED, "${userDto.email}은 중복 이메일입니다.")
-            } else {
-                throw ConditionConflictException(
-                    ErrorCode.USERNAME_DUPLICATED,
-                    "${userDto.username}은 중복 이메일입니다."
-                )
             }
+            throw ConditionConflictException(
+                ErrorCode.USERNAME_DUPLICATED,
+                "${userDto.username}은 중복 닉네임입니다."
+            )
         }
 
         val user = userDto.toUser()
