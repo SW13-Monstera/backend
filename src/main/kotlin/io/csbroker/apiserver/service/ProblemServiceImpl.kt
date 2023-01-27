@@ -224,9 +224,7 @@ class ProblemServiceImpl(
         val findProblem = this.longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
-        findProblem.gradingStandards.forEach {
-            this.gradingStandardRepository.delete(it)
-        }
+        this.gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
 
         findProblem.gradingStandards.clear()
 
@@ -267,9 +265,8 @@ class ProblemServiceImpl(
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "답의 개수는 1개 이상이여야합니다.")
         }
 
-        findProblem.choicesList.forEach {
-            this.choiceRepository.delete(it)
-        }
+        this.choiceRepository.deleteAllById(findProblem.choicesList.map { it.id })
+
         findProblem.choicesList.clear()
         findProblem.addChoices(choiceDataList)
         findProblem.updateFromDto(updateRequestDto)
