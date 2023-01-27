@@ -19,7 +19,7 @@ data class MultipleChoiceProblemUpsertRequestDto(
     )
 
     fun toMultipleChoiceProblem(creator: User): MultipleChoiceProblem {
-        val isMultiple = this.choices.count { it.isAnswer } > 1
+        val isMultiple = this.choices.any { it.isAnswer }
 
         return MultipleChoiceProblem(
             title = title,
