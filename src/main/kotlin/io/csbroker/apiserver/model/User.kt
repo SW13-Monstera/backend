@@ -109,7 +109,7 @@ class User(
             major = major,
             profileImgUrl = profileImageUrl,
             githubUrl = githubUrl,
-            linkedinUrl = linkedinUrl
+            linkedinUrl = linkedinUrl,
         )
     }
 

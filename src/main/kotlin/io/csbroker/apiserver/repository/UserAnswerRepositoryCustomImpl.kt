@@ -73,7 +73,7 @@ class UserAnswerRepositoryCustomImpl(
                 likeProblemTitle(problemTitle),
                 likeAnswer(answer),
                 userAnswerLabeled(isLabeled),
-                userAnswerValidated(isValidated)
+                userAnswerValidated(isValidated),
             )
             .orderBy(userAnswer.updatedAt.desc())
             .offset(pageable.offset)
@@ -93,7 +93,7 @@ class UserAnswerRepositoryCustomImpl(
                 likeProblemTitle(problemTitle),
                 likeAnswer(answer),
                 userAnswerLabeled(isLabeled),
-                userAnswerValidated(isValidated)
+                userAnswerValidated(isValidated),
             )
             .fetch().size.toLong()
 

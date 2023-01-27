@@ -64,7 +64,7 @@ class MultipleChoiceProblem(
             },
             score,
             isActive,
-            isGradable
+            isGradable,
         )
     }
 
@@ -80,7 +80,7 @@ class MultipleChoiceProblem(
             creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
             answerCnt,
-            isActive
+            isActive,
         )
     }
 
@@ -97,7 +97,7 @@ class MultipleChoiceProblem(
             commonDetail.totalSubmission,
             choicesList.map { it.toChoiceResponseDto() },
             gradingHistory.any { it.user.email == email },
-            isMultiple
+            isMultiple,
         )
     }
 }

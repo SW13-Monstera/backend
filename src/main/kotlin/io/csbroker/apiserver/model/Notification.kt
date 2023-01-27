@@ -45,7 +45,7 @@ class Notification(
             content,
             link,
             isRead,
-            createdAt!!
+            createdAt!!,
         )
     }
 }

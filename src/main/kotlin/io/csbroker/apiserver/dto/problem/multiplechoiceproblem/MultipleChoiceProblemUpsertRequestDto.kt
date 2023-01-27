@@ -26,7 +26,7 @@ data class MultipleChoiceProblemUpsertRequestDto(
             description = description,
             creator = creator,
             isMultiple = isMultiple,
-            score = score
+            score = score,
         )
     }
 
@@ -35,7 +35,7 @@ data class MultipleChoiceProblemUpsertRequestDto(
             Choice(
                 content = it.content,
                 isAnswer = it.isAnswer,
-                multipleChoiceProblem = multipleChoiceProblem
+                multipleChoiceProblem = multipleChoiceProblem,
             )
         }
     }

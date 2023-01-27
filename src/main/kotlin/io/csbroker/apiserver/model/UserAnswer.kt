@@ -1,7 +1,7 @@
 package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.common.enums.GradingStandardType
-import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
+import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto.UserAnswerDataDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -66,15 +66,15 @@ class UserAnswer(
         }
     }
 
-    fun toUserAnswerDataDto(): UserAnswerSearchResponseDto.UserAnswerDataDto {
-        return UserAnswerSearchResponseDto.UserAnswerDataDto(
+    fun toUserAnswerDataDto(): UserAnswerDataDto {
+        return UserAnswerDataDto(
             id!!,
             problem.title,
             assignedUser?.username,
             validatingUser?.username,
             updatedAt!!,
             isLabeled,
-            isValidated
+            isValidated,
         )
     }
 }

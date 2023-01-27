@@ -2,7 +2,7 @@ package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
-import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
+import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto.LongProblemDataDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
@@ -34,7 +34,7 @@ class LongProblem(
     creator = creator,
     dtype = "long",
     isGradable = false,
-    score = gradingStandards.sumOf { it.score }
+    score = gradingStandards.sumOf { it.score },
 ) {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
@@ -58,11 +58,11 @@ class LongProblem(
             problemTags.map { it.tag.name },
             gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) },
             isActive,
-            isGradable
+            isGradable,
         )
     }
 
-    fun toLongProblemDataDto(): LongProblemSearchResponseDto.LongProblemDataDto {
+    fun toLongProblemDataDto(): LongProblemDataDto {
         val keywordScores = userAnswers.map {
             it.getKeywordScore()
         }
@@ -71,14 +71,14 @@ class LongProblem(
             it.getContentScore()
         }
 
-        return LongProblemSearchResponseDto.LongProblemDataDto(
+        return LongProblemDataDto(
             id!!,
             title,
             creator.username,
             if (keywordScores.isEmpty()) null else keywordScores.average(),
             if (contentScores.isEmpty()) null else contentScores.average(),
             userAnswers.size,
-            isActive
+            isActive,
         )
     }
 
@@ -105,7 +105,7 @@ class LongProblem(
             if (scoreList.isEmpty()) null else scoreList.first(),
             scoreList.size,
             isSolved,
-            isGradable
+            isGradable,
         )
     }
 }

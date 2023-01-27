@@ -68,7 +68,7 @@ abstract class Problem(
             tags,
             gradingHistoryStats?.avgScore,
             gradingHistoryStats?.totalSolved ?: 0,
-            dtype
+            dtype,
         )
     }
 }

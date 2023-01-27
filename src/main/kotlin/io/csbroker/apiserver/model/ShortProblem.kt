@@ -44,7 +44,7 @@ class ShortProblem(
             answer,
             score,
             isActive,
-            isGradable
+            isGradable,
         )
     }
 
@@ -60,7 +60,7 @@ class ShortProblem(
             creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
             answerCnt,
-            isActive
+            isActive,
         )
     }
 
@@ -77,7 +77,7 @@ class ShortProblem(
             commonDetail.totalSubmission,
             answer.length,
             isEnglish(),
-            gradingHistory.any { it.user.email == email }
+            gradingHistory.any { it.user.email == email },
         )
     }
 
@@ -94,7 +94,7 @@ class ShortProblem(
             commonDetail.totalSubmission,
             answer.length,
             getTypeOfAnswer(),
-            gradingHistory.any { it.user.email == email }
+            gradingHistory.any { it.user.email == email },
         )
     }
 

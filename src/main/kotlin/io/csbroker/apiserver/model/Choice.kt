@@ -32,7 +32,7 @@ class Choice(
     fun toChoiceResponseDto(): ChoiceResponseDto {
         return ChoiceResponseDto(
             id!!,
-            content
+            content,
         )
     }
 }
