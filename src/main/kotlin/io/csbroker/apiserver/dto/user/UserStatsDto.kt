@@ -19,7 +19,7 @@ data class UserStatsDto(
             fun from(problemId: Long, gradingHistory: GradingHistory) = ProblemStatsDto(
                 problemId,
                 gradingHistory.problem.dtype,
-                gradingHistory.problem.title
+                gradingHistory.problem.title,
             )
         }
     }

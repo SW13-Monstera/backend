@@ -41,7 +41,7 @@ class AuthServiceImpl(
             }
             throw ConditionConflictException(
                 ErrorCode.USERNAME_DUPLICATED,
-                "${userDto.username}은 중복 닉네임입니다."
+                "${userDto.username}은 중복 닉네임입니다.",
             )
         }
 

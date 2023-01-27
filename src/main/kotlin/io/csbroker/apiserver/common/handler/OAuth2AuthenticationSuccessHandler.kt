@@ -61,7 +61,7 @@ class OAuth2AuthenticationSuccessHandler(
             if (!this.isAuthorizedRedirectUri(it)) {
                 throw UnAuthorizedException(
                     ErrorCode.INVALID_REDIRECT_URI,
-                    "올바르지 않은 redirect uri ( $redirectUri ) 입니다."
+                    "올바르지 않은 redirect uri ( $redirectUri ) 입니다.",
                 )
             }
         }
