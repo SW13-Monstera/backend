@@ -102,7 +102,7 @@ class UserAnswerServiceImpl(
             )
         }
 
-        if (userAnswer.validatingUser == null || userAnswer.validatingUser!!.email != email) {
+        if (userAnswer.validatingUser == null || userAnswer.validatingUser?.email != email) {
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
                 "${userAnswerId}번에 검수자로 할당된 유저가 아닙니다."
