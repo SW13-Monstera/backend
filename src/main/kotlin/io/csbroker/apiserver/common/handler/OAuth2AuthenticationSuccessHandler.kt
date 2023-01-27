@@ -15,7 +15,6 @@ import io.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
@@ -58,11 +57,13 @@ class OAuth2AuthenticationSuccessHandler(
     ): String {
         val redirectUri = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value
 
-        if (redirectUri != null && !this.isAuthorizedRedirectUri(redirectUri)) {
-            throw UnAuthorizedException(
-                ErrorCode.INVALID_REDIRECT_URI,
-                "올바르지 않은 redirect uri ( $redirectUri ) 입니다."
-            )
+        redirectUri?.let {
+            if (!this.isAuthorizedRedirectUri(it)) {
+                throw UnAuthorizedException(
+                    ErrorCode.INVALID_REDIRECT_URI,
+                    "올바르지 않은 redirect uri ( $redirectUri ) 입니다."
+                )
+            }
         }
 
         val targetUrl = redirectUri ?: defaultTargetUrl
@@ -107,19 +108,6 @@ class OAuth2AuthenticationSuccessHandler(
     fun clearAuthenticationAttributes(request: HttpServletRequest, response: HttpServletResponse) {
         super.clearAuthenticationAttributes(request)
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
-    }
-
-    private fun hasAuthority(authorities: Collection<GrantedAuthority>?, authority: String): Boolean {
-        if (authorities == null) {
-            return false
-        }
-
-        for (grantedAuthority in authorities) {
-            if (authority == grantedAuthority.authority) {
-                return true
-            }
-        }
-        return false
     }
 
     private fun isAuthorizedRedirectUri(uri: String): Boolean {

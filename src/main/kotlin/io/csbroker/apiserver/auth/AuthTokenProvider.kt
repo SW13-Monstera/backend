@@ -15,18 +15,18 @@ class AuthTokenProvider(
 ) {
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
 
-    fun createAuthToken(email: String, expiry: Date, role: String? = null): io.csbroker.apiserver.auth.AuthToken {
-        return io.csbroker.apiserver.auth.AuthToken(email, expiry, this.key, role)
+    fun createAuthToken(email: String, expiry: Date, role: String? = null): AuthToken {
+        return AuthToken(email, expiry, this.key, role)
     }
 
-    fun convertAuthToken(token: String): io.csbroker.apiserver.auth.AuthToken {
-        return io.csbroker.apiserver.auth.AuthToken(token, key)
+    fun convertAuthToken(token: String): AuthToken {
+        return AuthToken(token, key)
     }
 
-    fun getAuthentication(authToken: io.csbroker.apiserver.auth.AuthToken): Authentication {
+    fun getAuthentication(authToken: AuthToken): Authentication {
         if (authToken.isValid) {
             val claims = authToken.tokenClaims
-            val authorities = arrayOf(claims!![io.csbroker.apiserver.auth.AUTHORITIES_KEY].toString())
+            val authorities = arrayOf(claims!![AUTHORITIES_KEY].toString())
                 .map(::SimpleGrantedAuthority)
                 .toList()
 

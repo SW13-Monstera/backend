@@ -15,12 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         parameter.getParameterAnnotation(LoginUser::class.java) ?: return false
-
-        if (!parameter.parameterType.isAssignableFrom(User::class.java)) {
-            return false
-        }
-
-        return true
+        return parameter.parameterType.isAssignableFrom(User::class.java)
     }
 
     override fun resolveArgument(
@@ -29,12 +24,10 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        var principal: Any? = null
-
         val authentication = SecurityContextHolder.getContext().authentication
 
-        if (authentication != null) {
-            principal = authentication.principal
+        val principal = authentication?.let {
+            authentication.principal
         }
 
         if (authentication == null || principal is String) {

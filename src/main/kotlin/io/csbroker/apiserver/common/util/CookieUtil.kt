@@ -6,18 +6,8 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-fun getCookie(request: HttpServletRequest, name: String): Cookie? {
-    val cookies = request.cookies
-
-    cookies?.let {
-        for (cookie in it) {
-            if (cookie.name == name) {
-                return cookie
-            }
-        }
-    }
-
-    return null
+fun getCookie(request: HttpServletRequest, name: String) = request.cookies?.let {
+    it.find { cookie -> cookie.name == name }
 }
 
 fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge: Long) {
@@ -31,17 +21,11 @@ fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge
 }
 
 fun deleteCookie(request: HttpServletRequest, response: HttpServletResponse, name: String) {
-    val cookies = request.cookies
-
-    cookies?.let {
-        for (cookie in it) {
-            if (cookie.name == name) {
-                cookie.value = ""
-                cookie.path = "/"
-                cookie.maxAge = 0
-                response.addCookie(cookie)
-            }
-        }
+    request.cookies.find { it.name == name }?.let {
+        it.value = ""
+        it.path = "/"
+        it.maxAge = 0
+        response.addCookie(it)
     }
 }
 

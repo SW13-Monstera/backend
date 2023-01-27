@@ -18,7 +18,7 @@ class TokenAuthenticationFilter(
     ) {
         val tokenStr = getAccessToken(request)
 
-        if (tokenStr == null) {
+        tokenStr ?: run {
             filterChain.doFilter(request, response)
             return
         }

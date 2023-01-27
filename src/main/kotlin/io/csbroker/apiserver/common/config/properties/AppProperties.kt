@@ -17,10 +17,5 @@ data class AppProperties(
 
     data class OAuth2(
         var authorizedRedirectUris: List<String>
-    ) {
-        fun authorizedRedirectUris(authorizedRedirectUris: List<String>): OAuth2 {
-            this.authorizedRedirectUris = authorizedRedirectUris
-            return this
-        }
-    }
+    )
 }
