@@ -23,17 +23,8 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): Any? {
+    ): Any {
         val authentication = SecurityContextHolder.getContext().authentication
-
-        val principal = authentication?.let {
-            authentication.principal
-        }
-
-        if (authentication == null || principal is String) {
-            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
-        }
-
-        return principal
+        return authentication?.principal ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
     }
 }

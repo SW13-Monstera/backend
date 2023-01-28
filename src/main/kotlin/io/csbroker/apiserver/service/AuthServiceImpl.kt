@@ -33,17 +33,7 @@ class AuthServiceImpl(
     private val passwordEncoder: BCryptPasswordEncoder
 ) : AuthService {
     override fun saveUser(userDto: UserSignUpDto): UUID {
-        val findUser = userRepository.findByEmailOrUsername(userDto.email, userDto.username)
-
-        findUser?.let {
-            if (it.email == userDto.email) {
-                throw ConditionConflictException(ErrorCode.EMAIL_DUPLICATED, "${userDto.email}은 중복 이메일입니다.")
-            }
-            throw ConditionConflictException(
-                ErrorCode.USERNAME_DUPLICATED,
-                "${userDto.username}은 중복 닉네임입니다.",
-            )
-        }
+        checkEmailAndUserName(userDto.email, userDto.username)
 
         val user = userDto.toUser()
         val encodedPassword = passwordEncoder.encode(user.password)
@@ -155,5 +145,17 @@ class AuthServiceImpl(
         redisRepository.removePasswordVerification(code)
 
         return true
+    }
+
+    private fun checkEmailAndUserName(email: String, username: String) {
+        userRepository.findByEmailOrUsername(email, username)?.let {
+            if (it.email == email) {
+                throw ConditionConflictException(ErrorCode.EMAIL_DUPLICATED, "$email 은 중복 이메일입니다.")
+            }
+            throw ConditionConflictException(
+                ErrorCode.USERNAME_DUPLICATED,
+                "$username 은 중복 닉네임입니다.",
+            )
+        }
     }
 }
