@@ -89,14 +89,14 @@ class OAuth2AuthenticationSuccessHandler(
 
         return userRepository.findByEmailOrProviderId(userInfo.getEmail(), userInfo.getId())
             ?: throw EntityNotFoundException(
-                "유저를 찾을 수 없습니다. email = [${userInfo.getEmail()}], providerId = [${userInfo.getId()}] )"
+                "유저를 찾을 수 없습니다. email = [${userInfo.getEmail()}], providerId = [${userInfo.getId()}] )",
             )
     }
 
     private fun setCookie(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        refreshToken: AuthToken
+        refreshToken: AuthToken,
     ) {
         val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
         deleteCookie(request, response, REFRESH_TOKEN)
