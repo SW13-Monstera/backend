@@ -61,8 +61,8 @@ class OAuth2AuthenticationSuccessHandler(
         validateRedirectTargetUrl(targetUrl)
 
         val findUser = findUserByAuthToken(authentication)
-        val (accessToken, refreshToken) = createToken(findUser)
-        setCookie(request, response, refreshToken)
+        val (accessToken, refreshToken) = createTokens(findUser)
+        setRefreshTokenCookie(request, response, refreshToken)
 
         return UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("token", accessToken.token)
@@ -93,7 +93,7 @@ class OAuth2AuthenticationSuccessHandler(
             )
     }
 
-    private fun setCookie(
+    private fun setRefreshTokenCookie(
         request: HttpServletRequest,
         response: HttpServletResponse,
         refreshToken: AuthToken,
@@ -103,7 +103,7 @@ class OAuth2AuthenticationSuccessHandler(
         addCookie(response, REFRESH_TOKEN, refreshToken.token, cookieMaxAge)
     }
 
-    private fun createToken(findUser: User): Pair<AuthToken, AuthToken> {
+    private fun createTokens(findUser: User): Pair<AuthToken, AuthToken> {
         val now = Date()
         val tokenExpiry = appProperties.auth.tokenExpiry
         val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
