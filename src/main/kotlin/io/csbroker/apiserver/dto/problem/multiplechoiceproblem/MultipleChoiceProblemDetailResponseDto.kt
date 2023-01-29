@@ -10,5 +10,6 @@ data class MultipleChoiceProblemDetailResponseDto(
     val totalSubmission: Int,
     val choices: List<ChoiceResponseDto>,
     val isSolved: Boolean,
-    val isMultipleAnswer: Boolean
+    val isMultipleAnswer: Boolean,
+    val score: Double,
 )
