@@ -31,8 +31,8 @@ class Choice(
 ) {
     fun toChoiceResponseDto(): ChoiceResponseDto {
         return ChoiceResponseDto(
-            this.id!!,
-            this.content
+            id!!,
+            content,
         )
     }
 }

@@ -49,17 +49,17 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
 
     @Deprecated(
         message = "deprecated at original interface",
-        replaceWith = ReplaceWith("this.loadAuthorizationRequest(request)")
+        replaceWith = ReplaceWith("this.loadAuthorizationRequest(request)"),
     )
     override fun removeAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
-        return this.loadAuthorizationRequest(request)
+        return loadAuthorizationRequest(request)
     }
 
     override fun removeAuthorizationRequest(
         request: HttpServletRequest,
         response: HttpServletResponse
     ): OAuth2AuthorizationRequest? {
-        return this.loadAuthorizationRequest(request)
+        return loadAuthorizationRequest(request)
     }
 
     fun removeAuthorizationRequestCookies(request: HttpServletRequest, response: HttpServletResponse) {

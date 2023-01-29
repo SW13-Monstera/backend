@@ -56,19 +56,19 @@ abstract class Problem(
     val gradingHistory: MutableList<GradingHistory> = mutableListOf()
 ) : BaseEntity() {
     fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats?): ProblemResponseDto {
-        val tags = this.problemTags.map {
+        val tags = problemTags.map {
             it.tag
         }.map {
             it.name
         }
 
         return ProblemResponseDto(
-            this.id!!,
-            this.title,
+            id!!,
+            title,
             tags,
             gradingHistoryStats?.avgScore,
             gradingHistoryStats?.totalSolved ?: 0,
-            this.dtype
+            dtype,
         )
     }
 }

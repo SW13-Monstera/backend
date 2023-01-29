@@ -10,14 +10,8 @@ enum class Role(
 
     companion object {
         fun of(code: String): Role {
-            val role = Role.values()
-                .find { role -> role.code == code }
-
-            role?.let {
-                return it
-            }.let {
-                return Role.ROLE_USER
-            }
+            return Role.values()
+                .find { role -> role.code == code } ?: ROLE_USER
         }
     }
 }

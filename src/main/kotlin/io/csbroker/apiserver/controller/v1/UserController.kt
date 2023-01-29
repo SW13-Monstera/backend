@@ -26,7 +26,7 @@ class UserController(
 ) {
     @GetMapping("/{id}")
     fun getUser(@PathVariable("id") id: UUID): ApiResponse<UserResponseDto> {
-        val findUser = this.userService.findUserById(id)
+        val findUser = userService.findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
         return ApiResponse.success(findUser.toUserResponseDto())
@@ -35,7 +35,7 @@ class UserController(
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     fun getUsers(): ApiResponse<List<UserResponseDto>> {
-        val result = this.userService.findUsers()
+        val result = userService.findUsers()
             .map(io.csbroker.apiserver.model.User::toUserResponseDto)
         return ApiResponse.success(result)
     }
@@ -47,14 +47,14 @@ class UserController(
         @PathVariable("id") id: UUID,
         @RequestBody userUpdateRequestDto: UserUpdateRequestDto
     ): ApiResponse<UserResponseDto> {
-        val findUser = this.userService.findUserById(id)
+        val findUser = userService.findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
         if (findUser.email != loginUser.username) {
             throw EntityNotFoundException("${loginUser.username}을 가진 유저를 찾을 수 없습니다.")
         }
 
-        val user = this.userService.modifyUser(id, userUpdateRequestDto)
+        val user = userService.modifyUser(id, userUpdateRequestDto)
 
         return ApiResponse.success(user.toUserResponseDto())
     }
@@ -63,7 +63,7 @@ class UserController(
     fun getUserStats(
         @PathVariable("id") id: UUID
     ): ApiResponse<UserStatsDto> {
-        return ApiResponse.success(this.userService.getStats(id))
+        return ApiResponse.success(userService.getStats(id))
     }
 
     @DeleteMapping("/{id}")
@@ -71,7 +71,7 @@ class UserController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: UUID
     ): ApiResponse<DeleteResponseDto> {
-        val result = this.userService.deleteUser(loginUser.username, id)
+        val result = userService.deleteUser(loginUser.username, id)
         return ApiResponse.success(DeleteResponseDto(id, result))
     }
 }

@@ -153,9 +153,9 @@ class ProblemApiControllerTest {
             problemRepository.save(problem)
 
             if (i == 1) {
-                this.longProblemId = problem.id
-                this.keywordStandardId = keywordGradingStandard.id
-                this.contentStandardId = contentGradingStandard.id
+                longProblemId = problem.id
+                keywordStandardId = keywordGradingStandard.id
+                contentStandardId = contentGradingStandard.id
             }
 
             if (i <= 2) {
@@ -166,7 +166,7 @@ class ProblemApiControllerTest {
                     score = 9.5
                 )
                 gradingHistoryRepository.save(gradingHistory)
-                this.gradingHistoryId = gradingHistory.gradingHistoryId
+                gradingHistoryId = gradingHistory.gradingHistoryId
             }
 
             if (i <= 5) {
@@ -213,9 +213,9 @@ class ProblemApiControllerTest {
         problemRepository.save(shortProblem)
         problemRepository.save(multipleProblem)
 
-        this.shortProblemId = shortProblem.id
-        this.multipleChoiceProblemId = multipleProblem.id
-        this.choiceId = multipleProblem.choicesList.find { it.content == "choice3" }!!.id!!
+        shortProblemId = shortProblem.id
+        multipleChoiceProblemId = multipleProblem.id
+        choiceId = multipleProblem.choicesList.find { it.content == "choice3" }!!.id!!
         mockWebServer = MockWebServer()
         mockWebServer.start(8081)
     }
@@ -650,7 +650,7 @@ class ProblemApiControllerTest {
         // given
         val urlString = "$PROBLEM_ENDPOINT/multiple/{problem_id}/grade"
 
-        val answerIds = listOf(this.choiceId!!)
+        val answerIds = listOf(choiceId!!)
         val userAnswerDto = MultipleChoiceProblemAnswerDto(answerIds)
         val userAnswerDtoString = objectMapper.writeValueAsString(userAnswerDto)
 

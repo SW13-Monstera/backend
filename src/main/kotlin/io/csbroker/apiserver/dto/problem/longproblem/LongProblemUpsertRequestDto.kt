@@ -31,7 +31,7 @@ data class LongProblemUpsertRequestDto(
     }
 
     fun getGradingStandardList(longProblem: LongProblem): List<GradingStandard> {
-        return this.gradingStandards.map {
+        return gradingStandards.map {
             GradingStandard(
                 content = it.content,
                 score = it.score,

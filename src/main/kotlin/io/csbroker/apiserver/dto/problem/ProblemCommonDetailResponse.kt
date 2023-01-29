@@ -12,16 +12,12 @@ data class ProblemCommonDetailResponse(
         fun getCommonDetail(problem: Problem): ProblemCommonDetailResponse {
             val scoreList = problem.gradingHistory.map {
                 it.score
-            }.toList().sorted()
+            }.sorted()
 
-            var correctUserCnt = 0
-
-            problem.gradingHistory.groupBy {
+            val correctUserCnt = problem.gradingHistory.groupBy {
                 it.user.id
-            }.forEach {
-                if (it.value.any { gh -> gh.score == gh.problem.score }) {
-                    correctUserCnt++
-                }
+            }.count {
+                it.value.any { gh -> gh.score == gh.problem.score }
             }
 
             return ProblemCommonDetailResponse(

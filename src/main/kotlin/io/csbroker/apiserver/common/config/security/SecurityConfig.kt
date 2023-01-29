@@ -12,7 +12,6 @@ import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.service.CustomOAuth2UserService
-import io.csbroker.apiserver.service.CustomUserDetailsService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -38,7 +37,6 @@ class SecurityConfig(
     private val corsProperties: CorsProperties,
     private val appProperties: AppProperties,
     private val authTokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
-    private val userDetailsService: CustomUserDetailsService,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val redisRepository: RedisRepository,
     private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,
@@ -83,7 +81,7 @@ class SecurityConfig(
             .oauth2Login()
             .authorizationEndpoint()
             .baseUri("/oauth2/authorization")
-            .authorizationRequestRepository(this.oAuth2AuthorizationRequestBasedOnCookieRepository())
+            .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
             .and()
             .redirectionEndpoint()
             .baseUri("/*/oauth2/code/*")
@@ -91,8 +89,8 @@ class SecurityConfig(
             .userInfoEndpoint()
             .userService(oAuth2UserService)
             .and()
-            .successHandler(this.oAuth2AuthenticationSuccessHandler())
-            .failureHandler(this.oAuth2AuthenticationFailureHandler())
+            .successHandler(oAuth2AuthenticationSuccessHandler())
+            .failureHandler(oAuth2AuthenticationFailureHandler())
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
 

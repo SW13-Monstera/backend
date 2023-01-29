@@ -28,59 +28,59 @@ class MultipleChoiceProblem(
     val choicesList: MutableList<Choice> = arrayListOf()
 ) : Problem(title = title, description = description, creator = creator, dtype = "multiple", score = score) {
     fun addChoice(choice: Choice) {
-        this.choicesList.add(choice)
+        choicesList.add(choice)
         choice.multipleChoiceProblem = this
     }
 
     fun addChoices(choices: List<Choice>) {
-        this.choicesList.addAll(choices)
+        choicesList.addAll(choices)
         choices.forEach {
             it.multipleChoiceProblem = this
         }
     }
 
     fun updateFromDto(upsertRequestDto: MultipleChoiceProblemUpsertRequestDto) {
-        this.title = upsertRequestDto.title
-        this.description = upsertRequestDto.description
-        this.isGradable = upsertRequestDto.isGradable
-        this.isActive = upsertRequestDto.isActive
-        this.score = upsertRequestDto.score
+        title = upsertRequestDto.title
+        description = upsertRequestDto.description
+        isGradable = upsertRequestDto.isGradable
+        isActive = upsertRequestDto.isActive
+        score = upsertRequestDto.score
     }
 
     fun toMultipleChoiceProblemResponseDto(): MultipleChoiceProblemResponseDto {
         return MultipleChoiceProblemResponseDto(
-            this.id!!,
-            this.title,
-            this.description,
-            this.problemTags.map {
+            id!!,
+            title,
+            description,
+            problemTags.map {
                 it.tag.name
             },
-            this.isMultiple,
-            this.choicesList.map {
+            isMultiple,
+            choicesList.map {
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     it.content,
                     it.isAnswer
                 )
             },
-            this.score,
-            this.isActive,
-            this.isGradable
+            score,
+            isActive,
+            isGradable,
         )
     }
 
     fun toMultipleChoiceDataDto(): MultipleChoiceProblemSearchResponseDto.MultipleChoiceProblemDataDto {
-        val answerCnt = this.gradingHistory.size
-        val correctAnswerCnt = this.gradingHistory.count {
-            it.score == this.score
+        val answerCnt = gradingHistory.size
+        val correctAnswerCnt = gradingHistory.count {
+            it.score == score
         }
 
         return MultipleChoiceProblemSearchResponseDto.MultipleChoiceProblemDataDto(
-            this.id!!,
-            this.title,
-            this.creator.username,
+            id!!,
+            title,
+            creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
             answerCnt,
-            this.isActive
+            isActive,
         )
     }
 
@@ -88,16 +88,16 @@ class MultipleChoiceProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return MultipleChoiceProblemDetailResponseDto(
-            this.id!!,
-            this.title,
+            id!!,
+            title,
             commonDetail.tags,
-            this.description,
+            description,
             commonDetail.correctSubmission,
             commonDetail.correctUserCnt,
             commonDetail.totalSubmission,
-            this.choicesList.map { it.toChoiceResponseDto() },
-            this.gradingHistory.any { it.user.email == email },
-            this.isMultiple
+            choicesList.map { it.toChoiceResponseDto() },
+            gradingHistory.any { it.user.email == email },
+            isMultiple,
         )
     }
 }

@@ -15,7 +15,7 @@ class RestAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException
     ) {
         log.info("Responding with unauthorized error. Message ${authException.message}")
-        this.setResponse(response)
+        setResponse(response)
     }
 
     private fun setResponse(response: HttpServletResponse) {

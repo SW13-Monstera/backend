@@ -26,7 +26,7 @@ class CustomOAuth2UserService(
         val user = super.loadUser(userRequest)
 
         try {
-            return this.process(userRequest!!, user)
+            return process(userRequest!!, user)
         } catch (e: OAuthProviderMissMatchException) {
             Sentry.captureException(e)
             throw e
@@ -50,11 +50,11 @@ class CustomOAuth2UserService(
         }
 
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, attributes)
-        var savedUser = this.userRepository.findByEmail(userInfo.getEmail())
-            ?: this.userRepository.findUserByProviderId(userInfo.getId())
+        var savedUser = userRepository.findByEmail(userInfo.getEmail())
+            ?: userRepository.findUserByProviderId(userInfo.getId())
 
         if (savedUser == null) {
-            savedUser = this.createUser(userInfo, providerType)
+            savedUser = createUser(userInfo, providerType)
         }
 
         return UserPrincipal.create(savedUser, attributes)

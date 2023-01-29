@@ -101,7 +101,7 @@ class AdminControllerTest {
 
         userRepository.save(user)
 
-        this.user = user
+        user = user
 
         val osTag = Tag(
             name = "network"
@@ -121,7 +121,7 @@ class AdminControllerTest {
             role = Role.ROLE_ADMIN.code
         )
 
-        this.token = accessToken.token
+        token = accessToken.token
     }
 
     @Test
@@ -173,7 +173,7 @@ class AdminControllerTest {
             )
         )
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(longProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(longProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -320,7 +320,7 @@ class AdminControllerTest {
             )
         )
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(longProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(longProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -491,7 +491,7 @@ class AdminControllerTest {
             5.0
         )
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(shortProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(shortProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -548,9 +548,9 @@ class AdminControllerTest {
             5.0
         )
 
-        val id = this.problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
+        val id = problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(shortProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(shortProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -610,7 +610,7 @@ class AdminControllerTest {
             5.0
         )
 
-        val id = this.problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
+        val id = problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
 
         // when
         val result = mockMvc.perform(
@@ -676,7 +676,7 @@ class AdminControllerTest {
             5.0
         )
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -746,12 +746,12 @@ class AdminControllerTest {
             5.0
         )
 
-        val id = this.problemService.createMultipleChoiceProblem(
+        val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
             "test-admin2@test.com"
         )
 
-        val upsertDtoString = this.objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
+        val upsertDtoString = objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -824,7 +824,7 @@ class AdminControllerTest {
             5.0
         )
 
-        val id = this.problemService.createMultipleChoiceProblem(
+        val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
             "test-admin2@test.com"
         )
@@ -899,7 +899,7 @@ class AdminControllerTest {
             5.0
         )
 
-        val id = this.problemService.createMultipleChoiceProblem(
+        val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
             "test-admin2@test.com"
         )
@@ -957,7 +957,7 @@ class AdminControllerTest {
                 5.0
             )
 
-            val id = this.problemService.createMultipleChoiceProblem(
+            val id = problemService.createMultipleChoiceProblem(
                 multipleChoiceProblemUpsertRequestDto,
                 "test-admin2@test.com"
             )
@@ -965,7 +965,7 @@ class AdminControllerTest {
             ids.add(id)
         }
 
-        val problemDeleteRequestDtoString = this.objectMapper.writeValueAsString(ProblemDeleteRequestDto(ids))
+        val problemDeleteRequestDtoString = objectMapper.writeValueAsString(ProblemDeleteRequestDto(ids))
 
         // when
         val result = mockMvc.perform(
@@ -1056,7 +1056,7 @@ class AdminControllerTest {
             id
         )
 
-        val userAnswerUpsertDtoString = this.objectMapper.writeValueAsString(userAnswerUpsertDto)
+        val userAnswerUpsertDtoString = objectMapper.writeValueAsString(userAnswerUpsertDto)
 
         // when
         val result = mockMvc.perform(
@@ -1160,7 +1160,7 @@ class AdminControllerTest {
             userAnswerUpsertDtoList
         )
 
-        val userAnswerBatchInsertDtoString = this.objectMapper.writeValueAsString(userAnswerBatchInsertDto)
+        val userAnswerBatchInsertDtoString = objectMapper.writeValueAsString(userAnswerBatchInsertDto)
 
         // when
         val result = mockMvc.perform(
@@ -1261,7 +1261,7 @@ class AdminControllerTest {
             problemId
         )
 
-        val id = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+        val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
         // when
         val result = mockMvc.perform(
@@ -1388,13 +1388,13 @@ class AdminControllerTest {
             problemId
         )
 
-        val id = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+        val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
         val userAnswerLabelRequestDto = UserAnswerLabelRequestDto(
             gradingStandards
         )
 
-        val userAnswerLabelRequestDtoString = this.objectMapper.writeValueAsString(userAnswerLabelRequestDto)
+        val userAnswerLabelRequestDtoString = objectMapper.writeValueAsString(userAnswerLabelRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -1496,15 +1496,15 @@ class AdminControllerTest {
             problemId
         )
 
-        val id = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+        val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
-        this.userAnswerService.labelUserAnswer("test-admin2@test.com", id, gradingStandards)
+        userAnswerService.labelUserAnswer("test-admin2@test.com", id, gradingStandards)
 
         val userAnswerLabelRequestDto = UserAnswerLabelRequestDto(
             gradingStandards
         )
 
-        val userAnswerLabelRequestDtoString = this.objectMapper.writeValueAsString(userAnswerLabelRequestDto)
+        val userAnswerLabelRequestDtoString = objectMapper.writeValueAsString(userAnswerLabelRequestDto)
 
         // when
         val result = mockMvc.perform(
@@ -1593,7 +1593,7 @@ class AdminControllerTest {
                     )
                 )
             )
-            this.problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
+            problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
         }
 
         val title = "test"
@@ -1678,7 +1678,7 @@ class AdminControllerTest {
                 5.0
             )
 
-            this.problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
+            problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
         }
 
         val title = "test"
@@ -1769,7 +1769,7 @@ class AdminControllerTest {
                 5.0
             )
 
-            this.problemService.createMultipleChoiceProblem(
+            problemService.createMultipleChoiceProblem(
                 multipleChoiceProblemUpsertRequestDto,
                 "test-admin2@test.com"
             )
@@ -1900,7 +1900,7 @@ class AdminControllerTest {
                 problemId
             )
 
-            this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+            userAnswerService.createUserAnswer(userAnswerUpsertDto)
         }
 
         val assignedBy = "test-admin2"
@@ -2086,7 +2086,7 @@ class AdminControllerTest {
                 problemId
             )
 
-            val userAnswerId = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+            val userAnswerId = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
             userAnswerIds.add(userAnswerId)
         }
@@ -2187,7 +2187,7 @@ class AdminControllerTest {
                 problemId
             )
 
-            val userAnswerId = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+            val userAnswerId = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
             userAnswerIds.add(userAnswerId)
         }
@@ -2286,7 +2286,7 @@ class AdminControllerTest {
             problemId
         )
 
-        val id = this.userAnswerService.createUserAnswer(userAnswerUpsertDto)
+        val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
         // when
         val result = mockMvc.perform(

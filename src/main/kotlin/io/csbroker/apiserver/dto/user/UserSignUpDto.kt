@@ -13,7 +13,7 @@ data class UserSignUpDto(
             email = email,
             username = username,
             password = password,
-            providerType = ProviderType.LOCAL
+            providerType = ProviderType.LOCAL,
         )
     }
 }

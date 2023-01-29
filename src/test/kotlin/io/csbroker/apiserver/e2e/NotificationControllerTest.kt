@@ -74,7 +74,7 @@ class NotificationControllerTest {
 
         userRepository.save(user)
 
-        this.user = user
+        user = user
 
         val now = Date()
 
@@ -84,7 +84,7 @@ class NotificationControllerTest {
             role = Role.ROLE_ADMIN.code
         )
 
-        this.token = accessToken.token
+        token = accessToken.token
     }
 
     @Test
@@ -202,7 +202,7 @@ class NotificationControllerTest {
             (1..10).map {
                 Notification(
                     content = "test content $it",
-                    user = this.user,
+                    user = user,
                     link = "https://dev.csbroker.io"
                 )
             }.toList()
@@ -270,7 +270,7 @@ class NotificationControllerTest {
         val id = notificationRepository.save(
             Notification(
                 content = "test content",
-                user = this.user,
+                user = user,
                 link = "https://dev.csbroker.io"
             )
         ).id!!
@@ -309,7 +309,7 @@ class NotificationControllerTest {
             (1..10).map {
                 Notification(
                     content = "test content $it",
-                    user = this.user,
+                    user = user,
                     link = "https://dev.csbroker.io"
                 )
             }.toList()
@@ -362,7 +362,7 @@ class NotificationControllerTest {
             (1..10).map {
                 Notification(
                     content = "test content $it",
-                    user = this.user,
+                    user = user,
                     link = "https://dev.csbroker.io"
                 )
             }.toList()

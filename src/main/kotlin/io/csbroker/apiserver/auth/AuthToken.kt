@@ -19,9 +19,9 @@ class AuthToken(
 ) {
     constructor(email: String, expiry: Date, key: Key, role: String? = null) : this("", key) {
         if (role != null) {
-            this.token = this.createAuthToken(email, expiry, role)
+            token = createAuthToken(email, expiry, role)
         } else {
-            this.token = this.createAuthToken(email, expiry)
+            token = createAuthToken(email, expiry)
         }
     }
 
@@ -29,9 +29,9 @@ class AuthToken(
         get() {
             try {
                 return Jwts.parserBuilder()
-                    .setSigningKey(this.key)
+                    .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(this.token)
+                    .parseClaimsJws(token)
                     .body
             } catch (e: SecurityException) {
                 log.error("Invalid JWT signature.")
@@ -53,9 +53,9 @@ class AuthToken(
         get() {
             try {
                 Jwts.parserBuilder()
-                    .setSigningKey(this.key)
+                    .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(this.token)
+                    .parseClaimsJws(token)
                     .body
             } catch (e: ExpiredJwtException) {
                 log.info("Expired JWT token.")
@@ -75,12 +75,12 @@ class AuthToken(
         }
 
     val isValid: Boolean
-        get() = this.tokenClaims != null
+        get() = tokenClaims != null
 
     private fun createAuthToken(email: String, expiry: Date): String {
         return Jwts.builder()
             .setSubject(email)
-            .signWith(this.key, SignatureAlgorithm.HS256)
+            .signWith(key, SignatureAlgorithm.HS256)
             .setExpiration(expiry)
             .compact()
     }
@@ -89,7 +89,7 @@ class AuthToken(
         return Jwts.builder()
             .setSubject(email)
             .claim(io.csbroker.apiserver.auth.AUTHORITIES_KEY, role)
-            .signWith(this.key, SignatureAlgorithm.HS256)
+            .signWith(key, SignatureAlgorithm.HS256)
             .setExpiration(expiry)
             .compact()
     }

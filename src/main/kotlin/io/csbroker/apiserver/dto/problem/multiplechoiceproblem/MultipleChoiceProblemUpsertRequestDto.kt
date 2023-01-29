@@ -19,23 +19,23 @@ data class MultipleChoiceProblemUpsertRequestDto(
     )
 
     fun toMultipleChoiceProblem(creator: User): MultipleChoiceProblem {
-        val isMultiple = this.choices.count { it.isAnswer } > 1
+        val isMultiple = choices.any { it.isAnswer }
 
         return MultipleChoiceProblem(
             title = title,
             description = description,
             creator = creator,
             isMultiple = isMultiple,
-            score = score
+            score = score,
         )
     }
 
     fun getChoiceList(multipleChoiceProblem: MultipleChoiceProblem): List<Choice> {
-        return this.choices.map {
+        return choices.map {
             Choice(
                 content = it.content,
                 isAnswer = it.isAnswer,
-                multipleChoiceProblem = multipleChoiceProblem
+                multipleChoiceProblem = multipleChoiceProblem,
             )
         }
     }

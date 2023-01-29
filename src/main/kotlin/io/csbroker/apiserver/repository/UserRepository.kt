@@ -25,4 +25,7 @@ interface UserRepository : JpaRepository<User, UUID> {
 
     @Query("select count(u) from User u where u.isDeleted = FALSE")
     fun countUser(): Long
+
+    @Query("select u from User u where (u.email = :email or u.providerId = :providerId) and u.isDeleted = FALSE")
+    fun findByEmailOrProviderId(email: String, providerId: String): User?
 }
