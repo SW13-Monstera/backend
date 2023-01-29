@@ -264,7 +264,7 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.isGradable").type(JsonFieldType.BOOLEAN)
                             .description("문제 채점 가능 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
-                            .description("문제 배점")
+                            .description("문제 배점"),
                     )
                 )
             )
@@ -314,7 +314,7 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
                             .description("푼 문제 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
-                            .description("문제 배점")
+                            .description("문제 배점"),
                     )
                 )
             )
@@ -368,7 +368,7 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.isMultipleAnswer").type(JsonFieldType.BOOLEAN)
                             .description("다중 답안 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
-                            .description("문제 배점")
+                            .description("문제 배점"),
                     )
                 )
             )

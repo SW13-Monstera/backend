@@ -117,7 +117,7 @@ class ProblemControllerV2Test {
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
                             .description("푼 문제 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
-                            .description("문제 배점")
+                            .description("문제 배점"),
                     )
                 )
             )
