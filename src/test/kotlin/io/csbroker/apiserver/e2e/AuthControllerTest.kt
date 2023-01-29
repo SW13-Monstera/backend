@@ -3,7 +3,6 @@ package io.csbroker.apiserver.e2e
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.dto.auth.PasswordChangeMailRequestDto
 import io.csbroker.apiserver.dto.auth.PasswordChangeRequestDto
 import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
@@ -244,38 +243,6 @@ class AuthControllerTest {
 
     @Test
     @Order(5)
-    fun `Send password mail 200 OK`() {
-        // given
-        val email = "test@test.com"
-        val passwordChangeMailRequestDto = PasswordChangeMailRequestDto(email)
-        val passwordChangeMailRequestDtoString = objectMapper.writeValueAsString(passwordChangeMailRequestDto)
-
-        // when
-        val result = mockMvc.perform(
-            post("$AUTH_ENDPOINT/password/code")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(passwordChangeMailRequestDtoString)
-                .accept(MediaType.APPLICATION_JSON)
-        )
-
-        // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
-            .andDo(
-                MockMvcRestDocumentation.document(
-                    "password/code",
-                    preprocessRequest(prettyPrint()),
-                    preprocessResponse(prettyPrint()),
-                    responseFields(
-                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data").type(JsonFieldType.STRING).description("메일 전송 결과")
-                    )
-                )
-            )
-    }
-
-    @Test
-    @Order(6)
     fun `Change password 200 OK`() {
         // given
         val email = "test@test.com"
