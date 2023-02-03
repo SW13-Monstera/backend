@@ -4,5 +4,5 @@ data class ProblemSetResponseDto(
     val id: Long,
     val problemCnt: Int,
     val name: String,
-    val description: String
+    val description: String,
 )

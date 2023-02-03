@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class ProblemSetServiceImpl(
     private val problemSetRepository: ProblemSetRepository,
-    private val problemRepository: ProblemRepository
+    private val problemRepository: ProblemRepository,
 ) : ProblemSetService {
     override fun findAll(): List<ProblemSet> {
         return problemSetRepository.findAll()
@@ -31,14 +31,14 @@ class ProblemSetServiceImpl(
 
         if (problems.size != problemIds.size) {
             throw EntityNotFoundException(
-                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다."
+                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다.",
             )
         }
 
         val problemSet = ProblemSet(
             name = name,
             description = description,
-            problems = problems
+            problems = problems,
         )
 
         return problemSetRepository.save(problemSet).id!!
@@ -52,7 +52,7 @@ class ProblemSetServiceImpl(
 
         if (problems.size != problemIds.size) {
             throw EntityNotFoundException(
-                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다."
+                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다.",
             )
         }
 

@@ -49,7 +49,7 @@ class AdminController(
     private val userAnswerService: UserAnswerService,
     private val userService: UserService,
     private val notificationService: NotificationService,
-    private val problemSetService: ProblemSetService
+    private val problemSetService: ProblemSetService,
 ) {
     @GetMapping("/users/admin")
     fun findAdminUsers(): ApiResponse<List<AdminUserInfoResponseDto>> {
@@ -331,7 +331,7 @@ class AdminController(
 
     @PostMapping("/problem-sets")
     fun createProblemSet(
-        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto
+        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto,
     ): ApiResponse<Long> {
         return ApiResponse.success(problemSetService.createProblemSet(problemSetUpsertRequestDto))
     }
@@ -339,7 +339,7 @@ class AdminController(
     @PostMapping("/problem-sets/{id}")
     fun updateProblemSet(
         @PathVariable("id") id: Long,
-        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto
+        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto,
     ): ApiResponse<Long> {
         return ApiResponse.success(problemSetService.updateProblemSet(id, problemSetUpsertRequestDto))
     }

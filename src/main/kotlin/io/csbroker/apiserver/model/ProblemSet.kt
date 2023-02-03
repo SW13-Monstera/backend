@@ -33,7 +33,7 @@ class ProblemSet(
             id!!,
             problems.size,
             name,
-            description
+            description,
         )
     }
 
@@ -42,7 +42,7 @@ class ProblemSet(
             id!!,
             problems.map { it.toProblemResponseDto(GradingHistoryStats.toGradingHistoryStats(it.gradingHistory)) },
             name,
-            description
+            description,
         )
     }
 

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/problem-sets")
 class ProblemSetController(
-    private val problemSetService: ProblemSetService
+    private val problemSetService: ProblemSetService,
 ) {
     @GetMapping("/{id}")
     fun findById(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<ProblemSetDetailResponseDto> {
         return ApiResponse.success(problemSetService.findById(id).toProblemSetDetailResponseDto())
     }
