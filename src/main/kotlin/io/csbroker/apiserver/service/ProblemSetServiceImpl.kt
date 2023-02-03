@@ -31,7 +31,7 @@ class ProblemSetServiceImpl(
 
         if (problems.size != problemIds.size) {
             throw EntityNotFoundException(
-                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 세트를 찾을 수 없습니다."
+                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다."
             )
         }
 
@@ -52,7 +52,7 @@ class ProblemSetServiceImpl(
 
         if (problems.size != problemIds.size) {
             throw EntityNotFoundException(
-                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 세트를 찾을 수 없습니다."
+                "[ids = ${problemIds.joinToString(",")}] 에 해당하는 문제 목록을 찾을 수 없습니다."
             )
         }
 
