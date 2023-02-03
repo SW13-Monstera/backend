@@ -1,5 +1,8 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.dto.problem.GradingHistoryStats
+import io.csbroker.apiserver.dto.problem.problemset.ProblemSetDetailResponseDto
+import io.csbroker.apiserver.dto.problem.problemset.ProblemSetResponseDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -17,11 +20,41 @@ class ProblemSet(
     val id: Long? = null,
 
     @Column(name = "problem_set_name")
-    val name: String,
+    var name: String,
 
     @Column(name = "problem_set_description")
-    val description: String,
+    var description: String,
 
     @OneToMany
-    val problems: List<Problem> = mutableListOf(),
-)
+    val problems: MutableList<Problem> = mutableListOf(),
+) {
+    fun toProblemSetResponseDto(): ProblemSetResponseDto {
+        return ProblemSetResponseDto(
+            id!!,
+            problems.size,
+            name,
+            description
+        )
+    }
+
+    fun toProblemSetDetailResponseDto(): ProblemSetDetailResponseDto {
+        return ProblemSetDetailResponseDto(
+            id!!,
+            problems.map { it.toProblemResponseDto(GradingHistoryStats.toGradingHistoryStats(it.gradingHistory)) },
+            name,
+            description
+        )
+    }
+
+    fun update(name: String, description: String, problems: List<Problem>) {
+        this.name = name
+        this.description = description
+        this.problems.clear()
+        problems.forEach { addProblem(it) }
+    }
+
+    private fun addProblem(problem: Problem) {
+        this.problems.add(problem)
+        problem.problemSet = this
+    }
+}
