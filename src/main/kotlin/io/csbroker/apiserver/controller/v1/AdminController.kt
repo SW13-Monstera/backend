@@ -14,6 +14,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
+import io.csbroker.apiserver.dto.problem.problemset.ProblemSetUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
@@ -26,6 +27,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.service.NotificationService
 import io.csbroker.apiserver.service.ProblemService
+import io.csbroker.apiserver.service.ProblemSetService
 import io.csbroker.apiserver.service.UserAnswerService
 import io.csbroker.apiserver.service.UserService
 import org.springframework.data.domain.Pageable
@@ -46,7 +48,8 @@ class AdminController(
     private val problemService: ProblemService,
     private val userAnswerService: UserAnswerService,
     private val userService: UserService,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val problemSetService: ProblemSetService
 ) {
     @GetMapping("/users/admin")
     fun findAdminUsers(): ApiResponse<List<AdminUserInfoResponseDto>> {
@@ -324,5 +327,20 @@ class AdminController(
                 size = notificationService.createBulkNotification(notificationBulkInsertDto.content)
             )
         )
+    }
+
+    @PostMapping("/problem-sets")
+    fun createProblemSet(
+        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto
+    ): ApiResponse<Long> {
+        return ApiResponse.success(problemSetService.createProblemSet(problemSetUpsertRequestDto))
+    }
+
+    @PostMapping("/problem-sets/{id}")
+    fun updateProblemSet(
+        @PathVariable("id") id: Long,
+        @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto
+    ): ApiResponse<Long> {
+        return ApiResponse.success(problemSetService.updateProblemSet(id, problemSetUpsertRequestDto))
     }
 }
