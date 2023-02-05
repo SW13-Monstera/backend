@@ -26,12 +26,12 @@ class ProblemSet(
     var description: String,
 
     @OneToMany
-    val problems: MutableList<Problem> = mutableListOf(),
+    val problemSetMapping: List<ProblemSetMapping> = mutableListOf()
 ) {
     fun toProblemSetResponseDto(): ProblemSetResponseDto {
         return ProblemSetResponseDto(
             id!!,
-            problems.size,
+            problemSetMapping.size,
             name,
             description,
         )
@@ -40,21 +40,16 @@ class ProblemSet(
     fun toProblemSetDetailResponseDto(): ProblemSetDetailResponseDto {
         return ProblemSetDetailResponseDto(
             id!!,
-            problems.map { it.toProblemResponseDto(GradingHistoryStats.toGradingHistoryStats(it.gradingHistory)) },
+            problemSetMapping.map {
+                it.problem.toProblemResponseDto(GradingHistoryStats.toGradingHistoryStats(it.problem.gradingHistory))
+            },
             name,
             description,
         )
     }
 
-    fun update(name: String, description: String, problems: List<Problem>) {
+    fun updateContents(name: String, description: String) {
         this.name = name
         this.description = description
-        this.problems.clear()
-        problems.forEach { addProblem(it) }
-    }
-
-    private fun addProblem(problem: Problem) {
-        this.problems.add(problem)
-        problem.problemSet = this
     }
 }
