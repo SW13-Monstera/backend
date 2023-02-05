@@ -109,7 +109,8 @@ class ProblemRepositoryCustomImpl(
         val solvedProblemIds = queryFactory.select(gradingHistory.problem.id)
             .from(gradingHistory)
             .innerJoin(gradingHistory.user, user)
-            .where(gradingHistory.user.email.eq(email))
+            .innerJoin(gradingHistory.problem, problem)
+            .where(gradingHistory.user.email.eq(email), gradingHistory.score.eq(problem.score))
 
         return if (isSolved) problem.id.`in`(solvedProblemIds) else problem.id.notIn(solvedProblemIds)
     }
