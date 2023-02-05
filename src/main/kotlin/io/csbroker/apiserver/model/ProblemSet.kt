@@ -26,7 +26,7 @@ class ProblemSet(
     var description: String,
 
     @OneToMany
-    val problemSetMapping: List<ProblemSetMapping> = mutableListOf()
+    val problemSetMapping: List<ProblemSetMapping> = mutableListOf(),
 ) {
     fun toProblemSetResponseDto(): ProblemSetResponseDto {
         return ProblemSetResponseDto(

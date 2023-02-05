@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class ProblemSetServiceImpl(
     private val problemSetRepository: ProblemSetRepository,
     private val problemRepository: ProblemRepository,
-    private val problemSetMappingRepository: ProblemSetMappingRepository
+    private val problemSetMappingRepository: ProblemSetMappingRepository,
 ) : ProblemSetService {
     override fun findAll(): List<ProblemSet> {
         return problemSetRepository.findAll()
@@ -45,7 +45,7 @@ class ProblemSetServiceImpl(
 
     private fun createProblemSetMapping(
         problemIds: List<Long>,
-        problemSet: ProblemSet
+        problemSet: ProblemSet,
     ) {
         val problems = problemRepository.findAllById(problemIds)
         if (problems.size != problemIds.size) {
@@ -57,7 +57,7 @@ class ProblemSetServiceImpl(
         val problemSetMappings = problems.map {
             ProblemSetMapping(
                 problem = it,
-                problemSet = problemSet
+                problemSet = problemSet,
             )
         }
 
