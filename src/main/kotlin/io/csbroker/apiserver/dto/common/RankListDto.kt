@@ -9,10 +9,13 @@ data class RankListDto(
     val numberOfElements: Long,
     val contents: List<RankDetail>
 ) {
+    constructor() : this(0, 0, 0, 0, arrayListOf())
     data class RankDetail(
         val id: UUID,
         val username: String,
         val rank: Long,
         val score: Double
-    )
+    ) {
+        constructor() : this(UUID.randomUUID(), "", 0, 0.0)
+    }
 }
