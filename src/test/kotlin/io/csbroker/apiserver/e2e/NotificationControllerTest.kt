@@ -74,7 +74,7 @@ class NotificationControllerTest {
 
         userRepository.save(user)
 
-        user = user
+        this.user = user
 
         val now = Date()
 

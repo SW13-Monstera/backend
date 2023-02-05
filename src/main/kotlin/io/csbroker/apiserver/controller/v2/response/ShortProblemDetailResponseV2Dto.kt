@@ -10,7 +10,8 @@ class ShortProblemDetailResponseV2Dto(
     val totalSubmission: Int,
     val answerLength: Int,
     val consistOf: ShortProblemAnswerType,
-    val isSolved: Boolean
+    val isSolved: Boolean,
+    val score: Double,
 )
 
 enum class ShortProblemAnswerType {

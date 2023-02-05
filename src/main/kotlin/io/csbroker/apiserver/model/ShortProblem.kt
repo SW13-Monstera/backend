@@ -78,6 +78,7 @@ class ShortProblem(
             answer.length,
             isEnglish(),
             gradingHistory.any { it.user.email == email },
+            score,
         )
     }
 
@@ -95,6 +96,7 @@ class ShortProblem(
             answer.length,
             getTypeOfAnswer(),
             gradingHistory.any { it.user.email == email },
+            score,
         )
     }
 
