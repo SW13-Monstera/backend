@@ -103,6 +103,7 @@ class LongProblem(
             if (scoreList.isEmpty()) null else scoreList.average(),
             if (scoreList.isEmpty()) null else scoreList.last(),
             if (scoreList.isEmpty()) null else scoreList.first(),
+            score,
             scoreList.size,
             isSolved,
             isGradable,

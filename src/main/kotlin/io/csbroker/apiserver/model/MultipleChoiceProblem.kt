@@ -98,6 +98,7 @@ class MultipleChoiceProblem(
             choicesList.map { it.toChoiceResponseDto() },
             gradingHistory.any { it.user.email == email },
             isMultiple,
+            score,
         )
     }
 }

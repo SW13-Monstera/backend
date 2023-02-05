@@ -21,11 +21,13 @@ fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge
 }
 
 fun deleteCookie(request: HttpServletRequest, response: HttpServletResponse, name: String) {
-    request.cookies.find { it.name == name }?.let {
-        it.value = ""
-        it.path = "/"
-        it.maxAge = 0
-        response.addCookie(it)
+    request.cookies?.let {
+        it.find { cookie -> cookie.name == name }?.let { cookie ->
+            cookie.value = ""
+            cookie.path = "/"
+            cookie.maxAge = 0
+            response.addCookie(cookie)
+        }
     }
 }
 

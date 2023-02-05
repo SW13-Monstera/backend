@@ -101,7 +101,7 @@ class AdminControllerTest {
 
         userRepository.save(user)
 
-        user = user
+        this.user = user
 
         val osTag = Tag(
             name = "network"

@@ -115,7 +115,9 @@ class ProblemControllerV2Test {
                         fieldWithPath("data.consistOf").type(JsonFieldType.STRING)
                             .description("정답 언어 ( 영어면 ENGLISH, 한국어면 KOREAN, 숫자면 NUMERIC )"),
                         fieldWithPath("data.isSolved").type(JsonFieldType.BOOLEAN)
-                            .description("푼 문제 여부")
+                            .description("푼 문제 여부"),
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER)
+                            .description("문제 배점"),
                     )
                 )
             )
