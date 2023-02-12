@@ -40,7 +40,7 @@ class UserServiceImpl(
 
         userUpdateRequestDto.password?.let {
             if (findUser.providerType == ProviderType.LOCAL &&
-                !bCryptPasswordEncoder.matches(userUpdateRequestDto.password, findUser.password)
+                !bCryptPasswordEncoder.matches(userUpdateRequestDto.originalPassword, findUser.password)
             ) {
                 throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
             }
