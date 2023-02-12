@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.service
 
+import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
@@ -38,6 +39,11 @@ class UserServiceImpl(
             ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
 
         userUpdateRequestDto.password?.let {
+            if (findUser.providerType == ProviderType.LOCAL &&
+                !bCryptPasswordEncoder.matches(userUpdateRequestDto.password, findUser.password)
+            ) {
+                throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
+            }
             val encodedPassword = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
             userUpdateRequestDto.password = encodedPassword
         }

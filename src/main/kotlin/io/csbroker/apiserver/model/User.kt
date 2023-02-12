@@ -110,6 +110,7 @@ class User(
             profileImgUrl = profileImageUrl,
             githubUrl = githubUrl,
             linkedinUrl = linkedinUrl,
+            providerType = providerType
         )
     }
 
