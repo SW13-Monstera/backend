@@ -73,17 +73,25 @@ class LoggingFilter : OncePerRequestFilter() {
         if (visible) {
             val content: ByteArray = StreamUtils.copyToByteArray(inputStream)
             if (content.isNotEmpty()) {
-                var contentString = String(content)
-
-                if (contentString.contains("password")) {
-                    contentString = contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
-                }
-
-                log.info("{} Payload: {}", prefix, contentString)
+                log.info("{} Payload: {}", prefix, getPayload(content))
             }
         } else {
             log.info("{} Payload: Binary Content", prefix)
         }
+    }
+
+    private fun getPayload(content: ByteArray): String {
+        val contentString = String(content)
+
+        if (contentString.contains("originalPassword")) {
+            return contentString.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
+        }
+
+        if (contentString.contains("password")) {
+            return contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
+        }
+
+        return contentString
     }
 
     private fun isVisible(mediaType: MediaType): Boolean {
