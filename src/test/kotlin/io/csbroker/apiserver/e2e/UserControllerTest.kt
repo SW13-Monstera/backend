@@ -42,6 +42,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -58,6 +59,9 @@ import java.util.UUID
 class UserControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
+
+    @Autowired
+    private lateinit var bcryptPasswordEncoder: BCryptPasswordEncoder
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -107,7 +111,8 @@ class UserControllerTest {
             job = "백엔드 개발자",
             tech = "Spring, Docker, Kotlin",
             githubUrl = "https://github.com/kshired",
-            linkedinUrl = "https://www.linkedin.com/in/seongil-kim-40773b23b/"
+            linkedinUrl = "https://www.linkedin.com/in/seongil-kim-40773b23b/",
+            password = bcryptPasswordEncoder.encode("password")
         )
 
         userRepository.save(admin)

@@ -171,6 +171,7 @@ class UserServiceTest {
         val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", "test1234!", "test123!")
         every { userRepository.findByIdOrNull(id) } returns user
         every { passwordEncoder.encode("test123!") } returns "some-encrypted-password"
+        every { passwordEncoder.matches(any(), any()) } returns true
 
         // when
         val modifyUser = userService.modifyUser(

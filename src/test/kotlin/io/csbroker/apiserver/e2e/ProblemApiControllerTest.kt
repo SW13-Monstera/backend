@@ -379,7 +379,7 @@ class ProblemApiControllerTest {
     fun `problem 검색`() {
         // given
         val query = "test"
-        val isSolved = true
+        val isSolved = false
         val tags = "os,ds"
         val page = 0
         val size = 10
