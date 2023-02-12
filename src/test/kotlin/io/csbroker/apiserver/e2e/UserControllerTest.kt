@@ -243,7 +243,9 @@ class UserControllerTest {
                         fieldWithPath("data.githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.linkedinUrl")
-                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
+                        fieldWithPath("data.providerType")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
                     )
                 )
             )
@@ -297,7 +299,9 @@ class UserControllerTest {
                         fieldWithPath("data.[].githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.[].linkedinUrl")
-                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
+                        fieldWithPath("data.[].providerType")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
                     )
                 )
             )
@@ -323,7 +327,8 @@ class UserControllerTest {
             jobObjective = "프론트엔드 개발자",
             techs = listOf("react", "typescript"),
             githubUrl = "https://github.com/Kim-Hyunjo",
-            linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211"
+            linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211",
+            originalPassword = "password"
         )
 
         val userUpdateRequestDtoString = objectMapper.writeValueAsString(userUpdateRequestDto)
@@ -354,6 +359,8 @@ class UserControllerTest {
                             .description("수정할 닉네임 ( 필수 X )").optional(),
                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
                             .description("수정할 프로필 이미지 url ( 필수 X )").optional(),
+                        fieldWithPath("originalPassword").type(JsonFieldType.STRING)
+                            .description("수정전 비밀번호 ( 필수 X, but 수정시 필수 )").optional(),
                         fieldWithPath("password").type(JsonFieldType.STRING)
                             .description("수정할 비밀번호 ( 필수 X )").optional(),
                         fieldWithPath("major").type(JsonFieldType.STRING)
@@ -388,7 +395,9 @@ class UserControllerTest {
                         fieldWithPath("data.githubUrl")
                             .type(JsonFieldType.STRING).description("Github url").optional(),
                         fieldWithPath("data.linkedinUrl")
-                            .type(JsonFieldType.STRING).description("LinkedIn url").optional()
+                            .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
+                        fieldWithPath("data.providerType")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
                     )
                 )
             )
