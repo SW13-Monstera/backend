@@ -83,7 +83,7 @@ class User(
     val gradingHistories: MutableList<GradingHistory> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val notifications: MutableList<Notification> = mutableListOf()
+    val notifications: MutableList<Notification> = mutableListOf(),
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
         profileImageUrl = userUpdateRequestDto.profileImageUrl ?: profileImageUrl
@@ -110,7 +110,7 @@ class User(
             profileImgUrl = profileImageUrl,
             githubUrl = githubUrl,
             linkedinUrl = linkedinUrl,
-            providerType = providerType
+            providerType = providerType,
         )
     }
 

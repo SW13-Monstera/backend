@@ -135,7 +135,12 @@ class UserServiceTest {
         val exception = assertThrows<EntityNotFoundException> {
             userService.modifyUser(
                 id,
-                UserUpdateRequestDto("test-url.com", "test", "test1234!", "test1234")
+                UserUpdateRequestDto(
+                    "test-url.com",
+                    "test",
+                    "test1234!",
+                    "test1234",
+                ),
             )
         }
 

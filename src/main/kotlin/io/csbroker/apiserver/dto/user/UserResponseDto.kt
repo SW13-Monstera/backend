@@ -16,5 +16,5 @@ data class UserResponseDto(
     val profileImgUrl: String?,
     var githubUrl: String?,
     var linkedinUrl: String?,
-    val providerType: ProviderType
+    val providerType: ProviderType,
 )

@@ -112,7 +112,7 @@ class UserControllerTest {
             tech = "Spring, Docker, Kotlin",
             githubUrl = "https://github.com/kshired",
             linkedinUrl = "https://www.linkedin.com/in/seongil-kim-40773b23b/",
-            password = bcryptPasswordEncoder.encode("password")
+            password = bcryptPasswordEncoder.encode("password"),
         )
 
         userRepository.save(admin)
@@ -250,7 +250,7 @@ class UserControllerTest {
                         fieldWithPath("data.linkedinUrl")
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.providerType")
-                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
                     )
                 )
             )
@@ -306,7 +306,7 @@ class UserControllerTest {
                         fieldWithPath("data.[].linkedinUrl")
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.[].providerType")
-                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
                     )
                 )
             )
@@ -333,7 +333,7 @@ class UserControllerTest {
             techs = listOf("react", "typescript"),
             githubUrl = "https://github.com/Kim-Hyunjo",
             linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211",
-            originalPassword = "password"
+            originalPassword = "password",
         )
 
         val userUpdateRequestDtoString = objectMapper.writeValueAsString(userUpdateRequestDto)
@@ -402,7 +402,7 @@ class UserControllerTest {
                         fieldWithPath("data.linkedinUrl")
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.providerType")
-                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )")
+                            .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
                     )
                 )
             )
