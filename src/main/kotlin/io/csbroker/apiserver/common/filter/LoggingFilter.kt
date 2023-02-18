@@ -69,33 +69,27 @@ class LoggingFilter : OncePerRequestFilter() {
     }
 
     private fun logPayload(prefix: String, contentType: String?, inputStream: InputStream) {
-        val visible = isVisible(MediaType.valueOf(contentType ?: "application/json"))
-        if (visible) {
-            val content: ByteArray = StreamUtils.copyToByteArray(inputStream)
-            if (content.isNotEmpty()) {
-                log.info("{} Payload: {}", prefix, getPayload(content))
-            }
-        } else {
-            log.info("{} Payload: Binary Content", prefix)
-        }
+        val content = StreamUtils.copyToByteArray(inputStream).contentToString()
+        val mediaType = contentType?.let { MediaType.valueOf(it) } ?: MediaType.APPLICATION_JSON
+        val payload = getPayload(mediaType, content)
+        log.info("$prefix Payload: $payload")
     }
 
-    private fun getPayload(content: ByteArray): String {
-        val contentString = String(content)
-
-        if (contentString.contains("originalPassword")) {
-            return contentString.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
-        }
-
-        if (contentString.contains("password")) {
-            return contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
-        }
-
-        return contentString
+    private fun getPayload(mediaType: MediaType, content: String) = if (isVisible(mediaType)) {
+        content.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
+            .replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
+    } else {
+        "Binary Contents"
     }
 
     private fun isVisible(mediaType: MediaType): Boolean {
-        val VISIBLE_TYPES: List<MediaType> = listOf(
+        return VISIBLE_TYPES.stream().anyMatch {
+            it.includes(mediaType)
+        }
+    }
+
+    companion object {
+        private val VISIBLE_TYPES: List<MediaType> = listOf(
             MediaType.valueOf("text/*"),
             MediaType.APPLICATION_FORM_URLENCODED,
             MediaType.APPLICATION_JSON,
@@ -104,9 +98,5 @@ class LoggingFilter : OncePerRequestFilter() {
             MediaType.valueOf("application/*+xml"),
             MediaType.MULTIPART_FORM_DATA
         )
-
-        return VISIBLE_TYPES.stream().anyMatch {
-            it.includes(mediaType)
-        }
     }
 }
