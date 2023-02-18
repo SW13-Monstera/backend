@@ -88,4 +88,6 @@ interface ProblemService {
         gradingHistoryId: Long,
         assessmentRequestDto: AssessmentRequestDto
     ): Long
+
+    fun createChallenge(email: String, problemId: Long, content: String)
 }
