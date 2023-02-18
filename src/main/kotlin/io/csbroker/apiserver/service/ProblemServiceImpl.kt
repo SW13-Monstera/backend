@@ -549,8 +549,8 @@ class ProblemServiceImpl(
             Challenge(
                 user = user,
                 content = content,
-                problem = problem
-            )
+                problem = problem,
+            ),
         )
     }
 }

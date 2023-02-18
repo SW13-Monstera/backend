@@ -87,7 +87,7 @@ class ProblemControllerV2Test {
             description = "test",
             creator = adminUser!!,
             answer = "test",
-            score = 5.0
+            score = 5.0,
         )
 
         problemRepository.save(shortProblem)
@@ -147,7 +147,7 @@ class ProblemControllerV2Test {
             description = "test",
             creator = adminUser!!,
             answer = "test",
-            score = 5.0
+            score = 5.0,
         )
 
         problemRepository.save(shortProblem)
@@ -155,7 +155,7 @@ class ProblemControllerV2Test {
         val accessToken = tokenProvider.createAuthToken(
             email = "test50@test.com",
             expiry = Date(Date().time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         val urlString = "$PROBLEM_ENDPOINT/{problem_id}/challenge"
@@ -169,7 +169,7 @@ class ProblemControllerV2Test {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(challengeCreateRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -181,22 +181,22 @@ class ProblemControllerV2Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     requestFields(
                         fieldWithPath("content").type(JsonFieldType.STRING)
-                            .description("이의제기 내용 ( 최소 10자 ~ 최대 150자 )")
+                            .description("이의제기 내용 ( 최소 10자 ~ 최대 150자 )"),
                     ),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("이의제기 데이터 생성 여부"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 }

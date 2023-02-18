@@ -35,7 +35,9 @@ class ProblemControllerV2(
     fun challengeProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @Valid @RequestBody challengeCreateRequest: ChallengeCreateRequest,
+        @Valid
+        @RequestBody
+        challengeCreateRequest: ChallengeCreateRequest,
     ): ApiResponse<Boolean> {
         problemService.createChallenge(loginUser.username, id, challengeCreateRequest.content)
         return ApiResponse.success(true)
