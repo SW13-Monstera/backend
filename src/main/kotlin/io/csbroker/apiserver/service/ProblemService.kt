@@ -3,6 +3,7 @@ package io.csbroker.apiserver.service
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -89,5 +90,5 @@ interface ProblemService {
         assessmentRequestDto: AssessmentRequestDto
     ): Long
 
-    fun createChallenge(email: String, problemId: Long, content: String)
+    fun createChallenge(createChallengeDto: CreateChallengeDto)
 }

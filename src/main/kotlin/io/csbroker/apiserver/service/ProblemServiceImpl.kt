@@ -12,6 +12,7 @@ import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
@@ -538,7 +539,9 @@ class ProblemServiceImpl(
     }
 
     @Transactional
-    override fun createChallenge(email: String, problemId: Long, content: String) {
+    override fun createChallenge(createChallengeDto: CreateChallengeDto) {
+        val (email, problemId, content) = createChallengeDto
+
         val user = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
