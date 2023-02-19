@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/notifications")
 class NotificationController(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
 
     @GetMapping
@@ -30,8 +30,8 @@ class NotificationController(
         @PageableDefault(
             size = 10,
             sort = ["createdAt"],
-            direction = Sort.Direction.DESC
-        ) pageable: Pageable
+            direction = Sort.Direction.DESC,
+        ) pageable: Pageable,
     ): ApiResponse<NotificationPageResponseDto> {
         val notifications = notificationService.getNotification(loginUser.username, pageable)
         return ApiResponse.success(NotificationPageResponseDto(notifications))
@@ -46,7 +46,7 @@ class NotificationController(
     @PutMapping("/read")
     fun readNotifications(
         @LoginUser loginUser: User,
-        @RequestBody notificationBulkReadDto: NotificationBulkReadDto
+        @RequestBody notificationBulkReadDto: NotificationBulkReadDto,
     ): ApiResponse<NotificationReadResponseDto> {
         notificationService.readNotifications(loginUser.username, notificationBulkReadDto.ids)
         return ApiResponse.success(NotificationReadResponseDto())
@@ -55,7 +55,7 @@ class NotificationController(
     @PutMapping("/read/{id}")
     fun readNotificationById(
         @LoginUser loginUser: User,
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<NotificationReadResponseDto> {
         notificationService.readNotificationById(loginUser.username, id)
         return ApiResponse.success(NotificationReadResponseDto())

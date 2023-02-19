@@ -47,7 +47,7 @@ class CommonControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(statsEndPoint)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -66,9 +66,9 @@ class CommonControllerTest {
                         PayloadDocumentation.fieldWithPath("data.gradableProblemCnt")
                             .type(JsonFieldType.NUMBER).description("채점 가능한 문제 수"),
                         PayloadDocumentation.fieldWithPath("data.userCnt")
-                            .type(JsonFieldType.NUMBER).description("회원 수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("회원 수"),
+                    ),
+                ),
             )
     }
 
@@ -82,7 +82,7 @@ class CommonControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(statsEndPoint)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -94,15 +94,15 @@ class CommonControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     requestParameters(
-                        parameterWithName("query").description("검색어 ( 필수 )")
+                        parameterWithName("query").description("검색어 ( 필수 )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data")
-                            .type(JsonFieldType.ARRAY).description("기술 데이터")
-                    )
-                )
+                            .type(JsonFieldType.ARRAY).description("기술 데이터"),
+                    ),
+                ),
             )
     }
 
@@ -113,8 +113,8 @@ class CommonControllerTest {
             mapOf(
                 "${UUID.randomUUID()}@test1" to 100.0,
                 "${UUID.randomUUID()}@test2" to 99.0,
-                "${UUID.randomUUID()}@test3" to 99.0
-            )
+                "${UUID.randomUUID()}@test3" to 99.0,
+            ),
         )
 
         val ranksEndPoint = "/api/v1/ranks?size=3&page=0"
@@ -123,7 +123,7 @@ class CommonControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(ranksEndPoint)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -136,7 +136,7 @@ class CommonControllerTest {
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     requestParameters(
                         parameterWithName("size").description("가져올 첫 랭킹 ( 1 이상 )"),
-                        parameterWithName("page").description("가져올 페이지 ( 0 이상 )")
+                        parameterWithName("page").description("가져올 페이지 ( 0 이상 )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -160,9 +160,9 @@ class CommonControllerTest {
                         PayloadDocumentation.fieldWithPath("data.contents.[].rank")
                             .type(JsonFieldType.NUMBER).description("유저 랭킹"),
                         PayloadDocumentation.fieldWithPath("data.contents.[].score")
-                            .type(JsonFieldType.NUMBER).description("유저 점수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("유저 점수"),
+                    ),
+                ),
             )
     }
 }

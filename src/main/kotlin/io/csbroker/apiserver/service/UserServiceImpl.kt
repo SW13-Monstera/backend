@@ -24,7 +24,7 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder,
     private val gradingHistoryRepository: GradingHistoryRepository,
-    private val redisRepository: RedisRepository
+    private val redisRepository: RedisRepository,
 ) : UserService {
     override fun findUserByEmail(email: String): User? {
         return userRepository.findByEmail(email)
@@ -114,7 +114,7 @@ class UserServiceImpl(
             partialAnswered,
             tagCounterMap,
             rankResultDto.rank,
-            rankResultDto.score
+            rankResultDto.score,
         )
     }
 

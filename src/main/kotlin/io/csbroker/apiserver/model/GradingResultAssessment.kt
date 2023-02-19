@@ -27,5 +27,5 @@ class GradingResultAssessment(
     var type: AssessmentType,
 
     @Column(name = "assessment_content", columnDefinition = "VARCHAR(150)")
-    val content: String
+    val content: String,
 )

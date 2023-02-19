@@ -6,5 +6,5 @@ data class ProblemSearchDto(
     val isSolved: Boolean?,
     val query: String?,
     val type: List<String>? = listOf(),
-    val isGradable: Boolean?
+    val isGradable: Boolean?,
 )

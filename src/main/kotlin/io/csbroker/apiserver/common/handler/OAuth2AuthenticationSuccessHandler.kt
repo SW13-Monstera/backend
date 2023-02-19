@@ -34,12 +34,12 @@ class OAuth2AuthenticationSuccessHandler(
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository,
     private val tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
     private val redisRepository: RedisRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : SimpleUrlAuthenticationSuccessHandler() {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication
+        authentication: Authentication,
     ) {
         val targetUrl = determineTargetUrl(request, response, authentication)
 
@@ -55,7 +55,7 @@ class OAuth2AuthenticationSuccessHandler(
     override fun determineTargetUrl(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication
+        authentication: Authentication,
     ): String {
         val targetUrl = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value ?: defaultTargetUrl
         validateRedirectTargetUrl(targetUrl)
@@ -111,12 +111,12 @@ class OAuth2AuthenticationSuccessHandler(
         val accessToken = tokenProvider.createAuthToken(
             findUser.email,
             Date(now.time + tokenExpiry),
-            findUser.role.code
+            findUser.role.code,
         )
 
         val refreshToken = tokenProvider.createAuthToken(
             findUser.email,
-            Date(now.time + refreshTokenExpiry)
+            Date(now.time + refreshTokenExpiry),
         )
 
         redisRepository.setRefreshTokenByEmail(findUser.email, refreshToken.token)

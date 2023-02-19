@@ -32,7 +32,7 @@ class UserServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
 
     private val githubAdminUser: User = User(
@@ -41,7 +41,7 @@ class UserServiceTest {
         password = "test1234!",
         username = "test",
         role = Role.ROLE_ADMIN,
-        providerType = ProviderType.GITHUB
+        providerType = ProviderType.GITHUB,
     )
 
     @Test
@@ -159,7 +159,7 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            userUpdateRequestDto
+            userUpdateRequestDto,
         )
 
         // then
@@ -181,7 +181,7 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            userUpdateRequestDto
+            userUpdateRequestDto,
         )
 
         // then

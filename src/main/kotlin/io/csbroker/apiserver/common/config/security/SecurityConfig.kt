@@ -31,7 +31,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
     prePostEnabled = true,
-    securedEnabled = true
+    securedEnabled = true,
 )
 class SecurityConfig(
     private val corsProperties: CorsProperties,
@@ -40,7 +40,7 @@ class SecurityConfig(
     private val oAuth2UserService: CustomOAuth2UserService,
     private val redisRepository: RedisRepository,
     private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -69,7 +69,7 @@ class SecurityConfig(
                 "/**/*.jpg",
                 "/**/*.html",
                 "/**/*.css",
-                "/**/*.js"
+                "/**/*.js",
             )
             .permitAll()
             .antMatchers("/api/v1/**").permitAll()
@@ -124,14 +124,14 @@ class SecurityConfig(
             oAuth2AuthorizationRequestBasedOnCookieRepository(),
             authTokenProvider,
             redisRepository,
-            userRepository
+            userRepository,
         )
     }
 
     @Bean
     fun oAuth2AuthenticationFailureHandler(): OAuth2AuthenticationFailureHandler {
         return OAuth2AuthenticationFailureHandler(
-            oAuth2AuthorizationRequestBasedOnCookieRepository()
+            oAuth2AuthorizationRequestBasedOnCookieRepository(),
         )
     }
 

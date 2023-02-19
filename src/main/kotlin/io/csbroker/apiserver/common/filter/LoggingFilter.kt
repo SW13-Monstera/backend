@@ -18,7 +18,7 @@ class LoggingFilter : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         MDC.put("traceId", UUID.randomUUID().toString())
         if (
@@ -31,7 +31,7 @@ class LoggingFilter : OncePerRequestFilter() {
             doFilterWrapped(
                 RequestWrapper(request),
                 ResponseWrapper(response),
-                filterChain
+                filterChain,
             )
         }
         MDC.clear()
@@ -40,7 +40,7 @@ class LoggingFilter : OncePerRequestFilter() {
     protected fun doFilterWrapped(
         requestWrapper: RequestWrapper,
         responseWrapper: ResponseWrapper,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
             logRequest(requestWrapper)
@@ -58,7 +58,7 @@ class LoggingFilter : OncePerRequestFilter() {
             "Request : {} uri[{}] content-type=[{}]",
             requestWrapper.method,
             if (queryString == null) requestWrapper.requestURI else requestWrapper.requestURI + queryString,
-            requestWrapper.contentType
+            requestWrapper.contentType,
         )
 
         logPayload("Request", requestWrapper.contentType, requestWrapper.inputStream)
@@ -96,7 +96,7 @@ class LoggingFilter : OncePerRequestFilter() {
             MediaType.APPLICATION_XML,
             MediaType.valueOf("application/*+json"),
             MediaType.valueOf("application/*+xml"),
-            MediaType.MULTIPART_FORM_DATA
+            MediaType.MULTIPART_FORM_DATA,
         )
     }
 }

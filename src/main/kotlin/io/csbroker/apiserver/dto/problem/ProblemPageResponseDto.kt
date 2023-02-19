@@ -8,7 +8,7 @@ data class ProblemPageResponseDto(
     val totalPages: Int,
     val totalElements: Long,
     val numberOfElements: Int,
-    val size: Int
+    val size: Int,
 ) {
     constructor(pageData: Page<ProblemResponseDto>) : this(
         pageData.content,
@@ -16,6 +16,6 @@ data class ProblemPageResponseDto(
         pageData.totalPages,
         pageData.totalElements,
         pageData.numberOfElements,
-        pageData.size
+        pageData.size,
     )
 }

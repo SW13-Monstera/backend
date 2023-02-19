@@ -41,7 +41,7 @@ class AuthServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
 
     private val now = Date()
@@ -145,7 +145,7 @@ class AuthServiceTest {
             authTokenProvider.createAuthToken(
                 "test@test.com",
                 any(),
-                Role.ROLE_USER.code
+                Role.ROLE_USER.code,
             ).token
         } returns accessToken
         every { authTokenProvider.createAuthToken("test@test.com", any(), null).token } returns refreshToken

@@ -27,21 +27,21 @@ interface ProblemService {
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): LongProblemSearchResponseDto
 
     fun findShortProblems(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ShortProblemSearchResponseDto
 
     fun findMultipleProblems(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): MultipleChoiceProblemSearchResponseDto
 
     fun findLongProblemDetailById(id: Long, email: String?): LongProblemDetailResponseDto
@@ -61,31 +61,31 @@ interface ProblemService {
     fun updateMultipleChoiceProblem(
         id: Long,
         updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long
 
     fun gradingLongProblem(
         email: String,
         problemId: Long,
         answer: String,
-        isGrading: Boolean
+        isGrading: Boolean,
     ): LongProblemGradingHistoryDto
 
     fun gradingShortProblem(
         email: String,
         problemId: Long,
-        answer: String
+        answer: String,
     ): ShortProblemGradingHistoryDto
 
     fun gradingMultipleChoiceProblem(
         email: String,
         problemId: Long,
-        answerIds: List<Long>
+        answerIds: List<Long>,
     ): MultipleChoiceProblemGradingHistoryDto
 
     fun gradingAssessment(
         email: String,
         gradingHistoryId: Long,
-        assessmentRequestDto: AssessmentRequestDto
+        assessmentRequestDto: AssessmentRequestDto,
     ): Long
 }

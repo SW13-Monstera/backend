@@ -11,11 +11,11 @@ data class MultipleChoiceProblemUpsertRequestDto(
     val choices: MutableList<ChoiceData>,
     val score: Double,
     val isGradable: Boolean = true,
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
 ) {
     data class ChoiceData(
         val content: String,
-        val isAnswer: Boolean
+        val isAnswer: Boolean,
     )
 
     fun toMultipleChoiceProblem(creator: User): MultipleChoiceProblem {

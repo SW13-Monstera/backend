@@ -56,7 +56,7 @@ class AdminController(
         val adminUserInfoResponseDtoList = userService.findAdminUsers().map {
             AdminUserInfoResponseDto(
                 it.id!!,
-                it.username
+                it.username,
             )
         }
 
@@ -66,7 +66,7 @@ class AdminController(
     @PostMapping("/problems/long")
     fun createLongProblem(
         @RequestBody createRequestDto: LongProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = problemService.createLongProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
@@ -76,7 +76,7 @@ class AdminController(
     fun updateLongProblem(
         @PathVariable("id") id: Long,
         @RequestBody updateRequestDto: LongProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = problemService.updateLongProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
@@ -84,7 +84,7 @@ class AdminController(
 
     @GetMapping("/problems/long/{id}")
     fun getLongProblem(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<LongProblemResponseDto> {
         val longProblemResponseDto = problemService.findLongProblemById(id)
         return ApiResponse.success(longProblemResponseDto)
@@ -92,7 +92,7 @@ class AdminController(
 
     @GetMapping("/problems/short/{id}")
     fun getShortProblem(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<ShortProblemResponseDto> {
         val shortProblemResponseDto = problemService.findShortProblemById(id)
         return ApiResponse.success(shortProblemResponseDto)
@@ -100,7 +100,7 @@ class AdminController(
 
     @GetMapping("/problems/multiple/{id}")
     fun getMultipleChoiceProblem(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<MultipleChoiceProblemResponseDto> {
         val multipleProblemResponseDto = problemService.findMultipleProblemById(id)
         return ApiResponse.success(multipleProblemResponseDto)
@@ -109,7 +109,7 @@ class AdminController(
     @PostMapping("/problems/short")
     fun createShortProblem(
         @RequestBody createRequestDto: ShortProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = problemService.createShortProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
@@ -119,7 +119,7 @@ class AdminController(
     fun updateLongProblem(
         @PathVariable("id") id: Long,
         @RequestBody updateRequestDto: ShortProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = problemService.updateShortProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
@@ -128,7 +128,7 @@ class AdminController(
     @PostMapping("/problems/multiple")
     fun createMultipleProblem(
         @RequestBody createRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val createProblemId = problemService.createMultipleChoiceProblem(createRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
@@ -138,7 +138,7 @@ class AdminController(
     fun updateMultipleProblem(
         @PathVariable("id") id: Long,
         @RequestBody updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val updateProblemId = problemService.updateMultipleChoiceProblem(id, updateRequestDto, loginUser.username)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
@@ -146,7 +146,7 @@ class AdminController(
 
     @DeleteMapping("/problems/{id}")
     fun deleteProblem(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<Boolean> {
         problemService.removeProblemById(id)
         return ApiResponse.success(true)
@@ -154,7 +154,7 @@ class AdminController(
 
     @DeleteMapping("/problems")
     fun deleteProblems(
-        @RequestBody deleteRequestDto: ProblemDeleteRequestDto
+        @RequestBody deleteRequestDto: ProblemDeleteRequestDto,
     ): ApiResponse<Boolean> {
         problemService.removeProblemsById(deleteRequestDto.ids)
         return ApiResponse.success(true)
@@ -162,7 +162,7 @@ class AdminController(
 
     @PostMapping("/user-answers")
     fun createUserAnswers(
-        @RequestBody userAnswers: UserAnswerBatchInsertDto
+        @RequestBody userAnswers: UserAnswerBatchInsertDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val size = userAnswerService.createUserAnswers(userAnswers.userAnswers)
         return ApiResponse.success(UpsertSuccessResponseDto(size = size))
@@ -170,7 +170,7 @@ class AdminController(
 
     @PostMapping("/user-answer")
     fun createUserAnswer(
-        @RequestBody userAnswer: UserAnswerUpsertDto
+        @RequestBody userAnswer: UserAnswerUpsertDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val createUserAnswerId = userAnswerService.createUserAnswer(userAnswer)
         return ApiResponse.success(UpsertSuccessResponseDto(id = createUserAnswerId))
@@ -178,7 +178,7 @@ class AdminController(
 
     @GetMapping("/user-answers/{id}")
     fun getUserAnswerById(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<UserAnswerResponseDto> {
         return ApiResponse.success(userAnswerService.findUserAnswerById(id))
     }
@@ -188,26 +188,26 @@ class AdminController(
         @PathVariable("id") id: Long,
         @RequestBody userAnswerLabelRequestDto: UserAnswerLabelRequestDto,
         @PathVariable("type") type: String,
-        @LoginUser loginUser: User
+        @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
         val answerId = when (type) {
             "label" ->
                 userAnswerService.labelUserAnswer(
                     loginUser.username,
                     id,
-                    userAnswerLabelRequestDto.selectedGradingStandardIds
+                    userAnswerLabelRequestDto.selectedGradingStandardIds,
                 )
 
             "validate" ->
                 userAnswerService.validateUserAnswer(
                     loginUser.username,
                     id,
-                    userAnswerLabelRequestDto.selectedGradingStandardIds
+                    userAnswerLabelRequestDto.selectedGradingStandardIds,
                 )
 
             else -> throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "존재하지 않는 uri ( $type ) 입니다."
+                "존재하지 않는 uri ( $type ) 입니다.",
             )
         }
         return ApiResponse.success(UpsertSuccessResponseDto(id = answerId))
@@ -218,7 +218,7 @@ class AdminController(
         @RequestParam("id", required = false) id: Long?,
         @RequestParam("title", required = false) title: String?,
         @RequestParam("description", required = false) description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ApiResponse<LongProblemSearchResponseDto> {
         return ApiResponse.success(problemService.findLongProblems(id, title, description, pageable))
     }
@@ -228,7 +228,7 @@ class AdminController(
         @RequestParam("id", required = false) id: Long?,
         @RequestParam("title", required = false) title: String?,
         @RequestParam("description", required = false) description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ApiResponse<ShortProblemSearchResponseDto> {
         return ApiResponse.success(problemService.findShortProblems(id, title, description, pageable))
     }
@@ -238,7 +238,7 @@ class AdminController(
         @RequestParam("id", required = false) id: Long?,
         @RequestParam("title", required = false) title: String?,
         @RequestParam("description", required = false) description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ApiResponse<MultipleChoiceProblemSearchResponseDto> {
         return ApiResponse.success(problemService.findMultipleProblems(id, title, description, pageable))
     }
@@ -252,7 +252,7 @@ class AdminController(
         @RequestParam("answer", required = false) answer: String?,
         @RequestParam("isLabeled", required = false) isLabeled: Boolean?,
         @RequestParam("isValidated", required = false) isValidated: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ApiResponse<UserAnswerSearchResponseDto> {
         return ApiResponse.success(
             userAnswerService.findUserAnswersByQuery(
@@ -263,14 +263,14 @@ class AdminController(
                 answer,
                 isLabeled,
                 isValidated,
-                pageable
-            )
+                pageable,
+            ),
         )
     }
 
     @DeleteMapping("/user-answers/{id}")
     fun deleteUserAnswerById(
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Long,
     ): ApiResponse<Boolean> {
         userAnswerService.removeUserAnswerById(id)
         return ApiResponse.success(true)
@@ -279,7 +279,7 @@ class AdminController(
     @PutMapping("/user-answers/assign/{type:label|validate}")
     fun assignUserAnswer(
         @PathVariable("type") type: String,
-        @RequestBody assignUserAnswerDto: AssignUserAnswerDto
+        @RequestBody assignUserAnswerDto: AssignUserAnswerDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         if (assignUserAnswerDto.userAnswerIds.isEmpty()) {
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "할당 할 user answer가 없습니다.")
@@ -289,18 +289,18 @@ class AdminController(
             "label" ->
                 userAnswerService.assignLabelUserAnswer(
                     assignUserAnswerDto.userAnswerIds,
-                    assignUserAnswerDto.assigneeId
+                    assignUserAnswerDto.assigneeId,
                 )
 
             "validate" ->
                 userAnswerService.assignValidationUserAnswer(
                     assignUserAnswerDto.userAnswerIds,
-                    assignUserAnswerDto.assigneeId
+                    assignUserAnswerDto.assigneeId,
                 )
 
             else -> throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "존재하지 않는 uri ( $type ) 입니다."
+                "존재하지 않는 uri ( $type ) 입니다.",
             )
         }
 
@@ -309,23 +309,23 @@ class AdminController(
 
     @PostMapping("/notification")
     fun createNotification(
-        @RequestBody createNotificationDto: NotificationRequestDto
+        @RequestBody createNotificationDto: NotificationRequestDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         return ApiResponse.success(
             UpsertSuccessResponseDto(
-                id = notificationService.createNotification(createNotificationDto)
-            )
+                id = notificationService.createNotification(createNotificationDto),
+            ),
         )
     }
 
     @PostMapping("/notifications")
     fun createBulkNotifications(
-        @RequestBody notificationBulkInsertDto: NotificationBulkInsertDto
+        @RequestBody notificationBulkInsertDto: NotificationBulkInsertDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         return ApiResponse.success(
             UpsertSuccessResponseDto(
-                size = notificationService.createBulkNotification(notificationBulkInsertDto.content)
-            )
+                size = notificationService.createBulkNotification(notificationBulkInsertDto.content),
+            ),
         )
     }
 

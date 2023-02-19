@@ -12,6 +12,7 @@ import io.csbroker.apiserver.dto.auth.TokenDto
 import io.csbroker.apiserver.dto.user.UserInfoDto
 import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
@@ -30,7 +31,7 @@ class AuthServiceImpl(
     private val redisRepository: RedisRepository,
     private val authTokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
     private val appProperties: AppProperties,
-    private val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
 ) : AuthService {
     override fun saveUser(userDto: UserSignUpDto): UUID {
         checkEmailAndUserName(userDto.email, userDto.username)
@@ -60,6 +61,14 @@ class AuthServiceImpl(
             throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
         }
 
+        val (accessToken, refreshToken) = createTokens(findUser, email)
+        return UserInfoDto(findUser, accessToken, refreshToken)
+    }
+
+    private fun createTokens(
+        findUser: User,
+        email: String,
+    ): Pair<String, String> {
         val role = findUser.role
 
         val now = Date()
@@ -69,17 +78,17 @@ class AuthServiceImpl(
         val accessToken = authTokenProvider.createAuthToken(
             email,
             Date(now.time + tokenExpiry),
-            role.code
+            role.code,
         ).token
 
         val refreshToken = authTokenProvider.createAuthToken(
             email,
-            Date(now.time + refreshTokenExpiry)
+            Date(now.time + refreshTokenExpiry),
         ).token
 
         redisRepository.setRefreshTokenByEmail(email, refreshToken)
 
-        return UserInfoDto(findUser, accessToken, refreshToken)
+        return accessToken to refreshToken
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
@@ -115,7 +124,7 @@ class AuthServiceImpl(
         val newAccessToken = authTokenProvider.createAuthToken(
             email,
             Date(now.time + tokenExpiry),
-            role.code
+            role.code,
         ).token
 
         val validTime = convertRefreshToken.tokenClaims!!.expiration.time - now.time
@@ -124,7 +133,7 @@ class AuthServiceImpl(
             val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
             val newRefreshToken = authTokenProvider.createAuthToken(
                 email,
-                Date(now.time + refreshTokenExpiry)
+                Date(now.time + refreshTokenExpiry),
             ).token
 
             return TokenDto(newAccessToken, newRefreshToken)

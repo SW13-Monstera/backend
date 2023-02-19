@@ -7,5 +7,5 @@ data class NotificationResponseDto(
     val content: String,
     val link: String,
     val isRead: Boolean,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 )

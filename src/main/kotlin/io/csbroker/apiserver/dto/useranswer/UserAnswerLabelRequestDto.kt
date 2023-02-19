@@ -1,5 +1,5 @@
 package io.csbroker.apiserver.dto.useranswer
 
 data class UserAnswerLabelRequestDto(
-    val selectedGradingStandardIds: List<Long>
+    val selectedGradingStandardIds: List<Long>,
 )

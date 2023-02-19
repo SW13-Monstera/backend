@@ -14,7 +14,7 @@ data class UserAnswerResponseDto(
     val isValidated: Boolean,
     val keywordsGradingStandards: List<GradingStandardResponseDto>,
     val contentGradingStandards: List<GradingStandardResponseDto>,
-    val selectedGradingStandards: List<Long>
+    val selectedGradingStandards: List<Long>,
 ) {
     companion object {
         fun fromUserAnswer(userAnswer: UserAnswer): UserAnswerResponseDto {

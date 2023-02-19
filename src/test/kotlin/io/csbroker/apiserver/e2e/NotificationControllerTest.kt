@@ -69,7 +69,7 @@ class NotificationControllerTest {
             email = "test-admin3@test.com",
             username = "test-admin3",
             providerType = ProviderType.LOCAL,
-            role = Role.ROLE_ADMIN
+            role = Role.ROLE_ADMIN,
         )
 
         userRepository.save(user)
@@ -81,7 +81,7 @@ class NotificationControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin3@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         token = accessToken.token
@@ -94,7 +94,7 @@ class NotificationControllerTest {
         val notificationRequestDto = NotificationRequestDto(
             content = "test content",
             userId = user.id!!,
-            link = "https://dev.csbroker.io"
+            link = "https://dev.csbroker.io",
         )
 
         val notificationRequestDtoString = objectMapper.writeValueAsString(notificationRequestDto)
@@ -105,7 +105,7 @@ class NotificationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(notificationRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -122,15 +122,15 @@ class NotificationControllerTest {
                         PayloadDocumentation.fieldWithPath("userId").type(JsonFieldType.STRING)
                             .description("유저 아이디 ( UUID )"),
                         PayloadDocumentation.fieldWithPath("link").type(JsonFieldType.STRING)
-                            .description("알림에 해당하는 링크")
+                            .description("알림에 해당하는 링크"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("알림 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("알림 ID"),
+                    ),
+                ),
             )
     }
 
@@ -145,8 +145,8 @@ class NotificationControllerTest {
                 NotificationRequestDto(
                     content = "test content $i",
                     userId = user.id!!,
-                    link = "https://dev.csbroker.io"
-                )
+                    link = "https://dev.csbroker.io",
+                ),
             )
         }
 
@@ -160,7 +160,7 @@ class NotificationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(bulkInsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -179,15 +179,15 @@ class NotificationControllerTest {
                         PayloadDocumentation.fieldWithPath("content.[].userId").type(JsonFieldType.STRING)
                             .description("유저 아이디 ( UUID )"),
                         PayloadDocumentation.fieldWithPath("content.[].link").type(JsonFieldType.STRING)
-                            .description("알림에 해당하는 링크")
+                            .description("알림에 해당하는 링크"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("생성 된 알림 개수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("생성 된 알림 개수"),
+                    ),
+                ),
             )
     }
 
@@ -203,9 +203,9 @@ class NotificationControllerTest {
                 Notification(
                     content = "test content $it",
                     user = user,
-                    link = "https://dev.csbroker.io"
+                    link = "https://dev.csbroker.io",
                 )
-            }.toList()
+            }.toList(),
         )
 
         // when
@@ -213,7 +213,7 @@ class NotificationControllerTest {
             MockMvcRequestBuilders.get("$NOTIFICATION_ENDPOINT?page=$page&size=$size")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -227,11 +227,11 @@ class NotificationControllerTest {
                     HeaderDocumentation.requestHeaders(
                         HeaderDocumentation.headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     RequestDocumentation.requestParameters(
                         RequestDocumentation.parameterWithName("page").description("페이지"),
-                        RequestDocumentation.parameterWithName("size").description("가져올 문제의 개수")
+                        RequestDocumentation.parameterWithName("size").description("가져올 문제의 개수"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -257,9 +257,9 @@ class NotificationControllerTest {
                         PayloadDocumentation.fieldWithPath("data.numberOfElements")
                             .type(JsonFieldType.NUMBER).description("현재 페이지의 알림 개수"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("한 페이지에 보여줄 알림 개수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("한 페이지에 보여줄 알림 개수"),
+                    ),
+                ),
             )
     }
 
@@ -271,8 +271,8 @@ class NotificationControllerTest {
             Notification(
                 content = "test content",
                 user = user,
-                link = "https://dev.csbroker.io"
-            )
+                link = "https://dev.csbroker.io",
+            ),
         ).id!!
 
         // when
@@ -280,7 +280,7 @@ class NotificationControllerTest {
             MockMvcRequestBuilders.put("$NOTIFICATION_ENDPOINT/read/{notification_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -295,9 +295,9 @@ class NotificationControllerTest {
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.success")
-                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부"),
+                    ),
+                ),
             )
     }
 
@@ -310,15 +310,15 @@ class NotificationControllerTest {
                 Notification(
                     content = "test content $it",
                     user = user,
-                    link = "https://dev.csbroker.io"
+                    link = "https://dev.csbroker.io",
                 )
-            }.toList()
+            }.toList(),
         ).map {
             it.id!!
         }.toList()
 
         val notificationBulkReadDto = NotificationBulkReadDto(
-            ids = ids
+            ids = ids,
         )
 
         val notificationBulkReadDtoString = objectMapper.writeValueAsString(notificationBulkReadDto)
@@ -329,7 +329,7 @@ class NotificationControllerTest {
                 .content(notificationBulkReadDtoString)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -342,15 +342,15 @@ class NotificationControllerTest {
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("ids")
-                            .type(JsonFieldType.ARRAY).description("읽음 처리할 알림 ID 리스트")
+                            .type(JsonFieldType.ARRAY).description("읽음 처리할 알림 ID 리스트"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.success")
-                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부"),
+                    ),
+                ),
             )
     }
 
@@ -363,9 +363,9 @@ class NotificationControllerTest {
                 Notification(
                     content = "test content $it",
                     user = user,
-                    link = "https://dev.csbroker.io"
+                    link = "https://dev.csbroker.io",
                 )
-            }.toList()
+            }.toList(),
         )
 
         // when
@@ -373,7 +373,7 @@ class NotificationControllerTest {
             MockMvcRequestBuilders.get("$NOTIFICATION_ENDPOINT/count")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -387,15 +387,15 @@ class NotificationControllerTest {
                     HeaderDocumentation.requestHeaders(
                         HeaderDocumentation.headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.count")
-                            .type(JsonFieldType.NUMBER).description("읽지 않은 알림 개수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("읽지 않은 알림 개수"),
+                    ),
+                ),
             )
     }
 }

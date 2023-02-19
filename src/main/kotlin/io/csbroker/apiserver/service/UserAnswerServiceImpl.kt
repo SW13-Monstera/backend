@@ -26,7 +26,7 @@ class UserAnswerServiceImpl(
     private val userRepository: UserRepository,
     private val longProblemRepository: LongProblemRepository,
     private val gradingStandardRepository: GradingStandardRepository,
-    private val userAnswerGradingStandardRepository: UserAnswerGradingStandardRepository
+    private val userAnswerGradingStandardRepository: UserAnswerGradingStandardRepository,
 ) : UserAnswerService {
     @Transactional
     override fun createUserAnswers(userAnswers: List<UserAnswerUpsertDto>): Int {
@@ -40,24 +40,30 @@ class UserAnswerServiceImpl(
             ?: throw EntityNotFoundException("${userAnswer.problemId}번 문제를 찾을 수 없습니다.")
 
         val assignedUser =
-            if (userAnswer.assignedUserId == null) null
-            else userRepository.findByIdOrNull(userAnswer.assignedUserId)
-                ?: throw EntityNotFoundException(
-                    "${userAnswer.assignedUserId}의 아이디를 가진 유저를 찾을 수 없습니다."
-                )
+            if (userAnswer.assignedUserId == null) {
+                null
+            } else {
+                userRepository.findByIdOrNull(userAnswer.assignedUserId)
+                    ?: throw EntityNotFoundException(
+                        "${userAnswer.assignedUserId}의 아이디를 가진 유저를 찾을 수 없습니다.",
+                    )
+            }
 
         val validatingUser =
-            if (userAnswer.validatingUserId == null) null
-            else userRepository.findByIdOrNull(userAnswer.validatingUserId)
-                ?: throw EntityNotFoundException(
-                    "${userAnswer.validatingUserId}의 아이디를 가진 유저를 찾을 수 없습니다."
-                )
+            if (userAnswer.validatingUserId == null) {
+                null
+            } else {
+                userRepository.findByIdOrNull(userAnswer.validatingUserId)
+                    ?: throw EntityNotFoundException(
+                        "${userAnswer.validatingUserId}의 아이디를 가진 유저를 찾을 수 없습니다.",
+                    )
+            }
 
         val createUserAnswer = UserAnswer(
             answer = userAnswer.answer,
             problem = problem,
             assignedUser = assignedUser,
-            validatingUser = validatingUser
+            validatingUser = validatingUser,
         )
 
         return userAnswerRepository.save(createUserAnswer).id!!
@@ -74,7 +80,7 @@ class UserAnswerServiceImpl(
     override fun labelUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long {
         val userAnswer = userAnswerRepository.findByIdOrNull(userAnswerId)
             ?: throw EntityNotFoundException(
-                "${userAnswerId}번 유저 응답을 찾을 수 없습니다."
+                "${userAnswerId}번 유저 응답을 찾을 수 없습니다.",
             )
 
         if (userAnswer.assignedUser == null || userAnswer.assignedUser!!.email != email) {
@@ -92,20 +98,20 @@ class UserAnswerServiceImpl(
     override fun validateUserAnswer(email: String, userAnswerId: Long, selectedGradingStandardIds: List<Long>): Long {
         val userAnswer = userAnswerRepository.findByIdOrNull(userAnswerId)
             ?: throw EntityNotFoundException(
-                "${userAnswerId}번 유저 응답을 찾을 수 없습니다."
+                "${userAnswerId}번 유저 응답을 찾을 수 없습니다.",
             )
 
         if (!userAnswer.isLabeled) {
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "${userAnswerId}번 유저 응답은 라벨링 되지 않았기때문에, 검수할 수 없습니다."
+                "${userAnswerId}번 유저 응답은 라벨링 되지 않았기때문에, 검수할 수 없습니다.",
             )
         }
 
         if (userAnswer.validatingUser == null || userAnswer.validatingUser?.email != email) {
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "${userAnswerId}번에 검수자로 할당된 유저가 아닙니다."
+                "${userAnswerId}번에 검수자로 할당된 유저가 아닙니다.",
             )
         }
 
@@ -118,7 +124,7 @@ class UserAnswerServiceImpl(
 
     private fun setGradingStandards(
         selectedGradingStandardIds: List<Long>,
-        userAnswerId: Long
+        userAnswerId: Long,
     ) {
         val foundGradingStandardsCount = gradingStandardRepository
             .countByIdIn(selectedGradingStandardIds)
@@ -140,7 +146,7 @@ class UserAnswerServiceImpl(
         answer: String?,
         isLabeled: Boolean?,
         isValidated: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): UserAnswerSearchResponseDto {
         val pagedUserAnswers = userAnswerRepository.findUserAnswersByQuery(
             id,
@@ -150,13 +156,13 @@ class UserAnswerServiceImpl(
             answer,
             isLabeled,
             isValidated,
-            pageable
+            pageable,
         )
 
         return UserAnswerSearchResponseDto(
             pagedUserAnswers.map { it.toUserAnswerDataDto() }.toList(),
             pagedUserAnswers.totalPages,
-            pagedUserAnswers.totalElements
+            pagedUserAnswers.totalElements,
         )
     }
 

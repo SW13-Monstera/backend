@@ -8,5 +8,5 @@ data class ShortProblemResponseDto(
     val answer: String,
     val score: Double,
     val isActive: Boolean,
-    val isGradable: Boolean
+    val isGradable: Boolean,
 )

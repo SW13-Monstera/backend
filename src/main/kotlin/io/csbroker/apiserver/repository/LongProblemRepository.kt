@@ -11,12 +11,12 @@ interface LongProblemRepository : JpaRepository<LongProblem, Long> {
     @Query(
         "SELECT lp FROM LongProblem lp WHERE (lp.id = :id OR :id IS NULL)" +
             "AND (lp.title LIKE '%'||:title||'%' OR :title IS NULL) " +
-            "AND (lp.description LIKE '%'||:description||'%' OR :description IS NULL)"
+            "AND (lp.description LIKE '%'||:description||'%' OR :description IS NULL)",
     )
     fun findLongProblemsByQuery(
         @Param("id") id: Long?,
         @Param("title") title: String?,
         @Param("description") description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<LongProblem>
 }

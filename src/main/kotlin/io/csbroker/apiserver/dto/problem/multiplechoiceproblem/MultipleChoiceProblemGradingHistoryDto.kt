@@ -15,7 +15,7 @@ data class MultipleChoiceProblemGradingHistoryDto(
     val choices: List<ChoiceResponseDto>,
     val userAnswerIds: List<Long>,
     val isAnswer: Boolean,
-    val score: Double
+    val score: Double,
 ) {
 
     companion object {
@@ -24,14 +24,14 @@ data class MultipleChoiceProblemGradingHistoryDto(
             problem: MultipleChoiceProblem,
             userAnswerIds: List<Long>,
             score: Double,
-            isAnswer: Boolean
+            isAnswer: Boolean,
         ): MultipleChoiceProblemGradingHistoryDto {
             val commonDetail = ProblemCommonDetailResponse.getCommonDetail(problem)
 
             val choices = problem.choicesList.map {
                 ChoiceResponseDto(
                     it.id!!,
-                    it.content
+                    it.content,
                 )
             }
 
@@ -47,7 +47,7 @@ data class MultipleChoiceProblemGradingHistoryDto(
                 choices,
                 userAnswerIds,
                 isAnswer,
-                score
+                score,
             )
         }
     }

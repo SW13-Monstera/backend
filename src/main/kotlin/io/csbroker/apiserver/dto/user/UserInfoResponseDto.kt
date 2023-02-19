@@ -10,13 +10,13 @@ data class UserInfoResponseDto(
     val username: String,
     val email: String,
     val role: Role,
-    val accessToken: String?
+    val accessToken: String?,
 ) {
     constructor(userInfoDto: UserInfoDto) : this(
         userInfoDto.id,
         userInfoDto.username,
         userInfoDto.email,
         userInfoDto.role,
-        userInfoDto.accessToken
+        userInfoDto.accessToken,
     )
 }

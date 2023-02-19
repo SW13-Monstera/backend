@@ -15,12 +15,12 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 class ProblemRepositoryCustomImpl(
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 ) : ProblemRepositoryCustom {
 
     override fun findProblemsByQuery(
         problemSearchDto: ProblemSearchDto,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<ProblemResponseDto> {
         val ids = queryFactory.select(problem.id)
             .from(problem)
@@ -35,7 +35,7 @@ class ProblemRepositoryCustomImpl(
                 solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 isType(problemSearchDto.type),
                 isGradable(problemSearchDto.isGradable),
-                problem.isActive.isTrue
+                problem.isActive.isTrue,
             )
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
@@ -74,7 +74,7 @@ class ProblemRepositoryCustomImpl(
                 solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
                 isType(problemSearchDto.type),
                 isGradable(problemSearchDto.isGradable),
-                problem.isActive.isTrue
+                problem.isActive.isTrue,
             )
             .fetch().size.toLong()
 

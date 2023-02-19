@@ -9,5 +9,5 @@ data class MultipleChoiceProblemResponseDto(
     val choiceData: List<MultipleChoiceProblemUpsertRequestDto.ChoiceData>,
     val score: Double,
     val isActive: Boolean,
-    val isGradable: Boolean
+    val isGradable: Boolean,
 )

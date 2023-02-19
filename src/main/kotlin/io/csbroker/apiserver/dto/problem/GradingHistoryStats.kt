@@ -4,7 +4,7 @@ import io.csbroker.apiserver.model.GradingHistory
 
 data class GradingHistoryStats(
     val avgScore: Double?,
-    val totalSolved: Int
+    val totalSolved: Int,
 ) {
     companion object {
         fun toGradingHistoryStats(gradingHistories: List<GradingHistory>): GradingHistoryStats {
@@ -18,7 +18,7 @@ data class GradingHistoryStats(
                         it
                     }
                 },
-                gradingHistories.size
+                gradingHistories.size,
             )
         }
     }

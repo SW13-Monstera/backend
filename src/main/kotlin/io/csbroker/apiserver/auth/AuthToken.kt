@@ -15,7 +15,7 @@ const val AUTHORITIES_KEY: String = "ROLE"
 
 class AuthToken(
     var token: String,
-    private val key: Key
+    private val key: Key,
 ) {
     constructor(email: String, expiry: Date, key: Key, role: String? = null) : this("", key) {
         if (role != null) {

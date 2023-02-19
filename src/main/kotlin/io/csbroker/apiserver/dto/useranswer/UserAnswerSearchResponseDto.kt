@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 data class UserAnswerSearchResponseDto(
     val userAnswers: List<UserAnswerDataDto>,
     val totalPages: Int,
-    val totalElements: Long
+    val totalElements: Long,
 ) {
     data class UserAnswerDataDto(
         val id: Long,
@@ -14,6 +14,6 @@ data class UserAnswerSearchResponseDto(
         val validatingUsername: String?,
         val updatedAt: LocalDateTime,
         val isLabeled: Boolean,
-        val isValidated: Boolean
+        val isValidated: Boolean,
     )
 }

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class JwtConfig(
     @Value("\${jwt.secret}")
-    private val secret: String
+    private val secret: String,
 ) {
     @Bean
     fun jwtTokenProvider(): io.csbroker.apiserver.auth.AuthTokenProvider {

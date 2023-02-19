@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class TokenAuthenticationFilter(
-    private val tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider
+    private val tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val tokenStr = getAccessToken(request)
 

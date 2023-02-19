@@ -65,7 +65,7 @@ class AuthControllerTest {
         val userSignUpDto = UserSignUpDto(
             username = "test",
             email = "test@test.com",
-            password = "Test123@!"
+            password = "Test123@!",
         )
 
         val signUpDtoString = objectMapper.writeValueAsString(userSignUpDto)
@@ -75,7 +75,7 @@ class AuthControllerTest {
             post("$AUTH_ENDPOINT/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(signUpDtoString)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -89,13 +89,13 @@ class AuthControllerTest {
                     requestFields(
                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("username").type(JsonFieldType.STRING).description("닉네임"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID")
-                    )
-                )
+                        fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
+                    ),
+                ),
             )
     }
 
@@ -105,7 +105,7 @@ class AuthControllerTest {
         // given
         val userLoginRequestDto = UserLoginRequestDto(
             email = "test@test.com",
-            password = "Test123@!"
+            password = "Test123@!",
         )
 
         val loginDtoString = objectMapper.writeValueAsString(userLoginRequestDto)
@@ -115,7 +115,7 @@ class AuthControllerTest {
             post("$AUTH_ENDPOINT/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginDtoString)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -128,7 +128,7 @@ class AuthControllerTest {
                     preprocessResponse(prettyPrint()),
                     requestFields(
                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -137,12 +137,12 @@ class AuthControllerTest {
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
-                            .description("Access 토큰 (JWT)")
+                            .description("Access 토큰 (JWT)"),
                     ),
                     responseHeaders(
-                        headerWithName(HttpHeaders.SET_COOKIE).description("Refresh 토큰 쿠키 세팅 ( JWT )")
-                    )
-                )
+                        headerWithName(HttpHeaders.SET_COOKIE).description("Refresh 토큰 쿠키 세팅 ( JWT )"),
+                    ),
+                ),
             )
     }
 
@@ -157,12 +157,12 @@ class AuthControllerTest {
         val expiredAccessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = now,
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         val refreshToken = tokenProvider.createAuthToken(
             email = email,
-            expiry = Date(now.time + 259200000)
+            expiry = Date(now.time + 259200000),
         )
 
         val refreshTokenCookie = Cookie(REFRESH_TOKEN, refreshToken.token)
@@ -174,7 +174,7 @@ class AuthControllerTest {
             get("$AUTH_ENDPOINT/refresh")
                 .cookie(refreshTokenCookie)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${expiredAccessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -185,17 +185,17 @@ class AuthControllerTest {
                     "auth/refresh",
                     preprocessResponse(prettyPrint()),
                     requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("만료된 Access 토큰 ( JWT )")
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("만료된 Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
-                            .description("Access 토큰 (JWT)")
+                            .description("Access 토큰 (JWT)"),
                     ),
                     responseHeaders(
-                        headerWithName(HttpHeaders.SET_COOKIE).description("새로운 Refresh 토큰 쿠키 세팅 ( JWT )")
-                    )
-                )
+                        headerWithName(HttpHeaders.SET_COOKIE).description("새로운 Refresh 토큰 쿠키 세팅 ( JWT )"),
+                    ),
+                ),
             )
     }
 
@@ -210,14 +210,14 @@ class AuthControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 259200000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         // when
         val result = mockMvc.perform(
             get("$AUTH_ENDPOINT/info")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -228,16 +228,16 @@ class AuthControllerTest {
                     "auth/getUserInfo",
                     preprocessResponse(prettyPrint()),
                     requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("Access 토큰 ( JWT )")
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("회원의 UUID"),
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한")
-                    )
-                )
+                        fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
+                    ),
+                ),
             )
     }
 
@@ -256,7 +256,7 @@ class AuthControllerTest {
             put("$AUTH_ENDPOINT/password/change")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(passwordChangeRequestDtoString)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -269,9 +269,9 @@ class AuthControllerTest {
                     preprocessResponse(prettyPrint()),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data").type(JsonFieldType.STRING).description("비밀번호 변경 결과")
-                    )
-                )
+                        fieldWithPath("data").type(JsonFieldType.STRING).description("비밀번호 변경 결과"),
+                    ),
+                ),
             )
     }
 }

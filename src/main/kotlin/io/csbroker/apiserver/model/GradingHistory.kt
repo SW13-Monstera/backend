@@ -35,5 +35,5 @@ class GradingHistory(
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grading_result_assessment_id")
-    var gradingResultAssessment: GradingResultAssessment? = null
+    var gradingResultAssessment: GradingResultAssessment? = null,
 ) : BaseEntity()

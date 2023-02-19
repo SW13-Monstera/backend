@@ -16,7 +16,7 @@ const val RANKING = "ranking"
 @Repository
 class RedisRepository(
     private val redisTemplate: StringRedisTemplate,
-    private val appProperties: AppProperties
+    private val appProperties: AppProperties,
 ) {
     fun getRefreshTokenByEmail(email: String): String? {
         return redisTemplate.opsForValue().get(email)
@@ -42,7 +42,7 @@ class RedisRepository(
     fun setRank(scoreMap: Map<String, Double>) {
         redisTemplate.opsForZSet().add(
             RANKING,
-            scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet()
+            scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet(),
         )
     }
 
@@ -92,8 +92,8 @@ class RedisRepository(
                         id,
                         username,
                         rank,
-                        keyWithScore.score!!
-                    )
+                        keyWithScore.score!!,
+                    ),
                 )
             }
         }
@@ -103,7 +103,7 @@ class RedisRepository(
             totalPage = totalPage,
             currentPage = page,
             numberOfElements = result.size.toLong(),
-            contents = result
+            contents = result,
         )
     }
 }

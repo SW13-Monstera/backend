@@ -16,7 +16,7 @@ data class LongProblemGradingHistoryDto(
     val keywords: List<KeywordDto>,
     val contents: List<ContentDto>,
     val userAnswer: String,
-    val standardAnswer: String
+    val standardAnswer: String,
 ) {
 
     companion object {
@@ -26,7 +26,7 @@ data class LongProblemGradingHistoryDto(
             userAnswer: String,
             score: Double,
             keywords: List<KeywordDto>,
-            contents: List<ContentDto>
+            contents: List<ContentDto>,
         ): LongProblemGradingHistoryDto {
             val tags = problem.problemTags.map {
                 it.tag
@@ -52,7 +52,7 @@ data class LongProblemGradingHistoryDto(
                 keywords,
                 contents,
                 userAnswer,
-                problem.standardAnswer
+                problem.standardAnswer,
             )
         }
     }

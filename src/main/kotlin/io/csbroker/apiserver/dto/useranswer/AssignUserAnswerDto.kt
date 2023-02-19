@@ -4,5 +4,5 @@ import java.util.UUID
 
 data class AssignUserAnswerDto(
     val userAnswerIds: List<Long> = listOf(),
-    val assigneeId: UUID
+    val assigneeId: UUID,
 )

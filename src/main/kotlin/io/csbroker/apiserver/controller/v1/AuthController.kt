@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse
 class AuthController(
     private val authService: AuthService,
     private val appProperties: AppProperties,
-    private val mailService: MailService
+    private val mailService: MailService,
 ) {
 
     @PostMapping("/signup")
@@ -50,7 +50,7 @@ class AuthController(
     fun login(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        @RequestBody userLoginRequestDto: UserLoginRequestDto
+        @RequestBody userLoginRequestDto: UserLoginRequestDto,
     ): ApiResponse<UserInfoResponseDto> {
         val userInfoDto = authService.loginUser(userLoginRequestDto)
 
@@ -65,7 +65,7 @@ class AuthController(
     @GetMapping("/refresh")
     fun refresh(
         request: HttpServletRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): ApiResponse<TokenResponseDto> {
         val (accessToken, refreshToken) = authService.refreshUserToken(request)
 
@@ -81,7 +81,7 @@ class AuthController(
 
     @PostMapping("/password/code")
     fun sendPasswordChangeMail(
-        @RequestBody passwordChangeMailRequestDto: PasswordChangeMailRequestDto
+        @RequestBody passwordChangeMailRequestDto: PasswordChangeMailRequestDto,
     ): ApiResponse<String> {
         return runBlocking {
             mailService.sendPasswordChangeMail(passwordChangeMailRequestDto.email)
@@ -91,7 +91,7 @@ class AuthController(
 
     @PutMapping("/password/change")
     fun changePassword(
-        @RequestBody passwordChangeRequestDto: PasswordChangeRequestDto
+        @RequestBody passwordChangeRequestDto: PasswordChangeRequestDto,
     ): ApiResponse<String> {
         authService.changePassword(passwordChangeRequestDto.code, passwordChangeRequestDto.password)
         return ApiResponse.success("success")

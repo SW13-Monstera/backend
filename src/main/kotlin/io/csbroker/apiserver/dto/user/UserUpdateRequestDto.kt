@@ -10,5 +10,5 @@ data class UserUpdateRequestDto(
     var jobObjective: String? = null,
     var techs: List<String>? = null,
     var githubUrl: String? = null,
-    var linkedinUrl: String? = null
+    var linkedinUrl: String? = null,
 )

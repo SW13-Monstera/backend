@@ -12,13 +12,13 @@ data class LongProblemUpsertRequestDto(
     val tags: MutableList<String>,
     val gradingStandards: MutableList<GradingStandardData>,
     val isGradable: Boolean = false,
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
 ) {
 
     data class GradingStandardData(
         val content: String,
         val score: Double,
-        val type: GradingStandardType
+        val type: GradingStandardType,
     )
 
     fun toLongProblem(creator: User): LongProblem {
@@ -26,7 +26,7 @@ data class LongProblemUpsertRequestDto(
             title = title,
             description = description,
             standardAnswer = standardAnswer,
-            creator = creator
+            creator = creator,
         )
     }
 
@@ -36,7 +36,7 @@ data class LongProblemUpsertRequestDto(
                 content = it.content,
                 score = it.score,
                 type = it.type,
-                problem = longProblem
+                problem = longProblem,
             )
         }
     }
