@@ -1,7 +1,9 @@
 package io.csbroker.apiserver.service
 
+import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.user.UserStatsDto
@@ -38,13 +40,22 @@ class UserServiceImpl(
             ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
 
         userUpdateRequestDto.password?.let {
-            val encodedPassword = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
-            userUpdateRequestDto.password = encodedPassword
+            if (findUser.providerType != ProviderType.LOCAL) {
+                throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "간편 가입 유저는 비밀번호를 변경할 수 없습니다.")
+            }
+            encodePassword(findUser, userUpdateRequestDto)
         }
 
         findUser.updateInfo(userUpdateRequestDto)
 
         return findUser
+    }
+
+    private fun encodePassword(user: User, userUpdateRequestDto: UserUpdateRequestDto) {
+        if (!bCryptPasswordEncoder.matches(userUpdateRequestDto.originalPassword, user.password)) {
+            throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
+        }
+        userUpdateRequestDto.password = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
     }
 
     override fun findUsers(): List<User> {
