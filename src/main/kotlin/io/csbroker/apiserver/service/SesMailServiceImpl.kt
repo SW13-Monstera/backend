@@ -71,7 +71,7 @@ class SesMailServiceImpl(
             }
             message = Message {
                 subject = Content {
-                    data = PASSWORD_CHANGE_EMAIL_TITLE
+                    data = CHANGE_EMAIL_TITLE
                 }
                 body = Body {
                     html = Content {
@@ -90,7 +90,7 @@ class SesMailServiceImpl(
     }
 
     companion object {
-        private const val PASSWORD_CHANGE_EMAIL_TITLE = "CS Broker 비밀번호 변경"
+        private const val CHANGE_EMAIL_TITLE = "CS Broker 비밀번호 변경"
         private const val NO_REPLY_SOURCE_EMAIL = "no-reply@csbroker.io"
     }
 }

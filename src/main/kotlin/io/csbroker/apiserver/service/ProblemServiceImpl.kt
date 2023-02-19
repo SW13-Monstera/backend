@@ -12,6 +12,7 @@ import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
@@ -33,11 +34,13 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistory
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.model.Challenge
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.UserAnswer
+import io.csbroker.apiserver.repository.ChallengeRepository
 import io.csbroker.apiserver.repository.ChoiceRepository
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.GradingResultAssessmentRepository
@@ -71,6 +74,7 @@ class ProblemServiceImpl(
     private val userAnswerRepository: UserAnswerRepository,
     private val aiServerClient: AIServerClient,
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
+    private val challengeRepository: ChallengeRepository,
 ) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
@@ -532,5 +536,24 @@ class ProblemServiceImpl(
 
             GradeResultDto(gradingResponseDto)
         }
+    }
+
+    @Transactional
+    override fun createChallenge(createChallengeDto: CreateChallengeDto) {
+        val (email, problemId, content) = createChallengeDto
+
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        val problem = problemRepository.findByIdOrNull(problemId)
+            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
+
+        challengeRepository.save(
+            Challenge(
+                user = user,
+                content = content,
+                problem = problem,
+            ),
+        )
     }
 }
