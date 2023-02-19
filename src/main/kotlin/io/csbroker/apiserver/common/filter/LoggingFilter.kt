@@ -69,25 +69,27 @@ class LoggingFilter : OncePerRequestFilter() {
     }
 
     private fun logPayload(prefix: String, contentType: String?, inputStream: InputStream) {
-        val visible = isVisible(MediaType.valueOf(contentType ?: "application/json"))
-        if (visible) {
-            val content: ByteArray = StreamUtils.copyToByteArray(inputStream)
-            if (content.isNotEmpty()) {
-                var contentString = String(content)
+        val content = StreamUtils.copyToByteArray(inputStream).contentToString()
+        val mediaType = contentType?.let { MediaType.valueOf(it) } ?: MediaType.APPLICATION_JSON
+        val payload = getPayload(mediaType, content)
+        log.info("$prefix Payload: $payload")
+    }
 
-                if (contentString.contains("password")) {
-                    contentString = contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
-                }
-
-                log.info("{} Payload: {}", prefix, contentString)
-            }
-        } else {
-            log.info("{} Payload: Binary Content", prefix)
-        }
+    private fun getPayload(mediaType: MediaType, content: String) = if (isVisible(mediaType)) {
+        content.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
+            .replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
+    } else {
+        "Binary Contents"
     }
 
     private fun isVisible(mediaType: MediaType): Boolean {
-        val VISIBLE_TYPES: List<MediaType> = listOf(
+        return VISIBLE_TYPES.stream().anyMatch {
+            it.includes(mediaType)
+        }
+    }
+
+    companion object {
+        private val VISIBLE_TYPES: List<MediaType> = listOf(
             MediaType.valueOf("text/*"),
             MediaType.APPLICATION_FORM_URLENCODED,
             MediaType.APPLICATION_JSON,
@@ -96,9 +98,5 @@ class LoggingFilter : OncePerRequestFilter() {
             MediaType.valueOf("application/*+xml"),
             MediaType.MULTIPART_FORM_DATA
         )
-
-        return VISIBLE_TYPES.stream().anyMatch {
-            it.includes(mediaType)
-        }
     }
 }
