@@ -25,15 +25,15 @@ class CustomOAuth2UserService(
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
         val user = super.loadUser(userRequest)
 
-        try {
-            return process(userRequest!!, user)
-        } catch (e: OAuthProviderMissMatchException) {
-            Sentry.captureException(e)
-            throw e
-        } catch (e: Exception) {
-            Sentry.captureException(e)
-            throw InternalServiceException(ErrorCode.SERVER_ERROR, e.message.toString())
-        }
+        return runCatching {
+            process(userRequest!!, user)
+        }.onFailure {
+            Sentry.captureException(it)
+            if (it is OAuthProviderMissMatchException) {
+                throw it
+            }
+            throw InternalServiceException(ErrorCode.SERVER_ERROR, it.message.toString())
+        }.getOrThrow()
     }
 
     private fun process(userRequest: OAuth2UserRequest, user: OAuth2User): OAuth2User {
