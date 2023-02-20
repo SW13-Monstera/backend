@@ -9,7 +9,7 @@ data class NotificationPageResponseDto(
     val totalPages: Int,
     val totalElements: Long,
     val numberOfElements: Int,
-    val size: Int
+    val size: Int,
 ) {
     constructor(pageData: Page<Notification>) : this(
         pageData.content.map { it.toNotificationResponseDto() },
@@ -17,6 +17,6 @@ data class NotificationPageResponseDto(
         pageData.totalPages,
         pageData.totalElements,
         pageData.numberOfElements,
-        pageData.size
+        pageData.size,
     )
 }

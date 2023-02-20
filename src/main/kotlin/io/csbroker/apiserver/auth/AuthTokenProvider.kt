@@ -11,7 +11,7 @@ import java.security.Key
 import java.util.Date
 
 class AuthTokenProvider(
-    secret: String
+    secret: String,
 ) {
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
 

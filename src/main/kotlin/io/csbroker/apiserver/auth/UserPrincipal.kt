@@ -16,7 +16,7 @@ class UserPrincipal(
     private val password: String,
     private val providerType: ProviderType,
     private val roleType: Role,
-    private val authorities: MutableCollection<GrantedAuthority>
+    private val authorities: MutableCollection<GrantedAuthority>,
 ) : OAuth2User, UserDetails, OidcUser {
 
     private lateinit var attributes: MutableMap<String, Any>
@@ -76,7 +76,7 @@ class UserPrincipal(
                 user.password,
                 user.providerType,
                 Role.ROLE_USER,
-                Collections.singletonList(SimpleGrantedAuthority(Role.ROLE_USER.name))
+                Collections.singletonList(SimpleGrantedAuthority(Role.ROLE_USER.name)),
             )
         }
 

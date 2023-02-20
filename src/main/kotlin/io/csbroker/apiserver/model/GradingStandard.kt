@@ -38,5 +38,5 @@ class GradingStandard(
     var problem: LongProblem,
 
     @OneToMany(mappedBy = "gradingStandard", cascade = [CascadeType.ALL])
-    var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf()
+    var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
 ) : BaseEntity()

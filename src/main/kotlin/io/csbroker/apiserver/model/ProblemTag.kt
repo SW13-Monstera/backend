@@ -23,5 +23,5 @@ class ProblemTag(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
-    val tag: Tag
+    val tag: Tag,
 ) : BaseEntity()

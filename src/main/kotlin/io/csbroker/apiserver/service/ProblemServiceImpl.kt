@@ -85,7 +85,7 @@ class ProblemServiceImpl(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): LongProblemSearchResponseDto {
         val pagedProblems = longProblemRepository
             .findLongProblemsByQuery(id, title, description, pageable)
@@ -93,7 +93,7 @@ class ProblemServiceImpl(
         return LongProblemSearchResponseDto(
             pagedProblems.map { it.toLongProblemDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -101,7 +101,7 @@ class ProblemServiceImpl(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ShortProblemSearchResponseDto {
         val pagedProblems = shortProblemRepository
             .findShortProblemsByQuery(id, title, description, pageable)
@@ -109,7 +109,7 @@ class ProblemServiceImpl(
         return ShortProblemSearchResponseDto(
             pagedProblems.map { it.toShortProblemDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -117,7 +117,7 @@ class ProblemServiceImpl(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): MultipleChoiceProblemSearchResponseDto {
         val pagedProblems = multipleChoiceProblemRepository
             .findMultipleChoiceProblemsByQuery(id, title, description, pageable)
@@ -125,7 +125,7 @@ class ProblemServiceImpl(
         return MultipleChoiceProblemSearchResponseDto(
             pagedProblems.map { it.toMultipleChoiceDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -204,7 +204,7 @@ class ProblemServiceImpl(
     @Transactional
     override fun createMultipleChoiceProblem(
         createRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long {
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
@@ -258,7 +258,7 @@ class ProblemServiceImpl(
     override fun updateMultipleChoiceProblem(
         id: Long,
         updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long {
         val findProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
@@ -323,7 +323,7 @@ class ProblemServiceImpl(
         email: String,
         problemId: Long,
         answer: String,
-        isGrading: Boolean
+        isGrading: Boolean,
     ): LongProblemGradingHistoryDto {
         // get entities
         val findUser = userRepository.findByEmail(email)
@@ -336,7 +336,7 @@ class ProblemServiceImpl(
         val gradeResultDto = when (isGrading) {
             true -> getCorrectStandards(findProblem, answer)
             false -> GradeResultDto(
-                correctKeywordIds = emptyList()
+                correctKeywordIds = emptyList(),
             )
         }
         var userGradedScore = 0.0
@@ -348,7 +348,7 @@ class ProblemServiceImpl(
             if (keyword.type != GradingStandardType.KEYWORD) {
                 throw InternalServiceException(
                     ErrorCode.CONDITION_NOT_FULFILLED,
-                    "${it}번 기준은 키워드 채점 기준이 아닙니다."
+                    "${it}번 기준은 키워드 채점 기준이 아닙니다.",
                 )
             }
             userGradedScore += keyword.score
@@ -357,7 +357,7 @@ class ProblemServiceImpl(
                 keyword.content,
                 true,
                 gradeResultDto.predictKeywordPositions[it]
-                    ?: throw EntityNotFoundException("키워드 위치를 찾을 수 없습니다.")
+                    ?: throw EntityNotFoundException("키워드 위치를 찾을 수 없습니다."),
             )
         }.toList()
 
@@ -374,7 +374,7 @@ class ProblemServiceImpl(
             if (it.type != GradingStandardType.CONTENT) {
                 throw InternalServiceException(
                     ErrorCode.CONDITION_NOT_FULFILLED,
-                    "${it.id}번 기준은 내용 채점 기준이 아닙니다."
+                    "${it.id}번 기준은 내용 채점 기준이 아닙니다.",
                 )
             }
             userGradedScore += it.score
@@ -400,7 +400,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             user = findUser,
             userAnswer = answer,
-            score = userGradedScore
+            score = userGradedScore,
         )
         gradingHistoryRepository.save(gradingHistory)
 
@@ -411,7 +411,7 @@ class ProblemServiceImpl(
             userAnswer = answer,
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
-            contents = correctContentListDto + notCorrectContentListDto
+            contents = correctContentListDto + notCorrectContentListDto,
         )
     }
 
@@ -433,7 +433,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             user = findUser,
             userAnswer = answer,
-            score = score
+            score = score,
         )
         gradingHistoryRepository.save(gradingHistory)
 
@@ -443,7 +443,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswer = answer,
             score = score,
-            isAnswer = isAnswer
+            isAnswer = isAnswer,
         )
     }
 
@@ -451,7 +451,7 @@ class ProblemServiceImpl(
     override fun gradingMultipleChoiceProblem(
         email: String,
         problemId: Long,
-        answerIds: List<Long>
+        answerIds: List<Long>,
     ): MultipleChoiceProblemGradingHistoryDto {
         // get entities
         val findUser = userRepository.findByEmail(email)
@@ -475,7 +475,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             user = findUser,
             userAnswer = answerIds.joinToString(","),
-            score = score
+            score = score,
         )
         gradingHistoryRepository.save(gradingHistory)
 
@@ -485,7 +485,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswerIds = answerIds,
             score = score,
-            isAnswer = isAnswer
+            isAnswer = isAnswer,
         )
     }
 
@@ -493,7 +493,7 @@ class ProblemServiceImpl(
     override fun gradingAssessment(
         email: String,
         gradingHistoryId: Long,
-        assessmentRequestDto: AssessmentRequestDto
+        assessmentRequestDto: AssessmentRequestDto,
     ): Long {
         val gradingHistory = gradingHistoryRepository.findByIdOrNull(gradingHistoryId)
             ?: throw EntityNotFoundException("$gradingHistoryId 번의 채점 기록은 찾을 수 없습니다.")
@@ -501,14 +501,14 @@ class ProblemServiceImpl(
         if (gradingHistory.gradingResultAssessment != null) {
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!"
+                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!",
             )
         }
 
         if (gradingHistory.user.email != email) {
             throw UnAuthorizedException(
                 ErrorCode.FORBIDDEN,
-                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다."
+                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다.",
             )
         }
 

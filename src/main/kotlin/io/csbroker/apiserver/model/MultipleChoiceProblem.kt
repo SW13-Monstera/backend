@@ -25,7 +25,7 @@ class MultipleChoiceProblem(
     var isMultiple: Boolean,
 
     @OneToMany(mappedBy = "multipleChoiceProblem", cascade = [CascadeType.ALL])
-    val choicesList: MutableList<Choice> = arrayListOf()
+    val choicesList: MutableList<Choice> = arrayListOf(),
 ) : Problem(title = title, description = description, creator = creator, dtype = "multiple", score = score) {
     fun addChoice(choice: Choice) {
         choicesList.add(choice)
@@ -59,7 +59,7 @@ class MultipleChoiceProblem(
             choicesList.map {
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     it.content,
-                    it.isAnswer
+                    it.isAnswer,
                 )
             },
             score,

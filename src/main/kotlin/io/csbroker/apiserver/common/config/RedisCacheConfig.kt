@@ -20,13 +20,13 @@ class RedisCacheConfig {
         val redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    StringRedisSerializer()
-                )
+                    StringRedisSerializer(),
+                ),
             )
             .serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer()
-                )
+                    GenericJackson2JsonRedisSerializer(),
+                ),
             )
             .entryTtl(Duration.ofMinutes(5L))
 

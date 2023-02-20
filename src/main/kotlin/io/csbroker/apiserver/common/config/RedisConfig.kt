@@ -13,7 +13,7 @@ class RedisConfig(
     private val host: String,
 
     @Value("\${spring.redis.port}")
-    private val port: Int
+    private val port: Int,
 ) {
 
     @Bean

@@ -112,18 +112,18 @@ class ProblemApiControllerTest {
         val user = User(
             email = "test2@test.com",
             username = "test2",
-            providerType = ProviderType.LOCAL
+            providerType = ProviderType.LOCAL,
         )
 
         userRepository.save(user)
 
         val osTag = Tag(
-            name = "os"
+            name = "os",
         )
         tagRepository.save(osTag)
 
         val dsTag = Tag(
-            name = "ds"
+            name = "ds",
         )
         tagRepository.save(dsTag)
 
@@ -132,21 +132,21 @@ class ProblemApiControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = user,
-                standardAnswer = "test"
+                standardAnswer = "test",
             )
 
             val keywordGradingStandard = GradingStandard(
                 content = "test",
                 score = 5.0,
                 type = GradingStandardType.KEYWORD,
-                problem = problem
+                problem = problem,
             )
 
             val contentGradingStandard = GradingStandard(
                 content = "test",
                 score = 5.0,
                 type = GradingStandardType.CONTENT,
-                problem = problem
+                problem = problem,
             )
 
             problem.gradingStandards.addAll(listOf(keywordGradingStandard, contentGradingStandard))
@@ -163,7 +163,7 @@ class ProblemApiControllerTest {
                     problem = problem,
                     user = user,
                     userAnswer = "test",
-                    score = 9.5
+                    score = 9.5,
                 )
                 gradingHistoryRepository.save(gradingHistory)
                 gradingHistoryId = gradingHistory.gradingHistoryId
@@ -172,14 +172,14 @@ class ProblemApiControllerTest {
             if (i <= 5) {
                 val problemTagOS = ProblemTag(
                     problem = problem,
-                    tag = osTag
+                    tag = osTag,
                 )
 
                 problemTagRepository.save(problemTagOS)
             } else {
                 val problemTagDs = ProblemTag(
                     problem = problem,
-                    tag = dsTag
+                    tag = dsTag,
                 )
                 problemTagRepository.save(problemTagDs)
             }
@@ -190,7 +190,7 @@ class ProblemApiControllerTest {
             description = "test",
             creator = user,
             answer = "test",
-            score = 5.0
+            score = 5.0,
         )
 
         val multipleProblem = MultipleChoiceProblem(
@@ -198,14 +198,14 @@ class ProblemApiControllerTest {
             description = "test",
             creator = user,
             isMultiple = false,
-            score = 5.0
+            score = 5.0,
         )
 
         for (i in 1..3) {
             val choice = Choice(
                 content = "choice$i",
                 isAnswer = i == 3,
-                multipleChoiceProblem = multipleProblem
+                multipleChoiceProblem = multipleProblem,
             )
             multipleProblem.addChoice(choice)
         }
@@ -229,7 +229,7 @@ class ProblemApiControllerTest {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlString, longProblemId)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -241,7 +241,7 @@ class ProblemApiControllerTest {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -265,8 +265,8 @@ class ProblemApiControllerTest {
                             .description("문제 채점 가능 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -279,7 +279,7 @@ class ProblemApiControllerTest {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlString, shortProblemId)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -291,7 +291,7 @@ class ProblemApiControllerTest {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -315,8 +315,8 @@ class ProblemApiControllerTest {
                             .description("푼 문제 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -329,7 +329,7 @@ class ProblemApiControllerTest {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlString, multipleChoiceProblemId)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -341,7 +341,7 @@ class ProblemApiControllerTest {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -369,8 +369,8 @@ class ProblemApiControllerTest {
                             .description("다중 답안 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -392,7 +392,7 @@ class ProblemApiControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         // when
@@ -400,10 +400,10 @@ class ProblemApiControllerTest {
             RestDocumentationRequestBuilders
                 .get(
                     "$PROBLEM_ENDPOINT?query=$query" +
-                        "&isSolved=$isSolved&tags=$tags&page=$page&size=$size&type=$type&isGradable=$isGradable"
+                        "&isSolved=$isSolved&tags=$tags&page=$page&size=$size&type=$type&isGradable=$isGradable",
                 )
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -417,7 +417,7 @@ class ProblemApiControllerTest {
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰 ( 푼 문제로 검색을 하는 경우가 아니라면, 포함하지 않아도 됨. )")
-                            .optional()
+                            .optional(),
                     ),
                     requestParameters(
                         parameterWithName("query").description("검색어"),
@@ -426,7 +426,7 @@ class ProblemApiControllerTest {
                         parameterWithName("page").description("페이지"),
                         parameterWithName("size").description("가져올 문제의 개수"),
                         parameterWithName("type").description("문제의 type ( long, short, multiple )"),
-                        parameterWithName("isGradable").description("채점 가능 여부")
+                        parameterWithName("isGradable").description("채점 가능 여부"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -450,9 +450,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
                             .description("전체 데이터 중 현재 페이지의 데이터 수"),
                         fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-                            .description("요청한 데이터 수")
-                    )
-                )
+                            .description("요청한 데이터 수"),
+                    ),
+                ),
             )
     }
 
@@ -472,7 +472,7 @@ class ProblemApiControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         val mockGradingResponse = GradingResponseDto(
@@ -482,22 +482,22 @@ class ProblemApiControllerTest {
                     keywordStandardId!!,
                     "test",
                     listOf(9, 13),
-                    "test"
-                )
+                    "test",
+                ),
             ),
             listOf(
                 GradingResponseDto.CorrectContent(
                     contentStandardId!!,
-                    "test"
-                )
-            )
+                    "test",
+                ),
+            ),
         )
 
         val mockGradingResponseString = objectMapper.writeValueAsString(mockGradingResponse)
 
         mockWebServer.enqueue(
             MockResponse().setBody(mockGradingResponseString)
-                .addHeader("Content-Type", "application/json")
+                .addHeader("Content-Type", "application/json"),
         )
 
         // when
@@ -507,7 +507,7 @@ class ProblemApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -521,13 +521,13 @@ class ProblemApiControllerTest {
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     requestParameters(
-                        parameterWithName("isGrading").description("실제 채점 진행 여부 ( default = true )")
+                        parameterWithName("isGrading").description("실제 채점 진행 여부 ( default = true )"),
                     ),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -569,9 +569,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.contents.[].content").type(JsonFieldType.STRING)
                             .description("내용 채점 기준 내용"),
                         fieldWithPath("data.contents.[].isExist").type(JsonFieldType.BOOLEAN)
-                            .description("내용 채점 기준이 유저답안에 존재하는지 유무")
-                    )
-                )
+                            .description("내용 채점 기준이 유저답안에 존재하는지 유무"),
+                    ),
+                ),
             )
     }
 
@@ -591,7 +591,7 @@ class ProblemApiControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         // when
@@ -601,7 +601,7 @@ class ProblemApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -615,10 +615,10 @@ class ProblemApiControllerTest {
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -644,9 +644,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.isAnswer").type(JsonFieldType.BOOLEAN)
                             .description("유저 답안의 정답 여부"),
                         fieldWithPath("data.correctAnswer").type(JsonFieldType.STRING)
-                            .description("모범 답안")
-                    )
-                )
+                            .description("모범 답안"),
+                    ),
+                ),
             )
     }
 
@@ -666,7 +666,7 @@ class ProblemApiControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         // when
@@ -676,7 +676,7 @@ class ProblemApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -690,10 +690,10 @@ class ProblemApiControllerTest {
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -725,9 +725,9 @@ class ProblemApiControllerTest {
                         fieldWithPath("data.choices.[].id").type(JsonFieldType.NUMBER)
                             .description("선지 id"),
                         fieldWithPath("data.choices.[].content").type(JsonFieldType.STRING)
-                            .description("선지 내용")
-                    )
-                )
+                            .description("선지 내용"),
+                    ),
+                ),
             )
     }
 
@@ -743,12 +743,12 @@ class ProblemApiControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             email = email,
             expiry = Date(now.time + 600000),
-            role = Role.ROLE_USER.code
+            role = Role.ROLE_USER.code,
         )
 
         val assessmentRequestDto = AssessmentRequestDto(
             AssessmentType.BAD,
-            "키워드 채점 기준이 정확하게 적용되지 않은 것 같아요."
+            "키워드 채점 기준이 정확하게 적용되지 않은 것 같아요.",
         )
 
         val assessmentRequestDtoString = objectMapper.writeValueAsString(assessmentRequestDto)
@@ -760,7 +760,7 @@ class ProblemApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(assessmentRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -775,21 +775,21 @@ class ProblemApiControllerTest {
                         fieldWithPath("assessmentType").type(JsonFieldType.STRING)
                             .description("평가 의견 타입 ( 좋음 : GOOD, 나쁨 : BAD, 적당 : NORMAL )"),
                         fieldWithPath("content").type(JsonFieldType.STRING)
-                            .description("평가 의견 내용 ( 없어도 상관 없음, 최대 150자 )")
+                            .description("평가 의견 내용 ( 없어도 상관 없음, 최대 150자 )"),
                     ),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
                             .description("인증을 위한 Access 토큰")
-                            .optional()
+                            .optional(),
                     ),
                     pathParameters(
-                        parameterWithName("grading_history_id").description("문제 id")
+                        parameterWithName("grading_history_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("평가 의견 아이디")
-                    )
-                )
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("평가 의견 아이디"),
+                    ),
+                ),
             )
     }
 }

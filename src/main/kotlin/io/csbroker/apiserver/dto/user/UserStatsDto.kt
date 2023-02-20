@@ -8,13 +8,13 @@ data class UserStatsDto(
     val partialAnsweredProblem: List<ProblemStatsDto>,
     val count: Map<String, Int>,
     val rank: Long?,
-    val score: Double
+    val score: Double,
 ) {
     constructor() : this(arrayListOf(), arrayListOf(), arrayListOf(), mapOf(), null, 0.0)
     data class ProblemStatsDto(
         val id: Long,
         val type: String,
-        val title: String
+        val title: String,
     ) {
         constructor() : this(0, "", "")
         companion object {

@@ -20,5 +20,5 @@ class Tag(
     val name: String,
 
     @OneToMany(mappedBy = "tag")
-    val problemTags: MutableList<ProblemTag> = mutableListOf()
+    val problemTags: MutableList<ProblemTag> = mutableListOf(),
 ) : BaseEntity()

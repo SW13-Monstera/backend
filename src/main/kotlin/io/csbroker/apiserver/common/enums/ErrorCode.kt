@@ -2,7 +2,7 @@ package io.csbroker.apiserver.common.enums
 
 enum class ErrorCode(
     val code: Int,
-    val message: String
+    val message: String,
 ) {
     CONDITION_NOT_FULFILLED(400, "올바르지 않은 요청입니다."),
     TOKEN_NOT_EXPIRED(400, "만료되지 않은 토큰입니다."),
@@ -19,5 +19,5 @@ enum class ErrorCode(
     USERNAME_DUPLICATED(409, "닉네임이 중복되었습니다."),
     EMAIL_DUPLICATED(409, "이메일이 중복되었습니다."),
     PROVIDER_MISS_MATCH(409, "올바르지 않은 provider입니다."),
-    SERVER_ERROR(500, "서버에서 오류가 발생했습니다.")
+    SERVER_ERROR(500, "서버에서 오류가 발생했습니다."),
 }

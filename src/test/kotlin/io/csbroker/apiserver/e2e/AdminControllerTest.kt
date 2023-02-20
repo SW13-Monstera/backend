@@ -96,7 +96,7 @@ class AdminControllerTest {
             email = "test-admin2@test.com",
             username = "test-admin2",
             providerType = ProviderType.LOCAL,
-            role = Role.ROLE_ADMIN
+            role = Role.ROLE_ADMIN,
         )
 
         userRepository.save(user)
@@ -104,12 +104,12 @@ class AdminControllerTest {
         this.user = user
 
         val osTag = Tag(
-            name = "network"
+            name = "network",
         )
         tagRepository.save(osTag)
 
         val dsTag = Tag(
-            name = "db"
+            name = "db",
         )
         tagRepository.save(dsTag)
 
@@ -118,7 +118,7 @@ class AdminControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin2@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         token = accessToken.token
@@ -148,29 +148,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val upsertDtoString = objectMapper.writeValueAsString(longProblemUpsertRequestDto)
@@ -181,7 +181,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -212,15 +212,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 false )"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -248,29 +248,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val id = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -295,29 +295,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val upsertDtoString = objectMapper.writeValueAsString(longProblemUpsertRequestDto)
@@ -326,12 +326,12 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.put(
                 "$ADMIN_ENDPOINT/problems/long/{problem_id}",
-                id
+                id,
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -343,7 +343,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
@@ -365,15 +365,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -401,29 +401,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val id = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -433,7 +433,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.get("$ADMIN_ENDPOINT/problems/long/{problem_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -445,7 +445,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -473,9 +473,9 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("data.isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
+                    ),
+                ),
             )
     }
 
@@ -488,7 +488,7 @@ class AdminControllerTest {
             "test",
             mutableListOf("db", "network"),
             "test",
-            5.0
+            5.0,
         )
 
         val upsertDtoString = objectMapper.writeValueAsString(shortProblemUpsertRequestDto)
@@ -499,7 +499,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -524,15 +524,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 true )"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -545,7 +545,7 @@ class AdminControllerTest {
             "test1",
             mutableListOf("db", "network"),
             "test",
-            5.0
+            5.0,
         )
 
         val id = problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
@@ -558,7 +558,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -570,7 +570,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
@@ -586,15 +586,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -607,7 +607,7 @@ class AdminControllerTest {
             "test1",
             mutableListOf("db", "network"),
             "test",
-            5.0
+            5.0,
         )
 
         val id = problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
@@ -617,7 +617,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.get("$ADMIN_ENDPOINT/problems/short/{problem_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -629,7 +629,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -649,9 +649,9 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("data.isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
+                    ),
+                ),
             )
     }
 
@@ -666,14 +666,14 @@ class AdminControllerTest {
             mutableListOf(
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-1",
-                    true
+                    true,
                 ),
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-2",
-                    false
-                )
+                    false,
+                ),
             ),
-            5.0
+            5.0,
         )
 
         val upsertDtoString = objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
@@ -684,7 +684,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -713,15 +713,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 true )"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -736,19 +736,19 @@ class AdminControllerTest {
             mutableListOf(
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-1",
-                    true
+                    true,
                 ),
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-2",
-                    false
-                )
+                    false,
+                ),
             ),
-            5.0
+            5.0,
         )
 
         val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
-            "test-admin2@test.com"
+            "test-admin2@test.com",
         )
 
         val upsertDtoString = objectMapper.writeValueAsString(multipleChoiceProblemUpsertRequestDto)
@@ -759,7 +759,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(upsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -771,7 +771,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("title").type(JsonFieldType.STRING)
@@ -791,15 +791,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("문제 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("문제 ID"),
+                    ),
+                ),
             )
     }
 
@@ -814,19 +814,19 @@ class AdminControllerTest {
             mutableListOf(
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-1",
-                    true
+                    true,
                 ),
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-2",
-                    false
-                )
+                    false,
+                ),
             ),
-            5.0
+            5.0,
         )
 
         val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
-            "test-admin2@test.com"
+            "test-admin2@test.com",
         )
 
         // when
@@ -834,7 +834,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.get("$ADMIN_ENDPOINT/problems/multiple/{problem_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -846,7 +846,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -872,9 +872,9 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.isGradable")
                             .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         PayloadDocumentation.fieldWithPath("data.isActive")
-                            .type(JsonFieldType.BOOLEAN).description("활성화 여부")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
+                    ),
+                ),
             )
     }
 
@@ -889,19 +889,19 @@ class AdminControllerTest {
             mutableListOf(
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-1",
-                    true
+                    true,
                 ),
                 MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                     "choice-2",
-                    false
-                )
+                    false,
+                ),
             ),
-            5.0
+            5.0,
         )
 
         val id = problemService.createMultipleChoiceProblem(
             multipleChoiceProblemUpsertRequestDto,
-            "test-admin2@test.com"
+            "test-admin2@test.com",
         )
 
         // when
@@ -909,7 +909,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.delete("$ADMIN_ENDPOINT/problems/{problem_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -921,15 +921,15 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("problem_id").description("문제 id")
+                        RequestDocumentation.parameterWithName("problem_id").description("문제 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data")
-                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )"),
+                    ),
+                ),
             )
     }
 
@@ -947,19 +947,19 @@ class AdminControllerTest {
                 mutableListOf(
                     MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                         "choice-1",
-                        true
+                        true,
                     ),
                     MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                         "choice-2",
-                        false
-                    )
+                        false,
+                    ),
                 ),
-                5.0
+                5.0,
             )
 
             val id = problemService.createMultipleChoiceProblem(
                 multipleChoiceProblemUpsertRequestDto,
-                "test-admin2@test.com"
+                "test-admin2@test.com",
             )
 
             ids.add(id)
@@ -973,7 +973,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(problemDeleteRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -986,15 +986,15 @@ class AdminControllerTest {
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("ids").type(JsonFieldType.ARRAY)
-                            .description("삭제 할 문제 id 리스트")
+                            .description("삭제 할 문제 id 리스트"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data")
-                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )"),
+                    ),
+                ),
             )
     }
 
@@ -1022,29 +1022,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val id = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1053,7 +1053,7 @@ class AdminControllerTest {
             user.id!!,
             user.id!!,
             "test",
-            id
+            id,
         )
 
         val userAnswerUpsertDtoString = objectMapper.writeValueAsString(userAnswerUpsertDto)
@@ -1064,7 +1064,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerUpsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1083,15 +1083,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("answer").type(JsonFieldType.STRING)
                             .description("유저 답안"),
                         PayloadDocumentation.fieldWithPath("problemId").type(JsonFieldType.NUMBER)
-                            .description("답안에 대한 문제 ID")
+                            .description("답안에 대한 문제 ID"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("유저 답안 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("유저 답안 ID"),
+                    ),
+                ),
             )
     }
 
@@ -1119,29 +1119,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val id = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1151,13 +1151,13 @@ class AdminControllerTest {
                 user.id!!,
                 user.id!!,
                 "test$it",
-                id
+                id,
             )
         }.toList()
 
         val userAnswerBatchInsertDto = UserAnswerBatchInsertDto(
             10,
-            userAnswerUpsertDtoList
+            userAnswerUpsertDtoList,
         )
 
         val userAnswerBatchInsertDtoString = objectMapper.writeValueAsString(userAnswerBatchInsertDto)
@@ -1168,7 +1168,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerBatchInsertDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1191,15 +1191,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("userAnswers.[].answer").type(JsonFieldType.STRING)
                             .description("유저 답안"),
                         PayloadDocumentation.fieldWithPath("userAnswers.[].problemId").type(JsonFieldType.NUMBER)
-                            .description("답안에 대한 문제 ID")
+                            .description("답안에 대한 문제 ID"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("생성 된 유저 답안 수")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("생성 된 유저 답안 수"),
+                    ),
+                ),
             )
     }
 
@@ -1227,29 +1227,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1258,7 +1258,7 @@ class AdminControllerTest {
             user.id!!,
             user.id!!,
             "test",
-            problemId
+            problemId,
         )
 
         val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -1268,7 +1268,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.get("$ADMIN_ENDPOINT/user-answers/{user_answer_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1280,7 +1280,7 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id")
+                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
@@ -1320,9 +1320,9 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("data.contentGradingStandards.[].type")
                             .type(JsonFieldType.STRING).description("채점기준 타입 ( 'CONTENT' )"),
                         PayloadDocumentation.fieldWithPath("data.selectedGradingStandards")
-                            .type(JsonFieldType.ARRAY).description("선택 된 채점 기준 IDs")
-                    )
-                )
+                            .type(JsonFieldType.ARRAY).description("선택 된 채점 기준 IDs"),
+                    ),
+                ),
             )
     }
 
@@ -1350,29 +1350,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1385,13 +1385,13 @@ class AdminControllerTest {
             user.id!!,
             user.id!!,
             "test",
-            problemId
+            problemId,
         )
 
         val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
 
         val userAnswerLabelRequestDto = UserAnswerLabelRequestDto(
-            gradingStandards
+            gradingStandards,
         )
 
         val userAnswerLabelRequestDtoString = objectMapper.writeValueAsString(userAnswerLabelRequestDto)
@@ -1400,12 +1400,12 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.post(
                 "$ADMIN_ENDPOINT/user-answers/{user_answer_id}/label",
-                id
+                id,
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerLabelRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1417,20 +1417,20 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id")
+                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id"),
                     ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("selectedGradingStandardIds")
                             .type(JsonFieldType.ARRAY)
-                            .description("선택한 채점 기준 ID 리스트")
+                            .description("선택한 채점 기준 ID 리스트"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("유저 답안 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("유저 답안 ID"),
+                    ),
+                ),
             )
     }
 
@@ -1458,29 +1458,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1493,7 +1493,7 @@ class AdminControllerTest {
             user.id!!,
             user.id!!,
             "test",
-            problemId
+            problemId,
         )
 
         val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -1501,7 +1501,7 @@ class AdminControllerTest {
         userAnswerService.labelUserAnswer("test-admin2@test.com", id, gradingStandards)
 
         val userAnswerLabelRequestDto = UserAnswerLabelRequestDto(
-            gradingStandards
+            gradingStandards,
         )
 
         val userAnswerLabelRequestDtoString = objectMapper.writeValueAsString(userAnswerLabelRequestDto)
@@ -1510,12 +1510,12 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.post(
                 "$ADMIN_ENDPOINT/user-answers/{user_answer_id}/validate",
-                id
+                id,
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userAnswerLabelRequestDtoString)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1527,20 +1527,20 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id")
+                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 답안 id"),
                     ),
                     PayloadDocumentation.requestFields(
                         PayloadDocumentation.fieldWithPath("selectedGradingStandardIds")
                             .type(JsonFieldType.ARRAY)
-                            .description("선택한 채점 기준 ID 리스트")
+                            .description("선택한 채점 기준 ID 리스트"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("유저 답안 ID")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("유저 답안 ID"),
+                    ),
+                ),
             )
     }
 
@@ -1569,29 +1569,29 @@ class AdminControllerTest {
                     LongProblemUpsertRequestDto.GradingStandardData(
                         "keyword-1",
                         1.0,
-                        GradingStandardType.KEYWORD
+                        GradingStandardType.KEYWORD,
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
                         "keyword-2",
                         3.0,
-                        GradingStandardType.KEYWORD
+                        GradingStandardType.KEYWORD,
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
                         "keyword-3",
                         1.0,
-                        GradingStandardType.KEYWORD
+                        GradingStandardType.KEYWORD,
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
                         "CONTENT-1",
                         2.0,
-                        GradingStandardType.CONTENT
+                        GradingStandardType.CONTENT,
                     ),
                     LongProblemUpsertRequestDto.GradingStandardData(
                         "CONTENT-2",
                         3.0,
-                        GradingStandardType.CONTENT
-                    )
-                )
+                        GradingStandardType.CONTENT,
+                    ),
+                ),
             )
             problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
         }
@@ -1605,11 +1605,11 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(
                 "$ADMIN_ENDPOINT/problems/long?" +
-                    "title=$title&description=$description&size=$size&page=$page"
+                    "title=$title&description=$description&size=$size&page=$page",
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1659,9 +1659,9 @@ class AdminControllerTest {
                             .description("총 페이지 수"),
                         PayloadDocumentation.fieldWithPath("data.totalElements")
                             .type(JsonFieldType.NUMBER)
-                            .description("검색된 총 문제수")
-                    )
-                )
+                            .description("검색된 총 문제수"),
+                    ),
+                ),
             )
     }
 
@@ -1675,7 +1675,7 @@ class AdminControllerTest {
                 "test$i",
                 mutableListOf("db", "network"),
                 "test$i",
-                5.0
+                5.0,
             )
 
             problemService.createShortProblem(shortProblemUpsertRequestDto, "test-admin2@test.com")
@@ -1690,11 +1690,11 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(
                 "$ADMIN_ENDPOINT/problems/short?" +
-                    "title=$title&description=$description&size=$size&page=$page"
+                    "title=$title&description=$description&size=$size&page=$page",
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1741,9 +1741,9 @@ class AdminControllerTest {
                             .description("총 페이지 수"),
                         PayloadDocumentation.fieldWithPath("data.totalElements")
                             .type(JsonFieldType.NUMBER)
-                            .description("검색된 총 문제수")
-                    )
-                )
+                            .description("검색된 총 문제수"),
+                    ),
+                ),
             )
     }
 
@@ -1759,19 +1759,19 @@ class AdminControllerTest {
                 mutableListOf(
                     MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                         "choice-1",
-                        true
+                        true,
                     ),
                     MultipleChoiceProblemUpsertRequestDto.ChoiceData(
                         "choice-2",
-                        false
-                    )
+                        false,
+                    ),
                 ),
-                5.0
+                5.0,
             )
 
             problemService.createMultipleChoiceProblem(
                 multipleChoiceProblemUpsertRequestDto,
-                "test-admin2@test.com"
+                "test-admin2@test.com",
             )
         }
 
@@ -1784,11 +1784,11 @@ class AdminControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(
                 "$ADMIN_ENDPOINT/problems/multiple?" +
-                    "title=$title&description=$description&size=$size&page=$page"
+                    "title=$title&description=$description&size=$size&page=$page",
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1835,9 +1835,9 @@ class AdminControllerTest {
                             .description("총 페이지 수"),
                         PayloadDocumentation.fieldWithPath("data.totalElements")
                             .type(JsonFieldType.NUMBER)
-                            .description("검색된 총 문제수")
-                    )
-                )
+                            .description("검색된 총 문제수"),
+                    ),
+                ),
             )
     }
 
@@ -1865,29 +1865,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -1897,7 +1897,7 @@ class AdminControllerTest {
                 user.id!!,
                 user.id!!,
                 "test",
-                problemId
+                problemId,
             )
 
             userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -1917,11 +1917,11 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.get(
                 "$ADMIN_ENDPOINT/user-answers?" +
                     "assignedBy=$assignedBy&validatedBy=$validatedBy&problemTitle=$problemTitle&" +
-                    "answer=$answer&isLabeled=$isLabeled&isValidated=$isValidated&size=$size&page=$page"
+                    "answer=$answer&isLabeled=$isLabeled&isValidated=$isValidated&size=$size&page=$page",
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -1981,9 +1981,9 @@ class AdminControllerTest {
                             .description("총 페이지 수"),
                         PayloadDocumentation.fieldWithPath("data.totalElements")
                             .type(JsonFieldType.NUMBER)
-                            .description("검색된 총 유저 응답 수")
-                    )
-                )
+                            .description("검색된 총 유저 응답 수"),
+                    ),
+                ),
             )
     }
 
@@ -1996,11 +1996,11 @@ class AdminControllerTest {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "$ADMIN_ENDPOINT/users/admin"
+                "$ADMIN_ENDPOINT/users/admin",
             )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -2020,9 +2020,9 @@ class AdminControllerTest {
                             .description("유저 ID"),
                         PayloadDocumentation.fieldWithPath("data.[].username")
                             .type(JsonFieldType.STRING)
-                            .description("유저 닉네임")
-                    )
-                )
+                            .description("유저 닉네임"),
+                    ),
+                ),
             )
     }
 
@@ -2051,29 +2051,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -2083,7 +2083,7 @@ class AdminControllerTest {
                 user.id!!,
                 user.id!!,
                 "test",
-                problemId
+                problemId,
             )
 
             val userAnswerId = userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -2100,7 +2100,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(assignUserAnswerDtoStr)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -2115,15 +2115,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("userAnswerIds")
                             .type(JsonFieldType.ARRAY).description("유저 답안 id 리스트"),
                         PayloadDocumentation.fieldWithPath("assigneeId")
-                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id")
+                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size"),
+                    ),
+                ),
             )
     }
 
@@ -2152,29 +2152,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -2184,7 +2184,7 @@ class AdminControllerTest {
                 user.id!!,
                 user.id!!,
                 "test",
-                problemId
+                problemId,
             )
 
             val userAnswerId = userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -2201,7 +2201,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(assignUserAnswerDtoStr)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -2216,15 +2216,15 @@ class AdminControllerTest {
                         PayloadDocumentation.fieldWithPath("userAnswerIds")
                             .type(JsonFieldType.ARRAY).description("유저 답안 id 리스트"),
                         PayloadDocumentation.fieldWithPath("assigneeId")
-                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id")
+                            .type(JsonFieldType.STRING).description("할당 할 ADMIN 유저 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size")
-                    )
-                )
+                            .type(JsonFieldType.NUMBER).description("업데이트 된 유저 답안 size"),
+                    ),
+                ),
             )
     }
 
@@ -2252,29 +2252,29 @@ class AdminControllerTest {
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-1",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-2",
                     3.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "keyword-3",
                     1.0,
-                    GradingStandardType.KEYWORD
+                    GradingStandardType.KEYWORD,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-1",
                     2.0,
-                    GradingStandardType.CONTENT
+                    GradingStandardType.CONTENT,
                 ),
                 LongProblemUpsertRequestDto.GradingStandardData(
                     "CONTENT-2",
                     3.0,
-                    GradingStandardType.CONTENT
-                )
-            )
+                    GradingStandardType.CONTENT,
+                ),
+            ),
         )
 
         val problemId = problemService.createLongProblem(problemInsertDto, "test-admin2@test.com")
@@ -2283,7 +2283,7 @@ class AdminControllerTest {
             user.id!!,
             user.id!!,
             "test",
-            problemId
+            problemId,
         )
 
         val id = userAnswerService.createUserAnswer(userAnswerUpsertDto)
@@ -2293,7 +2293,7 @@ class AdminControllerTest {
             RestDocumentationRequestBuilders.delete("$ADMIN_ENDPOINT/user-answers/{user_answer_id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -2305,15 +2305,15 @@ class AdminControllerTest {
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 응답 id")
+                        RequestDocumentation.parameterWithName("user_answer_id").description("유저 응답 id"),
                     ),
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data")
-                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )")
-                    )
-                )
+                            .type(JsonFieldType.BOOLEAN).description("성공 유무 ( 삭제 성공시 true를 return )"),
+                    ),
+                ),
             )
     }
 }

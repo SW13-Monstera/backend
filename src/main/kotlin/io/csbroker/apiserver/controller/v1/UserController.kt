@@ -22,7 +22,7 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @GetMapping("/{id}")
     fun getUser(@PathVariable("id") id: UUID): ApiResponse<UserResponseDto> {
@@ -45,7 +45,7 @@ class UserController(
     fun updateUser(
         @LoginUser loginUser: User,
         @PathVariable("id") id: UUID,
-        @RequestBody userUpdateRequestDto: UserUpdateRequestDto
+        @RequestBody userUpdateRequestDto: UserUpdateRequestDto,
     ): ApiResponse<UserResponseDto> {
         val findUser = userService.findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
@@ -61,7 +61,7 @@ class UserController(
 
     @GetMapping("/{id}/stats")
     fun getUserStats(
-        @PathVariable("id") id: UUID
+        @PathVariable("id") id: UUID,
     ): ApiResponse<UserStatsDto> {
         return ApiResponse.success(userService.getStats(id))
     }
@@ -69,7 +69,7 @@ class UserController(
     @DeleteMapping("/{id}")
     fun deleteUser(
         @LoginUser loginUser: User,
-        @PathVariable("id") id: UUID
+        @PathVariable("id") id: UUID,
     ): ApiResponse<DeleteResponseDto> {
         val result = userService.deleteUser(loginUser.username, id)
         return ApiResponse.success(DeleteResponseDto(id, result))

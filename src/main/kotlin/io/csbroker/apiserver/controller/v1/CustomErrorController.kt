@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class CustomErrorController(
     @Value("\${server.error.redirect}")
-    private val redirectUrl: String
+    private val redirectUrl: String,
 ) : ErrorController {
 
     @RequestMapping("/error")

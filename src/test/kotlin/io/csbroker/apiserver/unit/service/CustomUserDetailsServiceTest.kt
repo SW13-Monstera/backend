@@ -23,7 +23,7 @@ class CustomUserDetailsServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
 
     @Test

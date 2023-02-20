@@ -3,7 +3,7 @@ package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 data class MultipleChoiceProblemSearchResponseDto(
     val problems: List<MultipleChoiceProblemDataDto>,
     val totalPages: Int,
-    val totalElements: Long
+    val totalElements: Long,
 ) {
     data class MultipleChoiceProblemDataDto(
         val id: Long,
@@ -11,6 +11,6 @@ data class MultipleChoiceProblemSearchResponseDto(
         val creator: String,
         val answerRate: Double?,
         val userAnswerCnt: Int,
-        val isActive: Boolean
+        val isActive: Boolean,
     )
 }

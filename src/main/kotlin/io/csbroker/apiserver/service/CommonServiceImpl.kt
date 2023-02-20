@@ -19,7 +19,7 @@ class CommonServiceImpl(
     private val userRepository: UserRepository,
     private val techRepository: TechRepository,
     private val majorRepository: MajorRepository,
-    private val redisRepository: RedisRepository
+    private val redisRepository: RedisRepository,
 ) : CommonService {
 
     @Cacheable(value = ["StatsDto"])

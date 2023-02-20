@@ -39,7 +39,7 @@ fun serialize(obj: Any): String {
 fun <T> deserialize(cookie: Cookie, cls: Class<T>): T {
     return cls.cast(
         SerializationUtils.deserialize(
-            Base64.getUrlDecoder().decode(cookie.value)
-        )
+            Base64.getUrlDecoder().decode(cookie.value),
+        ),
     )
 }

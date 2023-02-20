@@ -10,5 +10,5 @@ data class LongProblemResponseDto(
     val tags: List<String>,
     val gradingStandards: List<GradingStandardResponseDto>,
     val isActive: Boolean,
-    val isGradable: Boolean
+    val isGradable: Boolean,
 )

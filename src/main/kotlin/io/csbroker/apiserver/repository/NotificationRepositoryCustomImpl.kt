@@ -9,7 +9,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class NotificationRepositoryCustomImpl(
-    private val jdbcTemplate: JdbcTemplate
+    private val jdbcTemplate: JdbcTemplate,
 ) : NotificationRepositoryCustom {
     override fun insertBulkNotifications(notifications: List<NotificationRequestDto>) {
         val sql = """
@@ -35,7 +35,7 @@ class NotificationRepositoryCustomImpl(
                 override fun getBatchSize(): Int {
                     return notifications.size
                 }
-            }
+            },
         )
     }
 }

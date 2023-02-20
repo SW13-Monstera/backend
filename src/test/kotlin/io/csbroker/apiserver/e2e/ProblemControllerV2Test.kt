@@ -70,7 +70,7 @@ class ProblemControllerV2Test {
         val user = User(
             email = "test50@test.com",
             username = "test50",
-            providerType = ProviderType.LOCAL
+            providerType = ProviderType.LOCAL,
         )
 
         userRepository.save(user)
@@ -97,7 +97,7 @@ class ProblemControllerV2Test {
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlString, shortProblem.id)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -109,7 +109,7 @@ class ProblemControllerV2Test {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problem_id").description("문제 id")
+                        parameterWithName("problem_id").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -133,8 +133,8 @@ class ProblemControllerV2Test {
                             .description("푼 문제 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 

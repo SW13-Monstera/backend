@@ -97,7 +97,7 @@ class UserControllerTest {
             val user = User(
                 email = "test-user$i@test.com",
                 username = "test-user$i",
-                providerType = ProviderType.LOCAL
+                providerType = ProviderType.LOCAL,
             )
             userRepository.save(user)
         }
@@ -120,22 +120,22 @@ class UserControllerTest {
         adminId = admin.id!!
 
         val osTag = Tag(
-            name = "os"
+            name = "os",
         )
         tagRepository.save(osTag)
 
         val dsTag = Tag(
-            name = "ds"
+            name = "ds",
         )
         tagRepository.save(dsTag)
 
         val networkTag = Tag(
-            name = "network"
+            name = "network",
         )
         tagRepository.save(networkTag)
 
         val dbTag = Tag(
-            name = "db"
+            name = "db",
         )
         tagRepository.save(dbTag)
 
@@ -144,14 +144,14 @@ class UserControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = admin,
-                standardAnswer = "test"
+                standardAnswer = "test",
             )
 
             val gradingStandard = GradingStandard(
                 content = "test",
                 score = 10.0,
                 type = GradingStandardType.KEYWORD,
-                problem = problem
+                problem = problem,
             )
 
             problem.addGradingStandards(listOf(gradingStandard))
@@ -161,7 +161,7 @@ class UserControllerTest {
                 problem = problem,
                 user = admin,
                 userAnswer = "test",
-                score = i.toDouble()
+                score = i.toDouble(),
             )
 
             gradingHistoryRepository.save(gradingHistory)
@@ -169,22 +169,22 @@ class UserControllerTest {
             if (i == 10) {
                 val problemTagOS = ProblemTag(
                     problem = problem,
-                    tag = osTag
+                    tag = osTag,
                 )
 
                 val problemTagDB = ProblemTag(
                     problem = problem,
-                    tag = dbTag
+                    tag = dbTag,
                 )
 
                 val problemTagDs = ProblemTag(
                     problem = problem,
-                    tag = dsTag
+                    tag = dsTag,
                 )
 
                 val problemTagNetwork = ProblemTag(
                     problem = problem,
-                    tag = networkTag
+                    tag = networkTag,
                 )
 
                 problemTagRepository.save(problemTagOS)
@@ -205,14 +205,14 @@ class UserControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -223,11 +223,11 @@ class UserControllerTest {
                     "users/findOne",
                     preprocessResponse(Preprocessors.prettyPrint()),
                     pathParameters(
-                        parameterWithName("user_id").description("회원 UUID")
+                        parameterWithName("user_id").description("회원 UUID"),
                     ),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
-                            .description("Access 토큰 ( JWT )")
+                            .description("Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -251,8 +251,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.providerType")
                             .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -264,14 +264,14 @@ class UserControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         // when
         val result = mockMvc.perform(
             MockMvcRequestBuilders.get(USER_ENDPOINT)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -283,7 +283,7 @@ class UserControllerTest {
                     preprocessResponse(Preprocessors.prettyPrint()),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
-                            .description("Admin 권한의 Access 토큰 ( JWT )")
+                            .description("Admin 권한의 Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -307,8 +307,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.[].providerType")
                             .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -321,7 +321,7 @@ class UserControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
         val userUpdateRequestDto = UserUpdateRequestDto(
             username = "test-admin-update",
@@ -344,7 +344,7 @@ class UserControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userUpdateRequestDtoString)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -357,7 +357,7 @@ class UserControllerTest {
                     preprocessResponse(Preprocessors.prettyPrint()),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
-                            .description("Access 토큰 ( JWT )")
+                            .description("Access 토큰 ( JWT )"),
                     ),
                     PayloadDocumentation.requestFields(
                         fieldWithPath("username").type(JsonFieldType.STRING)
@@ -379,7 +379,7 @@ class UserControllerTest {
                         fieldWithPath("githubUrl").type(JsonFieldType.STRING)
                             .description("수정할 github url ( 필수 X )").optional(),
                         fieldWithPath("linkedinUrl").type(JsonFieldType.STRING)
-                            .description("수정할 linkedin url ( 필수 X )").optional()
+                            .description("수정할 linkedin url ( 필수 X )").optional(),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -403,8 +403,8 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING).description("LinkedIn url").optional(),
                         fieldWithPath("data.providerType")
                             .type(JsonFieldType.STRING).description("Provider Type ( GOOGLE, GITHUB, LOCAL )"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -418,14 +418,14 @@ class UserControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         // when
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.delete(urlTemplate, "$adminId")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -436,18 +436,18 @@ class UserControllerTest {
                     "users/deleteOne",
                     preprocessResponse(Preprocessors.prettyPrint()),
                     pathParameters(
-                        parameterWithName("user_id").description("회원 UUID")
+                        parameterWithName("user_id").description("회원 UUID"),
                     ),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
-                            .description("Access 토큰 ( JWT )")
+                            .description("Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.STRING).description("UUID"),
-                        fieldWithPath("data.result").type(JsonFieldType.BOOLEAN).description("삭제 결과")
-                    )
-                )
+                        fieldWithPath("data.result").type(JsonFieldType.BOOLEAN).description("삭제 결과"),
+                    ),
+                ),
             )
     }
 
@@ -461,7 +461,7 @@ class UserControllerTest {
         val accessToken = tokenProvider.createAuthToken(
             "test-admin@test.com",
             expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code
+            role = Role.ROLE_ADMIN.code,
         )
 
         redisRepository.setRank(mapOf("$adminId@test-admin" to 100.0))
@@ -470,7 +470,7 @@ class UserControllerTest {
         val result = mockMvc.perform(
             RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON),
         )
 
         // then
@@ -482,7 +482,7 @@ class UserControllerTest {
                     preprocessResponse(Preprocessors.prettyPrint()),
                     requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION)
-                            .description("Admin 권한의 Access 토큰 ( JWT )")
+                            .description("Admin 권한의 Access 토큰 ( JWT )"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -515,9 +515,9 @@ class UserControllerTest {
                         fieldWithPath("data.count.db").type(JsonFieldType.NUMBER).description("맞은 데이터베이스 문제 수 통계"),
                         fieldWithPath("data.rank").type(JsonFieldType.NUMBER).description("랭킹 ( 랭킹이 집계되지 않았다면, null )")
                             .optional(),
-                        fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("점수")
-                    )
-                )
+                        fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("점수"),
+                    ),
+                ),
             )
     }
 }

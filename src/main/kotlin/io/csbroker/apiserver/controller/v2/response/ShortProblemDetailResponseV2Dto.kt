@@ -17,5 +17,5 @@ class ShortProblemDetailResponseV2Dto(
 enum class ShortProblemAnswerType {
     ENGLISH,
     KOREAN,
-    NUMERIC
+    NUMERIC,
 }

@@ -26,8 +26,8 @@ class GlobalExceptionHandler {
         value = [
             IllegalArgumentException::class,
             MethodArgumentTypeMismatchException::class,
-            HttpRequestMethodNotSupportedException::class
-        ]
+            HttpRequestMethodNotSupportedException::class,
+        ],
     )
     fun handlingBizException(exception: Exception): ResponseEntity<ApiResponse<String>> {
         log.error(exception.message)

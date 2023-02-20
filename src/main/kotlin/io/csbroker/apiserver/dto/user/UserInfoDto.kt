@@ -10,7 +10,7 @@ data class UserInfoDto(
     val email: String,
     val role: Role,
     val accessToken: String?,
-    val refreshToken: String?
+    val refreshToken: String?,
 ) {
     constructor(user: User, accessToken: String? = null, refreshToken: String? = null) : this(
         user.id!!,
@@ -18,6 +18,6 @@ data class UserInfoDto(
         user.email,
         user.role,
         accessToken,
-        refreshToken
+        refreshToken,
     )
 }

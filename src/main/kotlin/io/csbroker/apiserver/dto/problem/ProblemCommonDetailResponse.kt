@@ -6,7 +6,7 @@ data class ProblemCommonDetailResponse(
     val tags: List<String>,
     val correctSubmission: Int,
     val correctUserCnt: Int,
-    val totalSubmission: Int
+    val totalSubmission: Int,
 ) {
     companion object {
         fun getCommonDetail(problem: Problem): ProblemCommonDetailResponse {
@@ -28,7 +28,7 @@ data class ProblemCommonDetailResponse(
                 },
                 scoreList.count { it == problem.score },
                 correctUserCnt,
-                scoreList.size
+                scoreList.size,
             )
         }
     }

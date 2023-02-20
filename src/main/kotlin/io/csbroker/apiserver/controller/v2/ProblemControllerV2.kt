@@ -19,14 +19,14 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v2/problems")
 class ProblemControllerV2(
-    private val problemService: ProblemService
+    private val problemService: ProblemService,
 ) {
 
     @GetMapping("/short/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseV2Dto> {
         val findProblemDetail = problemService.findShortProblemDetailByIdV2(
             id,
-            getEmailFromSecurityContextHolder()
+            getEmailFromSecurityContextHolder(),
         )
 
         return ApiResponse.success(findProblemDetail)

@@ -9,5 +9,5 @@ data class CorsProperties(
     val allowedOrigins: String,
     val allowedMethods: String,
     val allowedHeaders: String,
-    val maxAge: Long
+    val maxAge: Long,
 )

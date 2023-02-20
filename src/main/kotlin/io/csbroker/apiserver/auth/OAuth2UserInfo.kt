@@ -1,7 +1,7 @@
 package io.csbroker.apiserver.auth
 
 abstract class OAuth2UserInfo(
-    val attributes: MutableMap<String, Any>
+    val attributes: MutableMap<String, Any>,
 ) {
     abstract fun getId(): String
 

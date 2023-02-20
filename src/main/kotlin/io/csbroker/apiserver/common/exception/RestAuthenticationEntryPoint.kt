@@ -12,7 +12,7 @@ class RestAuthenticationEntryPoint : AuthenticationEntryPoint {
     override fun commence(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authException: AuthenticationException
+        authException: AuthenticationException,
     ) {
         log.info("Responding with unauthorized error. Message ${authException.message}")
         setResponse(response)

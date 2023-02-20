@@ -1,21 +1,20 @@
 package io.csbroker.apiserver.dto.problem.grade
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.model.LongProblem
 
 data class KeywordGradingRequestDto(
-    val problem_id: Long,
-    val user_answer: String,
-    val keyword_standards: List<GradingKeyword>
+    @field:JsonProperty("problem_id")
+    val problemId: Long,
+    @field:JsonProperty("user_answer")
+    val userAnswer: String,
+    @field:JsonProperty("keyword_standards")
+    val keywordStandards: List<GradingKeyword>,
 ) {
-    data class GradingContent(
-        val id: Long,
-        val content: String
-    )
-
     data class GradingKeyword(
         val id: Long,
-        val content: String
+        val content: String,
     )
 
     companion object {
@@ -28,9 +27,9 @@ data class KeywordGradingRequestDto(
                 }.map {
                     GradingKeyword(
                         it.id!!,
-                        it.content
+                        it.content,
                     )
-                }
+                },
             )
         }
     }

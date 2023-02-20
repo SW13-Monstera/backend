@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 
 class UserAnswerRepositoryCustomImpl(
     private val jdbcTemplate: JdbcTemplate,
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 ) : UserAnswerRepositoryCustom {
     override fun batchInsert(userAnswers: List<UserAnswerUpsertDto>) {
         val sql = """
@@ -47,7 +47,7 @@ class UserAnswerRepositoryCustomImpl(
                 override fun getBatchSize(): Int {
                     return userAnswers.size
                 }
-            }
+            },
         )
     }
 
@@ -59,7 +59,7 @@ class UserAnswerRepositoryCustomImpl(
         answer: String?,
         isLabeled: Boolean?,
         isValidated: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserAnswer> {
         val result = queryFactory.selectFrom(userAnswer)
             .distinct()

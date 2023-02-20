@@ -10,7 +10,7 @@ data class ShortProblemUpsertRequestDto(
     val answer: String,
     val score: Double,
     val isGradable: Boolean = true,
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
 ) {
     fun toShortProblem(creator: User): ShortProblem {
         return ShortProblem(
@@ -18,7 +18,7 @@ data class ShortProblemUpsertRequestDto(
             description = description,
             creator = creator,
             answer = answer,
-            score = score
+            score = score,
         )
     }
 }

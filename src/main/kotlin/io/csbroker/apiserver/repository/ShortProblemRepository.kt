@@ -11,12 +11,12 @@ interface ShortProblemRepository : JpaRepository<ShortProblem, Long> {
     @Query(
         "SELECT sp FROM ShortProblem sp WHERE (sp.id = :id OR :id IS NULL)" +
             "AND (sp.title LIKE '%'||:title||'%' OR :title IS NULL) " +
-            "AND (sp.description LIKE '%'||:description||'%' OR :description IS NULL)"
+            "AND (sp.description LIKE '%'||:description||'%' OR :description IS NULL)",
     )
     fun findShortProblemsByQuery(
         @Param("id") id: Long?,
         @Param("title") title: String?,
         @Param("description") description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<ShortProblem>
 }

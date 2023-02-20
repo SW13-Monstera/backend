@@ -24,5 +24,5 @@ class UserAnswerGradingStandard(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grading_standard_id")
-    val gradingStandard: GradingStandard
+    val gradingStandard: GradingStandard,
 )

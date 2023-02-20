@@ -27,7 +27,7 @@ class Choice(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
-    var multipleChoiceProblem: MultipleChoiceProblem
+    var multipleChoiceProblem: MultipleChoiceProblem,
 ) {
     fun toChoiceResponseDto(): ChoiceResponseDto {
         return ChoiceResponseDto(

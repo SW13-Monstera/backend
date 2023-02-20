@@ -27,7 +27,7 @@ class LongProblem(
     var gradingStandards: MutableList<GradingStandard> = mutableListOf(),
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
-    var userAnswers: MutableList<UserAnswer> = mutableListOf()
+    var userAnswers: MutableList<UserAnswer> = mutableListOf(),
 ) : Problem(
     title = title,
     description = description,
