@@ -20,20 +20,20 @@ import java.util.Locale
 @Service
 class CustomOAuth2UserService(
     private val userRepository: UserRepository,
-    private val githubClient: GithubClient
+    private val githubClient: GithubClient,
 ) : DefaultOAuth2UserService() {
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
         val user = super.loadUser(userRequest)
 
-        try {
-            return this.process(userRequest!!, user)
-        } catch (e: OAuthProviderMissMatchException) {
-            Sentry.captureException(e)
-            throw e
-        } catch (e: Exception) {
-            Sentry.captureException(e)
-            throw InternalServiceException(ErrorCode.SERVER_ERROR, e.message.toString())
-        }
+        return runCatching {
+            process(userRequest!!, user)
+        }.onFailure {
+            Sentry.captureException(it)
+            if (it is OAuthProviderMissMatchException) {
+                throw it
+            }
+            throw InternalServiceException(ErrorCode.SERVER_ERROR, it.message.toString())
+        }.getOrThrow()
     }
 
     private fun process(userRequest: OAuth2UserRequest, user: OAuth2User): OAuth2User {
@@ -45,19 +45,29 @@ class CustomOAuth2UserService(
         val attributes = user.attributes.toMutableMap()
 
         if (providerType == ProviderType.GITHUB && attributes["email"] == null) {
-            val emailResponseDto = githubClient.getUserEmail("Bearer $accessToken").first { it.primary }
-            attributes["email"] = emailResponseDto.email
+            setGithubPrimaryEmail(accessToken, attributes)
         }
 
+        return UserPrincipal.create(getOrCreateUser(providerType, attributes), attributes)
+    }
+
+    private fun setGithubPrimaryEmail(
+        accessToken: String?,
+        attributes: MutableMap<String, Any>,
+    ) {
+        val emailResponseDto = githubClient.getUserEmail("Bearer $accessToken").first { it.primary }
+        attributes["email"] = emailResponseDto.email
+    }
+
+    private fun getOrCreateUser(
+        providerType: ProviderType,
+        attributes: MutableMap<String, Any>,
+    ): User {
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, attributes)
-        var savedUser = this.userRepository.findByEmail(userInfo.getEmail())
-            ?: this.userRepository.findUserByProviderId(userInfo.getId())
+        val savedUser = userRepository.findByEmail(userInfo.getEmail())
+            ?: userRepository.findUserByProviderId(userInfo.getId())
 
-        if (savedUser == null) {
-            savedUser = this.createUser(userInfo, providerType)
-        }
-
-        return UserPrincipal.create(savedUser, attributes)
+        return savedUser ?: createUser(userInfo, providerType)
     }
 
     private fun createUser(userInfo: OAuth2UserInfo, providerType: ProviderType): User {
@@ -66,7 +76,7 @@ class CustomOAuth2UserService(
             username = userInfo.getName(),
             providerType = providerType,
             profileImageUrl = userInfo.getImageUrl(),
-            providerId = userInfo.getId()
+            providerId = userInfo.getId(),
         )
 
         return userRepository.saveAndFlush(user)

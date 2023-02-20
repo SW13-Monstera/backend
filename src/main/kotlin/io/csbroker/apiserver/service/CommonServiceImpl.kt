@@ -19,7 +19,7 @@ class CommonServiceImpl(
     private val userRepository: UserRepository,
     private val techRepository: TechRepository,
     private val majorRepository: MajorRepository,
-    private val redisRepository: RedisRepository
+    private val redisRepository: RedisRepository,
 ) : CommonService {
 
     @Cacheable(value = ["StatsDto"])
@@ -41,13 +41,13 @@ class CommonServiceImpl(
     }
 
     override fun findTechByQuery(query: String): List<String> {
-        return this.techRepository.findByNameContainingIgnoreCase(query).map {
+        return techRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }
 
     override fun findMajorByQuery(query: String): List<String> {
-        return this.majorRepository.findByNameContainingIgnoreCase(query).map {
+        return majorRepository.findByNameContainingIgnoreCase(query).map {
             it.name
         }
     }

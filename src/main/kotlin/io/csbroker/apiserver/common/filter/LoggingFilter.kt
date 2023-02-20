@@ -18,7 +18,7 @@ class LoggingFilter : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         MDC.put("traceId", UUID.randomUUID().toString())
         if (
@@ -31,7 +31,7 @@ class LoggingFilter : OncePerRequestFilter() {
             doFilterWrapped(
                 RequestWrapper(request),
                 ResponseWrapper(response),
-                filterChain
+                filterChain,
             )
         }
         MDC.clear()
@@ -40,13 +40,13 @@ class LoggingFilter : OncePerRequestFilter() {
     protected fun doFilterWrapped(
         requestWrapper: RequestWrapper,
         responseWrapper: ResponseWrapper,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
-            this.logRequest(requestWrapper)
+            logRequest(requestWrapper)
             filterChain.doFilter(requestWrapper, responseWrapper)
         } finally {
-            this.logResponse(responseWrapper)
+            logResponse(responseWrapper)
             responseWrapper.copyBodyToResponse()
         }
     }
@@ -58,7 +58,7 @@ class LoggingFilter : OncePerRequestFilter() {
             "Request : {} uri[{}] content-type=[{}]",
             requestWrapper.method,
             if (queryString == null) requestWrapper.requestURI else requestWrapper.requestURI + queryString,
-            requestWrapper.contentType
+            requestWrapper.contentType,
         )
 
         logPayload("Request", requestWrapper.contentType, requestWrapper.inputStream)
@@ -69,36 +69,34 @@ class LoggingFilter : OncePerRequestFilter() {
     }
 
     private fun logPayload(prefix: String, contentType: String?, inputStream: InputStream) {
-        val visible = isVisible(MediaType.valueOf(contentType ?: "application/json"))
-        if (visible) {
-            val content: ByteArray = StreamUtils.copyToByteArray(inputStream)
-            if (content.isNotEmpty()) {
-                var contentString = String(content)
+        val content = StreamUtils.copyToByteArray(inputStream).contentToString()
+        val mediaType = contentType?.let { MediaType.valueOf(it) } ?: MediaType.APPLICATION_JSON
+        val payload = getPayload(mediaType, content)
+        log.info("$prefix Payload: $payload")
+    }
 
-                if (contentString.contains("password")) {
-                    contentString = contentString.replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
-                }
-
-                log.info("{} Payload: {}", prefix, contentString)
-            }
-        } else {
-            log.info("{} Payload: Binary Content", prefix)
-        }
+    private fun getPayload(mediaType: MediaType, content: String) = if (isVisible(mediaType)) {
+        content.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
+            .replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
+    } else {
+        "Binary Contents"
     }
 
     private fun isVisible(mediaType: MediaType): Boolean {
-        val VISIBLE_TYPES: List<MediaType> = listOf(
+        return VISIBLE_TYPES.stream().anyMatch {
+            it.includes(mediaType)
+        }
+    }
+
+    companion object {
+        private val VISIBLE_TYPES: List<MediaType> = listOf(
             MediaType.valueOf("text/*"),
             MediaType.APPLICATION_FORM_URLENCODED,
             MediaType.APPLICATION_JSON,
             MediaType.APPLICATION_XML,
             MediaType.valueOf("application/*+json"),
             MediaType.valueOf("application/*+xml"),
-            MediaType.MULTIPART_FORM_DATA
+            MediaType.MULTIPART_FORM_DATA,
         )
-
-        return VISIBLE_TYPES.stream().anyMatch {
-            it.includes(mediaType)
-        }
     }
 }

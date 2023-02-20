@@ -592,6 +592,44 @@ include::{snippets}/problems/v2/short/inquire/path-parameters.adoc[]
 include::{snippets}/problems/v2/short/inquire/response-body.adoc[]
 include::{snippets}/problems/v2/short/inquire/response-fields.adoc[]
 
+==== 문제 이의 제기
+
+
+.description
+[source]
+----
+문제 이의 제기를 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v2/problems/{problem_id:Long}/challenge
+----
+
+.Sample Request
+include::{snippets}/problems/v2/challenge/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problems/v2/challenge/path-parameters.adoc[]
+
+이의 제기를 위한 path parameter의 설명입니다.
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+include::{snippets}/problems/v2/challenge/request-headers.adoc[]
+
+.Request Body
+include::{snippets}/problems/v2/challenge/request-body.adoc[]
+include::{snippets}/problems/v2/challenge/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/problems/v2/challenge/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/v2/challenge/path-parameters.adoc[]
+
+.Response Body
+include::{snippets}/problems/v2/challenge/response-body.adoc[]
+include::{snippets}/problems/v2/challenge/response-fields.adoc[]
+
 === User API ( /api/v1/users )
 
 ==== 유저 조회

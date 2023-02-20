@@ -20,20 +20,20 @@ interface UserAnswerService {
         answer: String?,
         isLabeled: Boolean?,
         isValidated: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): UserAnswerSearchResponseDto
 
     fun assignLabelUserAnswer(
         userAnswerIds: List<Long>,
-        userId: UUID
+        userId: UUID,
     )
 
     fun assignValidationUserAnswer(
         userAnswerIds: List<Long>,
-        userId: UUID
+        userId: UUID,
     )
 
     fun removeUserAnswerById(
-        userAnswerId: Long
+        userAnswerId: Long,
     )
 }

@@ -1,13 +1,19 @@
 package io.csbroker.apiserver.dto.problem.grade
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class KeywordGradingResponseDto(
-    val problem_id: Long,
-    val correct_keywords: List<CorrectKeyword>
+    @field:JsonProperty("problem_id")
+    val problemId: Long,
+    @field:JsonProperty("correct_keywords")
+    val correctKeywords: List<CorrectKeyword>,
 ) {
     data class CorrectKeyword(
         val id: Long,
         val keyword: String,
-        val predict_keyword_position: List<Int>,
-        val predict_keyword: String
+        @field:JsonProperty("predict_keyword_position")
+        val predictKeywordPosition: List<Int>,
+        @field:JsonProperty("predict_keyword")
+        val predictKeyword: String,
     )
 }

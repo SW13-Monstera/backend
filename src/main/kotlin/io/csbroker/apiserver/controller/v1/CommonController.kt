@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile
 class CommonController(
     private val commonService: CommonService,
     private val s3Service: S3Service,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @GetMapping("/stats")
     fun getStats(): ApiResponse<StatsDto> {
@@ -51,7 +51,7 @@ class CommonController(
     @GetMapping("/ranks")
     fun getRanks(
         @RequestParam("size", required = false, defaultValue = "10") size: Long,
-        @RequestParam("page", required = false, defaultValue = "0") page: Long
+        @RequestParam("page", required = false, defaultValue = "0") page: Long,
     ): ApiResponse<RankListDto> {
         return ApiResponse.success(commonService.getRanks(size, page))
     }

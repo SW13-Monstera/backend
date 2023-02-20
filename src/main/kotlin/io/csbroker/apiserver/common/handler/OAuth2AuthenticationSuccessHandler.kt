@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.common.handler
 
+import io.csbroker.apiserver.auth.AuthToken
 import io.csbroker.apiserver.auth.OAuth2UserInfoFactory
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.config.properties.AppProperties
@@ -9,13 +10,13 @@ import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.common.util.addCookie
 import io.csbroker.apiserver.common.util.deleteCookie
 import io.csbroker.apiserver.common.util.getCookie
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
 import io.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
@@ -33,12 +34,12 @@ class OAuth2AuthenticationSuccessHandler(
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository,
     private val tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
     private val redisRepository: RedisRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : SimpleUrlAuthenticationSuccessHandler() {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication
+        authentication: Authentication,
     ) {
         val targetUrl = determineTargetUrl(request, response, authentication)
 
@@ -47,36 +48,62 @@ class OAuth2AuthenticationSuccessHandler(
             return
         }
 
-        this.clearAuthenticationAttributes(request, response)
-        this.redirectStrategy.sendRedirect(request, response, targetUrl)
+        clearAuthenticationAttributes(request, response)
+        redirectStrategy.sendRedirect(request, response, targetUrl)
     }
 
     override fun determineTargetUrl(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication
+        authentication: Authentication,
     ): String {
-        val redirectUri = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value
+        val targetUrl = getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)?.value ?: defaultTargetUrl
+        validateRedirectTargetUrl(targetUrl)
 
-        if (redirectUri != null && !this.isAuthorizedRedirectUri(redirectUri)) {
-            throw UnAuthorizedException(
-                ErrorCode.INVALID_REDIRECT_URI,
-                "올바르지 않은 redirect uri ( $redirectUri ) 입니다."
-            )
+        val findUser = findUserByAuthToken(authentication)
+        val (accessToken, refreshToken) = createTokens(findUser)
+        setRefreshTokenCookie(request, response, refreshToken)
+
+        return UriComponentsBuilder.fromUriString(targetUrl)
+            .queryParam("token", accessToken.token)
+            .build().toUriString()
+    }
+
+    private fun validateRedirectTargetUrl(targetUrl: String) {
+        targetUrl.let {
+            if (!isAuthorizedRedirectUri(it)) {
+                throw UnAuthorizedException(
+                    ErrorCode.INVALID_REDIRECT_URI,
+                    "올바르지 않은 redirect uri ( $it ) 입니다.",
+                )
+            }
         }
+    }
 
-        val targetUrl = redirectUri ?: defaultTargetUrl
-
+    private fun findUserByAuthToken(authentication: Authentication): User {
         val authToken = authentication as OAuth2AuthenticationToken
         val providerType = ProviderType.valueOf(authToken.authorizedClientRegistrationId.uppercase(Locale.getDefault()))
 
         val user = authentication.principal as OidcUser
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
 
-        val findUser = this.userRepository.findByEmail(userInfo.getEmail())
-            ?: this.userRepository.findUserByProviderId(userInfo.getId())
-            ?: throw EntityNotFoundException("유저를 찾을 수 없습니다. ( ${userInfo.getId()} )")
+        return userRepository.findByEmailOrProviderId(userInfo.getEmail(), userInfo.getId())
+            ?: throw EntityNotFoundException(
+                "유저를 찾을 수 없습니다. email = [${userInfo.getEmail()}], providerId = [${userInfo.getId()}] )",
+            )
+    }
 
+    private fun setRefreshTokenCookie(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        refreshToken: AuthToken,
+    ) {
+        val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
+        deleteCookie(request, response, REFRESH_TOKEN)
+        addCookie(response, REFRESH_TOKEN, refreshToken.token, cookieMaxAge)
+    }
+
+    private fun createTokens(findUser: User): Pair<AuthToken, AuthToken> {
         val now = Date()
         val tokenExpiry = appProperties.auth.tokenExpiry
         val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
@@ -84,24 +111,17 @@ class OAuth2AuthenticationSuccessHandler(
         val accessToken = tokenProvider.createAuthToken(
             findUser.email,
             Date(now.time + tokenExpiry),
-            findUser.role.code
+            findUser.role.code,
         )
 
         val refreshToken = tokenProvider.createAuthToken(
             findUser.email,
-            Date(now.time + refreshTokenExpiry)
+            Date(now.time + refreshTokenExpiry),
         )
 
         redisRepository.setRefreshTokenByEmail(findUser.email, refreshToken.token)
 
-        val cookieMaxAge = refreshTokenExpiry / 1000
-
-        deleteCookie(request, response, REFRESH_TOKEN)
-        addCookie(response, REFRESH_TOKEN, refreshToken.token, cookieMaxAge)
-
-        return UriComponentsBuilder.fromUriString(targetUrl)
-            .queryParam("token", accessToken.token)
-            .build().toUriString()
+        return accessToken to refreshToken
     }
 
     fun clearAuthenticationAttributes(request: HttpServletRequest, response: HttpServletResponse) {
@@ -109,25 +129,11 @@ class OAuth2AuthenticationSuccessHandler(
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response)
     }
 
-    private fun hasAuthority(authorities: Collection<GrantedAuthority>?, authority: String): Boolean {
-        if (authorities == null) {
-            return false
-        }
-
-        for (grantedAuthority in authorities) {
-            if (authority == grantedAuthority.authority) {
-                return true
-            }
-        }
-        return false
-    }
-
     private fun isAuthorizedRedirectUri(uri: String): Boolean {
-        val clientRedirectUri: URI = URI.create(uri)
+        val clientRedirectUri = URI.create(uri)
         return appProperties.oAuth2.authorizedRedirectUris
-            .stream()
-            .anyMatch { authorizedRedirectUri ->
-                val authorizedURI: URI = URI.create(authorizedRedirectUri)
+            .any {
+                val authorizedURI = URI.create(it)
                 authorizedURI.host.equals(clientRedirectUri.host, ignoreCase = true) &&
                     authorizedURI.port == clientRedirectUri.port
             }

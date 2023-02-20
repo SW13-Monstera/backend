@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class NotificationServiceImpl(
     private val notificationRepository: NotificationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : NotificationService {
     @Transactional
     override fun createNotification(notificationRequestDto: NotificationRequestDto): Long {

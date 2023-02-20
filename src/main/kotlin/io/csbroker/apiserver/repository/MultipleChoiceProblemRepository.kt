@@ -11,12 +11,12 @@ interface MultipleChoiceProblemRepository : JpaRepository<MultipleChoiceProblem,
     @Query(
         "SELECT mp FROM MultipleChoiceProblem mp WHERE (mp.id = :id OR :id IS NULL)" +
             "AND (mp.title LIKE '%'||:title||'%' OR :title IS NULL) " +
-            "AND (mp.description LIKE '%'||:description||'%' OR :description IS NULL)"
+            "AND (mp.description LIKE '%'||:description||'%' OR :description IS NULL)",
     )
     fun findMultipleChoiceProblemsByQuery(
         @Param("id") id: Long?,
         @Param("title") title: String?,
         @Param("description") description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<MultipleChoiceProblem>
 }

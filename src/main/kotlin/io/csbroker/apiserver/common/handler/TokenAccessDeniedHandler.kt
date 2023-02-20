@@ -13,9 +13,9 @@ class TokenAccessDeniedHandler : AccessDeniedHandler {
     override fun handle(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        accessDeniedException: AccessDeniedException
+        accessDeniedException: AccessDeniedException,
     ) {
-        this.setResponse(response)
+        setResponse(response)
     }
 
     private fun setResponse(response: HttpServletResponse) {

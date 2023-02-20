@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import java.sql.PreparedStatement
 
 class UserAnswerGradingStandardRepositoryCustomImpl(
-    private val jdbcTemplate: JdbcTemplate
+    private val jdbcTemplate: JdbcTemplate,
 ) : UserAnswerGradingStandardRepositoryCustom {
     override fun batchInsert(userAnswerId: Long, gradingStandardIds: List<Long>) {
         val sql = """
@@ -27,7 +27,7 @@ class UserAnswerGradingStandardRepositoryCustomImpl(
                 override fun getBatchSize(): Int {
                     return gradingStandardIds.size
                 }
-            }
+            },
         )
     }
 }

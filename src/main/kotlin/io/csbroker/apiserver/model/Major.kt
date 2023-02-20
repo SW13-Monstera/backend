@@ -16,5 +16,5 @@ class Major(
     val id: Long? = null,
 
     @Column(name = "major_name", columnDefinition = "VARCHAR(100)")
-    val name: String
+    val name: String,
 ) : BaseEntity()

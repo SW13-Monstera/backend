@@ -4,5 +4,5 @@ data class GithubEmailResponseDto(
     val email: String,
     val verified: Boolean,
     val primary: Boolean,
-    val visibility: String?
+    val visibility: String?,
 )

@@ -1,7 +1,7 @@
 package io.csbroker.apiserver.auth
 
 class GithubOAuth2UserInfo(
-    attributes: MutableMap<String, Any>
+    attributes: MutableMap<String, Any>,
 ) : OAuth2UserInfo(attributes) {
 
     override fun getId(): String {

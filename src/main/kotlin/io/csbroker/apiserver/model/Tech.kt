@@ -16,5 +16,5 @@ class Tech(
     val id: Long? = null,
 
     @Column(name = "tech_name", columnDefinition = "VARCHAR(100)")
-    val name: String
+    val name: String,
 ) : BaseEntity()

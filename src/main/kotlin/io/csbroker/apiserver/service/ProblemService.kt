@@ -3,6 +3,7 @@ package io.csbroker.apiserver.service
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
@@ -27,21 +28,21 @@ interface ProblemService {
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): LongProblemSearchResponseDto
 
     fun findShortProblems(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ShortProblemSearchResponseDto
 
     fun findMultipleProblems(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): MultipleChoiceProblemSearchResponseDto
 
     fun findLongProblemDetailById(id: Long, email: String?): LongProblemDetailResponseDto
@@ -61,31 +62,33 @@ interface ProblemService {
     fun updateMultipleChoiceProblem(
         id: Long,
         updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long
 
     fun gradingLongProblem(
         email: String,
         problemId: Long,
         answer: String,
-        isGrading: Boolean
+        isGrading: Boolean,
     ): LongProblemGradingHistoryDto
 
     fun gradingShortProblem(
         email: String,
         problemId: Long,
-        answer: String
+        answer: String,
     ): ShortProblemGradingHistoryDto
 
     fun gradingMultipleChoiceProblem(
         email: String,
         problemId: Long,
-        answerIds: List<Long>
+        answerIds: List<Long>,
     ): MultipleChoiceProblemGradingHistoryDto
 
     fun gradingAssessment(
         email: String,
         gradingHistoryId: Long,
-        assessmentRequestDto: AssessmentRequestDto
+        assessmentRequestDto: AssessmentRequestDto,
     ): Long
+
+    fun createChallenge(createChallengeDto: CreateChallengeDto)
 }

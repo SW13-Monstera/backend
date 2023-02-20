@@ -3,7 +3,7 @@ package io.csbroker.apiserver.dto.problem.shortproblem
 data class ShortProblemSearchResponseDto(
     val problems: List<ShortProblemDataDto>,
     val totalPages: Int,
-    val totalElements: Long
+    val totalElements: Long,
 ) {
     data class ShortProblemDataDto(
         val id: Long,
@@ -11,6 +11,6 @@ data class ShortProblemSearchResponseDto(
         val creator: String,
         val answerRate: Double?,
         val userAnswerCnt: Int,
-        val isActive: Boolean
+        val isActive: Boolean,
     )
 }

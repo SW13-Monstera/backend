@@ -16,7 +16,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
     kotlin("kapt") version "1.3.61" // QueryDsl
     idea // QueryDsl
     id("org.sonarqube") version "3.4.0.2513"
@@ -57,7 +57,8 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+    implementation("mysql:mysql-connector-java")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
@@ -131,7 +132,7 @@ tasks.jacocoTestReport {
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
             exclude(excludes)
-        }
+        },
     )
 }
 

@@ -12,6 +12,7 @@ import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
@@ -33,11 +34,13 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistory
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.model.Challenge
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.UserAnswer
+import io.csbroker.apiserver.repository.ChallengeRepository
 import io.csbroker.apiserver.repository.ChoiceRepository
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.GradingResultAssessmentRepository
@@ -70,26 +73,27 @@ class ProblemServiceImpl(
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val userAnswerRepository: UserAnswerRepository,
     private val aiServerClient: AIServerClient,
-    private val gradingResultAssessmentRepository: GradingResultAssessmentRepository
+    private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
+    private val challengeRepository: ChallengeRepository,
 ) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
-        return ProblemPageResponseDto(this.problemRepository.findProblemsByQuery(problemSearchDto, pageable))
+        return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto, pageable))
     }
 
     override fun findLongProblems(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): LongProblemSearchResponseDto {
-        val pagedProblems = this.longProblemRepository
+        val pagedProblems = longProblemRepository
             .findLongProblemsByQuery(id, title, description, pageable)
 
         return LongProblemSearchResponseDto(
             pagedProblems.map { it.toLongProblemDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -97,15 +101,15 @@ class ProblemServiceImpl(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ShortProblemSearchResponseDto {
-        val pagedProblems = this.shortProblemRepository
+        val pagedProblems = shortProblemRepository
             .findShortProblemsByQuery(id, title, description, pageable)
 
         return ShortProblemSearchResponseDto(
             pagedProblems.map { it.toShortProblemDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -113,15 +117,15 @@ class ProblemServiceImpl(
         id: Long?,
         title: String?,
         description: String?,
-        pageable: Pageable
+        pageable: Pageable,
     ): MultipleChoiceProblemSearchResponseDto {
-        val pagedProblems = this.multipleChoiceProblemRepository
+        val pagedProblems = multipleChoiceProblemRepository
             .findMultipleChoiceProblemsByQuery(id, title, description, pageable)
 
         return MultipleChoiceProblemSearchResponseDto(
             pagedProblems.map { it.toMultipleChoiceDataDto() }.toList(),
             pagedProblems.totalPages,
-            pagedProblems.totalElements
+            pagedProblems.totalElements,
         )
     }
 
@@ -146,69 +150,69 @@ class ProblemServiceImpl(
     }
 
     override fun findLongProblemById(id: Long): LongProblemResponseDto {
-        val longProblem = this.longProblemRepository.findByIdOrNull(id)
+        val longProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
         return longProblem.toLongProblemResponseDto()
     }
 
     override fun findShortProblemById(id: Long): ShortProblemResponseDto {
-        val shortProblem = this.shortProblemRepository.findByIdOrNull(id)
+        val shortProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
         return shortProblem.toShortProblemResponseDto()
     }
 
     override fun findMultipleProblemById(id: Long): MultipleChoiceProblemResponseDto {
-        val multipleChoiceProblem = this.multipleChoiceProblemRepository.findByIdOrNull(id)
+        val multipleChoiceProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
         return multipleChoiceProblem.toMultipleChoiceProblemResponseDto()
     }
 
     @Transactional
     override fun removeProblemById(id: Long) {
-        this.problemRepository.deleteById(id)
+        problemRepository.deleteById(id)
     }
 
     @Transactional
     override fun removeProblemsById(ids: List<Long>) {
-        this.problemRepository.deleteProblemsByIdIn(ids)
+        problemRepository.deleteProblemsByIdIn(ids)
     }
 
     @Transactional
     override fun createLongProblem(createRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val longProblem = createRequestDto.toLongProblem(findUser)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
 
         longProblem.addGradingStandards(gradingStandardList)
-        this.setTags(longProblem, createRequestDto.tags)
+        setTags(longProblem, createRequestDto.tags)
 
-        return this.problemRepository.save(longProblem).id!!
+        return problemRepository.save(longProblem).id!!
     }
 
     @Transactional
     override fun createShortProblem(createRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val shortProblem = createRequestDto.toShortProblem(findUser)
 
-        this.setTags(shortProblem, createRequestDto.tags)
+        setTags(shortProblem, createRequestDto.tags)
 
-        return this.problemRepository.save(shortProblem).id!!
+        return problemRepository.save(shortProblem).id!!
     }
 
     @Transactional
     override fun createMultipleChoiceProblem(
         createRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long {
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         val multipleChoiceProblem = createRequestDto.toMultipleChoiceProblem(findUser)
         val choiceDataList = createRequestDto.getChoiceList(multipleChoiceProblem)
 
-        this.setTags(multipleChoiceProblem, createRequestDto.tags)
+        setTags(multipleChoiceProblem, createRequestDto.tags)
 
         if (choiceDataList.count { it.isAnswer } == 0) {
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "답의 개수는 1개 이상이여야합니다.")
@@ -216,17 +220,15 @@ class ProblemServiceImpl(
 
         multipleChoiceProblem.addChoices(choiceDataList)
 
-        return this.problemRepository.save(multipleChoiceProblem).id!!
+        return problemRepository.save(multipleChoiceProblem).id!!
     }
 
     @Transactional
     override fun updateLongProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findProblem = this.longProblemRepository.findByIdOrNull(id)
+        val findProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
-        findProblem.gradingStandards.forEach {
-            this.gradingStandardRepository.delete(it)
-        }
+        gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
 
         findProblem.gradingStandards.clear()
 
@@ -236,17 +238,17 @@ class ProblemServiceImpl(
 
         findProblem.updateFromDto(updateRequestDto)
 
-        this.updateTags(findProblem, updateRequestDto.tags)
+        updateTags(findProblem, updateRequestDto.tags)
 
         return id
     }
 
     @Transactional
     override fun updateShortProblem(id: Long, updateRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
-        val findProblem = this.shortProblemRepository.findByIdOrNull(id)
+        val findProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
 
-        this.updateTags(findProblem, updateRequestDto.tags)
+        updateTags(findProblem, updateRequestDto.tags)
         findProblem.updateFromDto(updateRequestDto)
 
         return id
@@ -256,9 +258,9 @@ class ProblemServiceImpl(
     override fun updateMultipleChoiceProblem(
         id: Long,
         updateRequestDto: MultipleChoiceProblemUpsertRequestDto,
-        email: String
+        email: String,
     ): Long {
-        val findProblem = this.multipleChoiceProblemRepository.findByIdOrNull(id)
+        val findProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
 
         val choiceDataList = updateRequestDto.getChoiceList(findProblem)
@@ -267,20 +269,19 @@ class ProblemServiceImpl(
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "답의 개수는 1개 이상이여야합니다.")
         }
 
-        findProblem.choicesList.forEach {
-            this.choiceRepository.delete(it)
-        }
+        choiceRepository.deleteAllById(findProblem.choicesList.map { it.id })
+
         findProblem.choicesList.clear()
         findProblem.addChoices(choiceDataList)
         findProblem.updateFromDto(updateRequestDto)
 
-        this.updateTags(findProblem, updateRequestDto.tags)
+        updateTags(findProblem, updateRequestDto.tags)
 
         return id
     }
 
     private fun setTags(problem: Problem, tagNames: List<String>) {
-        val tags = this.tagRepository.findTagsByNameIn(tagNames)
+        val tags = tagRepository.findTagsByNameIn(tagNames)
 
         if (tags.isEmpty()) {
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "태그의 개수는 1개 이상이여야합니다.")
@@ -296,7 +297,7 @@ class ProblemServiceImpl(
     private fun updateTags(problem: Problem, tagNames: MutableList<String>) {
         problem.problemTags.removeIf {
             if (it.tag.name !in tagNames) {
-                this.problemTagRepository.delete(it)
+                problemTagRepository.delete(it)
                 return@removeIf true
             }
             return@removeIf false
@@ -308,7 +309,7 @@ class ProblemServiceImpl(
             }
         }
 
-        val tags = this.tagRepository.findTagsByNameIn(tagNames)
+        val tags = tagRepository.findTagsByNameIn(tagNames)
 
         val problemTags = tags.map {
             ProblemTag(problem = problem, tag = it)
@@ -322,20 +323,20 @@ class ProblemServiceImpl(
         email: String,
         problemId: Long,
         answer: String,
-        isGrading: Boolean
+        isGrading: Boolean,
     ): LongProblemGradingHistoryDto {
         // get entities
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
-        val findProblem = this.longProblemRepository.findByIdOrNull(problemId)
+        val findProblem = longProblemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
         val gradeResultDto = when (isGrading) {
-            true -> this.getCorrectStandards(findProblem, answer)
+            true -> getCorrectStandards(findProblem, answer)
             false -> GradeResultDto(
-                correctKeywordIds = emptyList()
+                correctKeywordIds = emptyList(),
             )
         }
         var userGradedScore = 0.0
@@ -347,7 +348,7 @@ class ProblemServiceImpl(
             if (keyword.type != GradingStandardType.KEYWORD) {
                 throw InternalServiceException(
                     ErrorCode.CONDITION_NOT_FULFILLED,
-                    "${it}번 기준은 키워드 채점 기준이 아닙니다."
+                    "${it}번 기준은 키워드 채점 기준이 아닙니다.",
                 )
             }
             userGradedScore += keyword.score
@@ -356,7 +357,7 @@ class ProblemServiceImpl(
                 keyword.content,
                 true,
                 gradeResultDto.predictKeywordPositions[it]
-                    ?: throw EntityNotFoundException("키워드 위치를 찾을 수 없습니다.")
+                    ?: throw EntityNotFoundException("키워드 위치를 찾을 수 없습니다."),
             )
         }.toList()
 
@@ -373,7 +374,7 @@ class ProblemServiceImpl(
             if (it.type != GradingStandardType.CONTENT) {
                 throw InternalServiceException(
                     ErrorCode.CONDITION_NOT_FULFILLED,
-                    "${it.id}번 기준은 내용 채점 기준이 아닙니다."
+                    "${it.id}번 기준은 내용 채점 기준이 아닙니다.",
                 )
             }
             userGradedScore += it.score
@@ -392,16 +393,16 @@ class ProblemServiceImpl(
 
         // create user-answer
         val userAnswer = UserAnswer(answer = answer, problem = findProblem)
-        this.userAnswerRepository.save(userAnswer)
+        userAnswerRepository.save(userAnswer)
 
         // create grading-history
         val gradingHistory = GradingHistory(
             problem = findProblem,
             user = findUser,
             userAnswer = answer,
-            score = userGradedScore
+            score = userGradedScore,
         )
-        this.gradingHistoryRepository.save(gradingHistory)
+        gradingHistoryRepository.save(gradingHistory)
 
         // create dto
         return LongProblemGradingHistoryDto.createDto(
@@ -410,17 +411,17 @@ class ProblemServiceImpl(
             userAnswer = answer,
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
-            contents = correctContentListDto + notCorrectContentListDto
+            contents = correctContentListDto + notCorrectContentListDto,
         )
     }
 
     @Transactional
     override fun gradingShortProblem(email: String, problemId: Long, answer: String): ShortProblemGradingHistoryDto {
         // get entities
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
-        val findProblem = this.shortProblemRepository.findByIdOrNull(problemId)
+        val findProblem = shortProblemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
@@ -432,9 +433,9 @@ class ProblemServiceImpl(
             problem = findProblem,
             user = findUser,
             userAnswer = answer,
-            score = score
+            score = score,
         )
-        this.gradingHistoryRepository.save(gradingHistory)
+        gradingHistoryRepository.save(gradingHistory)
 
         // create dto
         return ShortProblemGradingHistoryDto.createDto(
@@ -442,7 +443,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswer = answer,
             score = score,
-            isAnswer = isAnswer
+            isAnswer = isAnswer,
         )
     }
 
@@ -450,13 +451,13 @@ class ProblemServiceImpl(
     override fun gradingMultipleChoiceProblem(
         email: String,
         problemId: Long,
-        answerIds: List<Long>
+        answerIds: List<Long>,
     ): MultipleChoiceProblemGradingHistoryDto {
         // get entities
-        val findUser = this.userRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
-        val findProblem = this.multipleChoiceProblemRepository.findByIdOrNull(problemId)
+        val findProblem = multipleChoiceProblemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
 
         // check score
@@ -474,9 +475,9 @@ class ProblemServiceImpl(
             problem = findProblem,
             user = findUser,
             userAnswer = answerIds.joinToString(","),
-            score = score
+            score = score,
         )
-        this.gradingHistoryRepository.save(gradingHistory)
+        gradingHistoryRepository.save(gradingHistory)
 
         // create dto
         return MultipleChoiceProblemGradingHistoryDto.createDto(
@@ -484,7 +485,7 @@ class ProblemServiceImpl(
             problem = findProblem,
             userAnswerIds = answerIds,
             score = score,
-            isAnswer = isAnswer
+            isAnswer = isAnswer,
         )
     }
 
@@ -492,27 +493,27 @@ class ProblemServiceImpl(
     override fun gradingAssessment(
         email: String,
         gradingHistoryId: Long,
-        assessmentRequestDto: AssessmentRequestDto
+        assessmentRequestDto: AssessmentRequestDto,
     ): Long {
-        val gradingHistory = this.gradingHistoryRepository.findByIdOrNull(gradingHistoryId)
+        val gradingHistory = gradingHistoryRepository.findByIdOrNull(gradingHistoryId)
             ?: throw EntityNotFoundException("$gradingHistoryId 번의 채점 기록은 찾을 수 없습니다.")
 
         if (gradingHistory.gradingResultAssessment != null) {
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!"
+                "$gradingHistoryId 번 채점 기록에 대한 평가가 이미 존재합니다!",
             )
         }
 
         if (gradingHistory.user.email != email) {
             throw UnAuthorizedException(
                 ErrorCode.FORBIDDEN,
-                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다."
+                "$email 유저는 $gradingHistoryId 번 채점 기록을 제출한 유저가 아닙니다.",
             )
         }
 
         val gradingResultAssessment =
-            this.gradingResultAssessmentRepository.save(assessmentRequestDto.toGradingResultAssessment(gradingHistory))
+            gradingResultAssessmentRepository.save(assessmentRequestDto.toGradingResultAssessment(gradingHistory))
 
         gradingHistory.gradingResultAssessment = gradingResultAssessment
 
@@ -522,18 +523,37 @@ class ProblemServiceImpl(
     private fun getCorrectStandards(findProblem: LongProblem, answer: String): GradeResultDto {
         return if (findProblem.isGradable) {
             val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
-            val gradingResponseDto = this.aiServerClient.getGrade(gradingRequestDto)
+            val gradingResponseDto = aiServerClient.getGrade(gradingRequestDto)
 
             log.info("Integrate Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
 
             GradeResultDto(gradingResponseDto)
         } else {
             val gradingRequestDto = KeywordGradingRequestDto.createKeywordGradingRequestDto(findProblem, answer)
-            val gradingResponseDto = this.aiServerClient.getKeywordGrade(gradingRequestDto)
+            val gradingResponseDto = aiServerClient.getKeywordGrade(gradingRequestDto)
 
             log.info("Keyword Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))
 
             GradeResultDto(gradingResponseDto)
         }
+    }
+
+    @Transactional
+    override fun createChallenge(createChallengeDto: CreateChallengeDto) {
+        val (email, problemId, content) = createChallengeDto
+
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        val problem = problemRepository.findByIdOrNull(problemId)
+            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
+
+        challengeRepository.save(
+            Challenge(
+                user = user,
+                content = content,
+                problem = problem,
+            ),
+        )
     }
 }

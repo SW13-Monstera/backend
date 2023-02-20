@@ -32,7 +32,7 @@ class UserServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
 
     private val githubAdminUser: User = User(
@@ -41,7 +41,7 @@ class UserServiceTest {
         password = "test1234!",
         username = "test",
         role = Role.ROLE_ADMIN,
-        providerType = ProviderType.GITHUB
+        providerType = ProviderType.GITHUB,
     )
 
     @Test
@@ -135,7 +135,12 @@ class UserServiceTest {
         val exception = assertThrows<EntityNotFoundException> {
             userService.modifyUser(
                 id,
-                UserUpdateRequestDto("test-url.com", "test", "test1234!")
+                UserUpdateRequestDto(
+                    "test-url.com",
+                    "test",
+                    "test1234!",
+                    "test1234",
+                ),
             )
         }
 
@@ -148,13 +153,13 @@ class UserServiceTest {
     fun `유저 수정 성공 without password 테스트`() {
         // given
         val id = user.id!!
-        val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", null)
+        val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", null, null)
         every { userRepository.findByIdOrNull(id) } returns user
 
         // when
         val modifyUser = userService.modifyUser(
             id,
-            userUpdateRequestDto
+            userUpdateRequestDto,
         )
 
         // then
@@ -168,14 +173,15 @@ class UserServiceTest {
     fun `유저 수정 성공 with password 테스트`() {
         // given
         val id = user.id!!
-        val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", "test123!")
+        val userUpdateRequestDto = UserUpdateRequestDto("test-url.com", "test", "test1234!", "test123!")
         every { userRepository.findByIdOrNull(id) } returns user
         every { passwordEncoder.encode("test123!") } returns "some-encrypted-password"
+        every { passwordEncoder.matches(any(), any()) } returns true
 
         // when
         val modifyUser = userService.modifyUser(
             id,
-            userUpdateRequestDto
+            userUpdateRequestDto,
         )
 
         // then

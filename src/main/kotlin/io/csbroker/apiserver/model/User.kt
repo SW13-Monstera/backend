@@ -83,37 +83,38 @@ class User(
     val gradingHistories: MutableList<GradingHistory> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val notifications: MutableList<Notification> = mutableListOf()
+    val notifications: MutableList<Notification> = mutableListOf(),
 ) : BaseEntity() {
     fun updateInfo(userUpdateRequestDto: UserUpdateRequestDto) {
-        this.profileImageUrl = userUpdateRequestDto.profileImageUrl ?: this.profileImageUrl
-        this.username = userUpdateRequestDto.username ?: this.username
-        this.password = userUpdateRequestDto.password ?: this.password
-        this.major = userUpdateRequestDto.major ?: this.major
-        this.job = userUpdateRequestDto.job ?: this.job
-        this.jobObjective = userUpdateRequestDto.jobObjective ?: this.jobObjective
-        this.tech = userUpdateRequestDto.techs?.joinToString() ?: this.tech
-        this.githubUrl = userUpdateRequestDto.githubUrl ?: this.githubUrl
-        this.linkedinUrl = userUpdateRequestDto.linkedinUrl ?: this.linkedinUrl
+        profileImageUrl = userUpdateRequestDto.profileImageUrl ?: profileImageUrl
+        username = userUpdateRequestDto.username ?: username
+        password = userUpdateRequestDto.password ?: password
+        major = userUpdateRequestDto.major ?: major
+        job = userUpdateRequestDto.job ?: job
+        jobObjective = userUpdateRequestDto.jobObjective ?: jobObjective
+        tech = userUpdateRequestDto.techs?.joinToString() ?: tech
+        githubUrl = userUpdateRequestDto.githubUrl ?: githubUrl
+        linkedinUrl = userUpdateRequestDto.linkedinUrl ?: linkedinUrl
     }
 
     fun toUserResponseDto(): UserResponseDto {
         return UserResponseDto(
-            id = this.id!!,
-            email = this.email,
-            username = this.username,
-            role = this.role,
-            job = this.job,
-            jobObjective = this.jobObjective,
-            techs = this.tech?.split(", ") ?: emptyList(),
-            major = this.major,
-            profileImgUrl = this.profileImageUrl,
-            githubUrl = this.githubUrl,
-            linkedinUrl = this.linkedinUrl
+            id = id!!,
+            email = email,
+            username = username,
+            role = role,
+            job = job,
+            jobObjective = jobObjective,
+            techs = tech?.split(", ") ?: emptyList(),
+            major = major,
+            profileImgUrl = profileImageUrl,
+            githubUrl = githubUrl,
+            linkedinUrl = linkedinUrl,
+            providerType = providerType,
         )
     }
 
     fun encodePassword(encodedPassword: String) {
-        this.password = encodedPassword
+        password = encodedPassword
     }
 }

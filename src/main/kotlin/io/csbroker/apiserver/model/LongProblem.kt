@@ -2,7 +2,7 @@ package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
-import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
+import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto.LongProblemDataDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
@@ -27,85 +27,86 @@ class LongProblem(
     var gradingStandards: MutableList<GradingStandard> = mutableListOf(),
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
-    var userAnswers: MutableList<UserAnswer> = mutableListOf()
+    var userAnswers: MutableList<UserAnswer> = mutableListOf(),
 ) : Problem(
     title = title,
     description = description,
     creator = creator,
     dtype = "long",
     isGradable = false,
-    score = gradingStandards.sumOf { it.score }
+    score = gradingStandards.sumOf { it.score },
 ) {
     fun addGradingStandards(gradingStandards: List<GradingStandard>) {
         this.gradingStandards.addAll(gradingStandards)
-        this.score = gradingStandards.sumOf { it.score }
+        score = gradingStandards.sumOf { it.score }
     }
 
     fun updateFromDto(upsertRequestDto: LongProblemUpsertRequestDto) {
-        this.title = upsertRequestDto.title
-        this.description = upsertRequestDto.description
-        this.standardAnswer = upsertRequestDto.standardAnswer
-        this.isGradable = upsertRequestDto.isGradable
-        this.isActive = upsertRequestDto.isActive
+        title = upsertRequestDto.title
+        description = upsertRequestDto.description
+        standardAnswer = upsertRequestDto.standardAnswer
+        isGradable = upsertRequestDto.isGradable
+        isActive = upsertRequestDto.isActive
     }
 
     fun toLongProblemResponseDto(): LongProblemResponseDto {
         return LongProblemResponseDto(
-            this.id!!,
-            this.title,
-            this.description,
-            this.standardAnswer,
-            this.problemTags.map { it.tag.name },
-            this.gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) },
-            this.isActive,
-            this.isGradable
+            id!!,
+            title,
+            description,
+            standardAnswer,
+            problemTags.map { it.tag.name },
+            gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) },
+            isActive,
+            isGradable,
         )
     }
 
-    fun toLongProblemDataDto(): LongProblemSearchResponseDto.LongProblemDataDto {
-        val keywordScores = this.userAnswers.map {
+    fun toLongProblemDataDto(): LongProblemDataDto {
+        val keywordScores = userAnswers.map {
             it.getKeywordScore()
         }
 
-        val contentScores = this.userAnswers.map {
+        val contentScores = userAnswers.map {
             it.getContentScore()
         }
 
-        return LongProblemSearchResponseDto.LongProblemDataDto(
-            this.id!!,
-            this.title,
-            this.creator.username,
+        return LongProblemDataDto(
+            id!!,
+            title,
+            creator.username,
             if (keywordScores.isEmpty()) null else keywordScores.average(),
             if (contentScores.isEmpty()) null else contentScores.average(),
-            this.userAnswers.size,
-            this.isActive
+            userAnswers.size,
+            isActive,
         )
     }
 
     fun toDetailResponseDto(email: String?): LongProblemDetailResponseDto {
-        val tags = this.problemTags.map {
+        val tags = problemTags.map {
             it.tag
         }.map {
             it.name
         }
 
-        val scoreList = this.gradingHistory.map {
+        val scoreList = gradingHistory.map {
             it.score
         }.toList().sorted()
 
-        val isSolved = this.gradingHistory.any { it.user.email == email }
+        val isSolved = gradingHistory.any { it.user.email == email }
 
         return LongProblemDetailResponseDto(
-            this.id!!,
-            this.title,
+            id!!,
+            title,
             tags,
-            this.description,
+            description,
             if (scoreList.isEmpty()) null else scoreList.average(),
             if (scoreList.isEmpty()) null else scoreList.last(),
             if (scoreList.isEmpty()) null else scoreList.first(),
+            score,
             scoreList.size,
             isSolved,
-            this.isGradable
+            isGradable,
         )
     }
 }

@@ -7,20 +7,15 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConstructorBinding
 data class AppProperties(
     val auth: Auth,
-    val oAuth2: OAuth2
+    val oAuth2: OAuth2,
 ) {
     data class Auth(
         val tokenSecret: String,
         val tokenExpiry: Long,
-        val refreshTokenExpiry: Long
+        val refreshTokenExpiry: Long,
     )
 
     data class OAuth2(
-        var authorizedRedirectUris: List<String>
-    ) {
-        fun authorizedRedirectUris(authorizedRedirectUris: List<String>): OAuth2 {
-            this.authorizedRedirectUris = authorizedRedirectUris
-            return this
-        }
-    }
+        var authorizedRedirectUris: List<String>,
+    )
 }

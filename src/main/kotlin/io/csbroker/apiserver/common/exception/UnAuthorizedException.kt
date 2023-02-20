@@ -4,5 +4,5 @@ import io.csbroker.apiserver.common.enums.ErrorCode
 
 class UnAuthorizedException(
     errorCode: ErrorCode,
-    log: String
+    log: String,
 ) : BizException(errorCode, log)

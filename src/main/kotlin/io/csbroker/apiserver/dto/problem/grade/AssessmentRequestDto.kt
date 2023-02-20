@@ -6,13 +6,13 @@ import io.csbroker.apiserver.model.GradingResultAssessment
 
 data class AssessmentRequestDto(
     val assessmentType: AssessmentType,
-    val content: String = ""
+    val content: String = "",
 ) {
     fun toGradingResultAssessment(gradingHistory: GradingHistory): GradingResultAssessment {
         return GradingResultAssessment(
             gradingHistory = gradingHistory,
             type = assessmentType,
-            content = content
+            content = content,
         )
     }
 }

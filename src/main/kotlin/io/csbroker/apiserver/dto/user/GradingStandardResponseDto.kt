@@ -7,7 +7,7 @@ data class GradingStandardResponseDto(
     val id: Long,
     val content: String,
     val score: Double,
-    val type: GradingStandardType
+    val type: GradingStandardType,
 ) {
     companion object {
         fun fromGradingStandard(gradingStandard: GradingStandard): GradingStandardResponseDto {
@@ -15,7 +15,7 @@ data class GradingStandardResponseDto(
                 id = gradingStandard.id!!,
                 content = gradingStandard.content,
                 score = gradingStandard.score,
-                type = gradingStandard.type
+                type = gradingStandard.type,
             )
         }
     }

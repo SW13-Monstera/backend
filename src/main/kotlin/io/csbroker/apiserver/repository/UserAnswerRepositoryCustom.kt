@@ -15,6 +15,6 @@ interface UserAnswerRepositoryCustom {
         answer: String?,
         isLabeled: Boolean?,
         isValidated: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserAnswer>
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
 const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME: String = "oauth2_auth_request"
 const val REDIRECT_URI_PARAM_COOKIE_NAME: String = "redirect_uri"
 const val REFRESH_TOKEN: String = "refresh_token"
-private const val cookieExpireSeconds = 180L
+private const val COOKIE_EXPIRE_SECONDS = 180L
 
 class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     override fun loadAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
@@ -25,7 +25,7 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
     override fun saveAuthorizationRequest(
         authorizationRequest: OAuth2AuthorizationRequest?,
         request: HttpServletRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ) {
         if (authorizationRequest == null) {
             deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
@@ -38,28 +38,28 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
             response,
             OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
             serialize(authorizationRequest),
-            cookieExpireSeconds
+            COOKIE_EXPIRE_SECONDS,
         )
 
         val redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)
         if (redirectUriAfterLogin.isNotBlank()) {
-            addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds)
+            addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, COOKIE_EXPIRE_SECONDS)
         }
     }
 
     @Deprecated(
         message = "deprecated at original interface",
-        replaceWith = ReplaceWith("this.loadAuthorizationRequest(request)")
+        replaceWith = ReplaceWith("this.loadAuthorizationRequest(request)"),
     )
     override fun removeAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
-        return this.loadAuthorizationRequest(request)
+        return loadAuthorizationRequest(request)
     }
 
     override fun removeAuthorizationRequest(
         request: HttpServletRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): OAuth2AuthorizationRequest? {
-        return this.loadAuthorizationRequest(request)
+        return loadAuthorizationRequest(request)
     }
 
     fun removeAuthorizationRequestCookies(request: HttpServletRequest, response: HttpServletResponse) {

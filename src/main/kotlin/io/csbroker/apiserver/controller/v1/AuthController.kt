@@ -31,18 +31,18 @@ import javax.servlet.http.HttpServletResponse
 class AuthController(
     private val authService: AuthService,
     private val appProperties: AppProperties,
-    private val mailService: MailService
+    private val mailService: MailService,
 ) {
 
     @PostMapping("/signup")
     fun signUp(@RequestBody userSignUpDto: UserSignUpDto): ApiResponse<UpsertSuccessResponseDto> {
-        val userId = this.authService.saveUser(userSignUpDto)
+        val userId = authService.saveUser(userSignUpDto)
         return ApiResponse.success(UpsertSuccessResponseDto(id = userId))
     }
 
     @GetMapping("/info")
     fun getUserInfo(@LoginUser loginUser: User): ApiResponse<UserInfoResponseDto> {
-        val userInfo = this.authService.getUserInfo(loginUser.username)
+        val userInfo = authService.getUserInfo(loginUser.username)
         return ApiResponse.success(UserInfoResponseDto(userInfo))
     }
 
@@ -50,9 +50,9 @@ class AuthController(
     fun login(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        @RequestBody userLoginRequestDto: UserLoginRequestDto
+        @RequestBody userLoginRequestDto: UserLoginRequestDto,
     ): ApiResponse<UserInfoResponseDto> {
-        val userInfoDto = this.authService.loginUser(userLoginRequestDto)
+        val userInfoDto = authService.loginUser(userLoginRequestDto)
 
         val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
 
@@ -65,9 +65,9 @@ class AuthController(
     @GetMapping("/refresh")
     fun refresh(
         request: HttpServletRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): ApiResponse<TokenResponseDto> {
-        val (accessToken, refreshToken) = this.authService.refreshUserToken(request)
+        val (accessToken, refreshToken) = authService.refreshUserToken(request)
 
         if (refreshToken != null) {
             val cookieMaxAge = appProperties.auth.refreshTokenExpiry / 1000
@@ -81,7 +81,7 @@ class AuthController(
 
     @PostMapping("/password/code")
     fun sendPasswordChangeMail(
-        @RequestBody passwordChangeMailRequestDto: PasswordChangeMailRequestDto
+        @RequestBody passwordChangeMailRequestDto: PasswordChangeMailRequestDto,
     ): ApiResponse<String> {
         return runBlocking {
             mailService.sendPasswordChangeMail(passwordChangeMailRequestDto.email)
@@ -91,7 +91,7 @@ class AuthController(
 
     @PutMapping("/password/change")
     fun changePassword(
-        @RequestBody passwordChangeRequestDto: PasswordChangeRequestDto
+        @RequestBody passwordChangeRequestDto: PasswordChangeRequestDto,
     ): ApiResponse<String> {
         authService.changePassword(passwordChangeRequestDto.code, passwordChangeRequestDto.password)
         return ApiResponse.success("success")

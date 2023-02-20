@@ -1,7 +1,7 @@
 package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.common.enums.GradingStandardType
-import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
+import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto.UserAnswerDataDto
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -47,7 +47,7 @@ class UserAnswer(
     var userAnswerGradingStandards: MutableList<UserAnswerGradingStandard> = mutableListOf(),
 ) : BaseEntity() {
     fun getKeywordScore(): Double {
-        return this.userAnswerGradingStandards.map {
+        return userAnswerGradingStandards.map {
             it.gradingStandard
         }.filter {
             it.type == GradingStandardType.KEYWORD
@@ -57,7 +57,7 @@ class UserAnswer(
     }
 
     fun getContentScore(): Double {
-        return this.userAnswerGradingStandards.map {
+        return userAnswerGradingStandards.map {
             it.gradingStandard
         }.filter {
             it.type == GradingStandardType.CONTENT
@@ -66,15 +66,15 @@ class UserAnswer(
         }
     }
 
-    fun toUserAnswerDataDto(): UserAnswerSearchResponseDto.UserAnswerDataDto {
-        return UserAnswerSearchResponseDto.UserAnswerDataDto(
-            this.id!!,
-            this.problem.title,
-            this.assignedUser?.username,
-            this.validatingUser?.username,
-            this.updatedAt!!,
-            this.isLabeled,
-            this.isValidated
+    fun toUserAnswerDataDto(): UserAnswerDataDto {
+        return UserAnswerDataDto(
+            id!!,
+            problem.title,
+            assignedUser?.username,
+            validatingUser?.username,
+            updatedAt!!,
+            isLabeled,
+            isValidated,
         )
     }
 }

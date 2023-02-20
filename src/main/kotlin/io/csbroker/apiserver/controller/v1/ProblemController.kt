@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/problems")
 class ProblemController(
-    private val problemService: ProblemService
+    private val problemService: ProblemService,
 ) {
     @GetMapping
     fun getAllProblemsByQuery(
@@ -41,7 +41,7 @@ class ProblemController(
         @RequestParam("tags", required = false) tags: List<String>?,
         @RequestParam("type", required = false) type: List<String>?,
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): ApiResponse<ProblemPageResponseDto> {
         var solvedBy: String? = null
 
@@ -51,14 +51,14 @@ class ProblemController(
         }
 
         val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)
-        val foundProblems = this.problemService.findProblems(searchDto, pageable)
+        val foundProblems = problemService.findProblems(searchDto, pageable)
 
         return ApiResponse.success(foundProblems)
     }
 
     @GetMapping("/long/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findLongProblemDetailById(id, getEmailFromSecurityContextHolder())
+        val findProblemDetail = problemService.findLongProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
@@ -66,14 +66,14 @@ class ProblemController(
     @GetMapping("/multiple/{id}")
     fun getMultipleProblemById(@PathVariable("id") id: Long): ApiResponse<MultipleChoiceProblemDetailResponseDto> {
         val findProblemDetail =
-            this.problemService.findMultipleChoiceProblemDetailById(id, getEmailFromSecurityContextHolder())
+            problemService.findMultipleChoiceProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
 
     @GetMapping("/short/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseDto> {
-        val findProblemDetail = this.problemService.findShortProblemDetailById(id, getEmailFromSecurityContextHolder())
+        val findProblemDetail = problemService.findShortProblemDetailById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
@@ -83,13 +83,13 @@ class ProblemController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
         @RequestBody answerDto: LongProblemAnswerDto,
-        @RequestParam("isGrading", required = false) isGrading: Boolean?
+        @RequestParam("isGrading", required = false) isGrading: Boolean?,
     ): ApiResponse<LongProblemGradingHistoryDto> {
-        val gradeHistory = this.problemService.gradingLongProblem(
+        val gradeHistory = problemService.gradingLongProblem(
             loginUser.username,
             id,
             answerDto.answer,
-            isGrading ?: true
+            isGrading ?: true,
         )
         return ApiResponse.success(gradeHistory)
     }
@@ -98,9 +98,9 @@ class ProblemController(
     fun gradeShortProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody answerDto: ShortProblemAnswerDto
+        @RequestBody answerDto: ShortProblemAnswerDto,
     ): ApiResponse<ShortProblemGradingHistoryDto> {
-        val gradeHistory = this.problemService.gradingShortProblem(loginUser.username, id, answerDto.answer)
+        val gradeHistory = problemService.gradingShortProblem(loginUser.username, id, answerDto.answer)
         return ApiResponse.success(gradeHistory)
     }
 
@@ -108,9 +108,9 @@ class ProblemController(
     fun gradeMultipleChoiceProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody answerDto: MultipleChoiceProblemAnswerDto
+        @RequestBody answerDto: MultipleChoiceProblemAnswerDto,
     ): ApiResponse<MultipleChoiceProblemGradingHistoryDto> {
-        val gradeHistory = this.problemService.gradingMultipleChoiceProblem(loginUser.username, id, answerDto.answerIds)
+        val gradeHistory = problemService.gradingMultipleChoiceProblem(loginUser.username, id, answerDto.answerIds)
         return ApiResponse.success(gradeHistory)
     }
 
@@ -118,16 +118,16 @@ class ProblemController(
     fun gradingAssessment(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody assessmentRequestDto: AssessmentRequestDto
+        @RequestBody assessmentRequestDto: AssessmentRequestDto,
     ): ApiResponse<UpsertSuccessResponseDto> {
         return ApiResponse.success(
             UpsertSuccessResponseDto(
-                this.problemService.gradingAssessment(
+                problemService.gradingAssessment(
                     loginUser.username,
                     id,
-                    assessmentRequestDto
-                )
-            )
+                    assessmentRequestDto,
+                ),
+            ),
         )
     }
 }

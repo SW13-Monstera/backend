@@ -10,7 +10,7 @@ private const val ERROR = "error"
 class ApiResponse<T> private constructor(
     val status: String,
     val data: T? = null,
-    val message: String? = null
+    val message: String? = null,
 ) {
     companion object {
         fun <T> success(data: T): ApiResponse<T> {

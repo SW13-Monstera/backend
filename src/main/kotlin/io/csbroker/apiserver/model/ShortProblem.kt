@@ -24,43 +24,43 @@ class ShortProblem(
     score: Double,
 
     @Column(name = "answer")
-    var answer: String
+    var answer: String,
 ) : Problem(title = title, description = description, creator = creator, dtype = "short", score = score) {
     fun updateFromDto(upsertRequestDto: ShortProblemUpsertRequestDto) {
-        this.title = upsertRequestDto.title
-        this.description = upsertRequestDto.description
-        this.answer = upsertRequestDto.answer
-        this.isGradable = upsertRequestDto.isGradable
-        this.isActive = upsertRequestDto.isActive
-        this.score = upsertRequestDto.score
+        title = upsertRequestDto.title
+        description = upsertRequestDto.description
+        answer = upsertRequestDto.answer
+        isGradable = upsertRequestDto.isGradable
+        isActive = upsertRequestDto.isActive
+        score = upsertRequestDto.score
     }
 
     fun toShortProblemResponseDto(): ShortProblemResponseDto {
         return ShortProblemResponseDto(
-            this.id!!,
-            this.title,
-            this.description,
-            this.problemTags.map { it.tag.name },
-            this.answer,
-            this.score,
-            this.isActive,
-            this.isGradable
+            id!!,
+            title,
+            description,
+            problemTags.map { it.tag.name },
+            answer,
+            score,
+            isActive,
+            isGradable,
         )
     }
 
     fun toShortProblemDataDto(): ShortProblemSearchResponseDto.ShortProblemDataDto {
-        val answerCnt = this.gradingHistory.size
-        val correctAnswerCnt = this.gradingHistory.count {
-            it.score == this.score
+        val answerCnt = gradingHistory.size
+        val correctAnswerCnt = gradingHistory.count {
+            it.score == score
         }
 
         return ShortProblemSearchResponseDto.ShortProblemDataDto(
-            this.id!!,
-            this.title,
-            this.creator.username,
+            id!!,
+            title,
+            creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
             answerCnt,
-            this.isActive
+            isActive,
         )
     }
 
@@ -68,16 +68,17 @@ class ShortProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseDto(
-            this.id!!,
-            this.title,
+            id!!,
+            title,
             commonDetail.tags,
-            this.description,
+            description,
             commonDetail.correctSubmission,
             commonDetail.correctUserCnt,
             commonDetail.totalSubmission,
-            this.answer.length,
-            this.isEnglish(),
-            this.gradingHistory.any { it.user.email == email }
+            answer.length,
+            isEnglish(),
+            gradingHistory.any { it.user.email == email },
+            score,
         )
     }
 
@@ -85,30 +86,31 @@ class ShortProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseV2Dto(
-            this.id!!,
-            this.title,
+            id!!,
+            title,
             commonDetail.tags,
-            this.description,
+            description,
             commonDetail.correctSubmission,
             commonDetail.correctUserCnt,
             commonDetail.totalSubmission,
-            this.answer.length,
-            this.getTypeOfAnswer(),
-            this.gradingHistory.any { it.user.email == email }
+            answer.length,
+            getTypeOfAnswer(),
+            gradingHistory.any { it.user.email == email },
+            score,
         )
     }
 
     private fun getTypeOfAnswer(): ShortProblemAnswerType {
         return when {
-            this.isEnglish() -> ShortProblemAnswerType.ENGLISH
-            this.isKorean() -> ShortProblemAnswerType.KOREAN
-            this.isNumeric() -> ShortProblemAnswerType.NUMERIC
+            isEnglish() -> ShortProblemAnswerType.ENGLISH
+            isKorean() -> ShortProblemAnswerType.KOREAN
+            isNumeric() -> ShortProblemAnswerType.NUMERIC
             else -> throw InternalServiceException(ErrorCode.SERVER_ERROR, "문제 답변이 영어, 한글, 숫자가 아닙니다.")
         }
     }
 
     private fun isKorean(): Boolean {
-        for (c in this.answer.replace("\\s".toRegex(), "")) {
+        for (c in answer.replace("\\s".toRegex(), "")) {
             if (c !in 'ㄱ'..'ㅣ' && c !in '가'..'힣') {
                 return false
             }
@@ -117,7 +119,7 @@ class ShortProblem(
     }
 
     private fun isEnglish(): Boolean {
-        for (c in this.answer.replace("\\s".toRegex(), "")) {
+        for (c in answer.replace("\\s".toRegex(), "")) {
             if (c !in 'A'..'Z' && c !in 'a'..'z') {
                 return false
             }
@@ -126,7 +128,7 @@ class ShortProblem(
     }
 
     private fun isNumeric(): Boolean {
-        for (c in this.answer.replace("\\s".toRegex(), "")) {
+        for (c in answer.replace("\\s".toRegex(), "")) {
             if (c !in '0'..'9') {
                 return false
             }

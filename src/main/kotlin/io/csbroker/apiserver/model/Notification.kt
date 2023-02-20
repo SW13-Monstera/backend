@@ -31,21 +31,21 @@ class Notification(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    val user: User
+    val user: User,
 ) : BaseEntity() {
     constructor(notificationRequestDto: NotificationRequestDto, user: User) : this(
         content = notificationRequestDto.content,
         link = notificationRequestDto.link,
-        user = user
+        user = user,
     )
 
     fun toNotificationResponseDto(): NotificationResponseDto {
         return NotificationResponseDto(
-            this.id!!,
-            this.content,
-            this.link,
-            this.isRead,
-            this.createdAt!!
+            id!!,
+            content,
+            link,
+            isRead,
+            createdAt!!,
         )
     }
 }
