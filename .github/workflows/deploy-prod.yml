@@ -1,5 +1,4 @@
 name: Deploy to prod env
-
 on:
     push:
         branches:
@@ -14,57 +13,23 @@ jobs:
                   token: ${{ secrets.PRIVATE_TOKEN }}
                   submodules: true
 
-            - name: setup jdk 11
-              uses: actions/setup-java@v2
-              with:
-                  distribution: 'adopt'
-                  java-version: '11'
-                  cache: 'gradle'
-
-            - name: add permission to gradlew
-              run: chmod +x ./gradlew
+            - name: Create SSH key
+              run: |
+                mkdir -p ~/.ssh/
+                echo "$SSH_PRIVATE_KEY" > ../private.key
+                sudo chmod 600 ../private.key
+                echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
               shell: bash
-
-            - name: aws configure
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: ap-northeast-2
-
-            - name: Login to ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v1
-
-            - name: build docker file and setting deploy files
               env:
-                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-                ECR_REPOSITORY: cs-broker
-                IMAGE_TAG: ${{ github.sha }}
-              run: |
-                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-                mkdir scripts
-                touch scripts/deploy.sh
-                echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
-                echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
-                echo "docker run -p 8080:8080 -e PROFILE=prod -d --restart always --name csbroker-api $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+                SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+                SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
 
-            - name: upload to s3
+            - name: Build and deploy
+              run: ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_KNOWN_HOSTS '~/build.sh'
               env:
-                IMAGE_TAG: ${{ github.sha }}
-              run: |
-                zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
-                aws s3 cp --region ap-northeast-2 --acl private ./deploy-$IMAGE_TAG.zip s3://cs-broker-bucket
-
-            - name: start deploy
-              env:
-                IMAGE_TAG: ${{ github.sha }}
-              run: |
-                aws deploy create-deployment --application-name csbroker-prod-api-codedeploy \
-                --deployment-config-name CodeDeployDefault.OneAtATime \
-                --deployment-group-name csbroker-prod-api \
-                --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip
+                SSH_USER: ${{secrets.SSH_USER}}
+                SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+                SSH_KEY_PATH: ${{ github.workspace }}/../private.key
 
             - name: slack-notification
               uses: 8398a7/action-slack@v3
