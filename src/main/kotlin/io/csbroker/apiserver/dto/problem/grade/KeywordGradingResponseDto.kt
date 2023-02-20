@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class KeywordGradingResponseDto(
     @field:JsonProperty("problem_id")
     val problemId: Long,
-    @field:JsonProperty("keyword_standards")
+    @field:JsonProperty("correct_keywords")
     val correctKeywords: List<CorrectKeyword>,
 ) {
     data class CorrectKeyword(
