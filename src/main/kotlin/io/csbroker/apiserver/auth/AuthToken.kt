@@ -93,5 +93,4 @@ class AuthToken(
             .setExpiration(expiry)
             .compact()
     }
-
 }
