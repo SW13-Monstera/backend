@@ -87,6 +87,9 @@ dependencies {
     implementation("aws.sdk.kotlin:ses:0.16.0")
     implementation("aws.sdk.kotlin:s3:0.16.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    // rate-limiter
+    implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.2.0")
 }
 
 dependencyManagement {
