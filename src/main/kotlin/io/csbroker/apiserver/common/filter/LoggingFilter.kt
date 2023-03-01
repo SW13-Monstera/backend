@@ -69,14 +69,14 @@ class LoggingFilter : OncePerRequestFilter() {
     }
 
     private fun logPayload(prefix: String, contentType: String?, inputStream: InputStream) {
-        val content = StreamUtils.copyToByteArray(inputStream).contentToString()
+        val content = StreamUtils.copyToByteArray(inputStream)
         val mediaType = contentType?.let { MediaType.valueOf(it) } ?: MediaType.APPLICATION_JSON
         val payload = getPayload(mediaType, content)
         log.info("$prefix Payload: $payload")
     }
 
-    private fun getPayload(mediaType: MediaType, content: String) = if (isVisible(mediaType)) {
-        content.replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
+    private fun getPayload(mediaType: MediaType, content: ByteArray) = if (isVisible(mediaType)) {
+        String(content).replace("\"originalPassword\":\".*\"".toRegex(), "\"originalPassword\":\"*****\"")
             .replace("\"password\":\".*\"".toRegex(), "\"password\":\"*****\"")
     } else {
         "Binary Contents"
