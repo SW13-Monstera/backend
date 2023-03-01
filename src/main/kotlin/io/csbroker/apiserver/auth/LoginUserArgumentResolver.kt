@@ -24,7 +24,13 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Any {
-        val authentication = SecurityContextHolder.getContext().authentication
-        return authentication?.principal ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
+        val principal = SecurityContextHolder.getContext().authentication?.principal
+
+        // 유저 검증이 되지 않으면, anonymousUser 라는 String으로 넘어옴. 그것을 방지하기 위한 검증.
+        if (principal is String) {
+            throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
+        }
+
+        return principal ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
     }
 }
