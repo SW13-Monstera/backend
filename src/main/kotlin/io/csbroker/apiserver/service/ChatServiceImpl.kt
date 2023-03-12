@@ -17,11 +17,16 @@ class ChatServiceImpl(
             "$TOKEN_PREFIX $apiKey",
             ChatRequestDto(
                 messages = listOf(
-                    ChatRequestDto.ChatRequestMessage(content = content, user = email),
+                    ChatRequestDto.ChatRequestMessage(content = "$prefix $content"),
                 ),
+                user = email,
             ),
         )
 
         return response.getChatResponseAnswer()
+    }
+
+    companion object {
+        private const val prefix: String = "Please answer me in korean as you were a veteran senior software engineer."
     }
 }
