@@ -32,6 +32,6 @@ class ChatServiceImpl(
     }
 
     companion object {
-        private const val prefix: String = "Please answer me in korean as you were a veteran senior software engineer."
+        private const val prefix: String = "Please answer me in korean as if you are a veteran software engineer."
     }
 }
