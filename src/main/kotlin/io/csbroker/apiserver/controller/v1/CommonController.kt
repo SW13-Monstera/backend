@@ -3,7 +3,9 @@ package io.csbroker.apiserver.controller.v1
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.dto.StatsDto
 import io.csbroker.apiserver.dto.common.ApiResponse
+import io.csbroker.apiserver.dto.common.ChatCompletionRequestDto
 import io.csbroker.apiserver.dto.common.RankListDto
+import io.csbroker.apiserver.service.ChatService
 import io.csbroker.apiserver.service.CommonService
 import io.csbroker.apiserver.service.S3Service
 import io.csbroker.apiserver.service.UserService
@@ -11,6 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
@@ -23,6 +26,7 @@ class CommonController(
     private val commonService: CommonService,
     private val s3Service: S3Service,
     private val userService: UserService,
+    private val chatService: ChatService,
 ) {
     @GetMapping("/stats")
     fun getStats(): ApiResponse<StatsDto> {
@@ -54,5 +58,13 @@ class CommonController(
         @RequestParam("page", required = false, defaultValue = "0") page: Long,
     ): ApiResponse<RankListDto> {
         return ApiResponse.success(commonService.getRanks(size, page))
+    }
+
+    @PostMapping("/chat")
+    fun chatCompletion(
+        @LoginUser loginUser: User,
+        @RequestBody chatCompletionRequestDto: ChatCompletionRequestDto,
+    ): ApiResponse<String> {
+        return ApiResponse.success(chatService.completeChat(loginUser.username, chatCompletionRequestDto.content))
     }
 }
