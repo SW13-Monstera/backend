@@ -14,11 +14,6 @@ class ApiPathBasedRateLimiter(
     ConcurrentHashMap<String, Bucket>(),
 ) {
     override fun resolveRate(request: HttpServletRequest): Boolean {
-        // 0개의 토큰을 consume 하려 하면, bucket.tryConsume 함수가 false 를 return 하기 때문에 먼저 처리.
-        if (request.getConsumeCount() == 0L) {
-            return true
-        }
-
         return super.resolveRate(request.getKey(), request.getConsumeCount()) {
             createNewBucket()
         }
