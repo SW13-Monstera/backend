@@ -50,6 +50,7 @@ import io.csbroker.apiserver.repository.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.ProblemTagRepository
 import io.csbroker.apiserver.repository.ShortProblemRepository
+import io.csbroker.apiserver.repository.StandardAnswerRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserAnswerRepository
 import io.csbroker.apiserver.repository.UserRepository
@@ -75,6 +76,7 @@ class ProblemServiceImpl(
     private val aiServerClient: AIServerClient,
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
     private val challengeRepository: ChallengeRepository,
+    private val standardAnswerRepository: StandardAnswerRepository,
 ) : ProblemService {
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
@@ -404,6 +406,9 @@ class ProblemServiceImpl(
         )
         gradingHistoryRepository.save(gradingHistory)
 
+        val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem)
+            .map { it.content } + findProblem.standardAnswer
+
         // create dto
         return LongProblemGradingHistoryDto.createDto(
             gradingHistoryId = gradingHistory.gradingHistoryId!!,
@@ -412,6 +417,7 @@ class ProblemServiceImpl(
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
             contents = correctContentListDto + notCorrectContentListDto,
+            standardAnswer = standardAnswers.random(),
         )
     }
 
