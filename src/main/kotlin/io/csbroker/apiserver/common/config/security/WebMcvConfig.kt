@@ -2,6 +2,7 @@ package io.csbroker.apiserver.common.config.security
 
 import io.csbroker.apiserver.auth.LoginUserArgumentResolver
 import io.csbroker.apiserver.common.interceptor.HttpInterceptor
+import io.csbroker.apiserver.common.interceptor.ratelimit.ApiPathBasedRateLimiter
 import io.csbroker.apiserver.common.interceptor.ratelimit.IpBasedRateLimiter
 import io.csbroker.apiserver.common.interceptor.ratelimit.RateLimiter
 import org.springframework.beans.factory.annotation.Value
@@ -32,7 +33,12 @@ class WebMcvConfig(
     }
 
     @Bean
+    fun apiPathBasedRateLimiter(): RateLimiter {
+        return ApiPathBasedRateLimiter(listOf("/api/v1/chat"))
+    }
+
+    @Bean
     fun httpInterceptor(): HandlerInterceptor {
-        return HttpInterceptor(ipBasedRateLimiter())
+        return HttpInterceptor(listOf(ipBasedRateLimiter(), apiPathBasedRateLimiter()))
     }
 }

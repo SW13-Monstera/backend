@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class HttpInterceptor(
-    private val rateLimiter: RateLimiter,
+    private val rateLimiters: List<RateLimiter>,
 ) : HandlerInterceptor {
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        if (rateLimiter.resolveRate(request.remoteAddr)) {
+        if (rateLimiters.all { it.resolveRate(request) }) {
             return true
         }
 

@@ -8,24 +8,29 @@ import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import javax.servlet.http.HttpServletRequest
 
-class IpBasedRateLimiter(
-    private val rateLimit: Long,
+class ApiPathBasedRateLimiter(
+    private val paths: List<String>,
 ) : BaseRateLimiter(
     ConcurrentHashMap<String, Bucket>(),
 ) {
     override fun resolveRate(request: HttpServletRequest): Boolean {
-        val key = request.remoteAddr
-        return super.resolveRate(key, key.getConsumeCountByIp()) {
+        return super.resolveRate(request.getKey(), request.getConsumeCount()) {
             createNewBucket()
         }
     }
 
-    private fun String.getConsumeCountByIp(): Long {
-        // TODO : 특정 ip 대역에 따라 무제한 허용 or 무제한 접근 금지
-        return 1
+    private fun HttpServletRequest.getKey(): String {
+        return "${this.remoteAddr}-${this.requestURI}"
+    }
+
+    private fun HttpServletRequest.getConsumeCount(): Long {
+        if (paths.contains(this.requestURI)) {
+            return 1
+        }
+        return 0
     }
 
     private fun createNewBucket() = Bucket4j.builder()
-        .addLimit(Bandwidth.classic(rateLimit, Refill.intervally(rateLimit, Duration.ofSeconds(1))))
+        .addLimit(Bandwidth.classic(1, Refill.intervally(1, Duration.ofSeconds(1))))
         .build()
 }
