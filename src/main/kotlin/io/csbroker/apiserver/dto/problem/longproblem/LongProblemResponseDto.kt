@@ -6,7 +6,7 @@ data class LongProblemResponseDto(
     val id: Long,
     val title: String,
     val description: String,
-    val standardAnswer: String,
+    val standardAnswers: List<String>,
     val tags: List<String>,
     val gradingStandards: List<GradingStandardResponseDto>,
     val isActive: Boolean,

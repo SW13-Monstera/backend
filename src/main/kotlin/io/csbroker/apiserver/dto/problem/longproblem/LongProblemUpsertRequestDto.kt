@@ -8,7 +8,7 @@ import io.csbroker.apiserver.model.User
 data class LongProblemUpsertRequestDto(
     val title: String,
     val description: String,
-    val standardAnswer: String,
+    val standardAnswers: List<String>,
     val tags: MutableList<String>,
     val gradingStandards: MutableList<GradingStandardData>,
     val isGradable: Boolean = false,
@@ -25,7 +25,7 @@ data class LongProblemUpsertRequestDto(
         return LongProblem(
             title = title,
             description = description,
-            standardAnswer = standardAnswer,
+            standardAnswer = "",
             creator = creator,
         )
     }

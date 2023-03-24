@@ -39,6 +39,7 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
+import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.ChallengeRepository
 import io.csbroker.apiserver.repository.ChoiceRepository
@@ -185,11 +186,21 @@ class ProblemServiceImpl(
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val longProblem = createRequestDto.toLongProblem(findUser)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
-
         longProblem.addGradingStandards(gradingStandardList)
         setTags(longProblem, createRequestDto.tags)
 
-        return problemRepository.save(longProblem).id!!
+        val savedProblem = problemRepository.save(longProblem)
+
+        standardAnswerRepository.saveAll(
+            createRequestDto.standardAnswers.map {
+                StandardAnswer(
+                    content = it,
+                    longProblem = savedProblem,
+                )
+            },
+        )
+
+        return savedProblem.id!!
     }
 
     @Transactional
@@ -235,6 +246,16 @@ class ProblemServiceImpl(
         findProblem.gradingStandards.clear()
 
         val gradingStandardList = updateRequestDto.getGradingStandardList(findProblem)
+
+        standardAnswerRepository.deleteAllByLongProblem(findProblem)
+        standardAnswerRepository.saveAll(
+            updateRequestDto.standardAnswers.map {
+                StandardAnswer(
+                    content = it,
+                    longProblem = findProblem,
+                )
+            },
+        )
 
         findProblem.addGradingStandards(gradingStandardList)
 
