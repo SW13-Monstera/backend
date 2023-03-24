@@ -27,6 +27,7 @@ data class LongProblemGradingHistoryDto(
             score: Double,
             keywords: List<KeywordDto>,
             contents: List<ContentDto>,
+            standardAnswer: String,
         ): LongProblemGradingHistoryDto {
             val tags = problem.problemTags.map {
                 it.tag
@@ -52,7 +53,7 @@ data class LongProblemGradingHistoryDto(
                 keywords,
                 contents,
                 userAnswer,
-                problem.standardAnswer,
+                standardAnswer,
             )
         }
     }
