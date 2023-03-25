@@ -336,7 +336,7 @@ class AdminController(
         return ApiResponse.success(problemSetService.createProblemSet(problemSetUpsertRequestDto))
     }
 
-    @PostMapping("/problem-sets/{id}")
+    @PutMapping("/problem-sets/{id}")
     fun updateProblemSet(
         @PathVariable("id") id: Long,
         @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto,
