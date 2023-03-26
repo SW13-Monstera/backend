@@ -241,28 +241,27 @@ class ProblemServiceImpl(
         val findProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
-        gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
-
-        findProblem.gradingStandards.clear()
-
         val gradingStandardList = updateRequestDto.getGradingStandardList(findProblem)
 
-        standardAnswerRepository.deleteAllByLongProblem(findProblem)
-        standardAnswerRepository.saveAll(
-            updateRequestDto.standardAnswers.map {
-                StandardAnswer(
-                    content = it,
-                    longProblem = findProblem,
-                )
-            },
-        )
+        if (findProblem.standardAnswers.map { it.content }.toSet() != updateRequestDto.standardAnswers.toSet()) {
+            standardAnswerRepository.deleteAllByLongProblem(findProblem)
+            standardAnswerRepository.saveAll(
+                updateRequestDto.standardAnswers.map {
+                    StandardAnswer(
+                        content = it,
+                        longProblem = findProblem,
+                    )
+                },
+            )
+        }
 
-        findProblem.addGradingStandards(gradingStandardList)
+        if (findProblem.gradingStandards.map { it.content }.toSet() != gradingStandardList.map { it.content }.toSet()) {
+            gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
+            findProblem.addGradingStandards(gradingStandardList)
+        }
 
         findProblem.updateFromDto(updateRequestDto)
-
         updateTags(findProblem, updateRequestDto.tags)
-
         return id
     }
 
