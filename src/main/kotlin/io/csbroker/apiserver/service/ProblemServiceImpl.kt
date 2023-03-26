@@ -426,8 +426,7 @@ class ProblemServiceImpl(
         )
         gradingHistoryRepository.save(gradingHistory)
 
-        val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem)
-            .map { it.content } + findProblem.standardAnswer
+        val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem).map { it.content }
 
         // create dto
         return LongProblemGradingHistoryDto.createDto(

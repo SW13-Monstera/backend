@@ -25,7 +25,6 @@ data class LongProblemUpsertRequestDto(
         return LongProblem(
             title = title,
             description = description,
-            standardAnswer = standardAnswers.first(),
             creator = creator,
         )
     }

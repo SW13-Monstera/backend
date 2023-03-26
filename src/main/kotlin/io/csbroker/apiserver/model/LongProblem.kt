@@ -6,7 +6,6 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDt
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import javax.persistence.CascadeType
-import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
 import javax.persistence.OneToMany
@@ -19,9 +18,6 @@ class LongProblem(
     title: String,
     description: String,
     creator: User,
-
-    @Column(name = "standard_answer", columnDefinition = "LONGTEXT")
-    var standardAnswer: String,
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     var gradingStandards: MutableList<GradingStandard> = mutableListOf(),
@@ -47,7 +43,6 @@ class LongProblem(
     fun updateFromDto(upsertRequestDto: LongProblemUpsertRequestDto) {
         title = upsertRequestDto.title
         description = upsertRequestDto.description
-        standardAnswer = upsertRequestDto.standardAnswers.first()
         isGradable = upsertRequestDto.isGradable
         isActive = upsertRequestDto.isActive
     }

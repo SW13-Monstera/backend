@@ -132,7 +132,6 @@ class ProblemApiControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = user,
-                standardAnswer = "test",
             )
 
             val keywordGradingStandard = GradingStandard(
