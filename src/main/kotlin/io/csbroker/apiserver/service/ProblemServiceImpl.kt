@@ -428,7 +428,6 @@ class ProblemServiceImpl(
 
         val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem).map { it.content }
 
-        // create dto
         return LongProblemGradingHistoryDto.createDto(
             gradingHistoryId = gradingHistory.gradingHistoryId!!,
             problem = findProblem,
@@ -436,7 +435,7 @@ class ProblemServiceImpl(
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
             contents = correctContentListDto + notCorrectContentListDto,
-            standardAnswer = standardAnswers.random(),
+            standardAnswer = standardAnswers.randomOrNull() ?: "", // 모범답안 데이터가 없을 수 있는 경우 대비.
         )
     }
 
