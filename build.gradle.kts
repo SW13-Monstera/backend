@@ -5,7 +5,7 @@ buildscript {
         maven(url = "https://plugins.gradle.org/m2/")
     }
     dependencies {
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.1.0")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:11.3.1")
     }
 }
 
@@ -16,7 +16,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
-    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     kotlin("kapt") version "1.3.61" // QueryDsl
     idea // QueryDsl
     id("org.sonarqube") version "3.4.0.2513"
