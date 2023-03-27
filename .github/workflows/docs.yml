@@ -2,9 +2,8 @@ name: deploy documentation
 
 on:
     push:
-        branches:
-            - dev
-            - 'feat/*'
+        branches-ignore:
+            - main
 
 jobs:
     deploy-docs:

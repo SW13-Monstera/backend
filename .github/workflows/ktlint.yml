@@ -20,3 +20,4 @@ jobs:
                   android: false
                   fail_on_error: true
                   level: warning
+                  ktlint_version: 0.38.0

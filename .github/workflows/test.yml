@@ -1,0 +1,33 @@
+name: Test Spring
+
+on: push
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+              with:
+                token: ${{ secrets.PRIVATE_TOKEN }}
+                submodules: true
+
+            - name: setup jdk 11
+              uses: actions/setup-java@v2
+              with:
+                distribution: 'adopt'
+                java-version: '11'
+                cache: 'gradle'
+
+            - name: Start Redis
+              uses: supercharge/redis-github-action@1.1.0
+              with:
+                redis-version: 6
+
+            - name: add permission to gradlew
+              run: chmod +x ./gradlew
+              shell: bash
+
+            - name: test
+              run: ./gradlew test
+              shell: bash

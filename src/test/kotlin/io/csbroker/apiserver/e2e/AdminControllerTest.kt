@@ -139,10 +139,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db", "network"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -197,7 +194,7 @@ class AdminControllerTest {
                             .description("문제 제목"),
                         PayloadDocumentation.fieldWithPath("description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        PayloadDocumentation.fieldWithPath("standardAnswer").type(JsonFieldType.STRING)
+                        PayloadDocumentation.fieldWithPath("standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         PayloadDocumentation.fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -239,10 +236,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -286,10 +280,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -350,7 +341,7 @@ class AdminControllerTest {
                             .description("문제 제목"),
                         PayloadDocumentation.fieldWithPath("description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        PayloadDocumentation.fieldWithPath("standardAnswer").type(JsonFieldType.STRING)
+                        PayloadDocumentation.fieldWithPath("standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         PayloadDocumentation.fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -392,10 +383,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -456,7 +444,7 @@ class AdminControllerTest {
                             .description("문제 제목"),
                         PayloadDocumentation.fieldWithPath("data.description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        PayloadDocumentation.fieldWithPath("data.standardAnswer").type(JsonFieldType.STRING)
+                        PayloadDocumentation.fieldWithPath("data.standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         PayloadDocumentation.fieldWithPath("data.tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -1013,10 +1001,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -1110,10 +1095,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -1218,10 +1200,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -1341,10 +1320,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -1449,10 +1425,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -1560,10 +1533,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
                 """.trimIndent(),
-                """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-                """.trimIndent(),
+                listOf("ab", "bc"),
                 mutableListOf("db"),
                 mutableListOf(
                     LongProblemUpsertRequestDto.GradingStandardData(
@@ -1856,10 +1826,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -2042,10 +2009,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -2143,10 +2107,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
@@ -2243,10 +2204,7 @@ class AdminControllerTest {
                 Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
                 like Aldus PageMaker including versions of Lorem Ipsum.
             """.trimIndent(),
-            """
-                It is a long established fact that a reader will be distracted by the readable content of
-                a page when looking at its layout.
-            """.trimIndent(),
+            listOf("ab", "bc"),
             mutableListOf("db"),
             mutableListOf(
                 LongProblemUpsertRequestDto.GradingStandardData(
