@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
+import io.csbroker.apiserver.dto.problem.AdminUpsertRequestDto
 import io.csbroker.apiserver.model.Choice
 import io.csbroker.apiserver.model.MultipleChoiceProblem
 import io.csbroker.apiserver.model.User
@@ -12,7 +13,7 @@ data class MultipleChoiceProblemUpsertRequestDto(
     val score: Double,
     val isGradable: Boolean = true,
     val isActive: Boolean = true,
-) {
+) : AdminUpsertRequestDto {
     data class ChoiceData(
         val content: String,
         val isAnswer: Boolean,
