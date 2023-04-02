@@ -17,8 +17,15 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.*
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+
+@Service
+@Transactional(readOnly = true)
+@Qualifier("longProblemService")
 class LongProblemServiceImpl(
     private val longProblemRepository: LongProblemRepository,
     private val userRepository: UserRepository,
@@ -28,11 +35,12 @@ class LongProblemServiceImpl(
     private val aiServerClient: AIServerClient,
 
     ) : ProblemService2{
-    override fun findProblemById(id: Long, email: String): ProblemDetailResponseDto {
+    override fun findProblemById(id: Long, email: String?): ProblemDetailResponseDto {
         return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
+    @Transactional
     override fun gradingProblem(gradingRequest: GradingRequestDto): ProblemGradingHistoryDto {
         // get entities
         val (email, problemId, answer, isGrading) = gradingRequest as LongProblemGradingRequestDto

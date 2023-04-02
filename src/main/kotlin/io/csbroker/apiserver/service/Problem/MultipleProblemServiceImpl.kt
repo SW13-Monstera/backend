@@ -10,18 +10,25 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.UserRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional(readOnly = true)
+@Qualifier("multipleProblemService")
 class MultipleProblemServiceImpl (
     private val multipleChoiceProblemRepository: MultipleChoiceProblemRepository,
     private val userRepository: UserRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
 ) : ProblemService2 {
-    override fun findProblemById(id: Long, email: String): ProblemDetailResponseDto {
+    override fun findProblemById(id: Long, email: String?): ProblemDetailResponseDto {
         return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 
+    @Transactional
     override fun gradingProblem(gradingRequestDto: GradingRequestDto): ProblemGradingHistoryDto {
         // get entities
         val (email, problemId, answerIds) = gradingRequestDto as MultipleProblemGradingRequestDto

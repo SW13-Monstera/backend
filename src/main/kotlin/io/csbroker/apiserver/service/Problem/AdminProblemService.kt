@@ -14,7 +14,7 @@ import io.csbroker.apiserver.repository.TagRepository
 interface AdminProblemService {
 
     fun findProblems(problemSearchDto : AdminProblemSearchDto) : AdminProblemSearchResponseDto
-    fun findProblemById(id: Long, email: String?) : AdminProblemResponseDto
+    fun findProblemById(id: Long) : AdminProblemResponseDto
     fun createProblem(createRequestDto: AdminUpsertRequestDto, email: String) : Long
     fun updateProblem(id: Long, updateRequestDto: AdminUpsertRequestDto, email: String) : Long
 

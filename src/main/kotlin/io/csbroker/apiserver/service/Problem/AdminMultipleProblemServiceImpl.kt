@@ -10,8 +10,14 @@ import io.csbroker.apiserver.dto.problem.AdminUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import io.csbroker.apiserver.repository.*
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional(readOnly = true)
+@Qualifier("adminMultipleProblemService")
 class AdminMultipleProblemServiceImpl(
     private val multipleChoiceProblemRepository: MultipleChoiceProblemRepository,
     private val choiceRepository: ChoiceRepository,
@@ -32,12 +38,13 @@ class AdminMultipleProblemServiceImpl(
         )
     }
 
-    override fun findProblemById(id: Long, email: String?): AdminProblemResponseDto {
+    override fun findProblemById(id: Long): AdminProblemResponseDto {
         val multipleChoiceProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
         return multipleChoiceProblem.toMultipleChoiceProblemResponseDto()
     }
 
+    @Transactional
     override fun createProblem(createRequestDto: AdminUpsertRequestDto, email: String): Long {
         val createRequestDto = createRequestDto as MultipleChoiceProblemUpsertRequestDto
         val findUser = userRepository.findByEmail(email)
@@ -57,6 +64,7 @@ class AdminMultipleProblemServiceImpl(
         return problemRepository.save(multipleChoiceProblem).id!!
     }
 
+    @Transactional
     override fun updateProblem(id: Long, updateRequestDto: AdminUpsertRequestDto, email: String): Long {
         val updateRequestDto = updateRequestDto as MultipleChoiceProblemUpsertRequestDto
         val findProblem = multipleChoiceProblemRepository.findByIdOrNull(id)

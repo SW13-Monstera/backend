@@ -8,8 +8,15 @@ import io.csbroker.apiserver.dto.problem.AdminUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
 import io.csbroker.apiserver.repository.*
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+
+@Service
+@Transactional(readOnly = true)
+@Qualifier("adminShortProblemService")
 class AdminShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
     private val problemRepository: ProblemRepository,
@@ -29,12 +36,13 @@ class AdminShortProblemServiceImpl(
         )
     }
 
-    override fun findProblemById(id: Long, email: String?): AdminProblemResponseDto {
+    override fun findProblemById(id: Long): AdminProblemResponseDto {
         val shortProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
         return shortProblem.toShortProblemResponseDto()
     }
 
+    @Transactional
     override fun createProblem(createRequestDto: AdminUpsertRequestDto, email: String): Long {
         val createRequestDto = createRequestDto as ShortProblemUpsertRequestDto
         val findUser = userRepository.findByEmail(email)
@@ -46,6 +54,7 @@ class AdminShortProblemServiceImpl(
         return problemRepository.save(shortProblem).id!!
     }
 
+    @Transactional
     override fun updateProblem(id: Long, updateRequestDto: AdminUpsertRequestDto, email: String): Long {
         val updateRequestDto = updateRequestDto as ShortProblemUpsertRequestDto
         val findProblem = shortProblemRepository.findByIdOrNull(id)
