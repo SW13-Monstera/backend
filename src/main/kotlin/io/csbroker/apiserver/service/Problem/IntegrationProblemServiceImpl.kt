@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service
+package io.csbroker.apiserver.service.Problem
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.ConditionConflictException
@@ -23,7 +23,7 @@ class IntegrationProblemServiceImpl(
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
     private val userRepository: UserRepository,
     private val challengeRepository: ChallengeRepository
-) : IntegrationProblemService{
+) : IntegrationProblemService {
 
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {

@@ -18,7 +18,7 @@ import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoicePro
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistoryDto
-import io.csbroker.apiserver.service.ProblemService
+import io.csbroker.apiserver.service.Problem.ProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping

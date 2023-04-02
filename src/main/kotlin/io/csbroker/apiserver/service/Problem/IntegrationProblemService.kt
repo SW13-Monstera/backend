@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service
+package io.csbroker.apiserver.service.Problem
 
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto

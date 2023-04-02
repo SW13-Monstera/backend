@@ -26,7 +26,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.service.NotificationService
-import io.csbroker.apiserver.service.ProblemService
+import io.csbroker.apiserver.service.Problem.ProblemService
 import io.csbroker.apiserver.service.ProblemSetService
 import io.csbroker.apiserver.service.UserAnswerService
 import io.csbroker.apiserver.service.UserService

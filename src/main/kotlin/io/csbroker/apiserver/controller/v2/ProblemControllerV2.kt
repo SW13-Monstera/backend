@@ -6,7 +6,7 @@ import io.csbroker.apiserver.controller.v2.request.ChallengeCreateRequest
 import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
-import io.csbroker.apiserver.service.ProblemService
+import io.csbroker.apiserver.service.Problem.ProblemService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

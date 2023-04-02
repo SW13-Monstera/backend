@@ -20,7 +20,7 @@ import io.csbroker.apiserver.repository.ShortProblemRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserAnswerRepository
 import io.csbroker.apiserver.repository.UserRepository
-import io.csbroker.apiserver.service.ProblemService
+import io.csbroker.apiserver.service.Problem.ProblemService
 import io.csbroker.apiserver.service.UserAnswerService
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll

@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service
+package io.csbroker.apiserver.service.Problem
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.csbroker.apiserver.common.client.AIServerClient

@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service
+package io.csbroker.apiserver.service.Problem
 
 interface ProblemService2 {
 
