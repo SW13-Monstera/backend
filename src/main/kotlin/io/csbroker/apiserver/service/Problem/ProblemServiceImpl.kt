@@ -15,7 +15,7 @@ import io.csbroker.apiserver.dto.problem.ProblemSearchDto
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
-import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
+import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestToAiServerDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.ContentDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
@@ -528,7 +528,7 @@ class ProblemServiceImpl(
 
     private fun getCorrectStandards(findProblem: LongProblem, answer: String): GradeResultDto {
         return if (findProblem.isGradable) {
-            val gradingRequestDto = GradingRequestDto.createGradingRequestDto(findProblem, answer)
+            val gradingRequestDto = LongProblemGradingRequestToAiServerDto.createGradingRequestDto(findProblem, answer)
             val gradingResponseDto = aiServerClient.getGrade(gradingRequestDto)
 
             log.info("Integrate Grading response : {}", jacksonObjectMapper().writeValueAsString(gradingResponseDto))

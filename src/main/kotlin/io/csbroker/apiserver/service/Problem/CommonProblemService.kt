@@ -6,7 +6,7 @@ import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import org.springframework.data.domain.Pageable
 
-interface IntegrationProblemService {
+interface CommonProblemService {
     fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto
 
     fun removeProblemById(id: Long)

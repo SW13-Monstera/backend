@@ -1,6 +1,6 @@
 package io.csbroker.apiserver.common.client
 
-import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
+import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestToAiServerDto
 import io.csbroker.apiserver.dto.problem.grade.GradingResponseDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingResponseDto
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 interface AIServerClient {
 
     @PostMapping("/integrate_predict")
-    fun getGrade(@RequestBody gradingRequestDto: GradingRequestDto): GradingResponseDto
+    fun getGrade(@RequestBody gradingRequestDto: LongProblemGradingRequestToAiServerDto): GradingResponseDto
 
     @PostMapping("/keyword_predict")
     fun getKeywordGrade(@RequestBody keywordGradingRequestDto: KeywordGradingRequestDto): KeywordGradingResponseDto

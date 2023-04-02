@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class IntegrationProblemServiceImpl(
+class CommonProblemServiceImpl(
     private val problemRepository: ProblemRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
     private val userRepository: UserRepository,
     private val challengeRepository: ChallengeRepository
-) : IntegrationProblemService {
+) : CommonProblemService {
 
 
     override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
