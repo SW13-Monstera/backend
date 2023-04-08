@@ -35,9 +35,13 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User {
+    override fun modifyUser(uuid: UUID, email: String, userUpdateRequestDto: UserUpdateRequestDto): User {
         val findUser = userRepository.findByIdOrNull(uuid)
             ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
+
+        if (findUser.email != email) {
+            throw EntityNotFoundException("${email}을 가진 유저를 찾을 수 없습니다.")
+        }
 
         userUpdateRequestDto.password?.let {
             if (findUser.providerType != ProviderType.LOCAL) {

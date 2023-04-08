@@ -1,11 +1,11 @@
 package io.csbroker.apiserver.controller.v1.admin.problem
 
 import io.csbroker.apiserver.common.enums.GradingStandardType
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
-import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.service.problem.AdminLongProblemService
 import io.mockk.every
 import io.mockk.mockk

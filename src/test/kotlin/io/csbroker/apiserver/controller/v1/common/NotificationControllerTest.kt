@@ -1,225 +1,75 @@
 package io.csbroker.apiserver.controller.v1.common
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.dto.notification.NotificationBulkInsertDto
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
-import io.csbroker.apiserver.dto.notification.NotificationRequestDto
 import io.csbroker.apiserver.model.Notification
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.common.NotificationRepository
-import io.csbroker.apiserver.repository.user.UserRepository
-import org.hamcrest.CoreMatchers
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Order
+import io.csbroker.apiserver.service.common.NotificationService
+import io.mockk.every
+import io.mockk.mockk
+import io.restassured.http.Method
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.request.RequestDocumentation
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.util.Date
+import java.time.LocalDateTime
+import java.util.UUID
 
-@SpringBootTest
-@AutoConfigureRestDocs
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class NotificationControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var notificationRepository: NotificationRepository
-
-    @Autowired
-    private lateinit var tokenProvider: AuthTokenProvider
-
-    private lateinit var user: User
-
-    private lateinit var token: String
-
-    private val ADMIN_ENDPOINT = "/api/admin"
-
+class NotificationControllerTest : RestDocsTest() {
     private val NOTIFICATION_ENDPOINT = "/api/v1/notifications"
+    private lateinit var mockMvc: MockMvcRequestSpecification
+    private lateinit var notificationService: NotificationService
 
-    @BeforeAll
+    @BeforeEach
     fun setup() {
-        val user = User(
-            email = "test-admin3@test.com",
-            username = "test-admin3",
-            providerType = ProviderType.LOCAL,
-            role = Role.ROLE_ADMIN,
-        )
-
-        userRepository.save(user)
-
-        this.user = user
-
-        val now = Date()
-
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin3@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
-        )
-
-        token = accessToken.token
+        notificationService = mockk()
+        mockMvc = mockMvc(
+            NotificationController(
+                notificationService,
+            ),
+        ).header("Authorization", "Bearer TEST-TOKEN")
     }
 
     @Test
-    @Order(1)
-    fun `Create Notification 200`() {
-        // given
-        val notificationRequestDto = NotificationRequestDto(
-            content = "test content",
-            userId = user.id!!,
-            link = "https://dev.csbroker.io",
-        )
-
-        val notificationRequestDtoString = objectMapper.writeValueAsString(notificationRequestDto)
-
-        // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("$ADMIN_ENDPOINT/notification")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(notificationRequestDtoString)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
-
-        // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
-                MockMvcRestDocumentation.document(
-                    "admin/notifications/insert",
-                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    PayloadDocumentation.requestFields(
-                        PayloadDocumentation.fieldWithPath("content").type(JsonFieldType.STRING)
-                            .description("알림 내용"),
-                        PayloadDocumentation.fieldWithPath("userId").type(JsonFieldType.STRING)
-                            .description("유저 아이디 ( UUID )"),
-                        PayloadDocumentation.fieldWithPath("link").type(JsonFieldType.STRING)
-                            .description("알림에 해당하는 링크"),
-                    ),
-                    PayloadDocumentation.responseFields(
-                        PayloadDocumentation.fieldWithPath("status")
-                            .type(JsonFieldType.STRING).description("결과 상태"),
-                        PayloadDocumentation.fieldWithPath("data.id")
-                            .type(JsonFieldType.NUMBER).description("알림 ID"),
-                    ),
-                ),
-            )
-    }
-
-    @Test
-    @Order(2)
-    fun `Create Multiple Notification 200`() {
-        // given
-        val content = mutableListOf<NotificationRequestDto>()
-
-        for (i in 1..10) {
-            content.add(
-                NotificationRequestDto(
-                    content = "test content $i",
-                    userId = user.id!!,
-                    link = "https://dev.csbroker.io",
-                ),
-            )
-        }
-
-        val bulkInsertDto = NotificationBulkInsertDto(content)
-
-        val bulkInsertDtoString = objectMapper.writeValueAsString(bulkInsertDto)
-
-        // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("$ADMIN_ENDPOINT/notifications")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bulkInsertDtoString)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
-
-        // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
-                MockMvcRestDocumentation.document(
-                    "admin/notifications/bulkInsert",
-                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    PayloadDocumentation.requestFields(
-                        PayloadDocumentation.fieldWithPath("content").type(JsonFieldType.ARRAY)
-                            .description("알림 데이터"),
-                        PayloadDocumentation.fieldWithPath("content.[].content").type(JsonFieldType.STRING)
-                            .description("알림 내용"),
-                        PayloadDocumentation.fieldWithPath("content.[].userId").type(JsonFieldType.STRING)
-                            .description("유저 아이디 ( UUID )"),
-                        PayloadDocumentation.fieldWithPath("content.[].link").type(JsonFieldType.STRING)
-                            .description("알림에 해당하는 링크"),
-                    ),
-                    PayloadDocumentation.responseFields(
-                        PayloadDocumentation.fieldWithPath("status")
-                            .type(JsonFieldType.STRING).description("결과 상태"),
-                        PayloadDocumentation.fieldWithPath("data.size")
-                            .type(JsonFieldType.NUMBER).description("생성 된 알림 개수"),
-                    ),
-                ),
-            )
-    }
-
-    @Test
-    @Order(3)
     fun `Get Notifications 200`() {
         // given
         val page = 0
         val size = 10
-
-        notificationRepository.saveAll(
-            (1..10).map {
+        every { notificationService.getNotification(any(), any()) } returns PageImpl(
+            listOf(
                 Notification(
-                    content = "test content $it",
-                    user = user,
-                    link = "https://dev.csbroker.io",
-                )
-            }.toList(),
+                    id = 1,
+                    content = "content",
+                    isRead = false,
+                    link = "link",
+                    user = User(
+                        id = UUID.randomUUID(),
+                        email = "email",
+                        username = "username",
+                        providerType = ProviderType.LOCAL,
+                    ),
+                ).also { it.createdAt = LocalDateTime.now() },
+            ),
+            PageRequest.of(0, 10),
+            1L,
         )
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.get("$NOTIFICATION_ENDPOINT?page=$page&size=$size")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.request(Method.GET, "$NOTIFICATION_ENDPOINT?page=$page&size=$size")
 
         // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "notifications/getAll",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -264,33 +114,22 @@ class NotificationControllerTest {
     }
 
     @Test
-    @Order(4)
     fun `Read One Notification 200`() {
         // given
-        val id = notificationRepository.save(
-            Notification(
-                content = "test content",
-                user = user,
-                link = "https://dev.csbroker.io",
-            ),
-        ).id!!
+        every { notificationService.readNotificationById(any(), any()) } returns Unit
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.put("$NOTIFICATION_ENDPOINT/read/{notification_id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.request(Method.PUT, "$NOTIFICATION_ENDPOINT/read/{notification_id}", 1L)
 
         // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "notifications/readOne",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
@@ -302,40 +141,18 @@ class NotificationControllerTest {
     }
 
     @Test
-    @Order(5)
     fun `Read Notifications 200`() {
         // given
-        val ids = notificationRepository.saveAll(
-            (1..10).map {
-                Notification(
-                    content = "test content $it",
-                    user = user,
-                    link = "https://dev.csbroker.io",
-                )
-            }.toList(),
-        ).map {
-            it.id!!
-        }.toList()
-
-        val notificationBulkReadDto = NotificationBulkReadDto(
-            ids = ids,
-        )
-
-        val notificationBulkReadDtoString = objectMapper.writeValueAsString(notificationBulkReadDto)
+        every { notificationService.readNotifications(any(), any()) } returns Unit
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.put("$NOTIFICATION_ENDPOINT/read")
-                .content(notificationBulkReadDtoString)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.body(NotificationBulkReadDto(ids = listOf(1L)))
+            .request(Method.PUT, "$NOTIFICATION_ENDPOINT/read")
 
         // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "notifications/readBulk",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -355,31 +172,17 @@ class NotificationControllerTest {
     }
 
     @Test
-    @Order(6)
     fun `Get Un Read Notifications 200`() {
         // given
-        notificationRepository.saveAll(
-            (1..10).map {
-                Notification(
-                    content = "test content $it",
-                    user = user,
-                    link = "https://dev.csbroker.io",
-                )
-            }.toList(),
-        )
+        every { notificationService.getUnreadNotificationCount(any()) } returns 10
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.get("$NOTIFICATION_ENDPOINT/count")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.request(Method.GET, "$NOTIFICATION_ENDPOINT/count")
 
         // then
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "notifications/count",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),

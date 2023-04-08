@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.csbroker.apiserver.auth.LoginUserArgumentResolver
+import io.csbroker.apiserver.common.enums.Role
 import io.restassured.config.ObjectMapperConfig
 import io.restassured.module.mockmvc.RestAssuredMockMvc
 import io.restassured.module.mockmvc.config.RestAssuredMockMvcConfig
@@ -17,6 +18,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
@@ -36,7 +40,7 @@ abstract class RestDocsTest {
         controllerAdvices: Any = emptyArray<Any>(),
         argumentResolvers: Array<HandlerMethodArgumentResolver> = arrayOf(
             PageableHandlerMethodArgumentResolver(),
-            LoginUserArgumentResolver(true),
+            LoginUserArgumentResolver(),
         ),
         httpMessageConverters: Array<HttpMessageConverter<Any>> = arrayOf(
             MappingJackson2HttpMessageConverter(objectMapper()),
@@ -49,6 +53,12 @@ abstract class RestDocsTest {
             argumentResolvers,
             httpMessageConverters,
         )
+        val adminUser = User(
+            "admin@csbroker.io",
+            "1234",
+            listOf(SimpleGrantedAuthority(Role.ROLE_ADMIN.code)),
+        )
+
         return RestAssuredMockMvc.given()
             .config(
                 RestAssuredMockMvcConfig.config().objectMapperConfig(
@@ -58,6 +68,8 @@ abstract class RestDocsTest {
             .mockMvc(mockMvc)
             .contentType("application/json")
             .accept("application/json")
+            .auth()
+            .authentication(UsernamePasswordAuthenticationToken(adminUser, null, adminUser.authorities))
     }
 
     private fun createMockMvc(

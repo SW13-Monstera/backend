@@ -1,38 +1,21 @@
 package io.csbroker.apiserver.controller.v1.user
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.enums.GradingStandardType
-import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.controller.RestDocsTest
+import io.csbroker.apiserver.dto.user.UserStatsDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
-import io.csbroker.apiserver.model.GradingHistory
-import io.csbroker.apiserver.model.GradingStandard
-import io.csbroker.apiserver.model.LongProblem
-import io.csbroker.apiserver.model.ProblemTag
-import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
-import io.csbroker.apiserver.repository.problem.ProblemRepository
-import io.csbroker.apiserver.repository.problem.ProblemTagRepository
-import io.csbroker.apiserver.repository.problem.TagRepository
-import io.csbroker.apiserver.repository.user.UserRepository
-import io.csbroker.apiserver.repository.common.RedisRepository
-import org.hamcrest.CoreMatchers.containsString
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Order
+import io.csbroker.apiserver.service.user.UserService
+import io.mockk.every
+import io.mockk.mockk
+import io.restassured.http.Method
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -42,182 +25,45 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.Date
 import java.util.UUID
 
-@SpringBootTest
-@AutoConfigureRestDocs
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var bcryptPasswordEncoder: BCryptPasswordEncoder
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var tokenProvider: AuthTokenProvider
-
-    @Autowired
-    private lateinit var problemRepository: ProblemRepository
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var tagRepository: TagRepository
-
-    @Autowired
-    private lateinit var problemTagRepository: ProblemTagRepository
-
-    @Autowired
-    private lateinit var gradingHistoryRepository: GradingHistoryRepository
-
-    @Autowired
-    private lateinit var redisRepository: RedisRepository
-
+class UserControllerTest : RestDocsTest() {
     private val USER_ENDPOINT = "/api/v1/users"
+    private lateinit var mockMvc: MockMvcRequestSpecification
+    private lateinit var userService: UserService
 
-    private lateinit var adminId: UUID
-
-    @BeforeAll
-    fun setUpData() {
-        for (i in 1..10) {
-            val user = User(
-                email = "test-user$i@test.com",
-                username = "test-user$i",
-                providerType = ProviderType.LOCAL,
-            )
-            userRepository.save(user)
-        }
-
-        val admin = User(
-            email = "test-admin@test.com",
-            username = "test-admin",
-            role = Role.ROLE_ADMIN,
-            providerType = ProviderType.LOCAL,
-            major = "컴퓨터공학",
-            job = "백엔드 개발자",
-            tech = "Spring, Docker, Kotlin",
-            githubUrl = "https://github.com/kshired",
-            linkedinUrl = "https://www.linkedin.com/in/seongil-kim-40773b23b/",
-            password = bcryptPasswordEncoder.encode("password"),
-        )
-
-        userRepository.save(admin)
-
-        adminId = admin.id!!
-
-        val osTag = Tag(
-            name = "os",
-        )
-        tagRepository.save(osTag)
-
-        val dsTag = Tag(
-            name = "ds",
-        )
-        tagRepository.save(dsTag)
-
-        val networkTag = Tag(
-            name = "network",
-        )
-        tagRepository.save(networkTag)
-
-        val dbTag = Tag(
-            name = "db",
-        )
-        tagRepository.save(dbTag)
-
-        for (i in 0..10) {
-            val problem = LongProblem(
-                title = "test$i",
-                description = "test",
-                creator = admin,
-            )
-
-            val gradingStandard = GradingStandard(
-                content = "test",
-                score = 10.0,
-                type = GradingStandardType.KEYWORD,
-                problem = problem,
-            )
-
-            problem.addGradingStandards(listOf(gradingStandard))
-            problemRepository.save(problem)
-
-            val gradingHistory = GradingHistory(
-                problem = problem,
-                user = admin,
-                userAnswer = "test",
-                score = i.toDouble(),
-            )
-
-            gradingHistoryRepository.save(gradingHistory)
-
-            if (i == 10) {
-                val problemTagOS = ProblemTag(
-                    problem = problem,
-                    tag = osTag,
-                )
-
-                val problemTagDB = ProblemTag(
-                    problem = problem,
-                    tag = dbTag,
-                )
-
-                val problemTagDs = ProblemTag(
-                    problem = problem,
-                    tag = dsTag,
-                )
-
-                val problemTagNetwork = ProblemTag(
-                    problem = problem,
-                    tag = networkTag,
-                )
-
-                problemTagRepository.save(problemTagOS)
-                problemTagRepository.save(problemTagDB)
-                problemTagRepository.save(problemTagDs)
-                problemTagRepository.save(problemTagNetwork)
-            }
-        }
+    @BeforeEach
+    fun setup() {
+        userService = mockk()
+        mockMvc = mockMvc(
+            UserController(userService),
+        ).header("Authorization", "Bearer TEST-TOKEN")
     }
 
     @Test
-    @Order(1)
     fun `GetUser v1 200 OK`() {
         // given
-        val now = Date()
-        val urlTemplate = "$USER_ENDPOINT/{user_id}"
-
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
+        every { userService.findUserById(any()) } returns User(
+            id = UUID.randomUUID(),
+            email = "email",
+            username = "username",
+            providerType = ProviderType.LOCAL,
+            major = "major",
+            job = "job",
+            jobObjective = "jobObjective",
+            tech = "tech",
+            profileImageUrl = "profileImageUrl",
+            githubUrl = "githubUrl",
+            linkedinUrl = "linkedinUrl",
         )
 
         // when
-        val result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.request(Method.GET, "$USER_ENDPOINT/{user_id}", UUID.randomUUID())
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 document(
                     "users/findOne",
                     preprocessResponse(Preprocessors.prettyPrint()),
@@ -256,27 +102,31 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(2)
     fun `GetUsers v1 200 OK`() {
         // given
-        val now = Date()
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
+        every { userService.findUsers() } returns listOf(
+            User(
+                id = UUID.randomUUID(),
+                email = "email",
+                username = "username",
+                providerType = ProviderType.LOCAL,
+                major = "major",
+                job = "job",
+                jobObjective = "jobObjective",
+                tech = "tech",
+                profileImageUrl = "profileImageUrl",
+                githubUrl = "githubUrl",
+                linkedinUrl = "linkedinUrl",
+            ),
         )
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.get(USER_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.get(USER_ENDPOINT)
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 document(
                     "users/findAll",
                     preprocessResponse(Preprocessors.prettyPrint()),
@@ -312,44 +162,42 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(3)
     fun `UpdateUser v1 200 OK`() {
         // given
-        val now = Date()
-        val urlTemplate = "$USER_ENDPOINT/$adminId"
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
+        every { userService.modifyUser(any(), any(), any()) } returns User(
+            id = UUID.randomUUID(),
+            email = "email",
+            username = "username",
+            providerType = ProviderType.LOCAL,
+            major = "major",
+            job = "job",
+            jobObjective = "jobObjective",
+            tech = "tech",
+            profileImageUrl = "profileImageUrl",
+            githubUrl = "githubUrl",
+            linkedinUrl = "linkedinUrl",
         )
-        val userUpdateRequestDto = UserUpdateRequestDto(
-            username = "test-admin-update",
-            profileImageUrl = "https://test.com/test.png",
-            password = "changePassword123!",
-            major = "환경공학",
-            job = "대학생",
-            jobObjective = "프론트엔드 개발자",
-            techs = listOf("react", "typescript"),
-            githubUrl = "https://github.com/Kim-Hyunjo",
-            linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211",
-            originalPassword = "password",
-        )
-
-        val userUpdateRequestDtoString = objectMapper.writeValueAsString(userUpdateRequestDto)
 
         // when
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.put(urlTemplate)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userUpdateRequestDtoString)
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.body(
+            UserUpdateRequestDto(
+                username = "test-admin-update",
+                profileImageUrl = "https://test.com/test.png",
+                password = "changePassword123!",
+                major = "환경공학",
+                job = "대학생",
+                jobObjective = "프론트엔드 개발자",
+                techs = listOf("react", "typescript"),
+                githubUrl = "https://github.com/Kim-Hyunjo",
+                linkedinUrl = "https://www.linkedin.com/in/%EC%9E%AC%EC%9B%90-%EB%AF%BC-2b5149211",
+                originalPassword = "password",
+            ),
+        ).request(Method.PUT, "$USER_ENDPOINT/${UUID.randomUUID()}")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 document(
                     "users/update",
                     preprocessRequest(Preprocessors.prettyPrint()),
@@ -408,29 +256,17 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(4)
     fun `Delete User v1 200 OK`() {
         // given
-        val now = Date()
-        val urlTemplate = "$USER_ENDPOINT/{user_id}"
-
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
-        )
+        every { userService.deleteUser(any(), any()) } returns true
 
         // when
-        val result = mockMvc.perform(
-            RestDocumentationRequestBuilders.delete(urlTemplate, "$adminId")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.delete("$USER_ENDPOINT/{user_id}", UUID.randomUUID())
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 document(
                     "users/deleteOne",
                     preprocessResponse(Preprocessors.prettyPrint()),
@@ -451,31 +287,42 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(5)
     fun `Get User Stat v1 200 OK`() {
         // given
-        val now = Date()
-        val urlTemplate = "$USER_ENDPOINT/{user_id}/stats"
-
-        val accessToken = tokenProvider.createAuthToken(
-            "test-admin@test.com",
-            expiry = Date(now.time + 6000000),
-            role = Role.ROLE_ADMIN.code,
+        every { userService.getStats(any()) } returns UserStatsDto(
+            correctAnsweredProblem = listOf(
+                UserStatsDto.ProblemStatsDto(
+                    id = 1,
+                    type = "long",
+                    title = "Long Problem",
+                ),
+            ),
+            wrongAnsweredProblem = listOf(
+                UserStatsDto.ProblemStatsDto(
+                    id = 2,
+                    type = "short",
+                    title = "Short Problem",
+                ),
+            ),
+            partialAnsweredProblem = listOf(
+                UserStatsDto.ProblemStatsDto(
+                    id = 3,
+                    type = "short",
+                    title = "Short Problem",
+                ),
+            ),
+            mapOf("os" to 1, "network" to 2, "ds" to 3, "db" to 4),
+            1,
+            10.0,
         )
-
-        redisRepository.setRank(mapOf("$adminId@test-admin" to 100.0))
 
         // when
-        val result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get(urlTemplate, "$adminId")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.get("$USER_ENDPOINT/${UUID.randomUUID()}/stats")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 document(
                     "users/statsOne",
                     preprocessResponse(Preprocessors.prettyPrint()),

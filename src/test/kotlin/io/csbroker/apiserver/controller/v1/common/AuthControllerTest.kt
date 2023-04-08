@@ -1,22 +1,24 @@
 package io.csbroker.apiserver.controller.v1.common
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.csbroker.apiserver.auth.AuthTokenProvider
+import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.controller.RestDocsTest
+import io.csbroker.apiserver.dto.auth.PasswordChangeMailRequestDto
 import io.csbroker.apiserver.dto.auth.PasswordChangeRequestDto
+import io.csbroker.apiserver.dto.auth.TokenDto
+import io.csbroker.apiserver.dto.user.UserInfoDto
 import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
-import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
-import io.csbroker.apiserver.repository.common.RedisRepository
-import org.hamcrest.CoreMatchers.containsString
-import org.junit.jupiter.api.Order
+import io.csbroker.apiserver.service.auth.AuthService
+import io.csbroker.apiserver.service.common.MailService
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.restassured.http.Method
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
@@ -28,60 +30,53 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.Date
 import java.util.UUID
-import javax.servlet.http.Cookie
 
-@SpringBootTest
-@AutoConfigureRestDocs
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-class AuthControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var tokenProvider: AuthTokenProvider
-
-    @Autowired
-    private lateinit var redisRepository: RedisRepository
-
+class AuthControllerTest : RestDocsTest() {
     private val AUTH_ENDPOINT = "/api/v1/auth"
+    private lateinit var mockMvc: MockMvcRequestSpecification
+    private lateinit var authService: AuthService
+    private lateinit var mailService: MailService
+
+    @BeforeEach
+    fun setUp() {
+        authService = mockk()
+        mailService = mockk()
+        mockMvc = mockMvc(
+            AuthController(
+                authService,
+                AppProperties(
+                    auth = AppProperties.Auth(
+                        tokenExpiry = 1000,
+                        tokenSecret = "secret",
+                        refreshTokenExpiry = 1000,
+                    ),
+                    oAuth2 = AppProperties.OAuth2(
+                        authorizedRedirectUris = listOf("http://localhost:8080"),
+                    ),
+                ),
+                mailService,
+            ),
+        ).header("Authorization", "Bearer TEST-TOKEN")
+    }
 
     @Test
-    @Order(1)
     fun `Signup v1 200 OK`() {
         // given
+        every { authService.saveUser(any()) } returns UUID.randomUUID()
         val userSignUpDto = UserSignUpDto(
             username = "test",
             email = "test@test.com",
             password = "Test123@!",
         )
 
-        val signUpDtoString = objectMapper.writeValueAsString(userSignUpDto)
-
         // when
-        val result = mockMvc.perform(
-            post("$AUTH_ENDPOINT/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(signUpDtoString)
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val response = mockMvc.body(userSignUpDto).request(Method.POST, "$AUTH_ENDPOINT/signup")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
-            .andDo(
+        response.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "auth/signup",
                     preprocessRequest(prettyPrint()),
@@ -100,28 +95,28 @@ class AuthControllerTest {
     }
 
     @Test
-    @Order(2)
     fun `Login v1 200 OK`() {
         // given
+        every { authService.loginUser(any()) } returns UserInfoDto(
+            id = UUID.randomUUID(),
+            username = "seongil-kim",
+            email = "seongil.kim@gmail.com",
+            role = Role.ROLE_USER,
+            accessToken = "accessToken",
+            refreshToken = "refreshToken",
+        )
         val userLoginRequestDto = UserLoginRequestDto(
             email = "test@test.com",
             password = "Test123@!",
         )
 
-        val loginDtoString = objectMapper.writeValueAsString(userLoginRequestDto)
-
         // when
-        val result = mockMvc.perform(
-            post("$AUTH_ENDPOINT/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(loginDtoString)
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val response = mockMvc.body(userLoginRequestDto).request(Method.POST, "$AUTH_ENDPOINT/login")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("accessToken")))
-            .andDo(
+        response.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "auth/login",
                     preprocessRequest(prettyPrint()),
@@ -147,40 +142,20 @@ class AuthControllerTest {
     }
 
     @Test
-    @Order(3)
     fun `Refresh with not expired refresh token v1 200 OK`() {
         // given
-        // 로그인 가정
-        val now = Date()
-        val email = "test@test.com"
-
-        val expiredAccessToken = tokenProvider.createAuthToken(
-            email = email,
-            expiry = now,
-            role = Role.ROLE_USER.code,
+        every { authService.refreshUserToken(any()) } returns TokenDto(
+            accessToken = "accessToken",
+            refreshToken = "refreshToken",
         )
-
-        val refreshToken = tokenProvider.createAuthToken(
-            email = email,
-            expiry = Date(now.time + 259200000),
-        )
-
-        val refreshTokenCookie = Cookie(REFRESH_TOKEN, refreshToken.token)
-
-        redisRepository.setRefreshTokenByEmail(email, refreshToken.token)
 
         // when
-        val result = mockMvc.perform(
-            get("$AUTH_ENDPOINT/refresh")
-                .cookie(refreshTokenCookie)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${expiredAccessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val response = mockMvc.request(Method.GET, "$AUTH_ENDPOINT/refresh")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("accessToken")))
-            .andDo(
+        response.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "auth/refresh",
                     preprocessResponse(prettyPrint()),
@@ -200,30 +175,24 @@ class AuthControllerTest {
     }
 
     @Test
-    @Order(4)
     fun `Get userInfo v1 200 OK`() {
         // given
-        // 로그인 가정
-        val now = Date()
-        val email = "test@test.com"
-
-        val accessToken = tokenProvider.createAuthToken(
-            email = email,
-            expiry = Date(now.time + 259200000),
-            role = Role.ROLE_USER.code,
+        every { authService.getUserInfo(any()) } returns UserInfoDto(
+            id = UUID.randomUUID(),
+            username = "seongil-kim",
+            email = "seongil.kim@gmail.com",
+            role = Role.ROLE_USER,
+            accessToken = "accessToken",
+            refreshToken = "refreshToken",
         )
 
         // when
-        val result = mockMvc.perform(
-            get("$AUTH_ENDPOINT/info")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken.token}")
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.request(Method.GET, "$AUTH_ENDPOINT/info")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("id")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "auth/getUserInfo",
                     preprocessResponse(prettyPrint()),
@@ -236,33 +205,25 @@ class AuthControllerTest {
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
+                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("Access 토큰 (JWT)"),
                     ),
                 ),
             )
     }
 
     @Test
-    @Order(5)
     fun `Change password 200 OK`() {
         // given
-        val email = "test@test.com"
-        val code = UUID.randomUUID().toString()
-        redisRepository.setPasswordVerification(code, email)
-        val passwordChangeRequestDto = PasswordChangeRequestDto(code, "Test123@!")
-        val passwordChangeRequestDtoString = objectMapper.writeValueAsString(passwordChangeRequestDto)
+        every { authService.changePassword(any(), any()) } returns true
+        val passwordChangeRequestDto = PasswordChangeRequestDto("123456", "Test123@!")
 
         // when
-        val result = mockMvc.perform(
-            put("$AUTH_ENDPOINT/password/change")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(passwordChangeRequestDtoString)
-                .accept(MediaType.APPLICATION_JSON),
-        )
+        val result = mockMvc.body(passwordChangeRequestDto).request(Method.PUT, "$AUTH_ENDPOINT/password/change")
 
         // then
-        result.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().string(containsString("success")))
-            .andDo(
+        result.then()
+            .statusCode(200)
+            .apply(
                 MockMvcRestDocumentation.document(
                     "password/change",
                     preprocessRequest(prettyPrint()),
@@ -270,6 +231,31 @@ class AuthControllerTest {
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data").type(JsonFieldType.STRING).description("비밀번호 변경 결과"),
+                    ),
+                ),
+            )
+    }
+
+    @Test
+    fun `Get password change code 200 OK`() {
+        // given
+        coEvery { mailService.sendPasswordChangeMail(any()) } returns Unit
+        val passwordChangeRequestDto = PasswordChangeMailRequestDto("test@test.com")
+
+        // when
+        val result = mockMvc.body(passwordChangeRequestDto).request(Method.POST, "$AUTH_ENDPOINT/password/code")
+
+        // then
+        result.then()
+            .statusCode(200)
+            .apply(
+                MockMvcRestDocumentation.document(
+                    "password/code",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data").type(JsonFieldType.STRING).description("비밀번호 변경 요청 결과"),
                     ),
                 ),
             )

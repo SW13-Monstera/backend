@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/problems/long")
+@RequestMapping("/api/v1/problems")
 class LongProblemController(
     private val longProblemService: LongProblemService,
 ) {

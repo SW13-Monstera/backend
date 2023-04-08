@@ -18,6 +18,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPri
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.restdocs.request.RequestDocumentation
 
 class ProblemSetControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
@@ -26,7 +27,7 @@ class ProblemSetControllerTest : RestDocsTest() {
     @BeforeEach
     fun setUp() {
         problemSetService = mockk()
-        mockMvc = mockMvc(ProblemSetController(problemSetService))
+        mockMvc = mockMvc(ProblemSetController(problemSetService)).header("Authorization", "Bearer TEST-TOKEN")
     }
 
     @Test
@@ -63,7 +64,7 @@ class ProblemSetControllerTest : RestDocsTest() {
         } returns createProblemsetDetailResponseDto()
 
         // when
-        val response = mockMvc.request(Method.GET, "/api/v1/problem-sets/1")
+        val response = mockMvc.request(Method.GET, "/api/v1/problem-sets/{problem_sets_id}", 1L)
 
         // then
         response.then().statusCode(200)
@@ -72,6 +73,9 @@ class ProblemSetControllerTest : RestDocsTest() {
                     "problem-sets-find",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("problem_sets_id").description("문제 세트 id"),
+                    ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("문제 세트 ID"),

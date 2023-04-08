@@ -10,7 +10,7 @@ interface UserService {
 
     fun findUserById(uuid: UUID): User?
 
-    fun modifyUser(uuid: UUID, userUpdateRequestDto: UserUpdateRequestDto): User
+    fun modifyUser(uuid: UUID, email: String, userUpdateRequestDto: UserUpdateRequestDto): User
 
     fun findUsers(): List<User>
 

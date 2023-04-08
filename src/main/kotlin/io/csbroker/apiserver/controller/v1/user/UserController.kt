@@ -47,15 +47,7 @@ class UserController(
         @PathVariable("id") id: UUID,
         @RequestBody userUpdateRequestDto: UserUpdateRequestDto,
     ): ApiResponse<UserResponseDto> {
-        val findUser = userService.findUserById(id)
-            ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
-
-        if (findUser.email != loginUser.username) {
-            throw EntityNotFoundException("${loginUser.username}을 가진 유저를 찾을 수 없습니다.")
-        }
-
-        val user = userService.modifyUser(id, userUpdateRequestDto)
-
+        val user = userService.modifyUser(id, loginUser.username, userUpdateRequestDto)
         return ApiResponse.success(user.toUserResponseDto())
     }
 

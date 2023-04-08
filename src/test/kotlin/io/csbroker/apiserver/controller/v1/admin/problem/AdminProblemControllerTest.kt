@@ -1,8 +1,8 @@
 package io.csbroker.apiserver.controller.v1.admin.problem
 
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import io.csbroker.apiserver.dto.problem.problemset.ProblemSetUpsertRequestDto
-import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.service.problem.CommonProblemService
 import io.csbroker.apiserver.service.problem.ProblemSetService
 import io.mockk.every
