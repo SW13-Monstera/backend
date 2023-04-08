@@ -44,7 +44,6 @@ class AdminMultipleProblemServiceImpl(
 
     @Transactional
     override fun createProblem(createRequestDto: MultipleChoiceProblemUpsertRequestDto, email: String): Long {
-        val createRequestDto = createRequestDto
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 

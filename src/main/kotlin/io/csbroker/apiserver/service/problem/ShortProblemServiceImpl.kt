@@ -2,7 +2,6 @@ package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.controller.v2.problem.response.ShortProblemDetailResponseV2Dto
-import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.ShortProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistoryDto
@@ -10,14 +9,12 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-@Qualifier("shortProblemService")
 class ShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
     private val userRepository: UserRepository,
@@ -29,9 +26,9 @@ class ShortProblemServiceImpl(
     }
 
     @Transactional
-    override fun gradingProblem(gradingRequest: GradingRequestDto): ShortProblemGradingHistoryDto {
+    override fun gradingProblem(gradingRequest: ShortProblemGradingRequestDto): ShortProblemGradingHistoryDto {
         // get entities
-        val (email, problemId, answer) = gradingRequest as ShortProblemGradingRequestDto
+        val (email, problemId, answer) = gradingRequest
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 

@@ -1,7 +1,6 @@
 package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
-import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.MultipleProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemGradingHistoryDto
@@ -9,14 +8,12 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-@Qualifier("multipleProblemService")
 class MultipleProblemServiceImpl(
     private val multipleChoiceProblemRepository: MultipleChoiceProblemRepository,
     private val userRepository: UserRepository,
@@ -28,9 +25,11 @@ class MultipleProblemServiceImpl(
     }
 
     @Transactional
-    override fun gradingProblem(gradingRequestDto: GradingRequestDto): MultipleChoiceProblemGradingHistoryDto {
+    override fun gradingProblem(
+        gradingRequest: MultipleProblemGradingRequestDto,
+    ): MultipleChoiceProblemGradingHistoryDto {
         // get entities
-        val (email, problemId, answerIds) = gradingRequestDto as MultipleProblemGradingRequestDto
+        val (email, problemId, answerIds) = gradingRequest
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 

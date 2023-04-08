@@ -8,7 +8,6 @@ import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.common.util.log
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
-import io.csbroker.apiserver.dto.problem.grade.GradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestToAiServerDto
@@ -24,14 +23,12 @@ import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
 import io.csbroker.apiserver.repository.problem.UserAnswerRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-@Qualifier("longProblemService")
 class LongProblemServiceImpl(
     private val longProblemRepository: LongProblemRepository,
     private val userRepository: UserRepository,
@@ -46,9 +43,9 @@ class LongProblemServiceImpl(
     }
 
     @Transactional
-    override fun gradingProblem(gradingRequest: GradingRequestDto): LongProblemGradingHistoryDto {
+    override fun gradingProblem(gradingRequest: LongProblemGradingRequestDto): LongProblemGradingHistoryDto {
         // get entities
-        val (email, problemId, answer, isGrading) = gradingRequest as LongProblemGradingRequestDto
+        val (email, problemId, answer, isGrading) = gradingRequest
         val findUser = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 

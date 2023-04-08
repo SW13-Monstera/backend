@@ -12,9 +12,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class LoginUserArgumentResolver(
-    private val isTest: Boolean = false,
-) : HandlerMethodArgumentResolver {
+class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         parameter.getParameterAnnotation(LoginUser::class.java) ?: return false
         return parameter.parameterType.isAssignableFrom(User::class.java)
