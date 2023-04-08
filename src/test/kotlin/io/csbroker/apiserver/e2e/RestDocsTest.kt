@@ -1,13 +1,19 @@
 package io.csbroker.apiserver.e2e
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.csbroker.apiserver.auth.LoginUserArgumentResolver
 import io.restassured.config.ObjectMapperConfig
 import io.restassured.module.mockmvc.RestAssuredMockMvc
 import io.restassured.module.mockmvc.config.RestAssuredMockMvcConfig
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
@@ -28,9 +34,14 @@ abstract class RestDocsTest {
     protected fun mockMvc(
         controller: Any,
         controllerAdvices: Any = emptyArray<Any>(),
-        argumentResolvers: Array<HandlerMethodArgumentResolver> = emptyArray(),
-        httpMessageConverters: Array<HttpMessageConverter<Any>> = emptyArray(),
-        objectMapper: ObjectMapper = ObjectMapper(),
+        argumentResolvers: Array<HandlerMethodArgumentResolver> = arrayOf(
+            PageableHandlerMethodArgumentResolver(),
+            LoginUserArgumentResolver(true),
+        ),
+        httpMessageConverters: Array<HttpMessageConverter<Any>> = arrayOf(
+            MappingJackson2HttpMessageConverter(objectMapper()),
+        ),
+        objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule(),
     ): MockMvcRequestSpecification {
         val mockMvc = createMockMvc(
             controller,
@@ -60,6 +71,13 @@ abstract class RestDocsTest {
             .setCustomArgumentResolvers(*argumentResolvers)
             .setMessageConverters(*httpMessageConverters)
             .apply<StandaloneMockMvcBuilder>(documentationConfiguration(restDocumentation))
+            .build()
+    }
+
+    private fun objectMapper(): ObjectMapper {
+        return Jackson2ObjectMapperBuilder()
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .featuresToDisable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
     }
 }
