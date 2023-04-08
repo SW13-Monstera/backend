@@ -1,6 +1,6 @@
-package io.csbroker.apiserver.e2e
+package io.csbroker.apiserver.controller.v1.problem
 
-import io.csbroker.apiserver.controller.v1.problem.ProblemSetController
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
 import io.csbroker.apiserver.dto.problem.problemset.ProblemSetDetailResponseDto
 import io.csbroker.apiserver.model.ProblemSet

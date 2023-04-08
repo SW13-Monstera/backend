@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.e2e
+package io.csbroker.apiserver.controller.v1.common
 
 import io.csbroker.apiserver.model.Tech
 import io.csbroker.apiserver.repository.common.TechRepository

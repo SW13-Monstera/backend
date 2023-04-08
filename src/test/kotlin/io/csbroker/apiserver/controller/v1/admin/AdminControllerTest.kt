@@ -1,9 +1,8 @@
-package io.csbroker.apiserver.e2e.admin
+package io.csbroker.apiserver.controller.v1.admin
 
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.controller.v1.admin.AdminController
-import io.csbroker.apiserver.e2e.RestDocsTest
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.common.NotificationService
 import io.csbroker.apiserver.service.user.UserService

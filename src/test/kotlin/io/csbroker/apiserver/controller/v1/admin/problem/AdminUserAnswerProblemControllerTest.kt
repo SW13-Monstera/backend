@@ -1,7 +1,6 @@
-package io.csbroker.apiserver.e2e.admin.problem
+package io.csbroker.apiserver.controller.v1.admin.problem
 
 import io.csbroker.apiserver.common.enums.GradingStandardType
-import io.csbroker.apiserver.controller.v1.admin.problem.AdminUserAnswerController
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import io.csbroker.apiserver.dto.useranswer.AssignUserAnswerDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerBatchInsertDto
@@ -9,7 +8,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
-import io.csbroker.apiserver.e2e.RestDocsTest
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.service.problem.UserAnswerService
 import io.mockk.every
 import io.mockk.mockk

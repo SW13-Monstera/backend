@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.e2e
+package io.csbroker.apiserver.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature

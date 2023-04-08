@@ -1,11 +1,10 @@
-package io.csbroker.apiserver.e2e.admin.problem
+package io.csbroker.apiserver.controller.v1.admin.problem
 
-import io.csbroker.apiserver.controller.v1.admin.problem.AdminMultipleProblemController
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto.ChoiceData
-import io.csbroker.apiserver.e2e.RestDocsTest
+import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.service.problem.AdminMultipleProblemService
 import io.mockk.every
 import io.mockk.mockk

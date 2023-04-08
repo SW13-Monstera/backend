@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.unit.service
+package io.csbroker.apiserver.service
 
 import io.csbroker.apiserver.auth.AUTHORITIES_KEY
 import io.csbroker.apiserver.auth.AuthTokenProvider

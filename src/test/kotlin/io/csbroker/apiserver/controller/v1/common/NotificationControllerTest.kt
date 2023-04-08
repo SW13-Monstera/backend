@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.e2e
+package io.csbroker.apiserver.controller.v1.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
