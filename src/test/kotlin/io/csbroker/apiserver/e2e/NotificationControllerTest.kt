@@ -9,8 +9,8 @@ import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
 import io.csbroker.apiserver.dto.notification.NotificationRequestDto
 import io.csbroker.apiserver.model.Notification
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.NotificationRepository
-import io.csbroker.apiserver.repository.UserRepository
+import io.csbroker.apiserver.repository.common.NotificationRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order

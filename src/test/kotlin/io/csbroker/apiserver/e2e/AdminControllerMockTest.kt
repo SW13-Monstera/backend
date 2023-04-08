@@ -3,7 +3,6 @@ package io.csbroker.apiserver.e2e
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.controller.v1.AdminController
 import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
@@ -24,11 +23,11 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.service.NotificationService
+import io.csbroker.apiserver.service.common.NotificationService
 import io.csbroker.apiserver.service.ProblemService
-import io.csbroker.apiserver.service.ProblemSetService
-import io.csbroker.apiserver.service.UserAnswerService
-import io.csbroker.apiserver.service.UserService
+import io.csbroker.apiserver.service.problem.ProblemSetService
+import io.csbroker.apiserver.service.problem.UserAnswerService
+import io.csbroker.apiserver.service.user.UserService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method

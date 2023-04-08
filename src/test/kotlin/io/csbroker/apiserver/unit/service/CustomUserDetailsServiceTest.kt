@@ -4,8 +4,8 @@ import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.UserRepository
-import io.csbroker.apiserver.service.CustomUserDetailsService
+import io.csbroker.apiserver.repository.user.UserRepository
+import io.csbroker.apiserver.service.auth.CustomUserDetailsService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

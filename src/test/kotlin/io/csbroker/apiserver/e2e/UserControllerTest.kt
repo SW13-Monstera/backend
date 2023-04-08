@@ -12,11 +12,11 @@ import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.GradingHistoryRepository
-import io.csbroker.apiserver.repository.ProblemRepository
-import io.csbroker.apiserver.repository.ProblemTagRepository
-import io.csbroker.apiserver.repository.TagRepository
-import io.csbroker.apiserver.repository.UserRepository
+import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
+import io.csbroker.apiserver.repository.problem.ProblemRepository
+import io.csbroker.apiserver.repository.problem.ProblemTagRepository
+import io.csbroker.apiserver.repository.problem.TagRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.BeforeAll

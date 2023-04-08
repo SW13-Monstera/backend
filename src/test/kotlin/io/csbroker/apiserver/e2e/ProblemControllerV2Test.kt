@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.controller.v2.request.ChallengeCreateRequest
+import io.csbroker.apiserver.controller.v2.problem.request.ChallengeCreateRequest
 import io.csbroker.apiserver.model.ShortProblem
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.ProblemRepository
-import io.csbroker.apiserver.repository.UserRepository
+import io.csbroker.apiserver.repository.problem.ProblemRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order

@@ -11,7 +11,7 @@ import io.csbroker.apiserver.common.util.addCookie
 import io.csbroker.apiserver.common.util.deleteCookie
 import io.csbroker.apiserver.common.util.getCookie
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.UserRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import io.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
 import io.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN

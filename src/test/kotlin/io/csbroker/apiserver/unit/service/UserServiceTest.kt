@@ -6,10 +6,10 @@ import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.GradingHistoryRepository
-import io.csbroker.apiserver.repository.UserRepository
+import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
-import io.csbroker.apiserver.service.UserServiceImpl
+import io.csbroker.apiserver.service.user.UserServiceImpl
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

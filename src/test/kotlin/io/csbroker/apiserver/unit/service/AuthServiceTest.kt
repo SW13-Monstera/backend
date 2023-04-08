@@ -13,8 +13,8 @@ import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.RedisRepository
-import io.csbroker.apiserver.repository.UserRepository
-import io.csbroker.apiserver.service.AuthServiceImpl
+import io.csbroker.apiserver.repository.user.UserRepository
+import io.csbroker.apiserver.service.auth.AuthServiceImpl
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import io.mockk.every

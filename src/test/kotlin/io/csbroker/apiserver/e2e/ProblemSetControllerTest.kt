@@ -1,10 +1,10 @@
 package io.csbroker.apiserver.e2e
 
-import io.csbroker.apiserver.controller.v1.ProblemSetController
+import io.csbroker.apiserver.controller.v1.problem.ProblemSetController
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
 import io.csbroker.apiserver.dto.problem.problemset.ProblemSetDetailResponseDto
 import io.csbroker.apiserver.model.ProblemSet
-import io.csbroker.apiserver.service.ProblemSetService
+import io.csbroker.apiserver.service.problem.ProblemSetService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method

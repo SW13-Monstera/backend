@@ -1,7 +1,7 @@
 package io.csbroker.apiserver.e2e
 
 import io.csbroker.apiserver.model.Tech
-import io.csbroker.apiserver.repository.TechRepository
+import io.csbroker.apiserver.repository.common.TechRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.Test
