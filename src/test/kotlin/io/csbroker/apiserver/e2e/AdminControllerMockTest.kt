@@ -154,7 +154,7 @@ class AdminControllerMockTest : RestDocsTest() {
                             .description("문제 제목"),
                         fieldWithPath("description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        fieldWithPath("standardAnswer").type(JsonFieldType.STRING)
+                        fieldWithPath("standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -206,7 +206,7 @@ class AdminControllerMockTest : RestDocsTest() {
                             .description("문제 제목"),
                         fieldWithPath("description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        fieldWithPath("standardAnswer").type(JsonFieldType.STRING)
+                        fieldWithPath("standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -239,8 +239,8 @@ class AdminControllerMockTest : RestDocsTest() {
         every { problemService.findLongProblemById(any()) } returns LongProblemResponseDto(
             id = 1L,
             title = "title",
+            standardAnswers = listOf("answer"),
             description = "description",
-            standardAnswer = "standardAnswer",
             tags = listOf("tag1", "tag2"),
             gradingStandards = listOf(
                 GradingStandardResponseDto(
@@ -250,8 +250,8 @@ class AdminControllerMockTest : RestDocsTest() {
                     type = GradingStandardType.KEYWORD,
                 ),
             ),
-            isGradable = true,
             isActive = true,
+            isGradable = true,
         )
 
         // when
@@ -276,7 +276,7 @@ class AdminControllerMockTest : RestDocsTest() {
                             .description("문제 제목"),
                         fieldWithPath("data.description").type(JsonFieldType.STRING)
                             .description("문제 설명"),
-                        fieldWithPath("data.standardAnswer").type(JsonFieldType.STRING)
+                        fieldWithPath("data.standardAnswers").type(JsonFieldType.ARRAY)
                             .description("모범 답안"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
@@ -1454,7 +1454,7 @@ class AdminControllerMockTest : RestDocsTest() {
     private fun createLongProblemUpsertRequestDto() = LongProblemUpsertRequestDto(
         "test",
         "test",
-        "test",
+        listOf("test"),
         mutableListOf("db", "network"),
         mutableListOf(
             LongProblemUpsertRequestDto.GradingStandardData(
