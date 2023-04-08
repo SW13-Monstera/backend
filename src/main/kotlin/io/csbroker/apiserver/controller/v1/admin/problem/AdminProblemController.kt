@@ -8,6 +8,7 @@ import io.csbroker.apiserver.service.problem.ProblemSetService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -41,7 +42,7 @@ class AdminProblemController(
         return ApiResponse.success(problemSetService.createProblemSet(problemSetUpsertRequestDto))
     }
 
-    @PostMapping("/problem-sets/{id}")
+    @PutMapping("/problem-sets/{id}")
     fun updateProblemSet(
         @PathVariable("id") id: Long,
         @RequestBody problemSetUpsertRequestDto: ProblemSetUpsertRequestDto,
