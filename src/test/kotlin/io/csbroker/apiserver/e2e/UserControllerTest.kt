@@ -144,7 +144,6 @@ class UserControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = admin,
-                standardAnswer = "test",
             )
 
             val gradingStandard = GradingStandard(

@@ -18,11 +18,13 @@ import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.MultipleChoiceProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.ShortProblem
+import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.GradingHistoryRepository
 import io.csbroker.apiserver.repository.ProblemRepository
 import io.csbroker.apiserver.repository.ProblemTagRepository
+import io.csbroker.apiserver.repository.StandardAnswerRepository
 import io.csbroker.apiserver.repository.TagRepository
 import io.csbroker.apiserver.repository.UserRepository
 import okhttp3.mockwebserver.MockResponse
@@ -87,6 +89,9 @@ class ProblemApiControllerTest {
     private lateinit var gradingHistoryRepository: GradingHistoryRepository
 
     @Autowired
+    private lateinit var standardAnswerRepository: StandardAnswerRepository
+
+    @Autowired
     private lateinit var tokenProvider: AuthTokenProvider
 
     lateinit var mockWebServer: MockWebServer
@@ -132,7 +137,6 @@ class ProblemApiControllerTest {
                 title = "test$i",
                 description = "test",
                 creator = user,
-                standardAnswer = "test",
             )
 
             val keywordGradingStandard = GradingStandard(
@@ -156,6 +160,13 @@ class ProblemApiControllerTest {
                 longProblemId = problem.id
                 keywordStandardId = keywordGradingStandard.id
                 contentStandardId = contentGradingStandard.id
+                standardAnswerRepository.save(
+                    StandardAnswer(
+                        id = 1L,
+                        content = "test",
+                        longProblem = problem,
+                    ),
+                )
             }
 
             if (i <= 2) {
