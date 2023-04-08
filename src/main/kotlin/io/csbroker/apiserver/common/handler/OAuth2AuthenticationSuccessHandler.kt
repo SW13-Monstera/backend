@@ -11,11 +11,11 @@ import io.csbroker.apiserver.common.util.addCookie
 import io.csbroker.apiserver.common.util.deleteCookie
 import io.csbroker.apiserver.common.util.getCookie
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
 import io.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser

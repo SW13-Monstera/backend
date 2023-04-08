@@ -8,10 +8,10 @@ import io.csbroker.apiserver.common.filter.TokenAuthenticationFilter
 import io.csbroker.apiserver.common.handler.OAuth2AuthenticationFailureHandler
 import io.csbroker.apiserver.common.handler.OAuth2AuthenticationSuccessHandler
 import io.csbroker.apiserver.common.handler.TokenAccessDeniedHandler
-import io.csbroker.apiserver.repository.UserRepository
 import io.csbroker.apiserver.repository.common.OAuth2AuthorizationRequestBasedOnCookieRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
-import io.csbroker.apiserver.service.CustomOAuth2UserService
+import io.csbroker.apiserver.repository.user.UserRepository
+import io.csbroker.apiserver.service.auth.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager

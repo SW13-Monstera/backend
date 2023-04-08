@@ -1,6 +1,7 @@
 package io.csbroker.apiserver.dto.problem.shortproblem
 
 import io.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
+import io.csbroker.apiserver.dto.problem.ProblemGradingHistoryDto
 import io.csbroker.apiserver.model.ShortProblem
 
 data class ShortProblemGradingHistoryDto(
@@ -17,7 +18,7 @@ data class ShortProblemGradingHistoryDto(
     val isAnswer: Boolean,
     val score: Double,
     val correctAnswer: String,
-) {
+) : ProblemGradingHistoryDto {
 
     companion object {
         fun createDto(

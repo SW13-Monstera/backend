@@ -2,8 +2,8 @@ package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.InternalServiceException
-import io.csbroker.apiserver.controller.v2.response.ShortProblemAnswerType
-import io.csbroker.apiserver.controller.v2.response.ShortProblemDetailResponseV2Dto
+import io.csbroker.apiserver.controller.v2.problem.response.ShortProblemAnswerType
+import io.csbroker.apiserver.controller.v2.problem.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
