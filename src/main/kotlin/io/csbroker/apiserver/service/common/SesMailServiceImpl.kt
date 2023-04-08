@@ -8,8 +8,8 @@ import aws.sdk.kotlin.services.ses.model.Destination
 import aws.sdk.kotlin.services.ses.model.Message
 import aws.sdk.kotlin.services.ses.model.SendEmailRequest
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Value

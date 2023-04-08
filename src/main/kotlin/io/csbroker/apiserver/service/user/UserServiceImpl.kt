@@ -10,9 +10,9 @@ import io.csbroker.apiserver.dto.user.UserStatsDto
 import io.csbroker.apiserver.dto.user.UserStatsDto.ProblemStatsDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import io.csbroker.apiserver.repository.common.RedisRepository
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service

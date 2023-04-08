@@ -4,10 +4,10 @@ import io.csbroker.apiserver.dto.StatsDto
 import io.csbroker.apiserver.dto.common.RankListDto
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
 import io.csbroker.apiserver.repository.common.MajorRepository
-import io.csbroker.apiserver.repository.problem.ProblemRepository
-import io.csbroker.apiserver.repository.common.TechRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.csbroker.apiserver.repository.common.RedisRepository
+import io.csbroker.apiserver.repository.common.TechRepository
+import io.csbroker.apiserver.repository.problem.ProblemRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
