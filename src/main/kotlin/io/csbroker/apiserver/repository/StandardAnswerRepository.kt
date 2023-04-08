@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface StandardAnswerRepository : JpaRepository<StandardAnswer, Long> {
     fun findAllByLongProblem(longProblem: LongProblem): List<StandardAnswer>
+    fun deleteAllByLongProblem(longProblem: LongProblem)
 }

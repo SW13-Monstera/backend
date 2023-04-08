@@ -903,6 +903,49 @@ include::{snippets}/notifications/count/request-headers.adoc[]
 include::{snippets}/notifications/count/response-body.adoc[]
 include::{snippets}/notifications/count/response-fields.adoc[]
 
+=== 문제 세트 API ( /api/v1/problem-sets )
+
+==== 문제 세트 전체 조회
+
+.description
+[source]
+----
+문제 세트 전체 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/problem-sets
+----
+
+.Sample Request
+include::{snippets}/problem-sets-findall/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problem-sets-findall/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem-sets-findall/response-body.adoc[]
+include::{snippets}/problem-sets-findall/response-fields.adoc[]
+
+==== 문제 세트 단건 조회
+
+.description
+[source]
+----
+문제 세트 단건 조회를 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/problem-sets/{problemSetId}
+----
+
+.Sample Request
+include::{snippets}/problem-sets-find/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problem-sets-find/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem-sets-find/response-body.adoc[]
+include::{snippets}/problem-sets-find/response-fields.adoc[]
 
 == Back-Office APIs
 
@@ -1609,3 +1652,60 @@ include::{snippets}/admin/notifications/bulkInsert/http-response.adoc[]
 .Response Body
 include::{snippets}/admin/notifications/bulkInsert/response-body.adoc[]
 include::{snippets}/admin/notifications/bulkInsert/response-fields.adoc[]
+
+=== 문제 세트 API ( /api/admin/problem-sets )
+
+==== 문제 세트 생성
+
+.description
+[source]
+----
+문제 세트 생성을 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/problem-sets
+----
+
+.Sample Request
+include::{snippets}/problem-sets-create/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problem-sets-create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/problem-sets-create/request-body.adoc[]
+include::{snippets}/problem-sets-create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/problem-sets-create/response-body.adoc[]
+include::{snippets}/problem-sets-create/response-fields.adoc[]
+
+==== 문제 세트 수정
+
+.description
+[source]
+----
+문제 세트 수정을 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/admin/problem-sets/{problem_set_id}
+----
+
+.Sample Request
+include::{snippets}/problem-sets-update/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problem-sets-update/path-parameters.adoc[]
+
+문제 세트 단건 조회을 위한 path parameter의 설명입니다.
+
+.Request Body
+include::{snippets}/problem-sets-update/request-body.adoc[]
+include::{snippets}/problem-sets-update/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/problem-sets-update/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem-sets-update/response-body.adoc[]
+include::{snippets}/problem-sets-update/response-fields.adoc[]

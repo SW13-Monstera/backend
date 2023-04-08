@@ -39,6 +39,7 @@ import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
+import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.ChallengeRepository
 import io.csbroker.apiserver.repository.ChoiceRepository
@@ -185,11 +186,21 @@ class ProblemServiceImpl(
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val longProblem = createRequestDto.toLongProblem(findUser)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
-
         longProblem.addGradingStandards(gradingStandardList)
         setTags(longProblem, createRequestDto.tags)
 
-        return problemRepository.save(longProblem).id!!
+        val savedProblem = problemRepository.save(longProblem)
+
+        standardAnswerRepository.saveAll(
+            createRequestDto.standardAnswers.map {
+                StandardAnswer(
+                    content = it,
+                    longProblem = savedProblem,
+                )
+            },
+        )
+
+        return savedProblem.id!!
     }
 
     @Transactional
@@ -230,18 +241,27 @@ class ProblemServiceImpl(
         val findProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
-        gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
-
-        findProblem.gradingStandards.clear()
-
         val gradingStandardList = updateRequestDto.getGradingStandardList(findProblem)
 
-        findProblem.addGradingStandards(gradingStandardList)
+        if (findProblem.standardAnswers.map { it.content }.toSet() != updateRequestDto.standardAnswers.toSet()) {
+            standardAnswerRepository.deleteAllByLongProblem(findProblem)
+            standardAnswerRepository.saveAll(
+                updateRequestDto.standardAnswers.map {
+                    StandardAnswer(
+                        content = it,
+                        longProblem = findProblem,
+                    )
+                },
+            )
+        }
+
+        if (findProblem.gradingStandards.map { it.content }.toSet() != gradingStandardList.map { it.content }.toSet()) {
+            gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
+            findProblem.addGradingStandards(gradingStandardList)
+        }
 
         findProblem.updateFromDto(updateRequestDto)
-
         updateTags(findProblem, updateRequestDto.tags)
-
         return id
     }
 
@@ -406,10 +426,8 @@ class ProblemServiceImpl(
         )
         gradingHistoryRepository.save(gradingHistory)
 
-        val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem)
-            .map { it.content } + findProblem.standardAnswer
+        val standardAnswers = standardAnswerRepository.findAllByLongProblem(findProblem).map { it.content }
 
-        // create dto
         return LongProblemGradingHistoryDto.createDto(
             gradingHistoryId = gradingHistory.gradingHistoryId!!,
             problem = findProblem,
@@ -417,7 +435,7 @@ class ProblemServiceImpl(
             score = userGradedScore,
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
             contents = correctContentListDto + notCorrectContentListDto,
-            standardAnswer = standardAnswers.random(),
+            standardAnswer = standardAnswers.randomOrNull() ?: "", // 모범답안 데이터가 없을 수 있는 경우 대비.
         )
     }
 
