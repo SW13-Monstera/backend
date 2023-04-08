@@ -25,7 +25,7 @@ class ProblemSet(
     @Column(name = "problem_set_description")
     var description: String,
 
-    @OneToMany
+    @OneToMany(mappedBy = "problemSet")
     val problemSetMapping: List<ProblemSetMapping> = mutableListOf(),
 ) {
     fun toProblemSetResponseDto(): ProblemSetResponseDto {
