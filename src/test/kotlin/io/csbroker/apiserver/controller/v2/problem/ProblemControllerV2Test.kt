@@ -3,7 +3,7 @@ package io.csbroker.apiserver.controller.v2.problem
 import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.controller.v2.problem.request.ChallengeCreateRequest
 import io.csbroker.apiserver.service.problem.CommonProblemService
-import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import io.restassured.http.Method
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
@@ -38,7 +38,7 @@ class ProblemControllerV2Test : RestDocsTest() {
     @Test
     fun `문제 이의 제기`() {
         // given
-        every { commonProblemService.createChallenge(any()) } returns Unit
+        justRun { commonProblemService.createChallenge(any()) }
 
         // when
         val result = mockMvc.body(ChallengeCreateRequest("이것은 이의제기를 위한 내용입니다."))

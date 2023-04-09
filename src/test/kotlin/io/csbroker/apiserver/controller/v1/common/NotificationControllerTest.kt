@@ -7,6 +7,7 @@ import io.csbroker.apiserver.model.Notification
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.common.NotificationService
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import io.restassured.http.Method
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
@@ -116,7 +117,7 @@ class NotificationControllerTest : RestDocsTest() {
     @Test
     fun `Read One Notification 200`() {
         // given
-        every { notificationService.readNotificationById(any(), any()) } returns Unit
+        justRun { notificationService.readNotificationById(any(), any()) }
 
         // when
         val result = mockMvc.request(Method.PUT, "$NOTIFICATION_ENDPOINT/read/{notification_id}", 1L)
@@ -143,7 +144,7 @@ class NotificationControllerTest : RestDocsTest() {
     @Test
     fun `Read Notifications 200`() {
         // given
-        every { notificationService.readNotifications(any(), any()) } returns Unit
+        justRun { notificationService.readNotifications(any(), any()) }
 
         // when
         val result = mockMvc.body(NotificationBulkReadDto(ids = listOf(1L)))

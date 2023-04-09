@@ -11,6 +11,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.service.problem.UserAnswerService
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import io.restassured.http.Method
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
@@ -405,7 +406,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
     @Test
     fun `Assign Labeler to User Answer 200`() {
         // given
-        every { userAnswerService.assignLabelUserAnswer(any(), any()) } returns Unit
+        justRun { userAnswerService.assignLabelUserAnswer(any(), any()) }
         val assignUserAnswerDto = AssignUserAnswerDto(
             listOf(1L, 2L),
             UUID.randomUUID(),
@@ -440,7 +441,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
     @Test
     fun `Assign Validator to User Answer 200`() {
         // given
-        every { userAnswerService.assignValidationUserAnswer(any(), any()) } returns Unit
+        justRun { userAnswerService.assignValidationUserAnswer(any(), any()) }
         val assignUserAnswerDto = AssignUserAnswerDto(
             listOf(1L, 2L),
             UUID.randomUUID(),
@@ -475,7 +476,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
     @Test
     fun `Delete User Answer By Id 200`() {
         // given
-        every { userAnswerService.removeUserAnswerById(any()) } returns Unit
+        justRun { userAnswerService.removeUserAnswerById(any()) }
 
         // when
         val result = mockMvc.request(Method.DELETE, "/api/admin/user-answers/{user_answer_id}", 1L)
