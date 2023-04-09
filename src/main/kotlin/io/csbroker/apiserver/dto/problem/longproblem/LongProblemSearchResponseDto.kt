@@ -1,12 +1,10 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-import io.csbroker.apiserver.dto.problem.AdminProblemSearchResponseDto
-
 data class LongProblemSearchResponseDto(
     val problems: List<LongProblemDataDto>,
     val totalPages: Int,
     val totalElements: Long,
-) : AdminProblemSearchResponseDto {
+) {
     data class LongProblemDataDto(
         val id: Long,
         val title: String,

@@ -1,7 +1,5 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
-import io.csbroker.apiserver.dto.problem.AdminProblemResponseDto
-
 data class MultipleChoiceProblemResponseDto(
     val id: Long,
     val title: String,
@@ -12,4 +10,4 @@ data class MultipleChoiceProblemResponseDto(
     val score: Double,
     val isActive: Boolean,
     val isGradable: Boolean,
-) : AdminProblemResponseDto
+)

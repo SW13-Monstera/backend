@@ -1,7 +1,6 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
 import io.csbroker.apiserver.dto.problem.ProblemCommonDetailResponse
-import io.csbroker.apiserver.dto.problem.ProblemGradingHistoryDto
 import io.csbroker.apiserver.model.MultipleChoiceProblem
 
 data class MultipleChoiceProblemGradingHistoryDto(
@@ -17,7 +16,7 @@ data class MultipleChoiceProblemGradingHistoryDto(
     val userAnswerIds: List<Long>,
     val isAnswer: Boolean,
     val score: Double,
-) : ProblemGradingHistoryDto {
+) {
 
     companion object {
         fun createDto(

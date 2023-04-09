@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/problems")
+@RequestMapping("/api/v1/problems/multiple")
 class MultipleProblemController(
     private val multipleProblemService: MultipleProblemService,
 ) {
-    @GetMapping("/multiple/{id}")
+    @GetMapping("/{id}")
     fun getMultipleProblemById(@PathVariable("id") id: Long): ApiResponse<MultipleChoiceProblemDetailResponseDto> {
         val findProblemDetail =
             multipleProblemService.findProblemById(id, getEmailFromSecurityContextHolder())
@@ -29,7 +29,7 @@ class MultipleProblemController(
         return ApiResponse.success(findProblemDetail)
     }
 
-    @PostMapping("/multiple/{id}/grade")
+    @PostMapping("/{id}/grade")
     fun gradeMultipleChoiceProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,

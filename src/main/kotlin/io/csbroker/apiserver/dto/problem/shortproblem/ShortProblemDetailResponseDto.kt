@@ -1,7 +1,5 @@
 package io.csbroker.apiserver.dto.problem.shortproblem
 
-import io.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
-
 data class ShortProblemDetailResponseDto(
     val id: Long,
     val title: String,
@@ -14,4 +12,4 @@ data class ShortProblemDetailResponseDto(
     val isEnglish: Boolean,
     val isSolved: Boolean,
     val score: Double,
-) : ProblemDetailResponseDto
+)

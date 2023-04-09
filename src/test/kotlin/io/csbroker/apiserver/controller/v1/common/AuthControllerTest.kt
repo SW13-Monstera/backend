@@ -11,7 +11,7 @@ import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
 import io.csbroker.apiserver.service.auth.AuthService
 import io.csbroker.apiserver.service.common.MailService
-import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method
@@ -239,7 +239,7 @@ class AuthControllerTest : RestDocsTest() {
     @Test
     fun `Get password change code 200 OK`() {
         // given
-        coEvery { mailService.sendPasswordChangeMail(any()) } returns Unit
+        coJustRun { mailService.sendPasswordChangeMail(any()) }
         val passwordChangeRequestDto = PasswordChangeMailRequestDto("test@test.com")
 
         // when
