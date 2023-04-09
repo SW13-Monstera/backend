@@ -32,6 +32,8 @@ class ProblemController(
         @RequestParam("tags", required = false) tags: List<String>?,
         @RequestParam("type", required = false) type: List<String>?,
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
+        @RequestParam("shuffle", defaultValue = "false", required = false) shuffle: Boolean?,
+        @RequestParam("seed", defaultValue = "42", required = false) seed: Long?,
         pageable: Pageable,
     ): ApiResponse<ProblemPageResponseDto> {
         var solvedBy: String? = null
@@ -41,8 +43,8 @@ class ProblemController(
                 ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable)
-        val foundProblems = commonProblemService.findProblems(searchDto, pageable)
+        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, shuffle, seed, pageable)
+        val foundProblems = commonProblemService.findProblems(searchDto)
 
         return ApiResponse.success(foundProblems)
     }

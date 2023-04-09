@@ -14,7 +14,6 @@ import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -28,8 +27,8 @@ class CommonProblemServiceImpl(
     private val userRepository: UserRepository,
     private val challengeRepository: ChallengeRepository,
 ) : CommonProblemService {
-    override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
-        return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto, pageable))
+    override fun findProblems(problemSearchDto: ProblemSearchDto): ProblemPageResponseDto {
+        return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto))
     }
 
     @Transactional

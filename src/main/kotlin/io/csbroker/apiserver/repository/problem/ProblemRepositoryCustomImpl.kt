@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import io.csbroker.apiserver.dto.problem.GradingHistoryStats
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.model.GradingHistory
+import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.QGradingHistory.gradingHistory
 import io.csbroker.apiserver.model.QProblem.problem
 import io.csbroker.apiserver.model.QProblemTag.problemTag
@@ -13,15 +15,29 @@ import io.csbroker.apiserver.model.QUser.user
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import java.util.*
 
 class ProblemRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory,
 ) : ProblemRepositoryCustom {
 
-    override fun findProblemsByQuery(
-        problemSearchDto: ProblemSearchDto,
-        pageable: Pageable,
-    ): Page<ProblemResponseDto> {
+    override fun findProblemsByQuery(problemSearchDto: ProblemSearchDto): Page<ProblemResponseDto> {
+        val totalProblemIds = getTotalProblemIdsWithFiltering(problemSearchDto)
+        val ids = getPaginatedIds(totalProblemIds, problemSearchDto.pageable)
+        val problems = getProblemsWithFetchJoin(ids)
+        val gradingHistories = getGradingHistoriesRelatedProblems(problems)
+        val stats = getStats(gradingHistories)
+
+        return PageImpl(
+            problems.map {
+                it.toProblemResponseDto(stats[it.id])
+            },
+            problemSearchDto.pageable,
+            totalProblemIds.size.toLong(),
+        )
+    }
+
+    private fun getTotalProblemIdsWithFiltering(problemSearchDto: ProblemSearchDto): List<Long> {
         val ids = queryFactory.select(problem.id)
             .from(problem)
             .distinct()
@@ -37,48 +53,42 @@ class ProblemRepositoryCustomImpl(
                 isGradable(problemSearchDto.isGradable),
                 problem.isActive.isTrue,
             )
-            .offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
             .fetch()
 
-        val result = queryFactory.selectFrom(problem)
+        if (problemSearchDto.shuffle!!) {
+            return ids.shuffled(Random(problemSearchDto.seed!!))
+        }
+        return ids.sortedDescending()
+    }
+
+    private fun getStats(gradingHistories: List<GradingHistory>) =
+        gradingHistories.groupBy {
+            it.problem.id
+        }.map {
+            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
+        }.toMap()
+
+    private fun getGradingHistoriesRelatedProblems(result: List<Problem>): List<GradingHistory> =
+        queryFactory.selectFrom(gradingHistory)
+            .distinct()
+            .where(gradingHistory.problem.id.`in`(result.map { it.id }))
+            .fetch()
+
+    private fun getProblemsWithFetchJoin(ids: List<Long>): List<Problem> =
+        queryFactory.selectFrom(problem)
             .distinct()
             .leftJoin(problem.gradingHistory, gradingHistory).fetchJoin()
             .leftJoin(gradingHistory.user, user).fetchJoin()
             .leftJoin(problem.problemTags, problemTag).fetchJoin()
             .leftJoin(problemTag.tag, tag).fetchJoin()
             .where(problem.id.`in`(ids))
+            .orderBy(problem.createdAt.desc())
             .fetch()
 
-        val gradingHistories = queryFactory.selectFrom(gradingHistory)
-            .distinct()
-            .where(gradingHistory.problem.id.`in`(result.map { it.id }))
-            .fetch()
-
-        val stats = gradingHistories.groupBy {
-            it.problem.id
-        }.map {
-            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
-        }.toMap()
-
-        val totalCnt = queryFactory.select(problem.id.count())
-            .from(problem)
-            .leftJoin(problem.gradingHistory, gradingHistory)
-            .leftJoin(gradingHistory.user, user)
-            .leftJoin(problem.problemTags, problemTag)
-            .leftJoin(problemTag.tag, tag)
-            .groupBy(problem.id)
-            .where(
-                likeTitle(problemSearchDto.query),
-                inTags(problemSearchDto.tags),
-                solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
-                isType(problemSearchDto.type),
-                isGradable(problemSearchDto.isGradable),
-                problem.isActive.isTrue,
-            )
-            .fetch().size.toLong()
-
-        return PageImpl(result.map { it.toProblemResponseDto(stats[it.id]) }, pageable, totalCnt)
+    private fun getPaginatedIds(ids: List<Long>, pageable: Pageable): List<Long> {
+        val start = pageable.offset.toInt()
+        val end = (pageable.offset + pageable.pageSize).toInt()
+        return ids.slice(start until end)
     }
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {

@@ -53,7 +53,10 @@ class ProblemControllerTest : RestDocsTest() {
         val size = 10
         val type = "long"
         val isGradable = false
-        every { commonProblemService.findProblems(any(), any()) } returns ProblemPageResponseDto(
+        val shuffle = true
+        val seed = 42L
+
+        every { commonProblemService.findProblems(any()) } returns ProblemPageResponseDto(
             PageImpl(
                 listOf(
                     ProblemResponseDto(
@@ -74,7 +77,7 @@ class ProblemControllerTest : RestDocsTest() {
         val result = mockMvc.request(
             Method.GET,
             "/api/v1/problems?query=$query&isSolved=$isSolved&tags=$tags" +
-                "&page=$page&size=$size&type=$type&isGradable=$isGradable",
+                "&page=$page&size=$size&type=$type&isGradable=$isGradable&shuffle=$shuffle&seed=$seed",
         )
         // then
         result.then()
@@ -97,6 +100,8 @@ class ProblemControllerTest : RestDocsTest() {
                         parameterWithName("size").description("가져올 문제의 개수"),
                         parameterWithName("type").description("문제의 type ( long, short, multiple )"),
                         parameterWithName("isGradable").description("채점 가능 여부"),
+                        parameterWithName("shuffle").description("문제 셔플링 여부"),
+                        parameterWithName("seed").description("랜덤 시드"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
