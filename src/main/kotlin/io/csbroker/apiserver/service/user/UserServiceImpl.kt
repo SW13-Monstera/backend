@@ -14,7 +14,7 @@ import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
 import javax.transaction.Transactional
@@ -22,7 +22,7 @@ import javax.transaction.Transactional
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val passwordEncoder: PasswordEncoder,
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val redisRepository: RedisRepository,
 ) : UserService {
@@ -56,10 +56,10 @@ class UserServiceImpl(
     }
 
     private fun encodePassword(user: User, userUpdateRequestDto: UserUpdateRequestDto) {
-        if (!bCryptPasswordEncoder.matches(userUpdateRequestDto.originalPassword, user.password)) {
+        if (!passwordEncoder.matches(userUpdateRequestDto.originalPassword, user.password)) {
             throw UnAuthorizedException(ErrorCode.PASSWORD_MISS_MATCH, "비밀번호가 일치하지 않습니다!")
         }
-        userUpdateRequestDto.password = bCryptPasswordEncoder.encode(userUpdateRequestDto.password)
+        userUpdateRequestDto.password = passwordEncoder.encode(userUpdateRequestDto.password)
     }
 
     override fun findUsers(): List<User> {

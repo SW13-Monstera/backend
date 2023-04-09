@@ -3,7 +3,7 @@ package io.csbroker.apiserver.controller.v1.admin.problem
 import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.ProblemDeleteRequestDto
 import io.csbroker.apiserver.service.problem.CommonProblemService
-import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import io.restassured.http.Method
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
@@ -35,7 +35,7 @@ class AdminProblemControllerTest : RestDocsTest() {
     @Test
     fun `Delete Problem By Id 200`() {
         // given
-        every { problemService.removeProblemById(any()) } returns Unit
+        justRun { problemService.removeProblemById(any()) }
 
         // when
         val result = mockMvc.request(Method.DELETE, "/api/admin/problems/{problem_id}", 1L)
@@ -66,7 +66,7 @@ class AdminProblemControllerTest : RestDocsTest() {
         val problemDeleteRequestDto = ProblemDeleteRequestDto(
             mutableListOf(1L, 2L, 3L),
         )
-        every { problemService.removeProblemsById(any()) } returns Unit
+        justRun { problemService.removeProblemsById(any()) }
 
         // when
         val result = mockMvc.body(problemDeleteRequestDto).request(Method.DELETE, "/api/admin/problems")
