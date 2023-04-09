@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-
 data class LongProblemDetailResponseDto(
     val id: Long,
     val title: String,

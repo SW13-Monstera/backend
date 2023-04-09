@@ -7,12 +7,16 @@ import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
-import org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
+import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
+import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 
@@ -20,7 +24,6 @@ class AdminProblemSetControllerTest : RestDocsTest() {
 
     private lateinit var problemSetService: ProblemSetService
     private lateinit var mockMvc: MockMvcRequestSpecification
-
 
     @BeforeEach()
     fun setUp() {
@@ -48,16 +51,15 @@ class AdminProblemSetControllerTest : RestDocsTest() {
                     requestFields(
                         fieldWithPath("problemIds").type(JsonFieldType.ARRAY).description("문제 ID 목록"),
                         fieldWithPath("name").type(JsonFieldType.STRING).description("문제 세트 이름"),
-                        fieldWithPath("description").type(JsonFieldType.STRING).description("문제 세트 설명")
+                        fieldWithPath("description").type(JsonFieldType.STRING).description("문제 세트 설명"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
-                        fieldWithPath("data").type(JsonFieldType.NUMBER).description("문제 세트 ID")
+                        fieldWithPath("data").type(JsonFieldType.NUMBER).description("문제 세트 ID"),
                     ),
                 ),
             )
     }
-
 
     @Test
     fun `문제 세트 수정`() {
@@ -92,4 +94,3 @@ class AdminProblemSetControllerTest : RestDocsTest() {
             )
     }
 }
-

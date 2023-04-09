@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
-
 data class MultipleChoiceProblemSearchResponseDto(
     val problems: List<MultipleChoiceProblemDataDto>,
     val totalPages: Int,

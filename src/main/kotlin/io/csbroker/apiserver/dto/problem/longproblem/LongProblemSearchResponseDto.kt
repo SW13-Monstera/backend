@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-
 data class LongProblemSearchResponseDto(
     val problems: List<LongProblemDataDto>,
     val totalPages: Int,

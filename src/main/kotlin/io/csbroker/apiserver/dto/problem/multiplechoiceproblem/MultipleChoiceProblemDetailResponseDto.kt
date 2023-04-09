@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
-
 data class MultipleChoiceProblemDetailResponseDto(
     val id: Long,
     val title: String,

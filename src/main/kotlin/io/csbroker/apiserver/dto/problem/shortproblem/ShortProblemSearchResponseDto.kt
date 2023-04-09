@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.shortproblem
 
-
 data class ShortProblemSearchResponseDto(
     val problems: List<ShortProblemDataDto>,
     val totalPages: Int,

@@ -32,7 +32,6 @@ class AdminProblemControllerTest : RestDocsTest() {
         ).header("Authorization", "Bearer TEST-TOKEN")
     }
 
-
     @Test
     fun `Delete Problem By Id 200`() {
         // given

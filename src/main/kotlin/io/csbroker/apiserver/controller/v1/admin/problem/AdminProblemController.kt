@@ -29,5 +29,4 @@ class AdminProblemController(
         problemService.removeProblemsById(deleteRequestDto.ids)
         return ApiResponse.success(true)
     }
-
 }
