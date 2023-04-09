@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-import io.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
 
 data class LongProblemDetailResponseDto(
     val id: Long,
@@ -14,4 +13,4 @@ data class LongProblemDetailResponseDto(
     val totalSubmission: Int,
     val isSolved: Boolean,
     val isGradable: Boolean,
-) : ProblemDetailResponseDto
+)
