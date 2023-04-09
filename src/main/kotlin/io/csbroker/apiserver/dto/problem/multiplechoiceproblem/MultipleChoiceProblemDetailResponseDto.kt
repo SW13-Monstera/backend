@@ -1,7 +1,5 @@
 package io.csbroker.apiserver.dto.problem.multiplechoiceproblem
 
-import io.csbroker.apiserver.dto.problem.ProblemDetailResponseDto
-
 data class MultipleChoiceProblemDetailResponseDto(
     val id: Long,
     val title: String,
@@ -14,4 +12,4 @@ data class MultipleChoiceProblemDetailResponseDto(
     val isSolved: Boolean,
     val isMultipleAnswer: Boolean,
     val score: Double,
-) : ProblemDetailResponseDto
+)

@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/problems")
+@RequestMapping("/api/v1/problems/long")
 class LongProblemController(
     private val longProblemService: LongProblemService,
 ) {
-    @GetMapping("/long/{id}")
+    @GetMapping("/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
         val findProblemDetail = longProblemService.findProblemById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
 
-    @PostMapping("/long/{id}/grade")
+    @PostMapping("/{id}/grade")
     fun gradeLongProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,

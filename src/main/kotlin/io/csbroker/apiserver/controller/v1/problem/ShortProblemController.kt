@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/problems")
+@RequestMapping("/api/v1/problems/short")
 class ShortProblemController(
     private val shortProblemService: ShortProblemService,
 ) {
-    @GetMapping("/short/{id}")
+    @GetMapping("/{id}")
     fun getShortProblemById(@PathVariable("id") id: Long): ApiResponse<ShortProblemDetailResponseDto> {
         val findProblemDetail = shortProblemService.findProblemById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
     }
 
-    @PostMapping("/short/{id}/grade")
+    @PostMapping("/{id}/grade")
     fun gradeShortProblem(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,

@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-import io.csbroker.apiserver.dto.problem.AdminProblemResponseDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 
 data class LongProblemResponseDto(
@@ -12,4 +11,4 @@ data class LongProblemResponseDto(
     val gradingStandards: List<GradingStandardResponseDto>,
     val isActive: Boolean,
     val isGradable: Boolean,
-) : AdminProblemResponseDto
+)

@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
-import io.csbroker.apiserver.dto.problem.ProblemGradingHistoryDto
 import io.csbroker.apiserver.model.LongProblem
 
 data class LongProblemGradingHistoryDto(
@@ -18,7 +17,7 @@ data class LongProblemGradingHistoryDto(
     val contents: List<ContentDto>,
     val userAnswer: String,
     val standardAnswer: String,
-) : ProblemGradingHistoryDto {
+) {
 
     companion object {
         fun createDto(
