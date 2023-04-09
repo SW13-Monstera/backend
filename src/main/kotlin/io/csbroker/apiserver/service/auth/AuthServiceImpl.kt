@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.service.auth
 
+import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
@@ -16,7 +17,7 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -29,9 +30,9 @@ private const val THREE_DAYS_MSEC = 259200000
 class AuthServiceImpl(
     private val userRepository: UserRepository,
     private val redisRepository: RedisRepository,
-    private val authTokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
+    private val authTokenProvider: AuthTokenProvider,
     private val appProperties: AppProperties,
-    private val passwordEncoder: BCryptPasswordEncoder,
+    private val passwordEncoder: PasswordEncoder,
 ) : AuthService {
     override fun saveUser(userDto: UserSignUpDto): UUID {
         checkEmailAndUserName(userDto.email, userDto.username)
