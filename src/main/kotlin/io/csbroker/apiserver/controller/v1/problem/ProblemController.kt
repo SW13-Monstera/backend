@@ -10,7 +10,6 @@ import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.service.problem.CommonProblemService
-import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,7 +33,8 @@ class ProblemController(
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
         @RequestParam("shuffle", defaultValue = "false", required = false) shuffle: Boolean?,
         @RequestParam("seed", defaultValue = "42", required = false) seed: Long?,
-        pageable: Pageable,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int,
     ): ApiResponse<ProblemPageResponseDto> {
         var solvedBy: String? = null
 
@@ -43,7 +43,7 @@ class ProblemController(
                 ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, shuffle, seed, pageable)
+        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, shuffle, seed, page, size)
         val foundProblems = commonProblemService.findProblems(searchDto)
 
         return ApiResponse.success(foundProblems)

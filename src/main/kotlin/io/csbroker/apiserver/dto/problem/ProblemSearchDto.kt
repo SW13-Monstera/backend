@@ -1,7 +1,5 @@
 package io.csbroker.apiserver.dto.problem
 
-import org.springframework.data.domain.Pageable
-
 data class ProblemSearchDto(
     val tags: List<String>? = listOf(),
     val solvedBy: String?,
@@ -11,5 +9,6 @@ data class ProblemSearchDto(
     val isGradable: Boolean?,
     val shuffle: Boolean? = false,
     val seed: Long? = 42,
-    val pageable: Pageable,
+    val page: Int,
+    val size: Int,
 )

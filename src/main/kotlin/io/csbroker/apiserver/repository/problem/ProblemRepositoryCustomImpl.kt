@@ -14,16 +14,18 @@ import io.csbroker.apiserver.model.QTag.tag
 import io.csbroker.apiserver.model.QUser.user
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import java.util.Random
+import kotlin.random.Random
 
 class ProblemRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory,
 ) : ProblemRepositoryCustom {
 
     override fun findProblemsByQuery(problemSearchDto: ProblemSearchDto): Page<ProblemResponseDto> {
+        val pageable = PageRequest.of(problemSearchDto.page, problemSearchDto.size)
         val totalProblemIds = getTotalProblemIdsWithFiltering(problemSearchDto)
-        val ids = getPaginatedIds(totalProblemIds, problemSearchDto.pageable)
+        val ids = getPaginatedIds(totalProblemIds, pageable)
         val problems = getProblemsWithFetchJoin(ids)
         val gradingHistories = getGradingHistoriesRelatedProblems(problems)
         val stats = getStats(gradingHistories)
@@ -32,7 +34,7 @@ class ProblemRepositoryCustomImpl(
             problems.map {
                 it.toProblemResponseDto(stats[it.id])
             },
-            problemSearchDto.pageable,
+            pageable,
             totalProblemIds.size.toLong(),
         )
     }
