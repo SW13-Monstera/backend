@@ -24,22 +24,22 @@ class ProblemRepositoryCustomImpl(
 
     override fun findProblemsByQuery(problemSearchDto: ProblemSearchDto): Page<ProblemResponseDto> {
         val pageable = PageRequest.of(problemSearchDto.page, problemSearchDto.size)
-        val totalProblemIds = getTotalProblemIdsWithFiltering(problemSearchDto)
-        val ids = getPaginatedIds(totalProblemIds, pageable)
+        val ids = getPaginatedIds(problemSearchDto, pageable)
         val problems = getProblemsWithFetchJoin(ids)
         val gradingHistories = getGradingHistoriesRelatedProblems(problems)
         val stats = getStats(gradingHistories)
-
+        val totalProblemSize = getTotalProblemSize(problemSearchDto)
         return PageImpl(
             problems.map {
                 it.toProblemResponseDto(stats[it.id])
             },
             pageable,
-            totalProblemIds.size.toLong(),
+            totalProblemSize,
         )
     }
 
-    private fun getTotalProblemIdsWithFiltering(problemSearchDto: ProblemSearchDto): List<Long> {
+
+    private fun getPaginatedIds(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<Long> {
         val ids = queryFactory.select(problem.id)
             .from(problem)
             .distinct()
@@ -55,6 +55,8 @@ class ProblemRepositoryCustomImpl(
                 isGradable(problemSearchDto.isGradable),
                 problem.isActive.isTrue,
             )
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
             .fetch()
 
         if (problemSearchDto.shuffle!!) {
@@ -62,19 +64,6 @@ class ProblemRepositoryCustomImpl(
         }
         return ids.sortedDescending()
     }
-
-    private fun getStats(gradingHistories: List<GradingHistory>) =
-        gradingHistories.groupBy {
-            it.problem.id
-        }.map {
-            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
-        }.toMap()
-
-    private fun getGradingHistoriesRelatedProblems(result: List<Problem>): List<GradingHistory> =
-        queryFactory.selectFrom(gradingHistory)
-            .distinct()
-            .where(gradingHistory.problem.id.`in`(result.map { it.id }))
-            .fetch()
 
     private fun getProblemsWithFetchJoin(ids: List<Long>): List<Problem> =
         queryFactory.selectFrom(problem)
@@ -87,11 +76,35 @@ class ProblemRepositoryCustomImpl(
             .orderBy(problem.createdAt.desc())
             .fetch()
 
-    private fun getPaginatedIds(ids: List<Long>, pageable: Pageable): List<Long> {
-        val start = pageable.offset.toInt()
-        val end = (pageable.offset + pageable.pageSize).toInt()
-        return ids.slice(start until end)
-    }
+    private fun getGradingHistoriesRelatedProblems(result: List<Problem>): List<GradingHistory> =
+        queryFactory.selectFrom(gradingHistory)
+            .distinct()
+            .where(gradingHistory.problem.id.`in`(result.map { it.id }))
+            .fetch()
+
+    private fun getStats(gradingHistories: List<GradingHistory>) =
+        gradingHistories.groupBy {
+            it.problem.id
+        }.map {
+            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
+        }.toMap()
+
+    private fun getTotalProblemSize(problemSearchDto: ProblemSearchDto): Long = queryFactory.select(problem.id.count())
+        .from(problem)
+        .leftJoin(problem.gradingHistory, gradingHistory)
+        .leftJoin(gradingHistory.user, user)
+        .leftJoin(problem.problemTags, problemTag)
+        .leftJoin(problemTag.tag, tag)
+        .groupBy(problem.id)
+        .where(
+            likeTitle(problemSearchDto.query),
+            inTags(problemSearchDto.tags),
+            solvedBy(problemSearchDto.solvedBy, problemSearchDto.isSolved),
+            isType(problemSearchDto.type),
+            isGradable(problemSearchDto.isGradable),
+            problem.isActive.isTrue,
+        )
+        .fetch().size.toLong()
 
     private fun isGradable(isGradable: Boolean?): BooleanExpression? {
         return if (isGradable == null) null else problem.isGradable.eq(isGradable)
