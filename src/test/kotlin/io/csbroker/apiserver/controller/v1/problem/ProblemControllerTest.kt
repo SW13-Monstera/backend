@@ -4,6 +4,7 @@ import io.csbroker.apiserver.common.enums.AssessmentType
 import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemResponseDto
+import io.csbroker.apiserver.dto.problem.ProblemsResponseDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.service.problem.CommonProblemService
 import io.mockk.every
@@ -28,6 +29,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import kotlin.random.Random
 
 class ProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
@@ -53,8 +55,6 @@ class ProblemControllerTest : RestDocsTest() {
         val size = 10
         val type = "long"
         val isGradable = false
-        val shuffle = true
-        val seed = 42L
 
         every { commonProblemService.findProblems(any()) } returns ProblemPageResponseDto(
             PageImpl(
@@ -77,7 +77,7 @@ class ProblemControllerTest : RestDocsTest() {
         val result = mockMvc.request(
             Method.GET,
             "/api/v1/problems?query=$query&isSolved=$isSolved&tags=$tags" +
-                "&page=$page&size=$size&type=$type&isGradable=$isGradable&shuffle=$shuffle&seed=$seed",
+                "&page=$page&size=$size&type=$type&isGradable=$isGradable",
         )
         // then
         result.then()
@@ -100,8 +100,6 @@ class ProblemControllerTest : RestDocsTest() {
                         parameterWithName("size").description("가져올 문제의 개수"),
                         parameterWithName("type").description("문제의 type ( long, short, multiple )"),
                         parameterWithName("isGradable").description("채점 가능 여부"),
-                        parameterWithName("shuffle").description("문제 셔플링 여부"),
-                        parameterWithName("seed").description("랜덤 시드"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -115,7 +113,7 @@ class ProblemControllerTest : RestDocsTest() {
                         fieldWithPath("data.contents.[].totalSubmission").type(JsonFieldType.NUMBER)
                             .description("총 제출 수"),
                         fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
-                            .description("문제의 타입 ( short, multiple, choice )"),
+                            .description("문제의 타입 ( short, multiple, long )"),
                         fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
                             .description("현재 페이지 번호"),
                         fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
@@ -128,6 +126,70 @@ class ProblemControllerTest : RestDocsTest() {
                             .description("요청한 데이터 수"),
                     ),
                 ),
+            )
+    }
+
+    @Test
+    fun `랜덤하게 N개 문제 가져오기`() {
+        // given
+        val size = 2
+        every { commonProblemService.findRandomProblems(any()) } returns ProblemsResponseDto(
+            listOf(
+                ProblemResponseDto(
+                    id = 1,
+                    title = "test",
+                    tags = listOf("os", "ds"),
+                    avgScore = 1.0,
+                    totalSubmission = 10,
+                    type = "long",
+                ),
+                ProblemResponseDto(
+                    id = 2,
+                    title = "test2",
+                    tags = listOf("db"),
+                    avgScore = 2.0,
+                    totalSubmission = 20,
+                    type = "long",
+                )
+            )
+        )
+
+        // when
+        val result = mockMvc.request(
+            Method.GET,
+            "/api/v1/problems/shuffle?size=$size",
+        )
+
+        // then()
+        result.then()
+            .statusCode(200)
+            .apply(
+                document(
+                    "problems/shuffle",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional(),
+                    ),
+                    requestParameters(
+                        parameterWithName("size").description("랜덤하게 가져올 문제의 개수"),
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.contents").type(JsonFieldType.ARRAY).description("문제 데이터"),
+                        fieldWithPath("data.contents.[].id").type(JsonFieldType.NUMBER).description("문제 id"),
+                        fieldWithPath("data.contents.[].title").type(JsonFieldType.STRING).description("문제 제목"),
+                        fieldWithPath("data.contents.[].tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.contents.[].avgScore").type(JsonFieldType.NUMBER)
+                            .description("평균 점수 ( 푼 사람이 없는 경우 null return )").optional(),
+                        fieldWithPath("data.contents.[].totalSubmission").type(JsonFieldType.NUMBER)
+                            .description("총 제출 수"),
+                        fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
+                            .description("문제의 타입 ( short, multiple, long )"),
+                    )
+                )
             )
     }
 
