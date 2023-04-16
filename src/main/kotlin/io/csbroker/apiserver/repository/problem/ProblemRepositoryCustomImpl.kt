@@ -25,11 +25,11 @@ class ProblemRepositoryCustomImpl(
         val pageable = PageRequest.of(problemSearchDto.page, problemSearchDto.size)
         val ids = getPaginatedIds(problemSearchDto, pageable)
         val problems = getProblemsWithFetchJoin(ids)
-        val stats = getProblemId2StatMap(problems)
+        val problemIdToStatMap = getProblemIdToStatMap(problems)
         val totalProblemSize = getTotalProblemSize(problemSearchDto)
         return PageImpl(
             problems.map {
-                it.toProblemResponseDto(stats[it.id])
+                it.toProblemResponseDto(problemIdToStatMap[it.id])
             },
             pageable,
             totalProblemSize,
@@ -70,10 +70,10 @@ class ProblemRepositoryCustomImpl(
             .orderBy(problem.createdAt.desc())
             .fetch()
 
-    override fun getProblemId2StatMap(problems: List<Problem>): Map<Long?, GradingHistoryStats> =
+    override fun getProblemIdToStatMap(problems: List<Problem>): Map<Long, GradingHistoryStats> =
         getGradingHistoriesRelatedProblems(problems)
             .groupBy {
-                it.problem.id
+                it.problem.id!!
             }.map {
                 it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
             }.toMap()

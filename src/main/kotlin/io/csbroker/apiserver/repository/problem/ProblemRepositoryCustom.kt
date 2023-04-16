@@ -8,5 +8,5 @@ import org.springframework.data.domain.Page
 
 interface ProblemRepositoryCustom {
     fun findProblemsByQuery(problemSearchDto: ProblemSearchDto): Page<ProblemResponseDto>
-    fun getProblemId2StatMap(problems: List<Problem>): Map<Long?, GradingHistoryStats>
+    fun getProblemIdToStatMap(problems: List<Problem>): Map<Long, GradingHistoryStats>
 }

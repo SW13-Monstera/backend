@@ -35,10 +35,10 @@ class CommonProblemServiceImpl(
     override fun findRandomProblems(size: Int): ProblemsResponseDto {
         val problemIds = problemRepository.findRandomProblemIds(size)
         val problems = problemRepository.findAllById(problemIds)
-        val statMap = problemRepository.getProblemId2StatMap(problems)
+        val problemIdToStatMap = problemRepository.getProblemIdToStatMap(problems)
         return ProblemsResponseDto(
             problems.map {
-                it.toProblemResponseDto(statMap[it.id])
+                it.toProblemResponseDto(problemIdToStatMap[it.id])
             },
         )
     }
