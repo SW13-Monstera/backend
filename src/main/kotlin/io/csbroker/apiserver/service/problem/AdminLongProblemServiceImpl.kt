@@ -55,7 +55,6 @@ class AdminLongProblemServiceImpl(
 
     @Transactional
     override fun updateProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val updateRequestDto = updateRequestDto
         val findProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 

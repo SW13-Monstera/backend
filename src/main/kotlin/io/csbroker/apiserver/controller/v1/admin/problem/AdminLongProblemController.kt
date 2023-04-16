@@ -29,7 +29,7 @@ class AdminLongProblemController(
         @PathVariable("id") id: Long,
     ): ApiResponse<LongProblemResponseDto> {
         val longProblemResponseDto = longProblemService.findProblemById(id)
-        return ApiResponse.success(longProblemResponseDto as LongProblemResponseDto)
+        return ApiResponse.success(longProblemResponseDto)
     }
 
     @PostMapping
@@ -59,6 +59,6 @@ class AdminLongProblemController(
         pageable: Pageable,
     ): ApiResponse<LongProblemSearchResponseDto> {
         val problemSearchDto = AdminProblemSearchDto(id, title, description, pageable)
-        return ApiResponse.success(longProblemService.findProblems(problemSearchDto) as LongProblemSearchResponseDto)
+        return ApiResponse.success(longProblemService.findProblems(problemSearchDto))
     }
 }

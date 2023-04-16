@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.common.config.security
 
+import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.config.properties.CorsProperties
 import io.csbroker.apiserver.common.enums.Role
@@ -37,7 +38,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val corsProperties: CorsProperties,
     private val appProperties: AppProperties,
-    private val authTokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
+    private val authTokenProvider: AuthTokenProvider,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val redisRepository: RedisRepository,
     private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,

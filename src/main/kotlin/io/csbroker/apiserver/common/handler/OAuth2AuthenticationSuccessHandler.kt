@@ -1,6 +1,7 @@
 package io.csbroker.apiserver.common.handler
 
 import io.csbroker.apiserver.auth.AuthToken
+import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.OAuth2UserInfoFactory
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.config.properties.AppProperties
@@ -32,7 +33,7 @@ import javax.servlet.http.HttpServletResponse
 class OAuth2AuthenticationSuccessHandler(
     private val appProperties: AppProperties,
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository,
-    private val tokenProvider: io.csbroker.apiserver.auth.AuthTokenProvider,
+    private val tokenProvider: AuthTokenProvider,
     private val redisRepository: RedisRepository,
     private val userRepository: UserRepository,
 ) : SimpleUrlAuthenticationSuccessHandler() {
