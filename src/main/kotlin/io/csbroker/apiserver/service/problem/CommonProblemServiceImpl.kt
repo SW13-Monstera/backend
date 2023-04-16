@@ -6,6 +6,7 @@ import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.ProblemsResponseDto
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.model.Challenge
@@ -29,6 +30,17 @@ class CommonProblemServiceImpl(
 ) : CommonProblemService {
     override fun findProblems(problemSearchDto: ProblemSearchDto): ProblemPageResponseDto {
         return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto))
+    }
+
+    override fun findRandomProblems(size: Int): ProblemsResponseDto {
+        val problemIds = problemRepository.findRandomProblemIds(size)
+        val problems = problemRepository.findAllById(problemIds)
+        val statMap = problemRepository.getProblemId2StatMap(problems)
+        return ProblemsResponseDto(
+            problems.map {
+                it.toProblemResponseDto(statMap[it.id])
+            }
+        )
     }
 
     @Transactional

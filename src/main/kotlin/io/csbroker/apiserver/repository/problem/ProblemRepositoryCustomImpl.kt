@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import kotlin.random.Random
 
 class ProblemRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory,
@@ -26,8 +25,7 @@ class ProblemRepositoryCustomImpl(
         val pageable = PageRequest.of(problemSearchDto.page, problemSearchDto.size)
         val ids = getPaginatedIds(problemSearchDto, pageable)
         val problems = getProblemsWithFetchJoin(ids)
-        val gradingHistories = getGradingHistoriesRelatedProblems(problems)
-        val stats = getStats(gradingHistories)
+        val stats = getProblemId2StatMap(problems)
         val totalProblemSize = getTotalProblemSize(problemSearchDto)
         return PageImpl(
             problems.map {
@@ -59,9 +57,6 @@ class ProblemRepositoryCustomImpl(
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        if (problemSearchDto.shuffle!!) {
-            return ids.shuffled(Random(problemSearchDto.seed!!))
-        }
         return ids.sortedDescending()
     }
 
@@ -76,18 +71,19 @@ class ProblemRepositoryCustomImpl(
             .orderBy(problem.createdAt.desc())
             .fetch()
 
+    override fun getProblemId2StatMap(problems: List<Problem>): Map<Long?, GradingHistoryStats> =
+        getGradingHistoriesRelatedProblems(problems)
+            .groupBy {
+                it.problem.id
+            }.map {
+                it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
+            }.toMap()
+
     private fun getGradingHistoriesRelatedProblems(result: List<Problem>): List<GradingHistory> =
         queryFactory.selectFrom(gradingHistory)
             .distinct()
             .where(gradingHistory.problem.id.`in`(result.map { it.id }))
             .fetch()
-
-    private fun getStats(gradingHistories: List<GradingHistory>) =
-        gradingHistories.groupBy {
-            it.problem.id
-        }.map {
-            it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
-        }.toMap()
 
     private fun getTotalProblemSize(problemSearchDto: ProblemSearchDto): Long = queryFactory.select(problem.id.count())
         .from(problem)

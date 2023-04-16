@@ -8,6 +8,7 @@ import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.ProblemsResponseDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.service.problem.CommonProblemService
 import org.springframework.security.core.userdetails.User
@@ -31,8 +32,6 @@ class ProblemController(
         @RequestParam("tags", required = false) tags: List<String>?,
         @RequestParam("type", required = false) type: List<String>?,
         @RequestParam("isGradable", required = false) isGradable: Boolean?,
-        @RequestParam("shuffle", defaultValue = "false", required = false) shuffle: Boolean?,
-        @RequestParam("seed", defaultValue = "42", required = false) seed: Long?,
         @RequestParam("page") page: Int,
         @RequestParam("size") size: Int,
     ): ApiResponse<ProblemPageResponseDto> {
@@ -43,10 +42,16 @@ class ProblemController(
                 ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
 
-        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, shuffle, seed, page, size)
+        val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, page, size)
         val foundProblems = commonProblemService.findProblems(searchDto)
 
         return ApiResponse.success(foundProblems)
+    }
+
+    @GetMapping("/shuffle")
+    fun getRandomProblems(@RequestParam("size") size: Int): ApiResponse<ProblemsResponseDto> {
+        val problemsResponseDto = commonProblemService.findRandomProblems(size)
+        return ApiResponse.success(problemsResponseDto)
     }
 
     @PostMapping("/grade/{id}/assessment")
