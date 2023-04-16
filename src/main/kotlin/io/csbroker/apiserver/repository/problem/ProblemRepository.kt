@@ -13,5 +13,4 @@ interface ProblemRepository : JpaRepository<Problem, Long>, ProblemRepositoryCus
 
     @Query("select problem_id from problem p order by RAND() limit :size", nativeQuery = true)
     fun findRandomProblemIds(@Param(value = "size") size: Int): List<Long>
-
 }

@@ -39,7 +39,7 @@ class CommonProblemServiceImpl(
         return ProblemsResponseDto(
             problems.map {
                 it.toProblemResponseDto(statMap[it.id])
-            }
+            },
         )
     }
 

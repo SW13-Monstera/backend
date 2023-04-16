@@ -36,7 +36,6 @@ class ProblemRepositoryCustomImpl(
         )
     }
 
-
     private fun getPaginatedIds(problemSearchDto: ProblemSearchDto, pageable: Pageable): List<Long> {
         val ids = queryFactory.select(problem.id)
             .from(problem)

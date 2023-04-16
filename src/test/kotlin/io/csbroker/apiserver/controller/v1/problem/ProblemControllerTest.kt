@@ -29,7 +29,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.requestParameters
-import kotlin.random.Random
 
 class ProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
@@ -150,8 +149,8 @@ class ProblemControllerTest : RestDocsTest() {
                     avgScore = 2.0,
                     totalSubmission = 20,
                     type = "long",
-                )
-            )
+                ),
+            ),
         )
 
         // when
@@ -188,8 +187,8 @@ class ProblemControllerTest : RestDocsTest() {
                             .description("총 제출 수"),
                         fieldWithPath("data.contents.[].type").type(JsonFieldType.STRING)
                             .description("문제의 타입 ( short, multiple, long )"),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
