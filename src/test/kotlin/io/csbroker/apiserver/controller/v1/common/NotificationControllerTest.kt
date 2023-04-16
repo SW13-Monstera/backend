@@ -2,6 +2,7 @@ package io.csbroker.apiserver.controller.v1.common
 
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.controller.RestDocsTest
+import io.csbroker.apiserver.dto.notification.NotificationBulkDeleteDto
 import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
 import io.csbroker.apiserver.model.Notification
 import io.csbroker.apiserver.model.User
@@ -198,6 +199,37 @@ class NotificationControllerTest : RestDocsTest() {
                             .type(JsonFieldType.STRING).description("결과 상태"),
                         PayloadDocumentation.fieldWithPath("data.count")
                             .type(JsonFieldType.NUMBER).description("읽지 않은 알림 개수"),
+                    ),
+                ),
+            )
+    }
+
+    @Test
+    fun `Delete notifications 200`() {
+        // given
+        justRun { notificationService.deleteNotifications(any(), any()) }
+
+        // when
+        val result = mockMvc.body(NotificationBulkDeleteDto(ids = listOf(1L)))
+            .request(Method.DELETE, NOTIFICATION_ENDPOINT)
+
+        // then
+        result.then()
+            .statusCode(200)
+            .apply(
+                MockMvcRestDocumentation.document(
+                    "notifications/delete",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    PayloadDocumentation.requestFields(
+                        PayloadDocumentation.fieldWithPath("ids")
+                            .type(JsonFieldType.ARRAY).description("삭제할 알림 ID 리스트"),
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data")
+                            .type(JsonFieldType.BOOLEAN).description("읽음 처리 성공 여부"),
                     ),
                 ),
             )
