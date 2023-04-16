@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.service.auth
 
+import io.csbroker.apiserver.auth.AUTHORITIES_KEY
 import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.common.enums.ErrorCode
@@ -102,7 +103,7 @@ class AuthServiceImpl(
             ?: throw UnAuthorizedException(ErrorCode.TOKEN_NOT_EXPIRED, "Access Token이 만료되지 않았거나 올바르지 않습니다.")
 
         val email = claims.subject
-        val role = Role.of(claims.get(io.csbroker.apiserver.auth.AUTHORITIES_KEY, String::class.java))
+        val role = Role.of(claims.get(AUTHORITIES_KEY, String::class.java))
 
         val refreshToken = getCookie(request, REFRESH_TOKEN)?.value
             ?: throw UnAuthorizedException(ErrorCode.REFRESH_TOKEN_NOT_EXIST, "Refresh Token이 존재하지 않습니다.")

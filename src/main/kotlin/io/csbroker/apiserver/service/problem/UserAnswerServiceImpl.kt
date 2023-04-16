@@ -39,25 +39,15 @@ class UserAnswerServiceImpl(
         val problem = longProblemRepository.findByIdOrNull(userAnswer.problemId)
             ?: throw EntityNotFoundException("${userAnswer.problemId}번 문제를 찾을 수 없습니다.")
 
-        val assignedUser =
-            if (userAnswer.assignedUserId == null) {
-                null
-            } else {
-                userRepository.findByIdOrNull(userAnswer.assignedUserId)
-                    ?: throw EntityNotFoundException(
-                        "${userAnswer.assignedUserId}의 아이디를 가진 유저를 찾을 수 없습니다.",
-                    )
-            }
+        val assignedUser = userAnswer.assignedUserId?.let {
+            userRepository.findByIdOrNull(it)
+                ?: throw EntityNotFoundException("${userAnswer.assignedUserId}번 유저를 찾을 수 없습니다.")
+        }
 
-        val validatingUser =
-            if (userAnswer.validatingUserId == null) {
-                null
-            } else {
-                userRepository.findByIdOrNull(userAnswer.validatingUserId)
-                    ?: throw EntityNotFoundException(
-                        "${userAnswer.validatingUserId}의 아이디를 가진 유저를 찾을 수 없습니다.",
-                    )
-            }
+        val validatingUser = userAnswer.validatingUserId?.let {
+            userRepository.findByIdOrNull(userAnswer.validatingUserId)
+                ?: throw EntityNotFoundException("${userAnswer.validatingUserId}번 유저를 찾을 수 없습니다.")
+        }
 
         val createUserAnswer = UserAnswer(
             answer = userAnswer.answer,

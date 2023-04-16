@@ -63,7 +63,6 @@ class AdminMultipleProblemServiceImpl(
 
     @Transactional
     override fun updateProblem(id: Long, updateRequestDto: MultipleChoiceProblemUpsertRequestDto, email: String): Long {
-        val updateRequestDto = updateRequestDto
         val findProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
 

@@ -88,7 +88,7 @@ class AuthToken(
     private fun createAuthToken(email: String, expiry: Date, role: String): String {
         return Jwts.builder()
             .setSubject(email)
-            .claim(io.csbroker.apiserver.auth.AUTHORITIES_KEY, role)
+            .claim(AUTHORITIES_KEY, role)
             .signWith(key, SignatureAlgorithm.HS256)
             .setExpiration(expiry)
             .compact()

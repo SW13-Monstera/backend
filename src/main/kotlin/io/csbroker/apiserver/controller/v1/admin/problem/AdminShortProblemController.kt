@@ -29,7 +29,7 @@ class AdminShortProblemController(
         @PathVariable("id") id: Long,
     ): ApiResponse<ShortProblemResponseDto> {
         val shortProblemResponseDto = shortProblemService.findProblemById(id)
-        return ApiResponse.success(shortProblemResponseDto as ShortProblemResponseDto)
+        return ApiResponse.success(shortProblemResponseDto)
     }
 
     @PostMapping
@@ -59,6 +59,6 @@ class AdminShortProblemController(
         pageable: Pageable,
     ): ApiResponse<ShortProblemSearchResponseDto> {
         val problemSearchDto = AdminProblemSearchDto(id, title, description, pageable)
-        return ApiResponse.success(shortProblemService.findProblems(problemSearchDto) as ShortProblemSearchResponseDto)
+        return ApiResponse.success(shortProblemService.findProblems(problemSearchDto))
     }
 }
