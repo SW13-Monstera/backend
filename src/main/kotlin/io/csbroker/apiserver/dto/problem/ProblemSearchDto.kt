@@ -7,4 +7,6 @@ data class ProblemSearchDto(
     val query: String?,
     val type: List<String>? = listOf(),
     val isGradable: Boolean?,
+    val page: Int,
+    val size: Int,
 )

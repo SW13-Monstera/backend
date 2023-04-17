@@ -6,6 +6,7 @@ import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.problem.ProblemPageResponseDto
 import io.csbroker.apiserver.dto.problem.ProblemSearchDto
+import io.csbroker.apiserver.dto.problem.ProblemsResponseDto
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.model.Challenge
@@ -14,7 +15,6 @@ import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -28,8 +28,19 @@ class CommonProblemServiceImpl(
     private val userRepository: UserRepository,
     private val challengeRepository: ChallengeRepository,
 ) : CommonProblemService {
-    override fun findProblems(problemSearchDto: ProblemSearchDto, pageable: Pageable): ProblemPageResponseDto {
-        return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto, pageable))
+    override fun findProblems(problemSearchDto: ProblemSearchDto): ProblemPageResponseDto {
+        return ProblemPageResponseDto(problemRepository.findProblemsByQuery(problemSearchDto))
+    }
+
+    override fun findRandomProblems(size: Int): ProblemsResponseDto {
+        val problemIds = problemRepository.findRandomProblemIds(size)
+        val problems = problemRepository.findAllById(problemIds)
+        val problemIdToStatMap = problemRepository.getProblemIdToStatMap(problems)
+        return ProblemsResponseDto(
+            problems.map {
+                it.toProblemResponseDto(problemIdToStatMap[it.id])
+            },
+        )
     }
 
     @Transactional
