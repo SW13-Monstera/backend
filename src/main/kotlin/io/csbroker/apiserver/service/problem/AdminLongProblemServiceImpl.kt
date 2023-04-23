@@ -5,9 +5,11 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.repository.problem.GradingStandardRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
+import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,6 +23,7 @@ class AdminLongProblemServiceImpl(
     private val userRepository: UserRepository,
     private val gradingStandardRepository: GradingStandardRepository,
     private val tagUpserter: TagUpserter,
+    private val standardAnswerRepository: StandardAnswerRepository,
 ) : AdminLongProblemService {
     override fun findProblems(problemSearchDto: AdminProblemSearchDto): LongProblemSearchResponseDto {
         val (id, title, description, pageable) = problemSearchDto
@@ -46,30 +49,50 @@ class AdminLongProblemServiceImpl(
             ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val longProblem = createRequestDto.toLongProblem(findUser)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
-
         longProblem.addGradingStandards(gradingStandardList)
+
         tagUpserter.setTags(longProblem, createRequestDto.tags)
 
-        return problemRepository.save(longProblem).id!!
+        val savedProblem = problemRepository.save(longProblem)
+
+        standardAnswerRepository.saveAll(
+            createRequestDto.standardAnswers.map {
+                StandardAnswer(
+                    content = it,
+                    longProblem = savedProblem,
+                )
+            },
+        )
+
+        return savedProblem.id!!
     }
 
     @Transactional
     override fun updateProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findProblem = longProblemRepository.findByIdOrNull(id)
+        val longProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
 
-        gradingStandardRepository.deleteAllById(findProblem.gradingStandards.map { it.id })
+        val gradingStandardList = updateRequestDto.getGradingStandardList(longProblem)
 
-        findProblem.gradingStandards.clear()
+        if (longProblem.standardAnswers.map { it.content }.toSet() != updateRequestDto.standardAnswers.toSet()) {
+            standardAnswerRepository.deleteAllByLongProblem(longProblem)
+            standardAnswerRepository.saveAll(
+                updateRequestDto.standardAnswers.map {
+                    StandardAnswer(
+                        content = it,
+                        longProblem = longProblem,
+                    )
+                },
+            )
+        }
 
-        val gradingStandardList = updateRequestDto.getGradingStandardList(findProblem)
+        if (longProblem.gradingStandards.map { it.content }.toSet() != gradingStandardList.map { it.content }.toSet()) {
+            gradingStandardRepository.deleteAllById(longProblem.gradingStandards.map { it.id })
+            longProblem.addGradingStandards(gradingStandardList)
+        }
 
-        findProblem.addGradingStandards(gradingStandardList)
-
-        findProblem.updateFromDto(updateRequestDto)
-
-        tagUpserter.updateTags(findProblem, updateRequestDto.tags)
-
+        longProblem.updateFromDto(updateRequestDto)
+        tagUpserter.setTags(longProblem, updateRequestDto.tags)
         return id
     }
 }
