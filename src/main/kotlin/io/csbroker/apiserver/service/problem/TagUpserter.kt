@@ -24,6 +24,7 @@ class TagUpserter(
             ProblemTag(problem = problem, tag = it)
         }
 
+        problemTagRepository.saveAll(problemTags)
         problem.problemTags.addAll(problemTags)
     }
 
