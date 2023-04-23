@@ -16,7 +16,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "notification")
-@SQLDelete(sql = "UPDATE notification SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE notification SET is_deleted = true WHERE notification_id = ?")
 @Where(clause = "is_deleted = false")
 class Notification(
     @Id
