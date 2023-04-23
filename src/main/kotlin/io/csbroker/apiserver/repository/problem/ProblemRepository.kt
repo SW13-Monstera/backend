@@ -11,6 +11,6 @@ interface ProblemRepository : JpaRepository<Problem, Long>, ProblemRepositoryCus
     @Query("select count(p) from Problem p where p.isGradable = TRUE and p.isActive = TRUE")
     fun countGradableProblem(): Long
 
-    @Query("select problem_id from problem order by RAND() limit :size", nativeQuery = true)
+    @Query("select problem_id from problem p where p.is_active = true order by RAND() limit :size", nativeQuery = true)
     fun findRandomProblemIds(@Param(value = "size") size: Int): List<Long>
 }
