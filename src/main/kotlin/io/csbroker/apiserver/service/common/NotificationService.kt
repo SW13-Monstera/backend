@@ -12,4 +12,5 @@ interface NotificationService {
     fun readNotifications(email: String, notificationIds: List<Long>)
     fun readNotificationById(email: String, id: Long)
     fun getUnreadNotificationCount(email: String): Long
+    fun deleteNotifications(email: String, ids: List<Long>)
 }
