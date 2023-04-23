@@ -2,6 +2,7 @@ package io.csbroker.apiserver.controller.v1.common
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.dto.common.ApiResponse
+import io.csbroker.apiserver.dto.notification.NotificationBulkDeleteDto
 import io.csbroker.apiserver.dto.notification.NotificationBulkReadDto
 import io.csbroker.apiserver.dto.notification.NotificationPageResponseDto
 import io.csbroker.apiserver.dto.notification.NotificationReadResponseDto
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.security.core.userdetails.User
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController
 class NotificationController(
     private val notificationService: NotificationService,
 ) {
-
     @GetMapping
     fun getNotifications(
         @LoginUser loginUser: User,
@@ -59,5 +60,14 @@ class NotificationController(
     ): ApiResponse<NotificationReadResponseDto> {
         notificationService.readNotificationById(loginUser.username, id)
         return ApiResponse.success(NotificationReadResponseDto())
+    }
+
+    @DeleteMapping
+    fun deleteNotificationByIds(
+        @LoginUser loginUser: User,
+        @RequestBody notificationBulkDeleteDto: NotificationBulkDeleteDto,
+    ): ApiResponse<Boolean> {
+        notificationService.deleteNotifications(loginUser.username, notificationBulkDeleteDto.ids)
+        return ApiResponse.success(true)
     }
 }

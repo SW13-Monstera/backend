@@ -7,6 +7,7 @@ import io.csbroker.apiserver.repository.common.NotificationRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -68,5 +69,17 @@ class NotificationServiceImpl(
             ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
 
         return notificationRepository.countUnReadByUserId(findUser.id!!)
+    }
+
+    @Transactional
+    override fun deleteNotifications(email: String, ids: List<Long>) {
+        val findUser = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
+
+        val deletedCnt = notificationRepository.deleteAllByUserAndIdIn(findUser, ids)
+
+        if (deletedCnt != ids.size) {
+            throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")
+        }
     }
 }
