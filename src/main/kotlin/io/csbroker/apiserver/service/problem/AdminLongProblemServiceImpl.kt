@@ -51,9 +51,8 @@ class AdminLongProblemServiceImpl(
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
         longProblem.addGradingStandards(gradingStandardList)
 
-        tagUpserter.setTags(longProblem, createRequestDto.tags)
-
         val savedProblem = problemRepository.save(longProblem)
+        tagUpserter.setTags(savedProblem, createRequestDto.tags)
 
         standardAnswerRepository.saveAll(
             createRequestDto.standardAnswers.map {
