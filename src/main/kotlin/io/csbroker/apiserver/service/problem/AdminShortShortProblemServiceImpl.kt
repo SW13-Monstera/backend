@@ -51,7 +51,6 @@ class AdminShortShortProblemServiceImpl(
 
     @Transactional
     override fun updateProblem(id: Long, updateRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
-        val updateRequestDto = updateRequestDto
         val findProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
 

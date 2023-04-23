@@ -29,7 +29,7 @@ class AdminMultipleProblemController(
         @PathVariable("id") id: Long,
     ): ApiResponse<MultipleChoiceProblemResponseDto> {
         val multipleProblemResponseDto = multipleProblemService.findProblemById(id)
-        return ApiResponse.success(multipleProblemResponseDto as MultipleChoiceProblemResponseDto)
+        return ApiResponse.success(multipleProblemResponseDto)
     }
 
     @PostMapping
@@ -60,7 +60,7 @@ class AdminMultipleProblemController(
     ): ApiResponse<MultipleChoiceProblemSearchResponseDto> {
         val problemSearchDto = AdminProblemSearchDto(id, title, description, pageable)
         return ApiResponse.success(
-            multipleProblemService.findProblems(problemSearchDto) as MultipleChoiceProblemSearchResponseDto,
+            multipleProblemService.findProblems(problemSearchDto),
         )
     }
 }

@@ -529,6 +529,38 @@ include::{snippets}/problems/search/request-parameters.adoc[]
 include::{snippets}/problems/search/response-body.adoc[]
 include::{snippets}/problems/search/response-fields.adoc[]
 
+
+=== 문제 랜덤 조회
+
+.description
+[source]
+----
+문제를 랜덤하게 가져오기 위한 API입니다.영
+
+HTTP Method : GET
+End-Point   : /api/v1/problems/shuffle
+Req Params  : size
+----
+
+.Sample Request
+include::{snippets}/problems/shuffle/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/shuffle/http-response.adoc[]
+
+
+include::{snippets}/problems/shuffle/request-headers.adoc[]
+
+.Request parameters
+
+문제 랜덤 조회를 위한 request parameter의 설명입니다.
+include::{snippets}/problems/shuffle/request-parameters.adoc[]
+
+
+.Response Body
+include::{snippets}/problems/shuffle/response-body.adoc[]
+include::{snippets}/problems/shuffle/response-fields.adoc[]
+
 ==== 문제 채점 결과 평가 의견
 .description
 [source]

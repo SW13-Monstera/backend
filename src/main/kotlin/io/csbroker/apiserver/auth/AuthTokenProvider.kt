@@ -29,10 +29,7 @@ class AuthTokenProvider(
             val authorities = arrayOf(claims!![AUTHORITIES_KEY].toString())
                 .map(::SimpleGrantedAuthority)
                 .toList()
-
-            val principal = User(claims.subject, "", authorities)
-
-            return UsernamePasswordAuthenticationToken(principal, authToken, authorities)
+            return UsernamePasswordAuthenticationToken(User(claims.subject, "", authorities), authToken, authorities)
         } else {
             throw UnAuthorizedException(ErrorCode.TOKEN_INVALID, "올바르지 않은 Token입니다.")
         }

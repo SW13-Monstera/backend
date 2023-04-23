@@ -18,7 +18,7 @@ class RequestWrapper(request: HttpServletRequest) : HttpServletRequestWrapper(re
 
     override fun getInputStream(): ServletInputStream {
         return object : ServletInputStream() {
-            private var cachedBodyInputStream = ByteArrayInputStream(cachedInputStream)
+            private val cachedBodyInputStream = ByteArrayInputStream(cachedInputStream)
 
             override fun read(): Int {
                 return cachedBodyInputStream.read()
