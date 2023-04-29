@@ -234,6 +234,7 @@ class LongProblemControllerTest : RestDocsTest() {
                         fieldWithPath("answer").type(JsonFieldType.STRING).description("유저가 작성한 답안"),
                     ),
                     responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
                         fieldWithPath("data.title").type(JsonFieldType.STRING).description("문제 제목"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
                         fieldWithPath("data.description").type(JsonFieldType.STRING).description("문제 설명"),
