@@ -153,16 +153,17 @@ class LongProblemServiceImpl(
         userAnswerRepository.save(userAnswer)
 
         val standardAnswer = standardAnswerRepository.findAllByLongProblem(problem).let {
-            if (it.isEmpty())
+            if (it.isEmpty()) {
                 throw EntityNotFoundException("{$problem.id}번 문제에 대한 모범답안이 존재하지 않습니다.")
+            }
             it.random().content
         }
-        val tags = problem.problemTags.map{
+        val tags = problem.problemTags.map {
             it.tag.name
         }
         val gradingHistories = problem.gradingHistory
         val totalSubmissionCount = gradingHistories.size
-        val userSubmissionCount = gradingHistories.filter{
+        val userSubmissionCount = gradingHistories.filter {
             it.user.id == user.id
         }.size
 
@@ -173,7 +174,7 @@ class LongProblemServiceImpl(
             totalSubmissionCount = totalSubmissionCount,
             userSubmissionCount = userSubmissionCount,
             userAnswer = answer,
-            standardAnswer = standardAnswer
+            standardAnswer = standardAnswer,
         )
     }
 
