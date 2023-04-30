@@ -163,9 +163,7 @@ class LongProblemServiceImpl(
         }
         val gradingHistories = problem.gradingHistory
         val totalSubmissionCount = gradingHistories.size
-        val userSubmissionCount = gradingHistories.filter {
-            it.user.id == user.id
-        }.size
+        val userSubmissionCount = gradingHistories.count { it.user.id == user.id }
 
         return SubmitLongProblemResponseDto(
             title = problem.title,
