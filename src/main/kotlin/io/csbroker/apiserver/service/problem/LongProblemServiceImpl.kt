@@ -152,12 +152,10 @@ class LongProblemServiceImpl(
         val userAnswer = UserAnswer(answer = answer, problem = problem)
         userAnswerRepository.save(userAnswer)
 
-        val standardAnswer = standardAnswerRepository.findAllByLongProblem(problem).let {
-            if (it.isEmpty()) {
-                throw EntityNotFoundException("{$problem.id}번 문제에 대한 모범답안이 존재하지 않습니다.")
-            }
-            it.random().content
-        }
+        val standardAnswer = standardAnswerRepository.findAllByLongProblem(problem).takeIf {
+            it.isNotEmpty()
+        }?.random()?.content ?: throw EntityNotFoundException("{$problem.id}번 문제에 대한 모범답안이 존재하지 않습니다.")
+
         val tags = problem.problemTags.map {
             it.tag.name
         }
