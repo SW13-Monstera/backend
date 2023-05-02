@@ -1,6 +1,7 @@
 package io.csbroker.apiserver.controller.v1.problem
 
 import io.csbroker.apiserver.controller.RestDocsTest
+import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.ContentDto
 import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
@@ -22,6 +23,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors.preproces
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
@@ -186,6 +188,62 @@ class LongProblemControllerTest : RestDocsTest() {
                             .description("내용 채점 기준 내용"),
                         fieldWithPath("data.contents.[].isExist").type(JsonFieldType.BOOLEAN)
                             .description("내용 채점 기준이 유저답안에 존재하는지 유무"),
+                    ),
+                ),
+            )
+    }
+
+    @Test
+    fun `서술형 문제 제출`() {
+        // given
+        val responseDto = SubmitLongProblemResponseDto(
+            title = "title",
+            tags = listOf("tag1", "tag2", "tag3"),
+            description = "description",
+            totalSubmissionCount = 100,
+            userSubmissionCount = 10,
+            userAnswer = "user answer",
+            standardAnswer = "standard answer",
+        )
+        every { longProblemService.submitProblem(any()) } returns responseDto
+
+        // when
+
+        val result = mockMvc.body(
+            LongProblemAnswerDto(
+                answer = "user answer",
+            ),
+        ).request(Method.POST, "/api/v1/problems/long/{problem_id}/submit", 1L)
+
+        result.then()
+            .statusCode(200)
+            .apply(
+                document(
+                    "problems/long/submit",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION)
+                            .description("인증을 위한 Access 토큰")
+                            .optional(),
+                    ),
+                    pathParameters(
+                        parameterWithName("problem_id").description("문제 id"),
+                    ),
+                    requestFields(
+                        fieldWithPath("answer").type(JsonFieldType.STRING).description("유저가 작성한 답안"),
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING).description("문제 제목"),
+                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                        fieldWithPath("data.description").type(JsonFieldType.STRING).description("문제 설명"),
+                        fieldWithPath("data.totalSubmissionCount").type(JsonFieldType.NUMBER)
+                            .description("해당 문제에 대해 전체 유저가 제출한 수 (총 제출 수)"),
+                        fieldWithPath("data.userSubmissionCount").type(JsonFieldType.NUMBER)
+                            .description("해당 문제에 대해 유저가 제출한 수 "),
+                        fieldWithPath("data.userAnswer").type(JsonFieldType.STRING).description("유저의 답변"),
+                        fieldWithPath("data.standardAnswer").type(JsonFieldType.STRING).description("모범 답안"),
                     ),
                 ),
             )
