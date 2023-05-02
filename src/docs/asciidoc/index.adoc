@@ -1674,7 +1674,7 @@ include::{snippets}/admin/user/admin/search/response-fields.adoc[]
 .description
 [source]
 ----
-Notification 생성을 위한 API입니다.
+Notification 단일 생성을 위한 API입니다.
 
 HTTP Method : POST
 End-Point   : /api/admin/notification
@@ -1718,6 +1718,33 @@ include::{snippets}/admin/notifications/bulkInsert/http-response.adoc[]
 .Response Body
 include::{snippets}/admin/notifications/bulkInsert/response-body.adoc[]
 include::{snippets}/admin/notifications/bulkInsert/response-fields.adoc[]
+
+==== Notification 삭제
+
+.description
+[source]
+----
+Notification 삭제를 위한 API입니다.
+단일 삭제는 List에 ID 한 개만 넣어서 요청하시면 됩니다.
+
+HTTP Method : DELETE
+End-Point   : /api/admin/notification
+----
+
+.Sample Request
+include::{snippets}/admin/notifications/delete/http-request.adoc[]
+
+.Request Body
+include::{snippets}/admin/notifications/delete/request-body.adoc[]
+include::{snippets}/admin/notifications/delete/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/admin/notifications/delete/http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/notifications/delete/response-body.adoc[]
+include::{snippets}/admin/notifications/delete/response-fields.adoc[]
+
 
 === 문제 세트 API ( /api/admin/problem-sets )
 
