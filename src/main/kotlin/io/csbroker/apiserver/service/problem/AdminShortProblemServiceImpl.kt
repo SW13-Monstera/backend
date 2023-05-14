@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class AdminShortShortProblemServiceImpl(
+class AdminShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
     private val problemRepository: ProblemRepository,
     private val userRepository: UserRepository,
