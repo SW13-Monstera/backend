@@ -21,12 +21,11 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import java.util.UUID
-import org.junit.jupiter.api.assertThrows
-
 
 class AdminMultipleProblemServiceTest {
     private lateinit var multipleChoiceProblemRepository: MultipleChoiceProblemRepository
@@ -77,16 +76,19 @@ class AdminMultipleProblemServiceTest {
 
         val adminProblemSearchDto = AdminProblemSearchDto(null, null, null, pageable)
 
-        every { multipleChoiceProblemRepository.findMultipleChoiceProblemsByQuery(null, null, null, pageable) } returns pagedProblems
+        every {
+            multipleChoiceProblemRepository.findMultipleChoiceProblemsByQuery(null, null, null, pageable)
+        } returns pagedProblems
 
         // when
-        val result: MultipleChoiceProblemSearchResponseDto = adminMultipleProblemService.findProblems(adminProblemSearchDto)
+        val result: MultipleChoiceProblemSearchResponseDto = adminMultipleProblemService.findProblems(
+            adminProblemSearchDto,
+        )
 
         // then
         verify { multipleChoiceProblemRepository.findMultipleChoiceProblemsByQuery(null, null, null, pageable) }
         assertEquals(pagedProblems.totalElements, result.totalElements)
         assertEquals(pagedProblems.totalPages, result.totalPages)
-
     }
 
     @Test
@@ -111,7 +113,6 @@ class AdminMultipleProblemServiceTest {
         assertEquals(pagedProblems.totalElements, result.totalElements)
         assertEquals(pagedProblems.totalPages, result.totalPages)
         assertEquals(pagedProblems.content.first().title, result.problems.first().title)
-
     }
 
     @Test
@@ -169,7 +170,6 @@ class AdminMultipleProblemServiceTest {
         every { userRepository.findByEmail(user.email) } returns user
         every { tagUpserter.setTags(any(), any()) } just runs
 
-
         // when & then
         assertThrows<ConditionConflictException> {
             adminMultipleProblemService.createProblem(createRequestDto, user.email)
@@ -220,7 +220,6 @@ class AdminMultipleProblemServiceTest {
         verify { multipleChoiceProblemRepository.findByIdOrNull(any()) }
     }
 
-
     @Test
     fun `updateProblem - choice를 수정시 정답이 존재하지 않으면 예외 발생`() {
         // given
@@ -239,6 +238,5 @@ class AdminMultipleProblemServiceTest {
         }
 
         verify { multipleChoiceProblemRepository.findByIdOrNull(problem.id) }
-
     }
 }

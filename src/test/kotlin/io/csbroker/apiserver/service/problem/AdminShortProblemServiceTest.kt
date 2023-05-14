@@ -3,11 +3,7 @@ package io.csbroker.apiserver.service.problem
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
-import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
-import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
-import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto.ShortProblemDataDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import io.csbroker.apiserver.model.MultipleChoiceProblem
 import io.csbroker.apiserver.model.ShortProblem
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
@@ -83,7 +79,6 @@ class AdminShortProblemServiceTest {
         assertEquals(1L, result.totalElements)
     }
 
-
     @Test
     fun `findProblems - 검색된 문제가 없을 경우 빈 페이지 반환`() {
         // given
@@ -97,9 +92,7 @@ class AdminShortProblemServiceTest {
         // then
         verify { shortProblemRepository.findShortProblemsByQuery(any(), any(), any(), any()) }
         assertEquals(true, result.problems.isEmpty())
-
     }
-
 
     @Test
     fun `findProblemById - success`() {
@@ -137,7 +130,7 @@ class AdminShortProblemServiceTest {
         val email = "test@test.com"
         every { userRepository.findByEmail(email) } returns user
         every { problemRepository.save(any()) } returns problem
-        every { tagUpserter.setTags(any(), any())} just runs
+        every { tagUpserter.setTags(any(), any()) } just runs
         every { problemRepository.save(any()) } returns problem
 
         // when
@@ -175,14 +168,14 @@ class AdminShortProblemServiceTest {
         )
         val email = "test@test.com"
         every { shortProblemRepository.findByIdOrNull(any()) } returns problem
-        every { tagUpserter.updateTags(any(), any())} just runs
+        every { tagUpserter.updateTags(any(), any()) } just runs
 
         // when
         val result = adminShortProblemService.updateProblem(1L, requestDto, email)
 
         // then
         verify { shortProblemRepository.findByIdOrNull(any()) }
-        verify { tagUpserter.updateTags(any(), any())}
+        verify { tagUpserter.updateTags(any(), any()) }
         assertEquals(problem.id, result)
     }
 
