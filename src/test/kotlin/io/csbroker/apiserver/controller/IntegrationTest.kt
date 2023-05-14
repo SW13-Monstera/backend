@@ -108,15 +108,21 @@ class IntegrationTest {
     }
 
     private fun createToken(isAdmin: Boolean): String {
-        val user = save(
-            User(
-                email = "test@csbroker.io",
-                username = "test",
-                password = "test",
-                role = if (isAdmin) Role.ROLE_ADMIN else Role.ROLE_USER,
-                providerType = ProviderType.LOCAL,
-            ),
-        )
+        val users = findAll<User>("SELECT u FROM User u where u.email = 'test@csbroker.io'")
+        val user = if (users.isNotEmpty()) {
+            users.first()
+        } else {
+            save(
+                User(
+                    email = "test@csbroker.io",
+                    username = "test",
+                    password = "test",
+                    role = if (isAdmin) Role.ROLE_ADMIN else Role.ROLE_USER,
+                    providerType = ProviderType.LOCAL,
+                ),
+            )
+        }
+
         return authTokenProvider.createAuthToken(
             user.email,
             Date(Date().time + 6000),
