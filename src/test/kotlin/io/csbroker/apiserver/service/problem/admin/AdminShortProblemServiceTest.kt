@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service.problem
+package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
@@ -9,6 +9,9 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
+import io.csbroker.apiserver.service.problem.admin.AdminShortProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminShortProblemServiceImpl
+import io.csbroker.apiserver.service.problem.admin.TagUpserter
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk

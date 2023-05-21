@@ -5,7 +5,7 @@ import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoicePro
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto.ChoiceData
-import io.csbroker.apiserver.service.problem.AdminMultipleProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminMultipleProblemService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method
