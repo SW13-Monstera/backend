@@ -108,13 +108,14 @@ class IntegrationTest {
     }
 
     private fun createToken(isAdmin: Boolean): String {
-        val users = findAll<User>("SELECT u FROM User u where u.email = 'test@csbroker.io'")
+        val email = if (isAdmin) "test-admin@csbroker.io" else "test@csbroker.io"
+        val users = findAll<User>("SELECT u FROM User u where u.email = '$email'")
         val user = if (users.isNotEmpty()) {
             users.first()
         } else {
             save(
                 User(
-                    email = "test@csbroker.io",
+                    email = email,
                     username = "test",
                     password = "test",
                     role = if (isAdmin) Role.ROLE_ADMIN else Role.ROLE_USER,
