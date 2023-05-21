@@ -61,7 +61,7 @@ class LongProblemServiceTest {
 
         // when & then
         assertThrows<EntityNotFoundException> { longProblemService.submitProblem(submitRequest) }
-        verify{ userRepository.findByEmail(any()) }
+        verify { userRepository.findByEmail(any()) }
     }
 
     @Test
@@ -79,7 +79,6 @@ class LongProblemServiceTest {
 
     @Test
     fun `submitProblem - 모범 답안이 존재하지 않으면 예외가 발생합니다`() {
-
         // given
         val email = "test@test.com"
         val problemId = 1L
@@ -109,7 +108,6 @@ class LongProblemServiceTest {
 
     @Test
     fun `submitProblem - success`() {
-
         // given
         val email = "test@test.com"
         val problemId = 1L
@@ -123,7 +121,7 @@ class LongProblemServiceTest {
             title = title,
             description = description,
         )
-        val standardAnswer = StandardAnswer(content="std content", longProblem = longProblem)
+        val standardAnswer = StandardAnswer(content = "std content", longProblem = longProblem)
         val userAnswer = UserAnswer(answer = answer, problem = longProblem)
         every { userRepository.findByEmail(email) } returns user
         every { longProblemRepository.findByIdOrNull(problemId) } returns longProblem
