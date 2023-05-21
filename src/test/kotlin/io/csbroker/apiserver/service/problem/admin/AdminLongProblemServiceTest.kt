@@ -10,9 +10,6 @@ import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
 import io.csbroker.apiserver.repository.user.UserRepository
-import io.csbroker.apiserver.service.problem.admin.AdminLongProblemService
-import io.csbroker.apiserver.service.problem.admin.AdminLongProblemServiceImpl
-import io.csbroker.apiserver.service.problem.admin.TagUpserter
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
