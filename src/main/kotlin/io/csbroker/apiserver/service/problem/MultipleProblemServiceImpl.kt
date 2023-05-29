@@ -47,14 +47,13 @@ class MultipleProblemServiceImpl(
         val score = if (isAnswer) findProblem.score else 0.0
 
         // create grading-history
-        val gradingHistory = gradingHistoryRepository.save(
-            GradingHistory(
-                problem = findProblem,
-                user = findUser,
-                userAnswer = answerIds.joinToString(","),
-                score = score,
-                )
+        val gradingHistory = GradingHistory(
+            problem = findProblem,
+            user = findUser,
+            userAnswer = answerIds.joinToString(","),
+            score = score,
         )
+        gradingHistoryRepository.save(gradingHistory)
 
         // create dto
         return MultipleChoiceProblemGradingHistoryDto.createDto(
