@@ -53,7 +53,7 @@ class MultipleProblemServiceImpl(
                 user = findUser,
                 userAnswer = answerIds.joinToString(","),
                 score = score,
-                )
+            ),
         )
 
         // create dto

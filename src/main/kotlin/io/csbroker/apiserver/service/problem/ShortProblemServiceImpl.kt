@@ -46,7 +46,7 @@ class ShortProblemServiceImpl(
                 user = findUser,
                 userAnswer = answer,
                 score = score,
-            )
+            ),
         )
 
         // create dto

@@ -35,14 +35,14 @@ class UserAnswerServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
     private val validator = User(
         id = UUID.randomUUID(),
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
     private lateinit var userAnswer: UserAnswer
     private lateinit var problem: LongProblem
@@ -62,7 +62,7 @@ class UserAnswerServiceTest {
             description = "description",
         )
         problem.id = 1L
-        userAnswer  = UserAnswer(
+        userAnswer = UserAnswer(
             id = 1L,
             answer = "answer",
             problem = problem,
@@ -70,7 +70,6 @@ class UserAnswerServiceTest {
             validatingUser = validator,
         )
     }
-
 
     @Test
     fun `createUserAnswer - 존재하지 않는 문제의 답안을 생성시에 예외가 발생합니다`() {
@@ -82,7 +81,6 @@ class UserAnswerServiceTest {
         // when & then
         assertThrows<EntityNotFoundException> { service.createUserAnswer(requestDto) }
         verify { longProblemRepository.findByIdOrNull(problemId) }
-
     }
 
     @Test
@@ -94,7 +92,7 @@ class UserAnswerServiceTest {
             assignedUserId = notExistUserId,
             validatingUserId = validator.id!!,
             answer = "answer",
-            problemId = problemId
+            problemId = problemId,
         )
         every { longProblemRepository.findByIdOrNull(problemId) } returns problem
         every { userRepository.findByIdOrNull(notExistUserId) } returns null
@@ -103,7 +101,6 @@ class UserAnswerServiceTest {
         assertThrows<EntityNotFoundException> { service.createUserAnswer(requestDto) }
         verify { longProblemRepository.findByIdOrNull(problemId) }
         verify { userRepository.findByIdOrNull(notExistUserId) }
-
     }
 
     @Test
@@ -115,7 +112,7 @@ class UserAnswerServiceTest {
             assignedUserId = assignee.id!!,
             validatingUserId = notExistUserId,
             answer = "answer",
-            problemId = problemId
+            problemId = problemId,
         )
         every { longProblemRepository.findByIdOrNull(problemId) } returns problem
         every { userRepository.findByIdOrNull(assignee.id!!) } returns assignee
@@ -126,9 +123,7 @@ class UserAnswerServiceTest {
         verify { longProblemRepository.findByIdOrNull(problemId) }
         verify { userRepository.findByIdOrNull(assignee.id!!) }
         verify { userRepository.findByIdOrNull(notExistUserId) }
-
     }
-
 
     @Test
     fun `createUserAnswer - success`() {
@@ -139,7 +134,7 @@ class UserAnswerServiceTest {
             assignedUserId = assignee.id!!,
             validatingUserId = validator.id!!,
             answer = answer,
-            problemId = problemId
+            problemId = problemId,
         )
         val userAnswer = UserAnswer(
             id = 1L,
@@ -155,15 +150,13 @@ class UserAnswerServiceTest {
         every { userAnswerRepository.save(any()) } returns userAnswer
 
         // when & then
-        val result =  service.createUserAnswer(requestDto)
+        val result = service.createUserAnswer(requestDto)
         assertEquals(userAnswer.id, result)
         verify { longProblemRepository.findByIdOrNull(problemId) }
         verify { userRepository.findByIdOrNull(assignee.id!!) }
         verify { userRepository.findByIdOrNull(validator.id!!) }
         verify { userAnswerRepository.save(any()) }
-
     }
-
 
     @Test
     fun `findUserAnswerById - 없는 유저 답안을 조회할 시 예외가 발생합니다`() {
@@ -173,7 +166,6 @@ class UserAnswerServiceTest {
         // when & then
         assertThrows<EntityNotFoundException> { service.findUserAnswerById(1L) }
         verify { userAnswerRepository.findByIdOrNull(1L) }
-
     }
 
     @Test
@@ -182,16 +174,14 @@ class UserAnswerServiceTest {
         val email = assignee.email
         val userAnswerId = 1L
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
-        every { userAnswerRepository.findByIdOrNull( userAnswerId ) } returns null
+        every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns null
 
         // when & then
         assertThrows<EntityNotFoundException> {
             service.labelUserAnswer(email, userAnswerId, selectedGradingStandardIds)
         }
-        verify { userAnswerRepository.findByIdOrNull( userAnswerId ) }
-
+        verify { userAnswerRepository.findByIdOrNull(userAnswerId) }
     }
-
 
     @Test
     fun `labelUserAnswer - 담당자가 존재하지 않는 답안은 라벨링을 할 수 없습니다`() {
@@ -200,13 +190,13 @@ class UserAnswerServiceTest {
         val userAnswerId = userAnswer.id!!
         userAnswer.assignedUser = null
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
-        every { userAnswerRepository.findByIdOrNull( userAnswerId) } returns userAnswer
+        every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
 
         // when & then
         assertThrows<EntityNotFoundException> {
             service.labelUserAnswer(anotherUserEmail, userAnswerId, selectedGradingStandardIds)
         }
-        verify { userAnswerRepository.findByIdOrNull( userAnswerId) }
+        verify { userAnswerRepository.findByIdOrNull(userAnswerId) }
     }
 
     @Test
@@ -215,13 +205,13 @@ class UserAnswerServiceTest {
         val anotherUserEmail = "another@email.com"
         val userAnswerId = userAnswer.id!!
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
-        every { userAnswerRepository.findByIdOrNull( userAnswerId) } returns userAnswer
+        every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
 
         // when & then
         assertThrows<EntityNotFoundException> {
             service.labelUserAnswer(anotherUserEmail, userAnswerId, selectedGradingStandardIds)
         }
-        verify { userAnswerRepository.findByIdOrNull( 1L) }
+        verify { userAnswerRepository.findByIdOrNull(1L) }
     }
 
     @Test
@@ -230,7 +220,7 @@ class UserAnswerServiceTest {
         val userAnswerId = userAnswer.id!!
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
 
-        every { userAnswerRepository.findByIdOrNull( userAnswerId) } returns userAnswer
+        every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
         every { gradingStandardRepository.countByIdIn(selectedGradingStandardIds) } returns 0
 
         // when & then
@@ -238,10 +228,8 @@ class UserAnswerServiceTest {
             service.labelUserAnswer(assignee.email, userAnswerId, selectedGradingStandardIds)
         }
         verify { gradingStandardRepository.countByIdIn(selectedGradingStandardIds) }
-        verify { userAnswerRepository.findByIdOrNull( 1L) }
+        verify { userAnswerRepository.findByIdOrNull(1L) }
     }
-
-
 
     @Test
     fun `labelUserAnswer - 라벨링이 완료되면 완료 표식을 남깁니다`() {
@@ -249,11 +237,10 @@ class UserAnswerServiceTest {
         val userAnswerId = userAnswer.id!!
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
 
-        every { userAnswerRepository.findByIdOrNull( userAnswerId) } returns userAnswer
+        every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
         every { gradingStandardRepository.countByIdIn(selectedGradingStandardIds) } returns 3
         every { userAnswerGradingStandardRepository.deleteAllByUserAnswerId(userAnswerId) } just runs
         every { userAnswerGradingStandardRepository.batchInsert(userAnswerId, selectedGradingStandardIds) } just runs
-
 
         // when & then
         assertEquals(false, userAnswer.isLabeled)
@@ -261,8 +248,8 @@ class UserAnswerServiceTest {
         assertEquals(userAnswer.id, result)
         assertEquals(true, userAnswer.isLabeled)
         verify { gradingStandardRepository.countByIdIn(selectedGradingStandardIds) }
-        verify { userAnswerRepository.findByIdOrNull( 1L) }
-        verify { userAnswerGradingStandardRepository.deleteAllByUserAnswerId(userAnswerId)}
+        verify { userAnswerRepository.findByIdOrNull(1L) }
+        verify { userAnswerGradingStandardRepository.deleteAllByUserAnswerId(userAnswerId) }
         verify { userAnswerGradingStandardRepository.batchInsert(userAnswerId, selectedGradingStandardIds) }
     }
 

@@ -11,12 +11,9 @@ import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -33,10 +30,9 @@ class MultipleProblemServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
     private lateinit var service: MultipleProblemService
-
 
     @BeforeEach
     fun setUp() {
@@ -45,9 +41,7 @@ class MultipleProblemServiceTest {
             userRepository,
             gradingHistoryRepository,
         )
-
     }
-
 
     @Test
     fun `findProblemById - 없는 문제를 찾을 시 예외가 발생합니다`() {
@@ -58,7 +52,6 @@ class MultipleProblemServiceTest {
         assertThrows<EntityNotFoundException> { service.findProblemById(1L, "email") }
         verify { service.findProblemById(1L, "email") }
     }
-
 
     @Test
     fun `findProblemById - success`() {
@@ -71,8 +64,6 @@ class MultipleProblemServiceTest {
         val responseDto = service.findProblemById(problemId, user.email)
         assertEquals(responseDto, mockProblem.toDetailResponseDto(user.email))
     }
-
-
 
     @Test
     fun `gradingProblem - 없는 유저가 문제를 제출시 예외가 발생합니다`() {
@@ -119,7 +110,7 @@ class MultipleProblemServiceTest {
             problem = problem,
             user = user,
             userAnswer = answerId.toString(),
-            score = problem.score
+            score = problem.score,
         )
         every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns problem
@@ -144,7 +135,7 @@ class MultipleProblemServiceTest {
             problem = problem,
             user = user,
             userAnswer = answerId.toString(),
-            score = 0.0
+            score = 0.0,
         )
         every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns problem
@@ -154,7 +145,6 @@ class MultipleProblemServiceTest {
         val result = service.gradingProblem(gradingRequest)
         assertEquals(0.0, result.score)
     }
-
 
     private fun createProblem(): MultipleChoiceProblem {
         val problem = MultipleChoiceProblem(
@@ -182,7 +172,7 @@ class MultipleProblemServiceTest {
                 content = "wrong answer2",
                 isAnswer = false,
                 multipleChoiceProblem = problem,
-            )
+            ),
         )
         choiceList.forEach { problem.choicesList.add(it) }
         problem.id = 1L

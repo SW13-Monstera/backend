@@ -12,14 +12,12 @@ import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import java.util.UUID
-import javax.swing.text.html.parser.Entity
 
 class ShortProblemServiceTest {
 
@@ -31,10 +29,9 @@ class ShortProblemServiceTest {
         email = "test@test.com",
         password = "test1234!",
         username = "test",
-        providerType = ProviderType.LOCAL
+        providerType = ProviderType.LOCAL,
     )
     private lateinit var service: ShortProblemService
-
 
     @BeforeEach
     fun setUp() {
@@ -48,11 +45,11 @@ class ShortProblemServiceTest {
     @Test
     fun `findProblemById - 없는 문제를 조회할 시 예외가 발생합니다`() {
         // given
-        every { shortProblemRepository.findByIdOrNull( any() ) } returns null
+        every { shortProblemRepository.findByIdOrNull(any()) } returns null
 
         // when & then
         assertThrows<EntityNotFoundException> { service.findProblemById(1L, user.email) }
-        verify { shortProblemRepository.findByIdOrNull( any() ) }
+        verify { shortProblemRepository.findByIdOrNull(any()) }
     }
 
     @Test
@@ -71,7 +68,6 @@ class ShortProblemServiceTest {
         // when & then
         assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
         verify { userRepository.findByEmail(email) }
-
     }
 
     @Test
@@ -96,7 +92,7 @@ class ShortProblemServiceTest {
 
     @Test
     fun `gradingProblem - 정답을 제출할 시 점수가 부여됩니다`() {
-        //given
+        // given
         val problem = createProblem()
         val gradingRequest = ShortProblemGradingRequestDto(
             user.email,
@@ -122,12 +118,11 @@ class ShortProblemServiceTest {
         verify { userRepository.findByEmail(user.email) }
         verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
         verify { gradingHistoryRepository.save(any()) }
-
     }
 
     @Test
     fun `gradingProblem - 오답을 제출할 시 점수가 부여됩니다`() {
-        //given
+        // given
         val problem = createProblem()
         val wrongAnswer = "wrongAnswer"
         val gradingRequest = ShortProblemGradingRequestDto(
@@ -153,9 +148,7 @@ class ShortProblemServiceTest {
         verify { userRepository.findByEmail(user.email) }
         verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
         verify { gradingHistoryRepository.save(any()) }
-
     }
-
 
     fun createProblem(): ShortProblem {
         val problem = ShortProblem(

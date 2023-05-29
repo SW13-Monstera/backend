@@ -8,12 +8,12 @@ import io.csbroker.apiserver.model.ProblemSetMapping
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemSetMappingRepository
 import io.csbroker.apiserver.repository.problem.ProblemSetRepository
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -43,7 +43,6 @@ class ProblemSetServiceTest {
         // when & then
         assertThrows<EntityNotFoundException> { service.findById(1L) }
         verify { problemSetRepository.findByIdOrNull(any()) }
-
     }
 
     @Test
@@ -64,7 +63,6 @@ class ProblemSetServiceTest {
         assertThrows<EntityNotFoundException> { service.createProblemSet(requestDto) }
         verify { problemSetRepository.save(any()) }
         verify { problemRepository.findAllById(problemIds) }
-
     }
 
     @Test
@@ -78,7 +76,7 @@ class ProblemSetServiceTest {
 
         val problemSetId = 1L
         val problemSet = ProblemSet(problemSetId, name, description)
-        val problemSetMappings = existProblems.map{
+        val problemSetMappings = existProblems.map {
             ProblemSetMapping(
                 problem = it,
                 problemSet = problemSet,
@@ -127,7 +125,6 @@ class ProblemSetServiceTest {
         verify { problemSetRepository.findByIdOrNull(problemSetId) }
         verify { problemRepository.findAllById(problemIds) }
         verify { problemSetMappingRepository.deleteAllByProblemSetId(problemSetId) }
-
     }
 
     @Test
@@ -141,7 +138,7 @@ class ProblemSetServiceTest {
 
         val problemSetId = 1L
         val problemSet = ProblemSet(problemSetId, name, description)
-        val problemSetMappings = existProblems.map{
+        val problemSetMappings = existProblems.map {
             ProblemSetMapping(
                 problem = it,
                 problemSet = problemSet,
@@ -159,7 +156,5 @@ class ProblemSetServiceTest {
         verify { problemSetMappingRepository.deleteAllByProblemSetId(problemSetId) }
         verify { problemRepository.findAllById(problemIds) }
         verify { problemSetMappingRepository.saveAll(any<List<ProblemSetMapping>>()) }
-
     }
-
 }
