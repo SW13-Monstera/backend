@@ -50,7 +50,7 @@ class MultipleProblemServiceTest {
 
         // when & then
         assertThrows<EntityNotFoundException> { service.findProblemById(1L, "email") }
-        verify { service.findProblemById(1L, "email") }
+        verify { multipleChoiceProblemRepository.findByIdOrNull(any()) }
     }
 
     @Test
@@ -76,7 +76,7 @@ class MultipleProblemServiceTest {
 
         // when & then
         assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
-        verify { service.gradingProblem(gradingRequest) }
+        verify { userRepository.findByEmail(email) }
     }
 
     @Test
