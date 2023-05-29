@@ -41,12 +41,12 @@ class UserAnswerServiceImpl(
 
         val assignedUser = userAnswer.assignedUserId?.let {
             userRepository.findByIdOrNull(it)
-                ?: throw EntityNotFoundException("${it}번 유저를 찾을 수 없습니다.")
+                ?: throw EntityNotFoundException("${userAnswer.assignedUserId}번 유저를 찾을 수 없습니다.")
         }
 
         val validatingUser = userAnswer.validatingUserId?.let {
-            userRepository.findByIdOrNull(it)
-                ?: throw EntityNotFoundException("${it}번 유저를 찾을 수 없습니다.")
+            userRepository.findByIdOrNull(userAnswer.validatingUserId)
+                ?: throw EntityNotFoundException("${userAnswer.validatingUserId}번 유저를 찾을 수 없습니다.")
         }
 
         val createUserAnswer = UserAnswer(
@@ -72,10 +72,8 @@ class UserAnswerServiceImpl(
             ?: throw EntityNotFoundException(
                 "${userAnswerId}번 유저 응답을 찾을 수 없습니다.",
             )
-        if (userAnswer.assignedUser == null) {
-            throw EntityNotFoundException("${userAnswerId}번에 담당자가 존재하지 않습니다.")
-        }
-        if (userAnswer.assignedUser!!.email != email) {
+
+        if (userAnswer.assignedUser == null || userAnswer.assignedUser!!.email != email) {
             throw EntityNotFoundException("${userAnswerId}번에 할당된 유저가 아닙니다.")
         }
 
