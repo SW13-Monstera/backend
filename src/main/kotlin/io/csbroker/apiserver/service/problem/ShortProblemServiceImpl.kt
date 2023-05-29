@@ -40,14 +40,13 @@ class ShortProblemServiceImpl(
         val score = if (isAnswer) findProblem.score else 0.0
 
         // create grading-history
-        val gradingHistory = gradingHistoryRepository.save(
-            GradingHistory(
-                problem = findProblem,
-                user = findUser,
-                userAnswer = answer,
-                score = score,
-            )
+        val gradingHistory = GradingHistory(
+            problem = findProblem,
+            user = findUser,
+            userAnswer = answer,
+            score = score,
         )
+        gradingHistoryRepository.save(gradingHistory)
 
         // create dto
         return ShortProblemGradingHistoryDto.createDto(
