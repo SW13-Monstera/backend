@@ -57,7 +57,14 @@ class AdminProblemControllerIntegrationTest : IntegrationTest() {
                 providerType = ProviderType.LOCAL,
             ),
         )
-        val problem = save(
+        val problem1 = save(
+            LongProblem(
+                title = "문제 제목",
+                description = "문제 설명",
+                creator = user,
+            ),
+        )
+        val problem2 = save(
             LongProblem(
                 title = "문제 제목",
                 description = "문제 설명",
@@ -71,14 +78,17 @@ class AdminProblemControllerIntegrationTest : IntegrationTest() {
             url = "/api/admin/problems",
             isAdmin = true,
             body = ProblemDeleteRequestDto(
-                ids = listOf(problem.id!!),
+                ids = listOf(problem1.id!!, problem2.id!!),
             ),
         )
 
         // then
         response.andExpect(status().isOk)
             .andExpect {
-                val problems = findAll<Problem>("SELECT p FROM Problem p where p.id = :id", mapOf("id" to problem.id!!))
+                val problems = findAll<Problem>(
+                    "SELECT p FROM Problem p where p.id in :ids",
+                    mapOf("ids" to listOf(problem1.id!!, problem2.id!!)),
+                )
                 problems.size shouldBe 0
             }
     }
