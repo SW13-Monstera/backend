@@ -28,8 +28,16 @@ class NotificationServiceImpl(
 
     @Transactional
     override fun createBulkNotification(notificationRequestListDto: List<NotificationRequestDto>): Int {
-        notificationRepository.insertBulkNotifications(notificationRequestListDto)
-        return notificationRequestListDto.size
+        val requestUserIds = notificationRequestListDto.map { it.userId }.toSet()
+        val users = userRepository.findAllById(requestUserIds)
+
+        if (users.size != requestUserIds.size) {
+            throw EntityNotFoundException("존재하지 않는 유저가 요청에 포함되어 있습니다.")
+        }
+
+        return notificationRepository.saveAll(
+            notificationRequestListDto.map { Notification(it, users.find { u -> u.id == it.userId }!!) },
+        ).size
     }
 
     override fun getNotification(email: String, page: Pageable): Page<Notification> {
