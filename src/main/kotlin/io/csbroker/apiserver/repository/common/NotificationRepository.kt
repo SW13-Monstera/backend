@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.UUID
 
-interface NotificationRepository : JpaRepository<Notification, Long>, NotificationRepositoryCustom {
+interface NotificationRepository : JpaRepository<Notification, Long> {
     fun findByUserId(userId: UUID, pageable: Pageable): Page<Notification>
 
     @Modifying

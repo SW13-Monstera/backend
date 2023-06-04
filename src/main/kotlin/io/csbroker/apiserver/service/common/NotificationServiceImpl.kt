@@ -7,7 +7,6 @@ import io.csbroker.apiserver.repository.common.NotificationRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -29,8 +28,10 @@ class NotificationServiceImpl(
 
     @Transactional
     override fun createBulkNotification(notificationRequestListDto: List<NotificationRequestDto>): Int {
-        notificationRepository.insertBulkNotifications(notificationRequestListDto)
-        return notificationRequestListDto.size
+        val users = userRepository.findAllById(notificationRequestListDto.map { it.userId })
+        return notificationRepository.saveAll(
+            notificationRequestListDto.map { Notification(it, users.find { u -> u.id == it.userId }!!) },
+        ).size
     }
 
     override fun getNotification(email: String, page: Pageable): Page<Notification> {
