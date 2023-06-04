@@ -7,6 +7,8 @@ import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.common.util.log
+import io.csbroker.apiserver.controller.v2.problem.request.SubmitLongProblemDto
+import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.grade.GradeResultDto
 import io.csbroker.apiserver.dto.problem.grade.KeywordGradingRequestDto
 import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
@@ -135,6 +137,40 @@ class LongProblemServiceImpl(
             keywords = correctKeywordListDto + notCorrectKeywordListDto,
             contents = correctContentListDto + notCorrectContentListDto,
             standardAnswer = standardAnswers.random(),
+        )
+    }
+
+    @Transactional
+    override fun submitProblem(submitRequest: SubmitLongProblemDto): SubmitLongProblemResponseDto {
+        val (email, problemId, answer) = submitRequest
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+
+        val problem = longProblemRepository.findByIdOrNull(problemId)
+            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
+
+        val userAnswer = UserAnswer(answer = answer, problem = problem)
+        userAnswerRepository.save(userAnswer)
+
+        val standardAnswer = standardAnswerRepository.findAllByLongProblem(problem).takeIf {
+            it.isNotEmpty()
+        }?.random()?.content ?: throw EntityNotFoundException("{$problem.id}번 문제에 대한 모범답안이 존재하지 않습니다.")
+
+        val tags = problem.problemTags.map {
+            it.tag.name
+        }
+        val gradingHistories = problem.gradingHistory
+        val totalSubmissionCount = gradingHistories.size
+        val userSubmissionCount = gradingHistories.count { it.user.id == user.id }
+
+        return SubmitLongProblemResponseDto(
+            title = problem.title,
+            tags = tags,
+            description = problem.description,
+            totalSubmissionCount = totalSubmissionCount,
+            userSubmissionCount = userSubmissionCount,
+            userAnswer = answer,
+            standardAnswer = standardAnswer,
         )
     }
 

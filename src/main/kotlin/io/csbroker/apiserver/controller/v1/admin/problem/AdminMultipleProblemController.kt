@@ -7,7 +7,7 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
-import io.csbroker.apiserver.service.problem.AdminMultipleProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminMultipleProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping

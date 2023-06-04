@@ -367,7 +367,6 @@ include::{snippets}/problems/long/grade/http-response.adoc[]
 .Path parameters
 include::{snippets}/problems/long/grade/path-parameters.adoc[]
 
-서술형 문제 단건 조회를 위한 path parameter의 설명입니다.
 
 .Request Header
 request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
@@ -379,6 +378,41 @@ include::{snippets}/problems/long/grade/request-parameters.adoc[]
 .Response Body
 include::{snippets}/problems/long/grade/response-body.adoc[]
 include::{snippets}/problems/long/grade/response-fields.adoc[]
+
+
+=== 서술형 문제 제출 (채점 X)
+.description
+[source]
+----
+서술형 문제 제출을 위한 API 입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/problems/long/{problem_id:Long}/submit
+
+----
+
+.Sample Request
+include::{snippets}/problems/long/submit/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/problems/long/submit/http-response.adoc[]
+
+.Path parameters
+include::{snippets}/problems/long/submit/path-parameters.adoc[]
+
+
+.Request Header
+request를 살펴보면 Authorization 헤더에서 Bearer token 형태로, access token을 전달하는 것을 알 수 있습니다.
+include::{snippets}/problems/long/submit/request-headers.adoc[]
+
+.Request Params
+include::{snippets}/problems/long/submit/request-parameters.adoc[]
+
+.Response Body
+include::{snippets}/problems/long/submit/response-body.adoc[]
+include::{snippets}/problems/long/submit/response-fields.adoc[]
+
+
 
 ==== 단답형 문제 단건 조회
 
@@ -1640,7 +1674,7 @@ include::{snippets}/admin/user/admin/search/response-fields.adoc[]
 .description
 [source]
 ----
-Notification 생성을 위한 API입니다.
+Notification 단일 생성을 위한 API입니다.
 
 HTTP Method : POST
 End-Point   : /api/admin/notification
@@ -1684,6 +1718,33 @@ include::{snippets}/admin/notifications/bulkInsert/http-response.adoc[]
 .Response Body
 include::{snippets}/admin/notifications/bulkInsert/response-body.adoc[]
 include::{snippets}/admin/notifications/bulkInsert/response-fields.adoc[]
+
+==== Notification 삭제
+
+.description
+[source]
+----
+Notification 삭제를 위한 API입니다.
+단일 삭제는 List에 ID 한 개만 넣어서 요청하시면 됩니다.
+
+HTTP Method : DELETE
+End-Point   : /api/admin/notification
+----
+
+.Sample Request
+include::{snippets}/admin/notifications/delete/http-request.adoc[]
+
+.Request Body
+include::{snippets}/admin/notifications/delete/request-body.adoc[]
+include::{snippets}/admin/notifications/delete/request-fields.adoc[]
+
+.Sample Response
+include::{snippets}/admin/notifications/delete/http-response.adoc[]
+
+.Response Body
+include::{snippets}/admin/notifications/delete/response-body.adoc[]
+include::{snippets}/admin/notifications/delete/response-fields.adoc[]
+
 
 === 문제 세트 API ( /api/admin/problem-sets )
 

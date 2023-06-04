@@ -1,9 +1,11 @@
-package io.csbroker.apiserver.service.problem
+package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.ConditionConflictException
+import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
+import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.repository.problem.ProblemTagRepository
 import io.csbroker.apiserver.repository.problem.TagRepository
 import org.springframework.stereotype.Component
@@ -14,11 +16,13 @@ class TagUpserter(
     private val problemTagRepository: ProblemTagRepository,
 ) {
     fun setTags(problem: Problem, tagNames: List<String>) {
-        val tags = tagRepository.findTagsByNameIn(tagNames)
-
-        if (tags.isEmpty()) {
+        if (tagNames.isEmpty()) {
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "태그의 개수는 1개 이상이여야합니다.")
         }
+
+        val tags = tagRepository.findTagsByNameIn(tagNames)
+
+        checkEveryTagExist(tags, tagNames)
 
         val problemTags = tags.map {
             ProblemTag(problem = problem, tag = it)
@@ -45,10 +49,24 @@ class TagUpserter(
 
         val tags = tagRepository.findTagsByNameIn(tagNames)
 
+        checkEveryTagExist(tags, tagNames)
+
         val problemTags = tags.map {
             ProblemTag(problem = problem, tag = it)
         }
 
         problem.problemTags.addAll(problemTags)
+    }
+
+    private fun checkEveryTagExist(
+        tags: List<Tag>,
+        tagNames: List<String>,
+    ) {
+        if (tags.size != tagNames.size) {
+            val notExistTags = tagNames.filter {
+                it !in tags.map { tag -> tag.name }
+            }
+            throw EntityNotFoundException("$notExistTags 태그가 존재하지 않습니다.")
+        }
     }
 }

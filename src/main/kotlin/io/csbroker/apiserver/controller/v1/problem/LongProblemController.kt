@@ -2,6 +2,8 @@ package io.csbroker.apiserver.controller.v1.problem
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
+import io.csbroker.apiserver.controller.v2.problem.request.SubmitLongProblemDto
+import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
@@ -44,5 +46,16 @@ class LongProblemController(
         )
         val gradeHistory = longProblemService.gradingProblem(gradingRequestDto)
         return ApiResponse.success(gradeHistory)
+    }
+
+    @PostMapping("{id}/submit")
+    fun submitLongProblem(
+        @LoginUser user: User,
+        @PathVariable("id") problemId: Long,
+        @RequestBody answerDto: LongProblemAnswerDto,
+    ): ApiResponse<SubmitLongProblemResponseDto> {
+        val submitRequestDto = SubmitLongProblemDto(user.username, problemId, answerDto.answer)
+        val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
+        return ApiResponse.success(submitResponseDto)
     }
 }

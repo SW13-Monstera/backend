@@ -4,7 +4,7 @@ import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import io.csbroker.apiserver.service.problem.AdminShortProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminShortProblemService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method

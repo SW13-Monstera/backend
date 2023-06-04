@@ -78,6 +78,9 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.4")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
+    testImplementation("io.kotest:kotest-assertions-core:5.5.5")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
 
     implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
 

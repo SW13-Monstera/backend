@@ -1,4 +1,4 @@
-package io.csbroker.apiserver.service.problem
+package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class AdminShortShortProblemServiceImpl(
+class AdminShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
     private val problemRepository: ProblemRepository,
     private val userRepository: UserRepository,
