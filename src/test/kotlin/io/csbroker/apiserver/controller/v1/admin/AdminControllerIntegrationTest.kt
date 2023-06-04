@@ -94,6 +94,11 @@ class AdminControllerIntegrationTest : IntegrationTest() {
                         userId = user.id!!,
                         link = "https://test.com",
                     ),
+                    NotificationRequestDto(
+                        content = "test2",
+                        userId = user.id!!,
+                        link = "https://test.com",
+                    ),
                 ),
             ),
             isAdmin = true,
@@ -102,8 +107,11 @@ class AdminControllerIntegrationTest : IntegrationTest() {
         // then
         response.andExpect(status().isOk)
             .andExpect {
-                val size = JsonPath.read(it.response.contentAsString, "$.data.size") as Int
-                size shouldBe 1
+                val notifications = findAll<Notification>(
+                    "SELECT n from Notification n WHERE n.user = :user",
+                    mapOf("user" to user),
+                )
+                notifications.size shouldBe 2
             }
     }
 }
