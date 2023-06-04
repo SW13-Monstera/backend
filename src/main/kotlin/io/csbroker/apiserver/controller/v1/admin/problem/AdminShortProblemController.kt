@@ -7,7 +7,7 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import io.csbroker.apiserver.service.problem.AdminShortProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminShortProblemService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping

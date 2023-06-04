@@ -6,7 +6,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
-import io.csbroker.apiserver.service.problem.AdminLongProblemService
+import io.csbroker.apiserver.service.problem.admin.AdminLongProblemService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.Method
