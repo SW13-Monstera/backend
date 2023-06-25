@@ -168,7 +168,6 @@ class LongProblemServiceImpl(
         )
         gradingHistoryRepository.save(gradingHistory)
 
-
         val gradingHistories = problem.gradingHistory
         val totalSubmissionCount = gradingHistories.size
         val userSubmissionCount = gradingHistories.count { it.user.id == user.id }

@@ -1,5 +1,7 @@
 package io.csbroker.apiserver.controller.v1.problem
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.jayway.jsonpath.JsonPath
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.controller.IntegrationTest
@@ -15,11 +17,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.springframework.transaction.annotation.Transactional
-
-
 
 class LongProblemIntegrationTest : IntegrationTest() {
 
@@ -35,12 +32,10 @@ class LongProblemIntegrationTest : IntegrationTest() {
                 username = "test-noti",
                 password = "test-noti",
                 providerType = ProviderType.LOCAL,
-            )
+            ),
         )
-
     }
 
-    @Transactional
     @Test
     fun `서술형 문제 조회`() {
         // given & when
@@ -48,7 +43,7 @@ class LongProblemIntegrationTest : IntegrationTest() {
         val problem = getProblem()
         val response = request(
             method = HttpMethod.GET,
-            url = "${baseUrl}/${problem.id}",
+            url = "$baseUrl/${problem.id}",
         )
 
         // then
@@ -61,7 +56,6 @@ class LongProblemIntegrationTest : IntegrationTest() {
             }
     }
 
-    @Transactional
     @Test
     fun `서술형 문제 제출`() {
         val problem = getProblem()
@@ -79,20 +73,19 @@ class LongProblemIntegrationTest : IntegrationTest() {
         println(preUserSubmissionCount)
         val standardAnswers = findAll<StandardAnswer>(
             "SELECT sa From StandardAnswer sa where sa.longProblem.id = :id",
-            mapOf("id" to problem.id!!)
+            mapOf("id" to problem.id!!),
         )
         println(standardAnswers)
 
         val userAnswer = "answer"
         val response = request(
             method = HttpMethod.POST,
-            url = "${baseUrl}/${problem.id}/submit",
-            body = LongProblemAnswerDto(userAnswer)
+            url = "$baseUrl/${problem.id}/submit",
+            body = LongProblemAnswerDto(userAnswer),
         )
 
-        //userAnswer 생성 확인
+        // userAnswer 생성 확인
 
-        println(response)
         response.andExpect(status().isOk)
             .andDo {
                 val jsonNode = objectMapper.readTree(it.response.contentAsString)
@@ -101,10 +94,10 @@ class LongProblemIntegrationTest : IntegrationTest() {
                 val responseDto = objectMapper.readValue<SubmitLongProblemResponseDto>(dataAsString)
                 responseDto.title shouldBe problem.title
                 responseDto.description shouldBe problem.description
-                responseDto.totalSubmissionCount shouldBe preSubmissionCount + 1  // 제출 수가 증가하는지 확인
-                responseDto.userSubmissionCount shouldBe preUserSubmissionCount + 1  // 제출 수가 증가하는지 확인
+                responseDto.totalSubmissionCount shouldBe preSubmissionCount + 1 // 제출 수가 증가하는지 확인
+                responseDto.userSubmissionCount shouldBe preUserSubmissionCount + 1 // 제출 수가 증가하는지 확인
                 responseDto.userAnswer shouldBe userAnswer
-                standardAnswers.map { sa -> sa.content } shouldContain responseDto.standardAnswer  // 모법답안중 하나가 반환되는지 확인
+                standardAnswers.map { sa -> sa.content } shouldContain responseDto.standardAnswer // 모법답안중 하나가 반환되는지 확인
             }
     }
 
@@ -114,12 +107,11 @@ class LongProblemIntegrationTest : IntegrationTest() {
                 title = "title",
                 description = "description",
                 creator = user,
-            )
+            ),
         )
         save(StandardAnswer(content = "standard answer1", longProblem = problem))
         save(StandardAnswer(content = "standard answer2", longProblem = problem))
 
         return problem
     }
-
 }
