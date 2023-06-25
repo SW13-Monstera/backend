@@ -159,6 +159,16 @@ class LongProblemServiceImpl(
         val tags = problem.problemTags.map {
             it.tag.name
         }
+
+        val gradingHistory = GradingHistory(
+            problem = problem,
+            user = user,
+            userAnswer = answer,
+            score = 0.0,
+        )
+        gradingHistoryRepository.save(gradingHistory)
+
+
         val gradingHistories = problem.gradingHistory
         val totalSubmissionCount = gradingHistories.size
         val userSubmissionCount = gradingHistories.count { it.user.id == user.id }
