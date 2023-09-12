@@ -701,7 +701,7 @@ include::{snippets}/problems/v2/challenge/response-fields.adoc[]
 .description
 [source]
 ----
-글을 좋아요하기 위한 API입니다.
+문제를 좋아요하기 위한 API입니다.
 HTTP Method : POST
 End-Point   : /api/v2/problems/{postId}/like
 ----
@@ -724,7 +724,7 @@ include::{snippets}/problem/v2/like/response-fields.adoc[]
 .description
 [source]
 ----
-글을 좋아요하기 위한 API입니다.
+문제를 북마크하기 위한 API입니다.
 HTTP Method : POST
 End-Point   : /api/v2/problems/{postId}/bookmark
 ----

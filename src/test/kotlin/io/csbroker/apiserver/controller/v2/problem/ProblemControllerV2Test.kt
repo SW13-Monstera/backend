@@ -88,7 +88,7 @@ class ProblemControllerV2Test : RestDocsTest() {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problemId").description("글 id"),
+                        parameterWithName("problemId").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
@@ -113,7 +113,7 @@ class ProblemControllerV2Test : RestDocsTest() {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("problemId").description("글 id"),
+                        parameterWithName("problemId").description("문제 id"),
                     ),
                     responseFields(
                         fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
