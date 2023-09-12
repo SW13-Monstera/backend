@@ -14,8 +14,10 @@ import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class PostServiceImpl(
     private val problemRepository: ProblemRepository,
     private val postRepository: PostRepository,
@@ -49,6 +51,7 @@ class PostServiceImpl(
         }
     }
 
+    @Transactional
     override fun create(problemId: Long, content: String, email: String): Long {
         val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val problem = problemRepository.findByIdOrNull(problemId) ?: throw EntityNotFoundException(
@@ -58,6 +61,7 @@ class PostServiceImpl(
         return post.id!!
     }
 
+    @Transactional
     override fun like(id: Long, email: String) {
         val post = postRepository.findByIdOrNull(id) ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
         val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
@@ -69,6 +73,7 @@ class PostServiceImpl(
         }
     }
 
+    @Transactional
     override fun deleteById(id: Long, email: String) {
         val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val post = postRepository.findByIdOrNull(id)

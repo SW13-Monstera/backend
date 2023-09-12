@@ -8,14 +8,17 @@ import io.csbroker.apiserver.repository.post.PostRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityNotFoundException
 
 @Service
+@Transactional(readOnly = true)
 class CommentServiceImpl(
     private val commentRepository: CommentRepository,
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
 ) : CommentService {
+    @Transactional
     override fun create(postId: Long, content: String, email: String): Long {
         val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val post = postRepository.findByIdOrNull(postId) ?: throw EntityNotFoundException(
@@ -25,6 +28,7 @@ class CommentServiceImpl(
         return comment.id!!
     }
 
+    @Transactional
     override fun deleteById(id: Long, email: String) {
         val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val comment = commentRepository.findByIdOrNull(id)
