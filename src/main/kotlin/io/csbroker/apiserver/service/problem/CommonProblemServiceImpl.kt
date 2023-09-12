@@ -109,6 +109,7 @@ class CommonProblemServiceImpl(
         )
     }
 
+    @Transactional
     override fun likeProblem(email: String, problemId: Long) {
         val problem = problemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
