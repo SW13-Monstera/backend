@@ -2,6 +2,7 @@ package io.csbroker.apiserver.controller.v1.post
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
+import io.csbroker.apiserver.controller.v1.post.request.CommentCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.request.PostCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.response.PostResponseDto
 import io.csbroker.apiserver.dto.common.ApiResponse
@@ -63,9 +64,9 @@ class PostControllerV1(
     fun createComment(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
-        @RequestBody postCreateRequestDto: PostCreateRequestDto,
+        @RequestBody commentCreateRequestDto: CommentCreateRequestDto,
     ): ApiResponse<Long> {
-        val postId = commentService.create(id, postCreateRequestDto.content, loginUser.username)
+        val postId = commentService.create(id, commentCreateRequestDto.content, loginUser.username)
         return ApiResponse.success(postId)
     }
 }
