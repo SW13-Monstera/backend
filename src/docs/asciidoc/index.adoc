@@ -696,6 +696,53 @@ include::{snippets}/problems/v2/challenge/path-parameters.adoc[]
 include::{snippets}/problems/v2/challenge/response-body.adoc[]
 include::{snippets}/problems/v2/challenge/response-fields.adoc[]
 
+==== 문제 좋아요 API ( /api/v2/problems/{postId}/like )
+
+.description
+[source]
+----
+글을 좋아요하기 위한 API입니다.
+HTTP Method : POST
+End-Point   : /api/v2/problems/{postId}/like
+----
+
+.Sample Request
+include::{snippets}/problem/v2/like/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problem/v2/like/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/problem/v2/like/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem/v2/like/response-body.adoc[]
+include::{snippets}/problem/v2/like/response-fields.adoc[]
+
+==== 문제 북마크 API ( /api/v2/problems/{postId}/bookmark )
+
+.description
+[source]
+----
+글을 좋아요하기 위한 API입니다.
+HTTP Method : POST
+End-Point   : /api/v2/problems/{postId}/bookmark
+----
+
+.Sample Request
+include::{snippets}/problem/v2/bookmark/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problem/v2/bookmark/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/problem/v2/bookmark/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem/v2/bookmark/response-body.adoc[]
+include::{snippets}/problem/v2/bookmark/response-fields.adoc[]
+
+
 === User API ( /api/v1/users )
 
 ==== 유저 조회

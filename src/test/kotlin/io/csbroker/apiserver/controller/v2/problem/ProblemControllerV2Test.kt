@@ -71,4 +71,54 @@ class ProblemControllerV2Test : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun `문제 좋아요`() {
+        // given
+        justRun { commonProblemService.likeProblem(any(), any()) }
+
+        // when
+        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/like", 1L)
+
+        // then
+        result.then().statusCode(200)
+            .apply(
+                document(
+                    "problem/v2/like",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("problemId").description("글 id"),
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                    ),
+                ),
+            )
+    }
+
+    @Test
+    fun `문제 북마크`() {
+        // given
+        justRun { commonProblemService.bookmarkProblem(any(), any()) }
+
+        // when
+        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/bookmark", 1L)
+
+        // then
+        result.then().statusCode(200)
+            .apply(
+                document(
+                    "problem/v2/bookmark",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("problemId").description("글 id"),
+                    ),
+                    responseFields(
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("결과 상태"),
+                    ),
+                ),
+            )
+    }
 }
