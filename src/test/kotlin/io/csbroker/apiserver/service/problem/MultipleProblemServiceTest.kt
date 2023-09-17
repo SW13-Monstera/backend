@@ -86,7 +86,7 @@ class MultipleProblemServiceTest {
         val problemId = 1L
         val answerIds = listOf(1L, 2L)
         val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
-        val problem = mockk<MultipleChoiceProblem>()
+
         every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns null
 
