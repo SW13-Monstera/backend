@@ -58,7 +58,7 @@ class LongProblemController(
     ): ApiResponse<SubmitLongProblemResponseDto> {
         val submitRequestDto = SubmitLongProblemDto(user.username, problemId, answerDto.answer)
         val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
-        postService.create(problemId=submitRequestDto.problemId, content=answerDto.answer, email=user.username)
+        postService.create(problemId = submitRequestDto.problemId, content = answerDto.answer, email = user.username)
         return ApiResponse.success(submitResponseDto)
     }
 }
