@@ -7,6 +7,8 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ChallengeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
+import io.csbroker.apiserver.repository.problem.ProblemBookmarkRepository
+import io.csbroker.apiserver.repository.problem.ProblemLikeRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
@@ -24,6 +26,8 @@ class CommonProblemServiceTest {
     private val gradingResultAssessmentRepository = mockk<GradingResultAssessmentRepository>()
     private val userRepository = mockk<UserRepository>()
     private val challengeRepository = mockk<ChallengeRepository>()
+    private val problemLikeRepository = mockk<ProblemLikeRepository>()
+    private val problemBookmarkRepository = mockk<ProblemBookmarkRepository>()
     private val user = User(
         id = UUID.randomUUID(),
         email = "test@test.com",
@@ -41,6 +45,8 @@ class CommonProblemServiceTest {
             gradingResultAssessmentRepository,
             userRepository,
             challengeRepository,
+            problemLikeRepository,
+            problemBookmarkRepository,
         )
     }
 
