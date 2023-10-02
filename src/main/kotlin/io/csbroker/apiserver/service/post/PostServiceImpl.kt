@@ -34,17 +34,12 @@ class PostServiceImpl(
         val postLikes = postLikeRepository.findAllByPostIn(posts)
         return posts.map {
             PostResponseDto(
-                id = it.id!!,
-                content = it.content,
-                username = it.user.username,
+                it,
                 likeCount = postLikes.count { postLike -> postLike.post == it }.toLong(),
                 isLiked = postLikes.any { postLike -> postLike.post == it && postLike.user.email == email },
                 comments = comments.filter { comment -> comment.post == it }.map { comment ->
                     CommentResponseDto(
-                        id = comment.id!!,
-                        content = comment.content,
-                        username = comment.user.username,
-                        createdAt = comment.createdAt!!,
+                        comment,
                     )
                 },
             )

@@ -1086,14 +1086,14 @@ include::{snippets}/posts/create/request-fields.adoc[]
 include::{snippets}/posts/create/response-body.adoc[]
 include::{snippets}/posts/create/response-fields.adoc[]
 
-==== 글 조회 API ( /api/v1/problem/{problemId}/posts )
+==== 글 조회 API ( /api/v1/problems/{problemId}/posts )
 .description
 [source]
 ----
 글을 조회하기 위한 API입니다.
 
 HTTP Method : GET
-End-Point   : /api/v1/problem/{problemId}/posts
+End-Point   : /api/v1/problems/{problemId}/posts
 ----
 
 .Sample Request
@@ -1158,21 +1158,18 @@ include::{snippets}/posts/like/http-response.adoc[]
 include::{snippets}/posts/like/response-body.adoc[]
 include::{snippets}/posts/like/response-fields.adoc[]
 
-==== 댓글 작성 API ( /api/v1/posts/{postId}/comments )
+==== 댓글 작성 API ( /api/v1/comments )
 .description
 [source]
 ----
 댓글을 생성하기 위한 API입니다.
 
 HTTP Method : POST
-End-Point   : /api/v1/posts/{postId}/comments
+End-Point   : /api/v1/comments
 ----
 
 .Sample Request
 include::{snippets}/posts/comments/create/http-request.adoc[]
-
-.Path parameters
-include::{snippets}/posts/comments/create/path-parameters.adoc[]
 
 .Sample Response
 include::{snippets}/posts/comments/create/http-response.adoc[]

@@ -1,11 +1,9 @@
 package io.csbroker.apiserver.controller.v1.post
 
 import io.csbroker.apiserver.controller.RestDocsTest
-import io.csbroker.apiserver.controller.v1.post.request.CommentCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.request.PostCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.response.CommentResponseDto
 import io.csbroker.apiserver.controller.v1.post.response.PostResponseDto
-import io.csbroker.apiserver.service.post.CommentService
 import io.csbroker.apiserver.service.post.PostService
 import io.mockk.every
 import io.mockk.justRun
@@ -21,17 +19,15 @@ import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.request.RequestDocumentation
 import java.time.LocalDateTime
 
-class PostControllerV1Test : RestDocsTest() {
+class PostControllerTest : RestDocsTest() {
     private lateinit var postService: PostService
-    private lateinit var commentService: CommentService
     private lateinit var mockMvc: MockMvcRequestSpecification
 
     @BeforeEach
     fun setUp() {
         postService = mockk()
-        commentService = mockk()
         mockMvc = mockMvc(
-            PostControllerV1(postService, commentService),
+            PostController(postService),
         )
     }
 
@@ -119,7 +115,7 @@ class PostControllerV1Test : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v1/problem/{problemId}/posts", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v1/problems/{problemId}/posts", 1L)
 
         // then
         result.then().statusCode(200)
@@ -178,42 +174,6 @@ class PostControllerV1Test : RestDocsTest() {
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
-                    ),
-                ),
-            )
-    }
-
-    @Test
-    fun `Create Comment 200`() {
-        // given
-        every { commentService.create(any(), any(), any()) } returns 1L
-
-        // when
-        val result = mockMvc.body(
-            CommentCreateRequestDto(
-                "content",
-            ),
-        ).request(Method.POST, "/api/v1/posts/{postId}/comments", 1L)
-
-        // then
-        result.then().statusCode(200)
-            .apply(
-                MockMvcRestDocumentation.document(
-                    "posts/comments/create",
-                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    RequestDocumentation.pathParameters(
-                        RequestDocumentation.parameterWithName("postId").description("글 id"),
-                    ),
-                    PayloadDocumentation.requestFields(
-                        PayloadDocumentation.fieldWithPath("content").type(JsonFieldType.STRING)
-                            .description("댓글 내용"),
-                    ),
-                    PayloadDocumentation.responseFields(
-                        PayloadDocumentation.fieldWithPath("status")
-                            .type(JsonFieldType.STRING).description("결과 상태"),
-                        PayloadDocumentation.fieldWithPath("data")
-                            .type(JsonFieldType.NUMBER).description("댓글 ID"),
                     ),
                 ),
             )

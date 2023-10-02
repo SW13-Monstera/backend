@@ -1,7 +1,9 @@
 package io.csbroker.apiserver.controller.v1.post
 
 import io.csbroker.apiserver.controller.RestDocsTest
+import io.csbroker.apiserver.controller.v1.post.request.CommentCreateRequestDto
 import io.csbroker.apiserver.service.post.CommentService
+import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.restassured.http.Method
@@ -14,7 +16,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.request.RequestDocumentation
 
-class CommentControllerV1Test : RestDocsTest() {
+class CommentControllerTest : RestDocsTest() {
     private lateinit var commentService: CommentService
     private lateinit var mockMvc: MockMvcRequestSpecification
 
@@ -22,7 +24,7 @@ class CommentControllerV1Test : RestDocsTest() {
     fun setUp() {
         commentService = mockk()
         mockMvc = mockMvc(
-            CommentControllerV1(commentService),
+            CommentController(commentService),
         )
     }
 
@@ -47,6 +49,42 @@ class CommentControllerV1Test : RestDocsTest() {
                     PayloadDocumentation.responseFields(
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
+                    ),
+                ),
+            )
+    }
+
+    @Test
+    fun `Create Comment 200`() {
+        // given
+        every { commentService.create(any(), any(), any()) } returns 1L
+
+        // when
+        val result = mockMvc.body(
+            CommentCreateRequestDto(
+                1L,
+                "content",
+            ),
+        ).request(Method.POST, "/api/v1/comments")
+
+        // then
+        result.then().statusCode(200)
+            .apply(
+                MockMvcRestDocumentation.document(
+                    "posts/comments/create",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    PayloadDocumentation.requestFields(
+                        PayloadDocumentation.fieldWithPath("postId")
+                            .type(JsonFieldType.NUMBER).description("글 id"),
+                        PayloadDocumentation.fieldWithPath("content").type(JsonFieldType.STRING)
+                            .description("댓글 내용"),
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                        PayloadDocumentation.fieldWithPath("data")
+                            .type(JsonFieldType.NUMBER).description("댓글 ID"),
                     ),
                 ),
             )

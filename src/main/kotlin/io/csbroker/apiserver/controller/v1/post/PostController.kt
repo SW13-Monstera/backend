@@ -2,11 +2,9 @@ package io.csbroker.apiserver.controller.v1.post
 
 import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
-import io.csbroker.apiserver.controller.v1.post.request.CommentCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.request.PostCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.response.PostResponseDto
 import io.csbroker.apiserver.dto.common.ApiResponse
-import io.csbroker.apiserver.service.post.CommentService
 import io.csbroker.apiserver.service.post.PostService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -17,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class PostControllerV1(
+class PostController(
     private val postService: PostService,
-    private val commentService: CommentService,
 ) {
     @PostMapping("/api/v1/posts")
     fun createPost(
@@ -43,8 +40,8 @@ class PostControllerV1(
         return ApiResponse.success()
     }
 
-    @GetMapping("/api/v1/problem/{problemId}/posts")
-    fun findById(
+    @GetMapping("/api/v1/problems/{problemId}/posts")
+    fun findAllByProblemId(
         @PathVariable("problemId") id: Long,
     ): ApiResponse<List<PostResponseDto>> {
         val email = getEmailFromSecurityContextHolder()
@@ -58,15 +55,5 @@ class PostControllerV1(
     ): ApiResponse<Unit> {
         postService.like(id, loginUser.username)
         return ApiResponse.success()
-    }
-
-    @PostMapping("/api/v1/posts/{id}/comments")
-    fun createComment(
-        @LoginUser loginUser: User,
-        @PathVariable("id") id: Long,
-        @RequestBody commentCreateRequestDto: CommentCreateRequestDto,
-    ): ApiResponse<Long> {
-        val postId = commentService.create(id, commentCreateRequestDto.content, loginUser.username)
-        return ApiResponse.success(postId)
     }
 }
