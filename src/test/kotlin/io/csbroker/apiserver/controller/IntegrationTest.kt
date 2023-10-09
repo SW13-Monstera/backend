@@ -65,6 +65,7 @@ class IntegrationTest {
         entity
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> findOne(
         @Language("JPAQL") qlString: String,
         params: Map<String, Any> = emptyMap(),
@@ -74,6 +75,7 @@ class IntegrationTest {
         query.singleResult as T
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> findAll(
         @Language("JPAQL") qlString: String,
         params: Map<String, Any> = emptyMap(),
