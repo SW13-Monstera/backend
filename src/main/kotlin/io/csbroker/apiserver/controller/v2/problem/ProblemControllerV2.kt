@@ -29,4 +29,22 @@ class ProblemControllerV2(
         commonProblemService.createChallenge(CreateChallengeDto(loginUser, id, challengeCreateRequest.content))
         return ApiResponse.success(true)
     }
+
+    @PostMapping("/{id}/like")
+    fun likeProblem(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+    ): ApiResponse<Unit> {
+        commonProblemService.likeProblem(loginUser.username, id)
+        return ApiResponse.success()
+    }
+
+    @PostMapping("/{id}/bookmark")
+    fun bookmarkProblem(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+    ): ApiResponse<Unit> {
+        commonProblemService.bookmarkProblem(loginUser.username, id)
+        return ApiResponse.success()
+    }
 }

@@ -12,4 +12,8 @@ data class ShortProblemDetailResponseDto(
     val isEnglish: Boolean,
     val isSolved: Boolean,
     val score: Double,
+    val likeCount: Long,
+    val bookmarkCount: Long,
+    val isLiked: Boolean,
+    val isBookmarked: Boolean,
 )
