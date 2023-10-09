@@ -124,32 +124,6 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유저 수정 ID 조회 불가 실패 테스트`() {
-        // given
-        val user = createUser()
-        val id = user.id!!
-        every { userRepository.findByIdOrNull(any()) } returns null
-
-        // when
-        val exception = assertThrows<EntityNotFoundException> {
-            userService.modifyUser(
-                id,
-                user,
-                UserUpdateRequestDto(
-                    "test-url.com",
-                    "test",
-                    "test1234!",
-                    "test1234",
-                ),
-            )
-        }
-
-        // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
-        assertThat(ErrorCode.NOT_FOUND_ENTITY).isEqualTo(exception.errorCode)
-    }
-
-    @Test
     fun `유저 수정 성공 without password 테스트`() {
         // given
         val user = createUser()
@@ -165,7 +139,6 @@ class UserServiceTest {
         )
 
         // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
         assertThat("test-url.com").isEqualTo(modifyUser.profileImageUrl)
         assertThat("test").isEqualTo(modifyUser.username)
         assertThat(user.password).isEqualTo(modifyUser.password)
@@ -189,7 +162,6 @@ class UserServiceTest {
         )
 
         // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { passwordEncoder.encode(any()) }
         verify(exactly = 1) { passwordEncoder.matches(any(), any()) }
         assertThat("test-url.com").isEqualTo(modifyUser.profileImageUrl)

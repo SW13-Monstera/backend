@@ -140,21 +140,6 @@ class AdminMultipleProblemServiceTest {
     }
 
     @Test
-    fun `createProblem - 존재하지 않는 유저가 문제 생성할 시 예외 발생`() {
-        // given
-        val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
-            title = "title",
-            description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(),
-            score = 10.0,
-        )
-
-        // when & then
-        assertThrows<EntityNotFoundException> { adminMultipleProblemService.createProblem(createRequestDto, user) }
-    }
-
-    @Test
     fun `createProblem - 정답은 항상 1개 이상 존재해야 한다`() {
         // given
         val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
