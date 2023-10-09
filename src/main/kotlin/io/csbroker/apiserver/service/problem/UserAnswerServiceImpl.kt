@@ -8,6 +8,7 @@ import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.problem.GradingStandardRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
@@ -75,6 +76,7 @@ class UserAnswerServiceImpl(
         if (userAnswer.assignedUser == null) {
             throw EntityNotFoundException("${userAnswerId}번에 담당자가 존재하지 않습니다.")
         }
+
         if (userAnswer.assignedUser!!.email != email) {
             throw EntityNotFoundException("${userAnswerId}번에 할당된 유저가 아닙니다.")
         }

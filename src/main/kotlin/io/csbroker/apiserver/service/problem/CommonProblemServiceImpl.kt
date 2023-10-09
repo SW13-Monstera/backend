@@ -86,10 +86,7 @@ class CommonProblemServiceImpl(
 
     @Transactional
     override fun createChallenge(createChallengeDto: CreateChallengeDto) {
-        val (email, problemId, content) = createChallengeDto
-
-        val user = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+        val (user, problemId, content) = createChallengeDto
 
         val problem = problemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")

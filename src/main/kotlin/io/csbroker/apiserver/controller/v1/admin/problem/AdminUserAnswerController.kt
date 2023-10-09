@@ -13,7 +13,7 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.service.problem.UserAnswerService
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.userdetails.User
+import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -62,14 +62,14 @@ class AdminUserAnswerController(
         val answerId = when (type) {
             "label" ->
                 userAnswerService.labelUserAnswer(
-                    loginUser.username,
+                    loginUser.email,
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds,
                 )
 
             "validate" ->
                 userAnswerService.validateUserAnswer(
-                    loginUser.username,
+                    loginUser.email,
                     id,
                     userAnswerLabelRequestDto.selectedGradingStandardIds,
                 )

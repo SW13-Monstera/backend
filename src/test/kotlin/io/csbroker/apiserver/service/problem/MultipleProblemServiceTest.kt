@@ -71,7 +71,7 @@ class MultipleProblemServiceTest {
         val email = "test@test.com"
         val problemId = 1L
         val answerIds = listOf(1L, 2L)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         every { userRepository.findByEmail(email) } returns null
 
         // when & then
@@ -85,7 +85,7 @@ class MultipleProblemServiceTest {
         val email = "test@test.com"
         val problemId = 1L
         val answerIds = listOf(1L, 2L)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val problem = mockk<MultipleChoiceProblem>()
         every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns null
@@ -104,7 +104,7 @@ class MultipleProblemServiceTest {
         val problemId = problem.id!!
         val answerId = problem.choicesList.find { it.isAnswer }?.id!!
         val answerIds = listOf(answerId)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(
             gradingHistoryId = 1L,
             problem = problem,
@@ -129,7 +129,7 @@ class MultipleProblemServiceTest {
         val problemId = problem.id!!
         val answerId = problem.choicesList.find { !it.isAnswer }?.id!!
         val answerIds = listOf(answerId)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(
             gradingHistoryId = 1L,
             problem = problem,

@@ -2,9 +2,10 @@ package io.csbroker.apiserver.auth
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
+import io.csbroker.apiserver.service.user.UserService
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.User
+import io.csbroker.apiserver.model.User
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
@@ -12,7 +13,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
+class LoginUserArgumentResolver(
+    private val userService: UserService,
+) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         parameter.getParameterAnnotation(LoginUser::class.java) ?: return false
         return parameter.parameterType.isAssignableFrom(User::class.java)
@@ -24,13 +27,15 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Any {
-        val principal = SecurityContextHolder.getContext().authentication?.principal
+        val authentication = SecurityContextHolder.getContext().authentication
 
-        // 유저 검증이 되지 않으면, anonymousUser 라는 String으로 넘어옴. 그것을 방지하기 위한 검증.
-        if (principal is String) {
+        if (authentication == null || authentication.principal.equals("anonymousUser")) {
             throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
         }
+        val email = authentication.name
+        val user = userService.findUserByEmail(email)
+            ?: throw UnAuthorizedException(ErrorCode.NOT_FOUND_ENTITY, "알 수 없는 유저의 요청입니다.")
 
-        return principal ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
+        return user
     }
 }

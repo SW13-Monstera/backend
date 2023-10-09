@@ -9,7 +9,7 @@ import io.csbroker.apiserver.dto.user.UserStatsDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import io.csbroker.apiserver.service.user.UserService
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.userdetails.User
+import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -36,7 +36,7 @@ class UserController(
     @PreAuthorize("hasRole('ADMIN')")
     fun getUsers(): ApiResponse<List<UserResponseDto>> {
         val result = userService.findUsers()
-            .map(io.csbroker.apiserver.model.User::toUserResponseDto)
+            .map(User::toUserResponseDto)
         return ApiResponse.success(result)
     }
 
@@ -47,7 +47,7 @@ class UserController(
         @PathVariable("id") id: UUID,
         @RequestBody userUpdateRequestDto: UserUpdateRequestDto,
     ): ApiResponse<UserResponseDto> {
-        val user = userService.modifyUser(id, loginUser.username, userUpdateRequestDto)
+        val user = userService.modifyUser(id, loginUser, userUpdateRequestDto)
         return ApiResponse.success(user.toUserResponseDto())
     }
 
@@ -63,7 +63,7 @@ class UserController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: UUID,
     ): ApiResponse<DeleteResponseDto> {
-        val result = userService.deleteUser(loginUser.username, id)
+        val result = userService.deleteUser(loginUser, id)
         return ApiResponse.success(DeleteResponseDto(id, result))
     }
 }

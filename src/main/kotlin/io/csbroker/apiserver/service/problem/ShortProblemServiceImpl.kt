@@ -28,9 +28,7 @@ class ShortProblemServiceImpl(
     @Transactional
     override fun gradingProblem(gradingRequest: ShortProblemGradingRequestDto): ShortProblemGradingHistoryDto {
         // get entities
-        val (email, problemId, answer) = gradingRequest
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+        val (user, problemId, answer) = gradingRequest
 
         val findProblem = shortProblemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
@@ -43,7 +41,7 @@ class ShortProblemServiceImpl(
         val gradingHistory = gradingHistoryRepository.save(
             GradingHistory(
                 problem = findProblem,
-                user = findUser,
+                user = user,
                 userAnswer = answer,
                 score = score,
             ),

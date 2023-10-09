@@ -3,12 +3,14 @@ package io.csbroker.apiserver.service.common
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.notification.NotificationRequestDto
 import io.csbroker.apiserver.model.Notification
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.NotificationRepository
 import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Transactional(readOnly = true)
 @Service
@@ -40,19 +42,13 @@ class NotificationServiceImpl(
         ).size
     }
 
-    override fun getNotification(email: String, page: Pageable): Page<Notification> {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
-
-        return notificationRepository.findByUserId(findUser.id!!, page)
+    override fun getNotification(userId: UUID, page: Pageable): Page<Notification> {
+        return notificationRepository.findByUserId(userId, page)
     }
 
     @Transactional
-    override fun readNotifications(email: String, notificationIds: List<Long>) {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
-
-        val updatedCount = notificationRepository.setIsReadByIdIn(findUser.id!!, notificationIds)
+    override fun readNotifications(userId: UUID, notificationIds: List<Long>) {
+        val updatedCount = notificationRepository.setIsReadByIdIn(userId, notificationIds)
 
         if (updatedCount != notificationIds.size) {
             throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")
@@ -60,30 +56,20 @@ class NotificationServiceImpl(
     }
 
     @Transactional
-    override fun readNotificationById(email: String, id: Long) {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
-
-        val updatedCount = notificationRepository.setIsReadById(findUser.id!!, id)
-
+    override fun readNotificationById(userId: UUID, id: Long) {
+        val updatedCount = notificationRepository.setIsReadById(userId, id)
         if (updatedCount == 0) {
             throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")
         }
     }
 
-    override fun getUnreadNotificationCount(email: String): Long {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
-
-        return notificationRepository.countUnReadByUserId(findUser.id!!)
+    override fun getUnreadNotificationCount(userId: UUID): Long {
+        return notificationRepository.countUnReadByUserId(userId)
     }
 
     @Transactional
-    override fun deleteNotifications(email: String, ids: List<Long>) {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 에 해당하는 유저를 찾을 수 없습니다.")
-
-        val deletedCnt = notificationRepository.deleteAllByUserAndIdIn(findUser, ids)
+    override fun deleteNotifications(user: User, ids: List<Long>) {
+        val deletedCnt = notificationRepository.deleteAllByUserAndIdIn(user, ids)
 
         if (deletedCnt != ids.size) {
             throw EntityNotFoundException("해당하는 알림을 찾을 수 없습니다.")

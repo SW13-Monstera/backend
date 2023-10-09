@@ -59,7 +59,7 @@ class ShortProblemServiceTest {
         val problemId = 1L
         val answer = "answer"
         val gradingRequest = ShortProblemGradingRequestDto(
-            email,
+            user,
             problemId,
             answer,
         )
@@ -77,7 +77,7 @@ class ShortProblemServiceTest {
         val problemId = 1L
         val answer = "answer"
         val gradingRequest = ShortProblemGradingRequestDto(
-            email,
+            user,
             problemId,
             answer,
         )
@@ -95,7 +95,7 @@ class ShortProblemServiceTest {
         // given
         val problem = createProblem()
         val gradingRequest = ShortProblemGradingRequestDto(
-            user.email,
+            user,
             problem.id!!,
             problem.answer,
         )
@@ -126,7 +126,7 @@ class ShortProblemServiceTest {
         val problem = createProblem()
         val wrongAnswer = "wrongAnswer"
         val gradingRequest = ShortProblemGradingRequestDto(
-            user.email,
+            user,
             problem.id!!,
             wrongAnswer,
         )

@@ -94,34 +94,10 @@ class AdminLongProblemServiceTest {
         every { standardAnswerRepository.saveAll(emptyList()) } returns emptyList()
 
         // when
-        val result = adminLongProblemService.createProblem(createRequestDto, user.email)
+        val result = adminLongProblemService.createProblem(createRequestDto, user)
 
         // then
         assertEquals(longProblem.id, result)
-    }
-
-    @Test
-    fun `존재하는 유저만이 문제를 생성할 수 있습니다`() {
-        // given
-        val createRequestDto = getLongProblemUpsertRequestDto()
-        every { userRepository.findByEmail(any()) } returns null
-        val notExistUserEmail = "email@email.com"
-        // when & then
-        assertThrows<EntityNotFoundException> {
-            adminLongProblemService.createProblem(createRequestDto, notExistUserEmail)
-        }
-    }
-
-    @Test
-    fun `존재하는 유저만이 문제 갱신을 할 수 있습니다`() {
-        // given
-        val id = 1L
-        every { longProblemRepository.findByIdOrNull(id) } returns null
-
-        // when, then
-        assertThrows<EntityNotFoundException> {
-            adminLongProblemService.updateProblem(id, getLongProblemUpsertRequestDto(), "test@test.com")
-        }
     }
 
     private fun getLongProblemUpsertRequestDto(): LongProblemUpsertRequestDto {

@@ -52,7 +52,7 @@ class CommonProblemServiceTest {
         // Act & Assert
         assertThrows<EntityNotFoundException> {
             commonProblemService.createChallenge(
-                CreateChallengeDto(email = "test@test.com", problemId = 1L, content = "Test"),
+                CreateChallengeDto(user, problemId = 1L, content = "Test"),
             )
         }
     }
@@ -68,7 +68,7 @@ class CommonProblemServiceTest {
         // Act & Assert
         assertThrows<EntityNotFoundException> {
             commonProblemService.createChallenge(
-                CreateChallengeDto(email = "test@test.com", problemId = 1L, content = "Test"),
+                CreateChallengeDto(user, problemId = 1L, content = "Test"),
             )
         }
     }

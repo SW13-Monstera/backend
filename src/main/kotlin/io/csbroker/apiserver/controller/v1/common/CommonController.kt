@@ -10,7 +10,7 @@ import io.csbroker.apiserver.service.common.CommonService
 import io.csbroker.apiserver.service.common.S3Service
 import io.csbroker.apiserver.service.user.UserService
 import kotlinx.coroutines.runBlocking
-import org.springframework.security.core.userdetails.User
+import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -37,7 +37,7 @@ class CommonController(
     fun uploadImg(@RequestPart("image") multipartFile: MultipartFile, @LoginUser loginUser: User): ApiResponse<String> {
         return runBlocking {
             val imgUrl = s3Service.uploadProfileImg(multipartFile)
-            userService.updateUserProfileImg(loginUser.username, imgUrl)
+            userService.updateUserProfileImg(loginUser, imgUrl)
             ApiResponse.success(imgUrl)
         }
     }
@@ -65,6 +65,6 @@ class CommonController(
         @LoginUser loginUser: User,
         @RequestBody chatCompletionRequestDto: ChatCompletionRequestDto,
     ): ApiResponse<String> {
-        return ApiResponse.success(chatService.completeChat(loginUser.username, chatCompletionRequestDto.content))
+        return ApiResponse.success(chatService.completeChat(loginUser.email, chatCompletionRequestDto.content))
     }
 }

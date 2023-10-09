@@ -9,7 +9,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDt
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.service.problem.admin.AdminLongProblemService
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.userdetails.User
+import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,7 +37,7 @@ class AdminLongProblemController(
         @RequestBody createRequestDto: LongProblemUpsertRequestDto,
         @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createProblemId = longProblemService.createProblem(createRequestDto, loginUser.username)
+        val createProblemId = longProblemService.createProblem(createRequestDto, loginUser)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
     }
 
@@ -47,7 +47,7 @@ class AdminLongProblemController(
         @RequestBody updateRequestDto: LongProblemUpsertRequestDto,
         @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val updateProblemId = longProblemService.updateProblem(id, updateRequestDto, loginUser.username)
+        val updateProblemId = longProblemService.updateProblem(id, updateRequestDto)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 

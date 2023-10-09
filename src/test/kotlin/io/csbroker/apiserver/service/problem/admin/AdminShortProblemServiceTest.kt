@@ -127,34 +127,20 @@ class AdminShortProblemServiceTest {
             answer = "answer",
             score = 10.0,
         )
-        val email = "test@test.com"
-        every { userRepository.findByEmail(email) } returns user
         every { problemRepository.save(any()) } returns problem
         every { tagUpserter.setTags(any(), any()) } just runs
         every { problemRepository.save(any()) } returns problem
 
         // when
-        val result = adminShortProblemService.createProblem(requestDto, email)
+        val result = adminShortProblemService.createProblem(requestDto, user)
 
         // then
-        verify { userRepository.findByEmail(email) }
         verify { problemRepository.save(any()) }
         verify { tagUpserter.setTags(any(), any()) }
         verify { problemRepository.save(any()) }
         assertEquals(problem.id, result)
     }
 
-    @Test
-    fun `createProblem - 존재하지 않는 유저가 문제를 생성하면 예외가 발생합니다`() {
-        // given
-        every { userRepository.findByEmail(any()) } returns null
-
-        // when & then
-        assertThrows<EntityNotFoundException> {
-            adminShortProblemService.createProblem(mockk<ShortProblemUpsertRequestDto>(), "email")
-        }
-        verify { userRepository.findByEmail(any()) }
-    }
 
     @Test
     fun `updateProblem - success`() {
@@ -171,7 +157,7 @@ class AdminShortProblemServiceTest {
         every { tagUpserter.updateTags(any(), any()) } just runs
 
         // when
-        val result = adminShortProblemService.updateProblem(1L, requestDto, email)
+        val result = adminShortProblemService.updateProblem(1L, requestDto)
 
         // then
         verify { shortProblemRepository.findByIdOrNull(any()) }
@@ -186,7 +172,7 @@ class AdminShortProblemServiceTest {
 
         // when & then
         assertThrows<EntityNotFoundException> {
-            adminShortProblemService.updateProblem(1L, mockk<ShortProblemUpsertRequestDto>(), "email")
+            adminShortProblemService.updateProblem(1L, mockk<ShortProblemUpsertRequestDto>())
         }
         verify { shortProblemRepository.findByIdOrNull(any()) }
     }

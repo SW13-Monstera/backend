@@ -126,14 +126,15 @@ class UserServiceTest {
     @Test
     fun `유저 수정 ID 조회 불가 실패 테스트`() {
         // given
-        val id = UUID.randomUUID()
+        val user = createUser()
+        val id = user.id!!
         every { userRepository.findByIdOrNull(any()) } returns null
 
         // when
         val exception = assertThrows<EntityNotFoundException> {
             userService.modifyUser(
                 id,
-                "test@test.com",
+                user,
                 UserUpdateRequestDto(
                     "test-url.com",
                     "test",
@@ -159,7 +160,7 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            "test@test.com",
+            user,
             userUpdateRequestDto,
         )
 
@@ -183,7 +184,7 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            "test@test.com",
+            user,
             userUpdateRequestDto,
         )
 
