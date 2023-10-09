@@ -16,7 +16,7 @@ class PostLike(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_like_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

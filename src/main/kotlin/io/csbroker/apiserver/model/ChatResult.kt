@@ -13,7 +13,7 @@ class ChatResult(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_result_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     // 연관관계로 엮을 수 있으나, 단순 데이터 저장용이기 때문에.. 굳이 엮지 않겠음.
     @Column(name = "email")

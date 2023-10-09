@@ -17,7 +17,7 @@ class Choice(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "choice_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "content")
     var content: String,
@@ -31,7 +31,7 @@ class Choice(
 ) {
     fun toChoiceResponseDto(): ChoiceResponseDto {
         return ChoiceResponseDto(
-            id!!,
+            id,
             content,
         )
     }

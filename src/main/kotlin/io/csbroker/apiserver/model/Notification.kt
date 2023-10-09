@@ -22,7 +22,7 @@ class Notification(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "content", columnDefinition = "VARCHAR(100)")
     val content: String,
@@ -48,7 +48,7 @@ class Notification(
 
     fun toNotificationResponseDto(): NotificationResponseDto {
         return NotificationResponseDto(
-            id!!,
+            id,
             content,
             link,
             isRead,

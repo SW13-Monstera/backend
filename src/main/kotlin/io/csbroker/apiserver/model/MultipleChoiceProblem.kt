@@ -49,7 +49,7 @@ class MultipleChoiceProblem(
 
     fun toMultipleChoiceProblemResponseDto(): MultipleChoiceProblemResponseDto {
         return MultipleChoiceProblemResponseDto(
-            id!!,
+            id,
             title,
             description,
             problemTags.map {
@@ -75,7 +75,7 @@ class MultipleChoiceProblem(
         }
 
         return MultipleChoiceProblemSearchResponseDto.MultipleChoiceProblemDataDto(
-            id!!,
+            id,
             title,
             creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
@@ -88,7 +88,7 @@ class MultipleChoiceProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return MultipleChoiceProblemDetailResponseDto(
-            id!!,
+            id,
             title,
             commonDetail.tags,
             description,

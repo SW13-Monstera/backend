@@ -13,7 +13,7 @@ class Major(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "major_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "major_name", columnDefinition = "VARCHAR(100)")
     val name: String,

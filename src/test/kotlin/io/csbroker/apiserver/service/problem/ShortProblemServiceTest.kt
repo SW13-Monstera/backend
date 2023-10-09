@@ -96,7 +96,7 @@ class ShortProblemServiceTest {
         val problem = createProblem()
         val gradingRequest = ShortProblemGradingRequestDto(
             user.email,
-            problem.id!!,
+            problem.id,
             problem.answer,
         )
         val gradingHistory = GradingHistory(
@@ -107,7 +107,7 @@ class ShortProblemServiceTest {
             score = problem.score,
         )
         every { userRepository.findByEmail(user.email) } returns user
-        every { shortProblemRepository.findByIdOrNull(problem.id!!) } returns problem
+        every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
 
         // when
@@ -116,7 +116,7 @@ class ShortProblemServiceTest {
         // then
         assertEquals(problem.score, result.score)
         verify { userRepository.findByEmail(user.email) }
-        verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
+        verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }
 
@@ -127,7 +127,7 @@ class ShortProblemServiceTest {
         val wrongAnswer = "wrongAnswer"
         val gradingRequest = ShortProblemGradingRequestDto(
             user.email,
-            problem.id!!,
+            problem.id,
             wrongAnswer,
         )
         val gradingHistory = GradingHistory(
@@ -138,7 +138,7 @@ class ShortProblemServiceTest {
             score = 10.0,
         )
         every { userRepository.findByEmail(user.email) } returns user
-        every { shortProblemRepository.findByIdOrNull(problem.id!!) } returns problem
+        every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
         // when
         val result = service.gradingProblem(gradingRequest)
@@ -146,7 +146,7 @@ class ShortProblemServiceTest {
         // then
         assertEquals(0.0, result.score)
         verify { userRepository.findByEmail(user.email) }
-        verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
+        verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }
 

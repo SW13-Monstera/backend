@@ -17,7 +17,7 @@ class ProblemSet(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "problem_set_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "problem_set_name")
     var name: String,
@@ -30,7 +30,7 @@ class ProblemSet(
 ) {
     fun toProblemSetResponseDto(): ProblemSetResponseDto {
         return ProblemSetResponseDto(
-            id!!,
+            id,
             problemSetMapping.size,
             name,
             description,
@@ -39,7 +39,7 @@ class ProblemSet(
 
     fun toProblemSetDetailResponseDto(): ProblemSetDetailResponseDto {
         return ProblemSetDetailResponseDto(
-            id!!,
+            id,
             problemSetMapping.map {
                 it.problem.toProblemResponseDto(GradingHistoryStats.toGradingHistoryStats(it.problem.gradingHistory))
             },

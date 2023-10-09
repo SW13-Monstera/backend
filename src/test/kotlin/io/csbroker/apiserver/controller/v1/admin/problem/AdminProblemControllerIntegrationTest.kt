@@ -41,7 +41,7 @@ class AdminProblemControllerIntegrationTest : IntegrationTest() {
         // then
         response.andExpect(status().isOk)
             .andExpect {
-                val problems = findAll<Problem>("SELECT p FROM Problem p where p.id = :id", mapOf("id" to problem.id!!))
+                val problems = findAll<Problem>("SELECT p FROM Problem p where p.id = :id", mapOf("id" to problem.id))
                 problems.size shouldBe 0
             }
     }
@@ -78,7 +78,7 @@ class AdminProblemControllerIntegrationTest : IntegrationTest() {
             url = "/api/admin/problems",
             isAdmin = true,
             body = ProblemDeleteRequestDto(
-                ids = listOf(problem1.id!!, problem2.id!!),
+                ids = listOf(problem1.id, problem2.id),
             ),
         )
 
@@ -87,7 +87,7 @@ class AdminProblemControllerIntegrationTest : IntegrationTest() {
             .andExpect {
                 val problems = findAll<Problem>(
                     "SELECT p FROM Problem p where p.id in :ids",
-                    mapOf("ids" to listOf(problem1.id!!, problem2.id!!)),
+                    mapOf("ids" to listOf(problem1.id, problem2.id)),
                 )
                 problems.size shouldBe 0
             }
