@@ -8,9 +8,7 @@ class OAuth2UserInfoFactory {
             return when (providerType) {
                 ProviderType.GOOGLE -> GoogleOAuth2UserInfo(attributes)
                 ProviderType.GITHUB -> GithubOAuth2UserInfo(attributes)
-                else -> throw OAuthProviderMissMatchException(
-                    "프로바이더 타입이 일치하지 않습니다. ${providerType.name}",
-                )
+                else -> throw OAuthProviderMissMatchException("프로바이더 타입이 일치하지 않습니다. ${providerType.name}")
             }
         }
     }
