@@ -17,7 +17,7 @@ class TokenAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val tokenStr = getAccessToken(request)
+        val tokenStr = request.getAccessToken()
 
         tokenStr ?: run {
             filterChain.doFilter(request, response)
