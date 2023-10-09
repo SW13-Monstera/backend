@@ -7,9 +7,9 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.problem.admin.AdminLongProblemService
 import org.springframework.data.domain.Pageable
-import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

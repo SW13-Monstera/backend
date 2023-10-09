@@ -5,7 +5,6 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
-import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.GradingStandardRepository
@@ -68,7 +67,6 @@ class AdminLongProblemServiceImpl(
 
     @Transactional
     override fun updateProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto): Long {
-
         val longProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
         val gradingStandardList = updateRequestDto.getGradingStandardList(longProblem)

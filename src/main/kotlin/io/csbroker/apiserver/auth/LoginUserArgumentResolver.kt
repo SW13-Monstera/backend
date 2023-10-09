@@ -2,10 +2,10 @@ package io.csbroker.apiserver.auth
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
-import org.springframework.core.MethodParameter
-import org.springframework.security.core.context.SecurityContextHolder
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.user.UserRepository
+import org.springframework.core.MethodParameter
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
@@ -14,7 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class LoginUserArgumentResolver(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         parameter.getParameterAnnotation(LoginUser::class.java) ?: return false

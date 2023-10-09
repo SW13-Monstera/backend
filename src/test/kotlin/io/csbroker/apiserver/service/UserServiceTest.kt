@@ -1,9 +1,7 @@
 package io.csbroker.apiserver.service
 
 import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.RedisRepository
@@ -17,7 +15,6 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.UUID
 

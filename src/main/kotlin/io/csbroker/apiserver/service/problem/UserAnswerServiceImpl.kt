@@ -8,7 +8,6 @@ import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
-import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.model.UserAnswer
 import io.csbroker.apiserver.repository.problem.GradingStandardRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository

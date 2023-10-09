@@ -141,7 +141,6 @@ class AdminShortProblemServiceTest {
         assertEquals(problem.id, result)
     }
 
-
     @Test
     fun `updateProblem - success`() {
         // given

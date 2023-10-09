@@ -11,9 +11,9 @@ import io.csbroker.apiserver.dto.useranswer.UserAnswerLabelRequestDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.problem.UserAnswerService
 import org.springframework.data.domain.Pageable
-import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

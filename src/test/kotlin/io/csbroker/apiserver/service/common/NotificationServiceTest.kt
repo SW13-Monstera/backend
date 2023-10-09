@@ -12,7 +12,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.data.domain.PageRequest
 import java.util.UUID
 
 class NotificationServiceTest {
@@ -67,7 +66,6 @@ class NotificationServiceTest {
         assertThrows<EntityNotFoundException> { service.readNotificationById(user.id!!, notificationId) }
         verify { notificationRepository.setIsReadById(user.id!!, notificationId) }
     }
-
 
     @Test
     fun `deleteNotifications - 존재하지 않는 알림에 대한 삭제 요청시 예외가 발생합니다`() {

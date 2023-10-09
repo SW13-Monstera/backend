@@ -7,9 +7,9 @@ import io.csbroker.apiserver.dto.common.DeleteResponseDto
 import io.csbroker.apiserver.dto.user.UserResponseDto
 import io.csbroker.apiserver.dto.user.UserStatsDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.user.UserService
 import org.springframework.security.access.prepost.PreAuthorize
-import io.csbroker.apiserver.model.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

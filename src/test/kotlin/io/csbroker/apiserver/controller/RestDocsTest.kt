@@ -7,7 +7,6 @@ import io.csbroker.apiserver.auth.LoginUserArgumentResolver
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.repository.user.UserRepository
-import io.csbroker.apiserver.service.user.UserService
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.config.ObjectMapperConfig
@@ -16,7 +15,6 @@ import io.restassured.module.mockmvc.config.RestAssuredMockMvcConfig
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.mock
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
