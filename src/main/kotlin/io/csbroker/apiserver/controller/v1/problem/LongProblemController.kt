@@ -10,6 +10,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/problems/long")
 class LongProblemController(
     private val longProblemService: LongProblemService,
+    private val postService: PostService,
 ) {
     @GetMapping("/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
@@ -50,12 +52,17 @@ class LongProblemController(
 
     @PostMapping("{id}/submit")
     fun submitLongProblem(
-        @LoginUser longUser: User,
+        @LoginUser loginUser: User,
         @PathVariable("id") problemId: Long,
         @RequestBody answerDto: LongProblemAnswerDto,
     ): ApiResponse<SubmitLongProblemResponseDto> {
-        val submitRequestDto = SubmitLongProblemDto(longUser.email, problemId, answerDto.answer)
+        val submitRequestDto = SubmitLongProblemDto(loginUser.email, problemId, answerDto.answer)
         val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
+        postService.create(
+            problemId = submitRequestDto.problemId,
+            content = answerDto.answer,
+            email = loginUser.username,
+        )
         return ApiResponse.success(submitResponseDto)
     }
 }
