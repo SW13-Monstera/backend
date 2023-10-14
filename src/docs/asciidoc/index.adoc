@@ -1171,6 +1171,9 @@ End-Point   : /api/v1/comments
 .Sample Request
 include::{snippets}/posts/comments/create/http-request.adoc[]
 
+.Path parameters
+include::{snippets}/posts/comments/create/path-parameters.adoc[]
+
 .Sample Response
 include::{snippets}/posts/comments/create/http-response.adoc[]
 

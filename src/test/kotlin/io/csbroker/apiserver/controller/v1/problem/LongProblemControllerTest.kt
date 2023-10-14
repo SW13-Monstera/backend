@@ -7,6 +7,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
+import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
 import io.mockk.every
 import io.mockk.mockk
@@ -32,13 +33,16 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParamete
 class LongProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
     private lateinit var longProblemService: LongProblemService
+    private lateinit var postService: PostService
 
     @BeforeEach
     fun setUp() {
         longProblemService = mockk()
+        postService = mockk()
         mockMvc = mockMvc(
             LongProblemController(
                 longProblemService,
+                postService,
             ),
         ).header("Authorization", "Bearer TEST-TOKEN")
     }
@@ -218,6 +222,7 @@ class LongProblemControllerTest : RestDocsTest() {
             standardAnswer = "standard answer",
         )
         every { longProblemService.submitProblem(any()) } returns responseDto
+        every { postService.create(any(), any(), any()) } returns 1L
 
         // when
 
