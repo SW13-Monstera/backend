@@ -13,4 +13,6 @@ interface CommonProblemService {
     fun removeProblemsById(ids: List<Long>)
     fun gradingAssessment(email: String, gradingHistoryId: Long, assessmentRequestDto: AssessmentRequestDto): Long
     fun createChallenge(createChallengeDto: CreateChallengeDto)
+    fun likeProblem(email: String, problemId: Long)
+    fun bookmarkProblem(email: String, problemId: Long)
 }

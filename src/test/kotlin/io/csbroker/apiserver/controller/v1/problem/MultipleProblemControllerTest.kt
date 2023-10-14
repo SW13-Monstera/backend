@@ -54,6 +54,10 @@ class MultipleProblemControllerTest : RestDocsTest() {
             isSolved = true,
             isMultipleAnswer = true,
             choices = listOf(ChoiceResponseDto(1, "123")),
+            bookmarkCount = 10,
+            likeCount = 10,
+            isBookmarked = true,
+            isLiked = true,
         )
 
         // when
@@ -96,6 +100,14 @@ class MultipleProblemControllerTest : RestDocsTest() {
                             .description("다중 답안 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
+                        fieldWithPath("data.bookmarkCount").type(JsonFieldType.NUMBER)
+                            .description("북마크 수"),
+                        fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER)
+                            .description("좋아요 수"),
+                        fieldWithPath("data.isBookmarked").type(JsonFieldType.BOOLEAN)
+                            .description("북마크 여부"),
+                        fieldWithPath("data.isLiked").type(JsonFieldType.BOOLEAN)
+                            .description("좋아요 여부"),
                     ),
                 ),
             )

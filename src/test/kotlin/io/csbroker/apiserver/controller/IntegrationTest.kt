@@ -7,6 +7,7 @@ import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.model.User
 import org.junit.jupiter.api.BeforeEach
+import org.intellij.lang.annotations.Language
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -94,14 +95,20 @@ class IntegrationTest {
         entity
     }
 
-    fun <T> findOne(queryString: String, params: Map<String, Any> = emptyMap()): T = runWithEntityManager {
-        val query = it.createQuery(queryString, Any::class.java)
+    fun <T> findOne(
+        @Language("JPAQL") qlString: String,
+        params: Map<String, Any> = emptyMap(),
+    ): T = runWithEntityManager {
+        val query = it.createQuery(qlString, Any::class.java)
         setParams(query, params)
         query.singleResult as T
     }
 
-    fun <T> findAll(queryString: String, params: Map<String, Any> = emptyMap()): List<T> = runWithEntityManager {
-        val query = it.createQuery(queryString, Any::class.java)
+    fun <T> findAll(
+        @Language("JPAQL") qlString: String,
+        params: Map<String, Any> = emptyMap(),
+    ): List<T> = runWithEntityManager {
+        val query = it.createQuery(qlString, Any::class.java)
         setParams(query, params)
         query.resultList as List<T>
     }

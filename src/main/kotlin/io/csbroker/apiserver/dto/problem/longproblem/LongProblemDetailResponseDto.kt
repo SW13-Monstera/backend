@@ -12,4 +12,8 @@ data class LongProblemDetailResponseDto(
     val totalSubmission: Int,
     val isSolved: Boolean,
     val isGradable: Boolean,
+    val likeCount: Long,
+    val bookmarkCount: Long,
+    val isLiked: Boolean,
+    val isBookmarked: Boolean,
 )

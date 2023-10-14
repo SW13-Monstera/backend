@@ -17,6 +17,10 @@ class ApiResponse<T> private constructor(
             return ApiResponse(SUCCESS, data)
         }
 
+        fun success(): ApiResponse<Unit> {
+            return ApiResponse(SUCCESS)
+        }
+
         fun <T> fail(reason: T): ApiResponse<T> {
             return ApiResponse(FAIL, reason)
         }
