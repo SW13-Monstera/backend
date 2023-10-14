@@ -3,14 +3,11 @@ package io.csbroker.apiserver.controller.v1.problem
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jayway.jsonpath.JsonPath
-import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistoryDto
 import io.csbroker.apiserver.model.ShortProblem
-import io.csbroker.apiserver.model.User
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -18,19 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class ShortProblemIntegrationTest : IntegrationTest() {
     private val baseUrl = "/api/v1/problems/short"
     private val objectMapper = jacksonObjectMapper()
-    private lateinit var user: User
-
-    @BeforeEach
-    fun setUp() {
-        user = save(
-            User(
-                email = "test-noti@test.com",
-                username = "test-noti",
-                password = "test-noti",
-                providerType = ProviderType.LOCAL,
-            ),
-        )
-    }
 
     @Test
     fun `단답형 문제 조회`() {
@@ -39,7 +23,7 @@ class ShortProblemIntegrationTest : IntegrationTest() {
             ShortProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
                 score = 10.0,
                 answer = "answer",
             ),
@@ -68,7 +52,7 @@ class ShortProblemIntegrationTest : IntegrationTest() {
             ShortProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
                 score = 10.0,
                 answer = "answer",
             ),
@@ -109,7 +93,7 @@ class ShortProblemIntegrationTest : IntegrationTest() {
             ShortProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
                 score = 10.0,
                 answer = "answer",
             ),

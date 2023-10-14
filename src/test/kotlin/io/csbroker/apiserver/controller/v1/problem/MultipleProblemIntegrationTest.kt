@@ -3,15 +3,12 @@ package io.csbroker.apiserver.controller.v1.problem
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jayway.jsonpath.JsonPath
-import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemGradingHistoryDto
 import io.csbroker.apiserver.model.Choice
 import io.csbroker.apiserver.model.MultipleChoiceProblem
-import io.csbroker.apiserver.model.User
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -20,19 +17,6 @@ class MultipleProblemIntegrationTest : IntegrationTest() {
 
     private val baseUrl = "/api/v1/problems/multiple"
     private val objectMapper = jacksonObjectMapper()
-    private lateinit var user: User
-
-    @BeforeEach
-    fun setUp() {
-        user = save(
-            User(
-                email = "test-noti@test.com",
-                username = "test-noti",
-                password = "test-noti",
-                providerType = ProviderType.LOCAL,
-            ),
-        )
-    }
 
     @Test
     fun `객관식 문제 조회`() {
@@ -41,7 +25,7 @@ class MultipleProblemIntegrationTest : IntegrationTest() {
             MultipleChoiceProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
                 score = 10.0,
                 isMultiple = false,
             ),
@@ -68,7 +52,7 @@ class MultipleProblemIntegrationTest : IntegrationTest() {
             MultipleChoiceProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
                 score = 10.0,
                 isMultiple = false,
             ),

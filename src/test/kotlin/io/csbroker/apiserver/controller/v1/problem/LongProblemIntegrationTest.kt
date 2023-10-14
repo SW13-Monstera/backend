@@ -3,17 +3,14 @@ package io.csbroker.apiserver.controller.v1.problem
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jayway.jsonpath.JsonPath
-import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.StandardAnswer
-import io.csbroker.apiserver.model.User
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -22,19 +19,6 @@ class LongProblemIntegrationTest : IntegrationTest() {
 
     private val baseUrl = "/api/v1/problems/long"
     private val objectMapper = jacksonObjectMapper()
-    private lateinit var user: User
-
-    @BeforeEach
-    fun setUp() {
-        user = save(
-            User(
-                email = "test-noti@test.com",
-                username = "test-noti",
-                password = "test-noti",
-                providerType = ProviderType.LOCAL,
-            ),
-        )
-    }
 
     @Test
     fun `서술형 문제 조회`() {
@@ -65,17 +49,16 @@ class LongProblemIntegrationTest : IntegrationTest() {
             "SELECT gh From GradingHistory gh where gh.problem.id = :id",
             mapOf("id" to problem.id!!),
         ).size
-        println(preSubmissionCount)
+
         val preUserSubmissionCount = findAll<GradingHistory>(
             "SELECT gh From GradingHistory gh where gh.problem.id = :problemId AND gh.user.id = :userId",
-            mapOf("problemId" to problem.id!!, "userId" to user.id!!),
+            mapOf("problemId" to problem.id!!, "userId" to defaultUser.id!!),
         ).size
-        println(preUserSubmissionCount)
+
         val standardAnswers = findAll<StandardAnswer>(
             "SELECT sa From StandardAnswer sa where sa.longProblem.id = :id",
             mapOf("id" to problem.id!!),
         )
-        println(standardAnswers)
 
         val userAnswer = "answer"
         val response = request(
@@ -106,7 +89,7 @@ class LongProblemIntegrationTest : IntegrationTest() {
             LongProblem(
                 title = "title",
                 description = "description",
-                creator = user,
+                creator = defaultUser,
             ),
         )
         save(StandardAnswer(content = "standard answer1", longProblem = problem))
