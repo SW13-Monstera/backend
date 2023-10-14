@@ -12,4 +12,8 @@ data class MultipleChoiceProblemDetailResponseDto(
     val isSolved: Boolean,
     val isMultipleAnswer: Boolean,
     val score: Double,
+    val likeCount: Long,
+    val bookmarkCount: Long,
+    val isLiked: Boolean,
+    val isBookmarked: Boolean,
 )

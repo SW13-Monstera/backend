@@ -99,6 +99,10 @@ class MultipleChoiceProblem(
             gradingHistory.any { it.user.email == email },
             isMultiple,
             score,
+            problemLike.count().toLong(),
+            problemBookmark.count().toLong(),
+            problemLike.any { it.user.email == email },
+            problemBookmark.any { it.user.email == email },
         )
     }
 }
