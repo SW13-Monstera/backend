@@ -6,8 +6,8 @@ import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.model.User
-import org.junit.jupiter.api.BeforeEach
 import org.intellij.lang.annotations.Language
+import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
