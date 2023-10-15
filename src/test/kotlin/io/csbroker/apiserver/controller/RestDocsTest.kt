@@ -4,7 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.csbroker.apiserver.auth.LoginUserArgumentResolver
+import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
+import io.csbroker.apiserver.repository.user.UserRepository
+import io.mockk.every
+import io.mockk.mockk
 import io.restassured.config.ObjectMapperConfig
 import io.restassured.module.mockmvc.RestAssuredMockMvc
 import io.restassured.module.mockmvc.config.RestAssuredMockMvcConfig
@@ -25,10 +29,21 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import java.util.UUID
 
 @ExtendWith(RestDocumentationExtension::class)
 abstract class RestDocsTest {
     private lateinit var restDocumentation: RestDocumentationContextProvider
+    private val userRepository: UserRepository = mockk {
+        every { findByEmail("admin@csbroker.io") } returns io.csbroker.apiserver.model.User(
+            id = UUID.randomUUID(),
+            email = "admin@csbroker.io",
+            password = "1234",
+            role = Role.ROLE_ADMIN,
+            providerType = ProviderType.LOCAL,
+            username = "admin",
+        )
+    }
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
@@ -40,7 +55,7 @@ abstract class RestDocsTest {
         controllerAdvices: Any = emptyArray<Any>(),
         argumentResolvers: Array<HandlerMethodArgumentResolver> = arrayOf(
             PageableHandlerMethodArgumentResolver(),
-            LoginUserArgumentResolver(),
+            LoginUserArgumentResolver(userRepository),
         ),
         httpMessageConverters: Array<HttpMessageConverter<Any>> = arrayOf(
             MappingJackson2HttpMessageConverter(objectMapper()),

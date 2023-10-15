@@ -6,6 +6,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
 import io.csbroker.apiserver.model.StandardAnswer
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.GradingStandardRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
@@ -44,10 +45,8 @@ class AdminLongProblemServiceImpl(
     }
 
     @Transactional
-    override fun createProblem(createRequestDto: LongProblemUpsertRequestDto, email: String): Long {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
-        val longProblem = createRequestDto.toLongProblem(findUser)
+    override fun createProblem(createRequestDto: LongProblemUpsertRequestDto, user: User): Long {
+        val longProblem = createRequestDto.toLongProblem(user)
         val gradingStandardList = createRequestDto.getGradingStandardList(longProblem)
         longProblem.addGradingStandards(gradingStandardList)
 
@@ -67,10 +66,9 @@ class AdminLongProblemServiceImpl(
     }
 
     @Transactional
-    override fun updateProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto, email: String): Long {
+    override fun updateProblem(id: Long, updateRequestDto: LongProblemUpsertRequestDto): Long {
         val longProblem = longProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
-
         val gradingStandardList = updateRequestDto.getGradingStandardList(longProblem)
 
         if (longProblem.standardAnswers.map { it.content }.toSet() != updateRequestDto.standardAnswers.toSet()) {

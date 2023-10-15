@@ -4,8 +4,8 @@ import io.csbroker.apiserver.auth.LoginUser
 import io.csbroker.apiserver.controller.v2.problem.request.ChallengeCreateRequest
 import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.problem.CommonProblemService
-import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,7 +26,7 @@ class ProblemControllerV2(
         @RequestBody
         challengeCreateRequest: ChallengeCreateRequest,
     ): ApiResponse<Boolean> {
-        commonProblemService.createChallenge(CreateChallengeDto(loginUser.username, id, challengeCreateRequest.content))
+        commonProblemService.createChallenge(CreateChallengeDto(loginUser, id, challengeCreateRequest.content))
         return ApiResponse.success(true)
     }
 

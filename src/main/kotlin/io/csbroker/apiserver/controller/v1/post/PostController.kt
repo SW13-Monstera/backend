@@ -5,8 +5,8 @@ import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
 import io.csbroker.apiserver.controller.v1.post.request.PostCreateRequestDto
 import io.csbroker.apiserver.controller.v1.post.response.PostResponseDto
 import io.csbroker.apiserver.dto.common.ApiResponse
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.post.PostService
-import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

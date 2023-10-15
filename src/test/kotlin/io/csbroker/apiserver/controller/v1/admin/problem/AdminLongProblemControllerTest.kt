@@ -88,7 +88,7 @@ class AdminLongProblemControllerTest : RestDocsTest() {
     @Test
     fun `Update Long Problem 200`() {
         // given
-        every { problemService.updateProblem(any(), any(), any()) } returns 1L
+        every { problemService.updateProblem(any(), any()) } returns 1L
         val longProblemUpsertRequestDto = createLongProblemUpsertRequestDto()
 
         // when

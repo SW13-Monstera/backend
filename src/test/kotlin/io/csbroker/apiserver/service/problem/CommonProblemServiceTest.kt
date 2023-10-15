@@ -51,19 +51,6 @@ class CommonProblemServiceTest {
     }
 
     @Test
-    fun `createChallenge - 존재하지 않는 유저가 이의제기를 할 시 예외가 발생합니다 `() {
-        // Arrange
-        every { userRepository.findByEmail(any()) } returns null
-
-        // Act & Assert
-        assertThrows<EntityNotFoundException> {
-            commonProblemService.createChallenge(
-                CreateChallengeDto(email = "test@test.com", problemId = 1L, content = "Test"),
-            )
-        }
-    }
-
-    @Test
     fun `createChallenge should throw EntityNotFoundException when problem not found`() {
         // Arrange
         // Define necessary mock for user here
@@ -74,7 +61,7 @@ class CommonProblemServiceTest {
         // Act & Assert
         assertThrows<EntityNotFoundException> {
             commonProblemService.createChallenge(
-                CreateChallengeDto(email = "test@test.com", problemId = 1L, content = "Test"),
+                CreateChallengeDto(user, problemId = 1L, content = "Test"),
             )
         }
     }

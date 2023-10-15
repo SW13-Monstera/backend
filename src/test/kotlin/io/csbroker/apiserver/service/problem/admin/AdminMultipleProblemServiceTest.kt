@@ -140,24 +140,6 @@ class AdminMultipleProblemServiceTest {
     }
 
     @Test
-    fun `createProblem - 존재하지 않는 유저가 문제 생성할 시 예외 발생`() {
-        // given
-        val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
-            title = "title",
-            description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(),
-            score = 10.0,
-        )
-        val email = "not@exist.email"
-        every { userRepository.findByEmail(email) } returns null
-
-        // when & then
-        assertThrows<EntityNotFoundException> { adminMultipleProblemService.createProblem(createRequestDto, email) }
-        verify { userRepository.findByEmail(email) }
-    }
-
-    @Test
     fun `createProblem - 정답은 항상 1개 이상 존재해야 한다`() {
         // given
         val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
@@ -167,15 +149,13 @@ class AdminMultipleProblemServiceTest {
             choices = mutableListOf(),
             score = 10.0,
         )
-        every { userRepository.findByEmail(user.email) } returns user
         every { tagUpserter.setTags(any(), any()) } just runs
 
         // when & then
         assertThrows<ConditionConflictException> {
-            adminMultipleProblemService.createProblem(createRequestDto, user.email)
+            adminMultipleProblemService.createProblem(createRequestDto, user)
         }
 
-        verify { userRepository.findByEmail(user.email) }
         verify { tagUpserter.setTags(any(), any()) }
     }
 
@@ -189,13 +169,11 @@ class AdminMultipleProblemServiceTest {
             choices = mutableListOf(ChoiceData(content = "content", isAnswer = true)),
             score = 10.0,
         )
-        every { userRepository.findByEmail(user.email) } returns user
         every { tagUpserter.setTags(any(), any()) } just runs
         every { problemRepository.save(any()) } returns problem
 
         // when & then
-        val result = adminMultipleProblemService.createProblem(createRequestDto, user.email)
-        verify { userRepository.findByEmail(user.email) }
+        val result = adminMultipleProblemService.createProblem(createRequestDto, user)
         verify { tagUpserter.setTags(any(), any()) }
         verify { problemRepository.save(any()) }
         assertEquals(problem.id, result)
@@ -215,7 +193,7 @@ class AdminMultipleProblemServiceTest {
 
         // when & then
         assertThrows<EntityNotFoundException> {
-            adminMultipleProblemService.updateProblem(1L, requestDto, user.email)
+            adminMultipleProblemService.updateProblem(1L, requestDto)
         }
         verify { multipleChoiceProblemRepository.findByIdOrNull(any()) }
     }
@@ -234,7 +212,7 @@ class AdminMultipleProblemServiceTest {
 
         // when & then
         assertThrows<ConditionConflictException> {
-            adminMultipleProblemService.updateProblem(1L, requestDto, user.email)
+            adminMultipleProblemService.updateProblem(1L, requestDto)
         }
 
         verify { multipleChoiceProblemRepository.findByIdOrNull(problem.id) }

@@ -35,24 +35,21 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun modifyUser(uuid: UUID, email: String, userUpdateRequestDto: UserUpdateRequestDto): User {
-        val findUser = userRepository.findByIdOrNull(uuid)
-            ?: throw EntityNotFoundException("${uuid}를 가진 유저를 찾을 수 없습니다.")
-
-        if (findUser.email != email) {
-            throw EntityNotFoundException("${email}을 가진 유저를 찾을 수 없습니다.")
+    override fun modifyUser(uuid: UUID, user: User, userUpdateRequestDto: UserUpdateRequestDto): User {
+        if (user.id != uuid) {
+            throw UnAuthorizedException(ErrorCode.FORBIDDEN, "해당 유저를 수정할 권한이 없습니다.")
         }
 
         userUpdateRequestDto.password?.let {
-            if (findUser.providerType != ProviderType.LOCAL) {
+            if (user.providerType != ProviderType.LOCAL) {
                 throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "간편 가입 유저는 비밀번호를 변경할 수 없습니다.")
             }
-            encodePassword(findUser, userUpdateRequestDto)
+            encodePassword(user, userUpdateRequestDto)
         }
 
-        findUser.updateInfo(userUpdateRequestDto)
+        user.updateInfo(userUpdateRequestDto)
 
-        return findUser
+        return user
     }
 
     private fun encodePassword(user: User, userUpdateRequestDto: UserUpdateRequestDto) {
@@ -122,25 +119,21 @@ class UserServiceImpl(
         )
     }
 
-    override fun deleteUser(email: String, id: UUID): Boolean {
+    override fun deleteUser(user: User, id: UUID): Boolean {
         val findUserById = findUserById(id)
             ?: throw EntityNotFoundException("${id}를 가진 유저를 찾을 수 없습니다.")
 
-        if (findUserById.email != email) {
+        if (user.role == Role.ROLE_ADMIN || user.id == findUserById.id) {
+            findUserById.isDeleted = true
+            return true
+        } else {
             throw UnAuthorizedException(ErrorCode.FORBIDDEN, "해당 유저를 삭제할 권한이 없습니다.")
         }
-
-        findUserById.isDeleted = true
-
-        return true
     }
 
     @Transactional
-    override fun updateUserProfileImg(email: String, imgUrl: String) {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("${email}를 가진 유저를 찾을 수 없습니다.")
-
-        findUser.profileImageUrl = imgUrl
+    override fun updateUserProfileImg(user: User, imgUrl: String) {
+        user.profileImageUrl = imgUrl
     }
 
     @Transactional

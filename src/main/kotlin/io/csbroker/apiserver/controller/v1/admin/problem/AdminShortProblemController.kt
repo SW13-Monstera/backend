@@ -7,9 +7,9 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.problem.admin.AdminShortProblemService
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,7 +37,7 @@ class AdminShortProblemController(
         @RequestBody createRequestDto: ShortProblemUpsertRequestDto,
         @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val createProblemId = shortProblemService.createProblem(createRequestDto, loginUser.username)
+        val createProblemId = shortProblemService.createProblem(createRequestDto, loginUser)
         return ApiResponse.success(UpsertSuccessResponseDto(createProblemId))
     }
 
@@ -47,7 +47,7 @@ class AdminShortProblemController(
         @RequestBody updateRequestDto: ShortProblemUpsertRequestDto,
         @LoginUser loginUser: User,
     ): ApiResponse<UpsertSuccessResponseDto> {
-        val updateProblemId = shortProblemService.updateProblem(id, updateRequestDto, loginUser.username)
+        val updateProblemId = shortProblemService.updateProblem(id, updateRequestDto)
         return ApiResponse.success(UpsertSuccessResponseDto(updateProblemId))
     }
 

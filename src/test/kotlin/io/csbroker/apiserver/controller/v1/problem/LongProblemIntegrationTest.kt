@@ -47,17 +47,17 @@ class LongProblemIntegrationTest : IntegrationTest() {
         // given & when
         val preSubmissionCount = findAll<GradingHistory>(
             "SELECT gh From GradingHistory gh where gh.problem.id = :id",
-            mapOf("id" to problem.id!!),
+            mapOf("id" to problem.id),
         ).size
 
         val preUserSubmissionCount = findAll<GradingHistory>(
             "SELECT gh From GradingHistory gh where gh.problem.id = :problemId AND gh.user.id = :userId",
-            mapOf("problemId" to problem.id!!, "userId" to defaultUser.id!!),
+            mapOf("problemId" to problem.id, "userId" to defaultUser.id!!),
         ).size
 
         val standardAnswers = findAll<StandardAnswer>(
             "SELECT sa From StandardAnswer sa where sa.longProblem.id = :id",
-            mapOf("id" to problem.id!!),
+            mapOf("id" to problem.id),
         )
 
         val userAnswer = "answer"

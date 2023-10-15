@@ -66,33 +66,15 @@ class MultipleProblemServiceTest {
     }
 
     @Test
-    fun `gradingProblem - 없는 유저가 문제를 제출시 예외가 발생합니다`() {
-        // given
-        val email = "test@test.com"
-        val problemId = 1L
-        val answerIds = listOf(1L, 2L)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
-        every { userRepository.findByEmail(email) } returns null
-
-        // when & then
-        assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
-        verify { userRepository.findByEmail(email) }
-    }
-
-    @Test
     fun `gradingProblem - 존재하지 않는 문제에 대한 답안을 제출시 예외가 발생합니다`() {
         // given
-        val email = "test@test.com"
         val problemId = 1L
         val answerIds = listOf(1L, 2L)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
-
-        every { userRepository.findByEmail(email) } returns user
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns null
 
         // when & then
         assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
-        verify { userRepository.findByEmail(email) }
         verify { multipleChoiceProblemRepository.findByIdOrNull(problemId) }
     }
 
@@ -104,7 +86,7 @@ class MultipleProblemServiceTest {
         val problemId = problem.id
         val answerId = problem.choicesList.first { it.isAnswer }.id
         val answerIds = listOf(answerId)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(
             gradingHistoryId = 1L,
             problem = problem,
@@ -129,7 +111,7 @@ class MultipleProblemServiceTest {
         val problemId = problem.id
         val answerId = problem.choicesList.first { !it.isAnswer }.id
         val answerIds = listOf(answerId)
-        val gradingRequest = MultipleProblemGradingRequestDto(email, problemId, answerIds)
+        val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(
             gradingHistoryId = 1L,
             problem = problem,
