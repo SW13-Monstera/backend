@@ -35,23 +35,13 @@ class AdminControllerIntegrationTest : IntegrationTest() {
 
     @Test
     fun `단일 알림 생성`() {
-        // given
-        val user = save(
-            User(
-                email = "test-noti@test.com",
-                username = "test-noti",
-                password = "test-noti",
-                providerType = ProviderType.LOCAL,
-            ),
-        )
-
         // when
         val response = request(
             method = HttpMethod.POST,
             url = "/api/admin/notification",
             body = NotificationRequestDto(
                 content = "test",
-                userId = user.id!!,
+                userId = defaultUser.id!!,
                 link = "https://test.com",
             ),
             isAdmin = true,
@@ -67,7 +57,7 @@ class AdminControllerIntegrationTest : IntegrationTest() {
                 )
                 notification.content shouldBe "test"
                 notification.link shouldBe "https://test.com"
-                notification.user.id shouldBe user.id
+                notification.user.id shouldBe defaultUser.id
             }
     }
 
@@ -76,9 +66,9 @@ class AdminControllerIntegrationTest : IntegrationTest() {
         // given
         val user = save(
             User(
-                email = "test-noti2@test.com",
-                username = "test-noti2",
-                password = "test-noti2",
+                email = "manyNotiCreator@test.com",
+                username = "manyNotiCreator",
+                password = "test",
                 providerType = ProviderType.LOCAL,
             ),
         )

@@ -127,6 +127,7 @@ class LongProblemServiceTest {
         every { longProblemRepository.findByIdOrNull(problemId) } returns longProblem
         every { userAnswerRepository.save(any<UserAnswer>()) } returns userAnswer
         every { standardAnswerRepository.findAllByLongProblem(longProblem) } returns listOf(standardAnswer)
+        every { gradingHistoryRepository.save(any()) } returns mockk()
 
         // when
         val result = longProblemService.submitProblem(submitRequest)
