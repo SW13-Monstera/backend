@@ -25,7 +25,7 @@ abstract class Problem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "problem_id")
-    var id: Long? = null,
+    var id: Long = 0,
 
     @Column(name = "problem_title", columnDefinition = "VARCHAR(50)")
     var title: String,
@@ -72,7 +72,7 @@ abstract class Problem(
         }
 
         return ProblemResponseDto(
-            id!!,
+            id,
             title,
             tags,
             gradingHistoryStats?.avgScore,

@@ -1,6 +1,6 @@
 package io.csbroker.apiserver.controller.v2.problem.response
 
-class ShortProblemDetailResponseV2Dto(
+data class ShortProblemDetailResponseV2Dto(
     val id: Long,
     val title: String,
     val tags: List<String>,

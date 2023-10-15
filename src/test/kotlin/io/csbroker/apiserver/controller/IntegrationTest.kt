@@ -7,6 +7,7 @@ import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.model.User
 import org.intellij.lang.annotations.Language
+import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -39,6 +40,35 @@ class IntegrationTest {
     @Autowired
     private lateinit var authTokenProvider: AuthTokenProvider
 
+    protected lateinit var defaultUser: User
+    protected lateinit var adminUser: User
+    private val userEmail = "test@test.com"
+    private val adminEmail = "admin@test.com"
+
+    @BeforeEach
+    fun setUp() {
+        defaultUser = getOrCreateUser(userEmail)
+        adminUser = getOrCreateUser(adminEmail)
+    }
+
+    fun getOrCreateUser(email: String): User =
+        try {
+            findOne("SELECT u FROM User u where u.email = '$email'")
+        } catch (e: Exception) {
+            saveUser(email, email == adminEmail)
+        }
+
+    fun saveUser(email: String, isAdmin: Boolean): User =
+        save(
+            User(
+                email = email,
+                username = email.split("@")[0],
+                password = "test",
+                role = if (isAdmin) Role.ROLE_ADMIN else Role.ROLE_USER,
+                providerType = ProviderType.LOCAL,
+            ),
+        )
+
     fun request(
         method: HttpMethod,
         url: String,
@@ -65,6 +95,7 @@ class IntegrationTest {
         entity
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> findOne(
         @Language("JPAQL") qlString: String,
         params: Map<String, Any> = emptyMap(),
@@ -74,6 +105,7 @@ class IntegrationTest {
         query.singleResult as T
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> findAll(
         @Language("JPAQL") qlString: String,
         params: Map<String, Any> = emptyMap(),
@@ -115,21 +147,7 @@ class IntegrationTest {
     }
 
     private fun createToken(isAdmin: Boolean): String {
-        val email = if (isAdmin) "test-admin@csbroker.io" else "test@csbroker.io"
-        val users = findAll<User>("SELECT u FROM User u where u.email = '$email'")
-        val user = if (users.isNotEmpty()) {
-            users.first()
-        } else {
-            save(
-                User(
-                    email = email,
-                    username = "test",
-                    password = "test",
-                    role = if (isAdmin) Role.ROLE_ADMIN else Role.ROLE_USER,
-                    providerType = ProviderType.LOCAL,
-                ),
-            )
-        }
+        val user = getOrCreateUser(if (isAdmin) adminEmail else userEmail)
 
         return authTokenProvider.createAuthToken(
             user.email,

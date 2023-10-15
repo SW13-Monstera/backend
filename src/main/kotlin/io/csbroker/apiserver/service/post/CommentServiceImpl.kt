@@ -25,7 +25,7 @@ class CommentServiceImpl(
             "${postId}번 답변은 존재하지 않는 답변입니다",
         )
         val comment = commentRepository.save(Comment(content = content, post = post, user = user))
-        return comment.id!!
+        return comment.id
     }
 
     @Transactional

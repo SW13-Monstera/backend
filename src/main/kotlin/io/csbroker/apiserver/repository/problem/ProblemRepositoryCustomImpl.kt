@@ -73,7 +73,7 @@ class ProblemRepositoryCustomImpl(
     override fun getProblemIdToStatMap(problems: List<Problem>): Map<Long, GradingHistoryStats> =
         getGradingHistoriesRelatedProblems(problems)
             .groupBy {
-                it.problem.id!!
+                it.problem.id
             }.map {
                 it.key to GradingHistoryStats.toGradingHistoryStats(it.value)
             }.toMap()

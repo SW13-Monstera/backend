@@ -20,13 +20,13 @@ data class KeywordGradingRequestDto(
     companion object {
         fun createKeywordGradingRequestDto(problem: LongProblem, answer: String): KeywordGradingRequestDto {
             return KeywordGradingRequestDto(
-                problem.id!!,
+                problem.id,
                 answer,
                 problem.gradingStandards.filter {
                     it.type == GradingStandardType.KEYWORD
                 }.map {
                     GradingKeyword(
-                        it.id!!,
+                        it.id,
                         it.content,
                     )
                 },

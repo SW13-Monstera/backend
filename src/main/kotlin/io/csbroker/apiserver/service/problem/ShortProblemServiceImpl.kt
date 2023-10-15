@@ -49,7 +49,7 @@ class ShortProblemServiceImpl(
 
         // create dto
         return ShortProblemGradingHistoryDto.createDto(
-            gradingHistoryId = gradingHistory.gradingHistoryId!!,
+            gradingHistoryId = gradingHistory.gradingHistoryId,
             problem = findProblem,
             userAnswer = answer,
             score = score,

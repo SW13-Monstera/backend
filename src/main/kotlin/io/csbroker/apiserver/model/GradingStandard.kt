@@ -21,7 +21,7 @@ class GradingStandard(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_standard_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "content")
     var content: String,

@@ -86,7 +86,7 @@ class UserAnswerServiceTest {
     @Test
     fun `createUserAnswer - 존재하지 않는 유저가 담당자로 등록되면 예외가 발생합니다 `() {
         // given
-        val problemId = problem.id!!
+        val problemId = problem.id
         val notExistUserId = UUID.randomUUID()
         val requestDto = UserAnswerUpsertDto(
             assignedUserId = notExistUserId,
@@ -106,7 +106,7 @@ class UserAnswerServiceTest {
     @Test
     fun `createUserAnswer - 존재하지 않는 유저가 검수자로 등록되면 예외가 발생합니다 `() {
         // given
-        val problemId = problem.id!!
+        val problemId = problem.id
         val notExistUserId = UUID.randomUUID()
         val requestDto = UserAnswerUpsertDto(
             assignedUserId = assignee.id!!,
@@ -128,7 +128,7 @@ class UserAnswerServiceTest {
     @Test
     fun `createUserAnswer - success`() {
         // given
-        val problemId = problem.id!!
+        val problemId = problem.id
         val answer = "answer"
         val requestDto = UserAnswerUpsertDto(
             assignedUserId = assignee.id!!,
@@ -187,7 +187,7 @@ class UserAnswerServiceTest {
     fun `labelUserAnswer - 담당자가 존재하지 않는 답안은 라벨링을 할 수 없습니다`() {
         // given
         val anotherUserEmail = "another@email.com"
-        val userAnswerId = userAnswer.id!!
+        val userAnswerId = userAnswer.id
         userAnswer.assignedUser = null
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
         every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
@@ -203,7 +203,7 @@ class UserAnswerServiceTest {
     fun `labelUserAnswer - 담당자가 아닌 유저가 라벨링을 진행할 시 예외가 발생합니다`() {
         // given
         val anotherUserEmail = "another@email.com"
-        val userAnswerId = userAnswer.id!!
+        val userAnswerId = userAnswer.id
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
         every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
 
@@ -217,7 +217,7 @@ class UserAnswerServiceTest {
     @Test
     fun `labelUserAnswer - 존재하지 않는 채점기준이 존재하면 예외가 발생합니다`() {
         // given
-        val userAnswerId = userAnswer.id!!
+        val userAnswerId = userAnswer.id
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
 
         every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer
@@ -234,7 +234,7 @@ class UserAnswerServiceTest {
     @Test
     fun `labelUserAnswer - 라벨링이 완료되면 완료 표식을 남깁니다`() {
         // given
-        val userAnswerId = userAnswer.id!!
+        val userAnswerId = userAnswer.id
         val selectedGradingStandardIds = listOf(1L, 2L, 3L)
 
         every { userAnswerRepository.findByIdOrNull(userAnswerId) } returns userAnswer

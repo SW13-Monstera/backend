@@ -83,8 +83,8 @@ class MultipleProblemServiceTest {
         // given
         val email = user.email
         val problem = createProblem()
-        val problemId = problem.id!!
-        val answerId = problem.choicesList.find { it.isAnswer }?.id!!
+        val problemId = problem.id
+        val answerId = problem.choicesList.first { it.isAnswer }.id
         val answerIds = listOf(answerId)
         val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(
@@ -108,8 +108,8 @@ class MultipleProblemServiceTest {
         // given
         val email = user.email
         val problem = createProblem()
-        val problemId = problem.id!!
-        val answerId = problem.choicesList.find { !it.isAnswer }?.id!!
+        val problemId = problem.id
+        val answerId = problem.choicesList.first { !it.isAnswer }.id
         val answerIds = listOf(answerId)
         val gradingRequest = MultipleProblemGradingRequestDto(user, problemId, answerIds)
         val gradingHistory = GradingHistory(

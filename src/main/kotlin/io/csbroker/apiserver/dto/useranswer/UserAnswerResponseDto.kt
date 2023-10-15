@@ -27,12 +27,12 @@ data class UserAnswerResponseDto(
                 .map { GradingStandardResponseDto.fromGradingStandard(it) }
 
             val selectedGradingStandards = userAnswer.userAnswerGradingStandards.map {
-                it.gradingStandard.id!!
+                it.gradingStandard.id
             }
 
             return UserAnswerResponseDto(
-                userAnswer.id!!,
-                userAnswer.problem.id!!,
+                userAnswer.id,
+                userAnswer.problem.id,
                 userAnswer.problem.title,
                 userAnswer.problem.description,
                 userAnswer.answer,

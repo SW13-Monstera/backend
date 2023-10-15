@@ -65,7 +65,7 @@ class LongProblemServiceImpl(
 
         // get keywords
         val correctKeywordListDto = gradeResultDto.correctKeywordIds.map {
-            val keyword = findProblem.gradingStandards.find { gs -> gs.id!! == it }
+            val keyword = findProblem.gradingStandards.find { gs -> gs.id == it }
                 ?: throw EntityNotFoundException("${it}번 채점 기준을 찾을 수 없습니다.")
             if (keyword.type != GradingStandardType.KEYWORD) {
                 throw InternalServiceException(
@@ -75,7 +75,7 @@ class LongProblemServiceImpl(
             }
             userGradedScore += keyword.score
             KeywordDto(
-                keyword.id!!,
+                keyword.id,
                 keyword.content,
                 true,
                 gradeResultDto.predictKeywordPositions[it]
@@ -86,7 +86,7 @@ class LongProblemServiceImpl(
         val notCorrectKeywordListDto = findProblem.gradingStandards.filter {
             it.type == GradingStandardType.KEYWORD && it.id !in gradeResultDto.correctKeywordIds
         }.map {
-            KeywordDto(it.id!!, it.content)
+            KeywordDto(it.id, it.content)
         }.toList()
 
         // get score from content standards
@@ -100,13 +100,13 @@ class LongProblemServiceImpl(
                 )
             }
             userGradedScore += it.score
-            ContentDto(it.id!!, it.content, true)
+            ContentDto(it.id, it.content, true)
         }
 
         val notCorrectContentListDto = findProblem.gradingStandards.filter {
             it.type == GradingStandardType.CONTENT && it.id !in gradeResultDto.correctContentIds
         }.map {
-            ContentDto(it.id!!, it.content)
+            ContentDto(it.id, it.content)
         }.toList()
 
         if (correctContentListDto.size != gradeResultDto.correctContentIds.size) {
@@ -130,7 +130,7 @@ class LongProblemServiceImpl(
 
         // create dto
         return LongProblemGradingHistoryDto.createDto(
-            gradingHistoryId = gradingHistory.gradingHistoryId!!,
+            gradingHistoryId = gradingHistory.gradingHistoryId,
             problem = findProblem,
             userAnswer = answer,
             score = userGradedScore,
@@ -159,6 +159,15 @@ class LongProblemServiceImpl(
         val tags = problem.problemTags.map {
             it.tag.name
         }
+
+        val gradingHistory = GradingHistory(
+            problem = problem,
+            user = user,
+            userAnswer = answer,
+            score = 0.0,
+        )
+        gradingHistoryRepository.save(gradingHistory)
+
         val gradingHistories = problem.gradingHistory
         val totalSubmissionCount = gradingHistories.size
         val userSubmissionCount = gradingHistories.count { it.user.id == user.id }

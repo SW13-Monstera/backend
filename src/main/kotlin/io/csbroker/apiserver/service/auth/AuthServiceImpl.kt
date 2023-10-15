@@ -94,7 +94,7 @@ class AuthServiceImpl(
     }
 
     override fun refreshUserToken(request: HttpServletRequest): TokenDto {
-        val accessToken = getAccessToken(request)
+        val accessToken = request.getAccessToken()
             ?: throw UnAuthorizedException(ErrorCode.ACCESS_TOKEN_NOT_EXIST, "Access Token이 존재하지 않습니다.")
 
         val convertAccessToken = authTokenProvider.convertAuthToken(accessToken)

@@ -25,7 +25,7 @@ class NotificationServiceImpl(
 
         val notification = Notification(notificationRequestDto, findUser)
 
-        return notificationRepository.save(notification).id!!
+        return notificationRepository.save(notification).id
     }
 
     @Transactional

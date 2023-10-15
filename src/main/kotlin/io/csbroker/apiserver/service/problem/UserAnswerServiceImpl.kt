@@ -56,7 +56,7 @@ class UserAnswerServiceImpl(
             validatingUser = validatingUser,
         )
 
-        return userAnswerRepository.save(createUserAnswer).id!!
+        return userAnswerRepository.save(createUserAnswer).id
     }
 
     override fun findUserAnswerById(id: Long): UserAnswerResponseDto {

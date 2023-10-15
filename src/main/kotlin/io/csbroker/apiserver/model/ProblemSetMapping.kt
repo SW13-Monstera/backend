@@ -16,7 +16,7 @@ class ProblemSetMapping(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "problem_set_mapping_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")

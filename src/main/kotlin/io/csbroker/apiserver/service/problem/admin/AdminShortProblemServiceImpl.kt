@@ -43,7 +43,8 @@ class AdminShortProblemServiceImpl(
     override fun createProblem(createRequestDto: ShortProblemUpsertRequestDto, user: User): Long {
         val shortProblem = createRequestDto.toShortProblem(user)
         tagUpserter.setTags(shortProblem, createRequestDto.tags)
-        return problemRepository.save(shortProblem).id!!
+
+        return problemRepository.save(shortProblem).id
     }
 
     @Transactional

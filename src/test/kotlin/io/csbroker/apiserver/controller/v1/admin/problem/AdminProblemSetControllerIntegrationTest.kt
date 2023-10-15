@@ -1,8 +1,6 @@
 package io.csbroker.apiserver.controller.v1.admin.problem
 
 import com.jayway.jsonpath.JsonPath
-import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.dto.problem.problemset.ProblemSetUpsertRequestDto
 import io.csbroker.apiserver.model.LongProblem
@@ -10,7 +8,6 @@ import io.csbroker.apiserver.model.MultipleChoiceProblem
 import io.csbroker.apiserver.model.ProblemSet
 import io.csbroker.apiserver.model.ProblemSetMapping
 import io.csbroker.apiserver.model.ShortProblem
-import io.csbroker.apiserver.model.User
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
@@ -20,26 +17,18 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
     @Test
     fun `문제 세트 생성`() {
         // given
-        val user = save(
-            User(
-                email = "problemCreator@csbroker.io",
-                username = "problemCreator",
-                role = Role.ROLE_ADMIN,
-                providerType = ProviderType.LOCAL,
-            ),
-        )
         val longProblem = save(
             LongProblem(
                 title = "long problem",
                 description = "long problem description",
-                creator = user,
+                creator = adminUser,
             ),
         )
         val shortProblem = save(
             ShortProblem(
                 title = "short problem",
                 description = "short problem description",
-                creator = user,
+                creator = adminUser,
                 score = 10.0,
                 answer = "answer",
             ),
@@ -49,7 +38,7 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
         val response = request(
             method = HttpMethod.POST,
             url = "/api/admin/problem-sets",
-            body = ProblemSetUpsertRequestDto(listOf(longProblem.id!!, shortProblem.id!!), "name", "description"),
+            body = ProblemSetUpsertRequestDto(listOf(longProblem.id, shortProblem.id), "name", "description"),
             isAdmin = true,
         )
 
@@ -69,26 +58,19 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
     @Test
     fun `문제 세트 수정`() {
         // given
-        val user = save(
-            User(
-                email = "problemCreator2@csbroker.io",
-                username = "problemCreator2",
-                role = Role.ROLE_ADMIN,
-                providerType = ProviderType.LOCAL,
-            ),
-        )
+
         val longProblem = save(
             LongProblem(
                 title = "long problem",
                 description = "long problem description",
-                creator = user,
+                creator = adminUser,
             ),
         )
         val shortProblem = save(
             ShortProblem(
                 title = "short problem",
                 description = "short problem description",
-                creator = user,
+                creator = adminUser,
                 score = 10.0,
                 answer = "answer",
             ),
@@ -97,7 +79,7 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
             MultipleChoiceProblem(
                 title = "multiple choice problem",
                 description = "multiple choice problem description",
-                creator = user,
+                creator = adminUser,
                 score = 10.0,
                 isMultiple = false,
             ),
@@ -125,7 +107,7 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
         val response = request(
             method = HttpMethod.PUT,
             url = "/api/admin/problem-sets/${problemSet.id}",
-            body = ProblemSetUpsertRequestDto(listOf(multipleChoiceProblem.id!!), "name", "description"),
+            body = ProblemSetUpsertRequestDto(listOf(multipleChoiceProblem.id), "name", "description"),
             isAdmin = true,
         )
 

@@ -3,11 +3,9 @@ package io.csbroker.apiserver.common.util
 import java.nio.ByteBuffer
 import java.util.UUID
 
-fun uuidAsByte(uuid: UUID?): ByteArray? {
-    uuid ?: return null
-
+fun UUID.asByte(): ByteArray? {
     val byteBufferWrapper = ByteBuffer.wrap(ByteArray(16))
-    byteBufferWrapper.putLong(uuid.mostSignificantBits)
-    byteBufferWrapper.putLong(uuid.leastSignificantBits)
+    byteBufferWrapper.putLong(this.mostSignificantBits)
+    byteBufferWrapper.putLong(this.leastSignificantBits)
     return byteBufferWrapper.array()
 }

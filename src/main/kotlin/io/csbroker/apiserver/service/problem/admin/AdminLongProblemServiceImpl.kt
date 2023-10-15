@@ -62,7 +62,7 @@ class AdminLongProblemServiceImpl(
             },
         )
 
-        return savedProblem.id!!
+        return savedProblem.id
     }
 
     @Transactional

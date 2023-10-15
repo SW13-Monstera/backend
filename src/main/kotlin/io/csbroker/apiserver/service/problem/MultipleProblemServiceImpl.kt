@@ -38,7 +38,7 @@ class MultipleProblemServiceImpl(
         val correctAnswer = findProblem.choicesList.filter {
             it.isAnswer
         }.map {
-            it.id!!
+            it.id
         }
 
         val isAnswer = correctAnswer.size == answerIds.size && correctAnswer.containsAll(answerIds)
@@ -56,7 +56,7 @@ class MultipleProblemServiceImpl(
 
         // create dto
         return MultipleChoiceProblemGradingHistoryDto.createDto(
-            gradingHistoryId = gradingHistory.gradingHistoryId!!,
+            gradingHistoryId = gradingHistory.gradingHistoryId,
             problem = findProblem,
             userAnswerIds = answerIds,
             score = score,
