@@ -76,7 +76,7 @@ class ShortProblemServiceTest {
         val problem = createProblem()
         val gradingRequest = ShortProblemGradingRequestDto(
             user,
-            problem.id!!,
+            problem.id,
             problem.answer,
         )
         val gradingHistory = GradingHistory(
@@ -86,7 +86,7 @@ class ShortProblemServiceTest {
             userAnswer = problem.answer,
             score = problem.score,
         )
-        every { shortProblemRepository.findByIdOrNull(problem.id!!) } returns problem
+        every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
 
         // when
@@ -94,7 +94,7 @@ class ShortProblemServiceTest {
 
         // then
         assertEquals(problem.score, result.score)
-        verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
+        verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }
 
@@ -105,7 +105,7 @@ class ShortProblemServiceTest {
         val wrongAnswer = "wrongAnswer"
         val gradingRequest = ShortProblemGradingRequestDto(
             user,
-            problem.id!!,
+            problem.id,
             wrongAnswer,
         )
         val gradingHistory = GradingHistory(
@@ -115,14 +115,14 @@ class ShortProblemServiceTest {
             userAnswer = wrongAnswer,
             score = 10.0,
         )
-        every { shortProblemRepository.findByIdOrNull(problem.id!!) } returns problem
+        every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
         // when
         val result = service.gradingProblem(gradingRequest)
 
         // then
         assertEquals(0.0, result.score)
-        verify { shortProblemRepository.findByIdOrNull(problem.id!!) }
+        verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }
 
