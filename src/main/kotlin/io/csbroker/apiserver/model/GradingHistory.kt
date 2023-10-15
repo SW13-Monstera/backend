@@ -17,7 +17,7 @@ class GradingHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_history_id")
-    val gradingHistoryId: Long? = null,
+    val gradingHistoryId: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")

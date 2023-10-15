@@ -53,7 +53,7 @@ class PostServiceImpl(
             "${problemId}번 문제는 존재하지 않는 문제입니다",
         )
         val post = postRepository.save(Post(content = content, problem = problem, user = user))
-        return post.id!!
+        return post.id
     }
 
     @Transactional

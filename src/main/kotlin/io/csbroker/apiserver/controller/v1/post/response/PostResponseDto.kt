@@ -13,7 +13,7 @@ data class PostResponseDto(
     val comments: List<CommentResponseDto>,
 ) {
     constructor(post: Post, likeCount: Long, isLiked: Boolean, comments: List<CommentResponseDto>) : this(
-        id = post.id!!,
+        id = post.id,
         content = post.content,
         username = post.user.username,
         likeCount = likeCount,
@@ -29,7 +29,7 @@ data class CommentResponseDto(
     val createdAt: LocalDateTime,
 ) {
     constructor(comment: Comment) : this(
-        id = comment.id!!,
+        id = comment.id,
         content = comment.content,
         username = comment.user.username,
         createdAt = comment.createdAt!!,

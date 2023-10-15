@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.common.util
 
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 import org.springframework.util.SerializationUtils
 import java.util.Base64
 import javax.servlet.http.Cookie
@@ -21,19 +22,17 @@ fun addCookie(response: HttpServletResponse, name: String, value: String, maxAge
 }
 
 fun deleteCookie(request: HttpServletRequest, response: HttpServletResponse, name: String) {
-    request.cookies?.let {
-        it.find { cookie -> cookie.name == name }?.let { cookie ->
-            cookie.value = ""
-            cookie.path = "/"
-            cookie.maxAge = 0
-            response.addCookie(cookie)
-        }
+    request.cookies?.find { cookie -> cookie.name == name }?.let { cookie ->
+        cookie.value = ""
+        cookie.path = "/"
+        cookie.maxAge = 0
+        response.addCookie(cookie)
     }
 }
 
-fun serialize(obj: Any): String {
+fun OAuth2AuthorizationRequest.serialize(): String {
     return Base64.getUrlEncoder()
-        .encodeToString(SerializationUtils.serialize(obj))
+        .encodeToString(SerializationUtils.serialize(this))
 }
 
 fun <T> deserialize(cookie: Cookie, cls: Class<T>): T {

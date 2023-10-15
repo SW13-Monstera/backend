@@ -27,13 +27,13 @@ data class LongProblemGradingRequestToAiServerDto(
     companion object {
         fun createGradingRequestDto(problem: LongProblem, answer: String): LongProblemGradingRequestToAiServerDto {
             return LongProblemGradingRequestToAiServerDto(
-                problem.id!!,
+                problem.id,
                 answer,
                 problem.gradingStandards.filter {
                     it.type == GradingStandardType.KEYWORD
                 }.map {
                     GradingKeyword(
-                        it.id!!,
+                        it.id,
                         it.content,
                     )
                 },
@@ -41,7 +41,7 @@ data class LongProblemGradingRequestToAiServerDto(
                     it.type == GradingStandardType.CONTENT
                 }.map {
                     GradingContent(
-                        it.id!!,
+                        it.id,
                         it.content,
                     )
                 },

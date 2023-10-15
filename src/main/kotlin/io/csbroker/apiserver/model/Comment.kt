@@ -16,7 +16,7 @@ class Comment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

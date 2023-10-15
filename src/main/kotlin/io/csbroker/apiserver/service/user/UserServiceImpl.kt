@@ -77,7 +77,7 @@ class UserServiceImpl(
         val gradingHistories = gradingHistoryRepository.findGradingHistoriesByUserId(findUser.id!!)
 
         val resultMap = gradingHistories.groupBy {
-            it.problem.id!!
+            it.problem.id
         }.mapValues { v ->
             v.value.maxByOrNull { it.score } ?: v.value.first()
         }
@@ -148,7 +148,7 @@ class UserServiceImpl(
     override fun calculateRank() {
         val userScoreMap = userRepository.findAll().associate {
             val scoreMap = it.gradingHistories.groupBy { gradingHistory ->
-                gradingHistory.problem.id!!
+                gradingHistory.problem.id
             }.mapValues { map ->
                 map.value.maxOfOrNull { gradingHistory -> gradingHistory.score } ?: 0.0
             }

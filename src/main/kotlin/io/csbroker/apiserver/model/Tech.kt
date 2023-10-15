@@ -13,7 +13,7 @@ class Tech(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tech_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "tech_name", columnDefinition = "VARCHAR(100)")
     val name: String,

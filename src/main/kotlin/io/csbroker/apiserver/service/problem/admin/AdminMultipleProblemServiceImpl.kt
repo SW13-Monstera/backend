@@ -58,7 +58,7 @@ class AdminMultipleProblemServiceImpl(
 
         multipleChoiceProblem.addChoices(choiceDataList)
 
-        return problemRepository.save(multipleChoiceProblem).id!!
+        return problemRepository.save(multipleChoiceProblem).id
     }
 
     @Transactional

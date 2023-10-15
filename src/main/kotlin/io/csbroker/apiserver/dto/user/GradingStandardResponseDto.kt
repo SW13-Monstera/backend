@@ -12,7 +12,7 @@ data class GradingStandardResponseDto(
     companion object {
         fun fromGradingStandard(gradingStandard: GradingStandard): GradingStandardResponseDto {
             return GradingStandardResponseDto(
-                id = gradingStandard.id!!,
+                id = gradingStandard.id,
                 content = gradingStandard.content,
                 score = gradingStandard.score,
                 type = gradingStandard.type,

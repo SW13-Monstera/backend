@@ -16,7 +16,7 @@ class StandardAnswer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "standard_answer_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "content", columnDefinition = "LONGTEXT")
     var content: String,

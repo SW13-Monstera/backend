@@ -30,8 +30,8 @@ class AuthTokenProvider(
                 .map(::SimpleGrantedAuthority)
                 .toList()
             return UsernamePasswordAuthenticationToken(User(claims.subject, "", authorities), authToken, authorities)
-        } else {
-            throw UnAuthorizedException(ErrorCode.TOKEN_INVALID, "올바르지 않은 Token입니다.")
         }
+
+        throw UnAuthorizedException(ErrorCode.TOKEN_INVALID, "올바르지 않은 Token입니다.")
     }
 }

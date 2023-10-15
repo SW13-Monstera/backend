@@ -46,7 +46,7 @@ class AdminShortProblemServiceImpl(
 
         tagUpserter.setTags(shortProblem, createRequestDto.tags)
 
-        return problemRepository.save(shortProblem).id!!
+        return problemRepository.save(shortProblem).id
     }
 
     @Transactional

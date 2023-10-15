@@ -2,7 +2,7 @@ package io.csbroker.apiserver.repository.problem
 
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
-import io.csbroker.apiserver.common.util.uuidAsByte
+import io.csbroker.apiserver.common.util.asByte
 import io.csbroker.apiserver.dto.useranswer.UserAnswerUpsertDto
 import io.csbroker.apiserver.model.QLongProblem.longProblem
 import io.csbroker.apiserver.model.QUser.user
@@ -37,9 +37,9 @@ class UserAnswerRepositoryCustomImpl(
                     ps.setString(1, userAnswer.answer)
                     ps.setBoolean(2, false)
                     ps.setBoolean(3, false)
-                    ps.setBytes(4, uuidAsByte(userAnswer.assignedUserId))
+                    ps.setBytes(4, userAnswer.assignedUserId?.asByte())
                     ps.setLong(5, userAnswer.problemId)
-                    ps.setBytes(6, uuidAsByte(userAnswer.validatingUserId))
+                    ps.setBytes(6, userAnswer.assignedUserId?.asByte())
                     ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()))
                     ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()))
                 }

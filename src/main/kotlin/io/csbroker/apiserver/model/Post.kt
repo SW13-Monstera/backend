@@ -16,7 +16,7 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")

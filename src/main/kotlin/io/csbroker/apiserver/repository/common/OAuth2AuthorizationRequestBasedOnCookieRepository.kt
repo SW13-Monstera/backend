@@ -37,7 +37,7 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
         addCookie(
             response,
             OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-            serialize(authorizationRequest),
+            authorizationRequest.serialize(),
             COOKIE_EXPIRE_SECONDS,
         )
 

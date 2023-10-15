@@ -35,13 +35,10 @@ class ProblemController(
         @RequestParam("page") page: Int,
         @RequestParam("size") size: Int,
     ): ApiResponse<ProblemPageResponseDto> {
-        var solvedBy: String? = null
-
-        if (isSolved != null) {
-            solvedBy = getEmailFromSecurityContextHolder()
+        val solvedBy = isSolved?.let {
+            getEmailFromSecurityContextHolder()
                 ?: throw UnAuthorizedException(ErrorCode.FORBIDDEN, "사용자 권한이 없습니다.")
         }
-
         val searchDto = ProblemSearchDto(tags, solvedBy, isSolved, query, type, isGradable, page, size)
         val foundProblems = commonProblemService.findProblems(searchDto)
 

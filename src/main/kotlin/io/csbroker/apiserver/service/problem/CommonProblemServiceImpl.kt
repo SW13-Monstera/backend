@@ -87,7 +87,7 @@ class CommonProblemServiceImpl(
 
         gradingHistory.gradingResultAssessment = gradingResultAssessment
 
-        return gradingResultAssessment.id!!
+        return gradingResultAssessment.id
     }
 
     @Transactional

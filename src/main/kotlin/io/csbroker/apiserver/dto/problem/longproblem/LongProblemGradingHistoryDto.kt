@@ -41,7 +41,7 @@ data class LongProblemGradingHistoryDto(
 
             return LongProblemGradingHistoryDto(
                 gradingHistoryId,
-                problem.id!!,
+                problem.id,
                 problem.title,
                 tags,
                 problem.description,
