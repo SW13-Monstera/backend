@@ -88,9 +88,9 @@ class OAuth2AuthenticationSuccessHandler(
         val user = authentication.principal as OidcUser
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, user.attributes)
 
-        return userRepository.findByEmailOrProviderId(userInfo.getEmail(), userInfo.getId())
+        return userRepository.findByEmailOrProviderId(userInfo.email, userInfo.id)
             ?: throw EntityNotFoundException(
-                "유저를 찾을 수 없습니다. email = [${userInfo.getEmail()}], providerId = [${userInfo.getId()}] )",
+                "유저를 찾을 수 없습니다. email = [${userInfo.email}], providerId = [${userInfo.id}] )",
             )
     }
 

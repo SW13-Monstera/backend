@@ -14,7 +14,7 @@ class Tag(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "tag_name", columnDefinition = "VARCHAR(30)")
     val name: String,

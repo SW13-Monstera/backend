@@ -49,7 +49,7 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
         val response = request(
             method = HttpMethod.POST,
             url = "/api/admin/problem-sets",
-            body = ProblemSetUpsertRequestDto(listOf(longProblem.id!!, shortProblem.id!!), "name", "description"),
+            body = ProblemSetUpsertRequestDto(listOf(longProblem.id, shortProblem.id), "name", "description"),
             isAdmin = true,
         )
 
@@ -125,7 +125,7 @@ class AdminProblemSetControllerIntegrationTest : IntegrationTest() {
         val response = request(
             method = HttpMethod.PUT,
             url = "/api/admin/problem-sets/${problemSet.id}",
-            body = ProblemSetUpsertRequestDto(listOf(multipleChoiceProblem.id!!), "name", "description"),
+            body = ProblemSetUpsertRequestDto(listOf(multipleChoiceProblem.id), "name", "description"),
             isAdmin = true,
         )
 

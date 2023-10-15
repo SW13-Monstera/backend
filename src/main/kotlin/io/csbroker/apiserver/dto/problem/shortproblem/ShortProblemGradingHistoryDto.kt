@@ -31,7 +31,7 @@ data class ShortProblemGradingHistoryDto(
 
             return ShortProblemGradingHistoryDto(
                 gradingHistoryId,
-                problem.id!!,
+                problem.id,
                 problem.title,
                 commonDetail.tags,
                 problem.description,

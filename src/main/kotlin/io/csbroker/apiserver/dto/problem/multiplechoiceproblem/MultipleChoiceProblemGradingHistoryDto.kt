@@ -30,14 +30,14 @@ data class MultipleChoiceProblemGradingHistoryDto(
 
             val choices = problem.choicesList.map {
                 ChoiceResponseDto(
-                    it.id!!,
+                    it.id,
                     it.content,
                 )
             }
 
             return MultipleChoiceProblemGradingHistoryDto(
                 gradingHistoryId,
-                problem.id!!,
+                problem.id,
                 problem.title,
                 commonDetail.tags,
                 problem.description,

@@ -31,16 +31,16 @@ class ProblemSetServiceImpl(
     override fun createProblemSet(problemSetUpsertRequestDto: ProblemSetUpsertRequestDto): Long {
         val problemSet = problemSetRepository.save(problemSetUpsertRequestDto.toProblemSet())
         createProblemSetMapping(problemSetUpsertRequestDto.problemIds, problemSet)
-        return problemSet.id!!
+        return problemSet.id
     }
 
     @Transactional
     override fun updateProblemSet(id: Long, problemSetUpsertRequestDto: ProblemSetUpsertRequestDto): Long {
         val problemSet = findById(id)
         problemSet.updateContents(problemSetUpsertRequestDto.name, problemSetUpsertRequestDto.description)
-        problemSetMappingRepository.deleteAllByProblemSetId(problemSet.id!!)
+        problemSetMappingRepository.deleteAllByProblemSetId(problemSet.id)
         createProblemSetMapping(problemSetUpsertRequestDto.problemIds, problemSet)
-        return problemSet.id!!
+        return problemSet.id
     }
 
     private fun createProblemSetMapping(

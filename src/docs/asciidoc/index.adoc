@@ -696,6 +696,53 @@ include::{snippets}/problems/v2/challenge/path-parameters.adoc[]
 include::{snippets}/problems/v2/challenge/response-body.adoc[]
 include::{snippets}/problems/v2/challenge/response-fields.adoc[]
 
+==== 문제 좋아요 API ( /api/v2/problems/{postId}/like )
+
+.description
+[source]
+----
+문제를 좋아요하기 위한 API입니다.
+HTTP Method : POST
+End-Point   : /api/v2/problems/{postId}/like
+----
+
+.Sample Request
+include::{snippets}/problem/v2/like/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problem/v2/like/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/problem/v2/like/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem/v2/like/response-body.adoc[]
+include::{snippets}/problem/v2/like/response-fields.adoc[]
+
+==== 문제 북마크 API ( /api/v2/problems/{postId}/bookmark )
+
+.description
+[source]
+----
+문제를 북마크하기 위한 API입니다.
+HTTP Method : POST
+End-Point   : /api/v2/problems/{postId}/bookmark
+----
+
+.Sample Request
+include::{snippets}/problem/v2/bookmark/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/problem/v2/bookmark/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/problem/v2/bookmark/http-response.adoc[]
+
+.Response Body
+include::{snippets}/problem/v2/bookmark/response-body.adoc[]
+include::{snippets}/problem/v2/bookmark/response-fields.adoc[]
+
+
 === User API ( /api/v1/users )
 
 ==== 유저 조회
@@ -1012,6 +1059,154 @@ include::{snippets}/problem-sets-find/http-response.adoc[]
 .Response Body
 include::{snippets}/problem-sets-find/response-body.adoc[]
 include::{snippets}/problem-sets-find/response-fields.adoc[]
+
+=== 게시판 API
+
+==== 글 작성 API ( /api/v1/posts )
+.description
+[source]
+----
+글을 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/posts
+----
+
+.Sample Request
+include::{snippets}/posts/create/http-request.adoc[]
+
+.Sample Response
+include::{snippets}/posts/create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/posts/create/request-body.adoc[]
+include::{snippets}/posts/create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/posts/create/response-body.adoc[]
+include::{snippets}/posts/create/response-fields.adoc[]
+
+==== 글 조회 API ( /api/v1/problems/{problemId}/posts )
+.description
+[source]
+----
+글을 조회하기 위한 API입니다.
+
+HTTP Method : GET
+End-Point   : /api/v1/problems/{problemId}/posts
+----
+
+.Sample Request
+include::{snippets}/posts/get/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/posts/get/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/posts/get/http-response.adoc[]
+
+.Response Body
+include::{snippets}/posts/get/response-body.adoc[]
+include::{snippets}/posts/get/response-fields.adoc[]
+
+
+==== 글 삭제 API ( /api/v1/posts/{postId} )
+.description
+[source]
+----
+글을 삭제하기 위한 API입니다.
+
+HTTP Method : DELETE
+End-Point   : /api/v1/posts/{postId}
+----
+
+.Sample Request
+include::{snippets}/posts/delete/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/posts/delete/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/posts/delete/http-response.adoc[]
+
+.Response Body
+include::{snippets}/posts/delete/response-body.adoc[]
+include::{snippets}/posts/delete/response-fields.adoc[]
+
+
+==== 글 좋아요 API ( /api/v1/posts/{postId}/like )
+
+.description
+[source]
+----
+글을 좋아요하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/posts/{postId}/like
+----
+
+.Sample Request
+include::{snippets}/posts/like/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/posts/like/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/posts/like/http-response.adoc[]
+
+.Response Body
+include::{snippets}/posts/like/response-body.adoc[]
+include::{snippets}/posts/like/response-fields.adoc[]
+
+==== 댓글 작성 API ( /api/v1/comments )
+.description
+[source]
+----
+댓글을 생성하기 위한 API입니다.
+
+HTTP Method : POST
+End-Point   : /api/v1/comments
+----
+
+.Sample Request
+include::{snippets}/posts/comments/create/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/posts/comments/create/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/posts/comments/create/http-response.adoc[]
+
+.Request Body
+include::{snippets}/posts/comments/create/request-body.adoc[]
+include::{snippets}/posts/comments/create/request-fields.adoc[]
+
+.Response Body
+include::{snippets}/posts/comments/create/response-body.adoc[]
+include::{snippets}/posts/comments/create/response-fields.adoc[]
+
+==== 댓글 삭제 API ( /api/v1/comments/{commentId} )
+.description
+[source]
+----
+댓글을 삭제하기 위한 API입니다.
+
+HTTP Method : DELETE
+End-Point   : /api/v1/comments/{commentId}
+----
+
+.Sample Request
+include::{snippets}/posts/comments/delete/http-request.adoc[]
+
+.Path parameters
+include::{snippets}/posts/comments/delete/path-parameters.adoc[]
+
+.Sample Response
+include::{snippets}/posts/comments/delete/http-response.adoc[]
+
+.Response Body
+include::{snippets}/posts/comments/delete/response-body.adoc[]
+include::{snippets}/posts/comments/delete/response-fields.adoc[]
 
 == Back-Office APIs
 

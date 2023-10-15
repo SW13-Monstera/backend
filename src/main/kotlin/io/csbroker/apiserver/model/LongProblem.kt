@@ -49,7 +49,7 @@ class LongProblem(
 
     fun toLongProblemResponseDto(): LongProblemResponseDto {
         return LongProblemResponseDto(
-            id!!,
+            id,
             title,
             description,
             standardAnswers.map { it.content },
@@ -70,7 +70,7 @@ class LongProblem(
         }
 
         return LongProblemDataDto(
-            id!!,
+            id,
             title,
             creator.username,
             if (keywordScores.isEmpty()) null else keywordScores.average(),
@@ -94,7 +94,7 @@ class LongProblem(
         val isSolved = gradingHistory.any { it.user.email == email }
 
         return LongProblemDetailResponseDto(
-            id!!,
+            id,
             title,
             tags,
             description,
@@ -105,6 +105,10 @@ class LongProblem(
             scoreList.size,
             isSolved,
             isGradable,
+            problemLike.count().toLong(),
+            problemBookmark.count().toLong(),
+            problemLike.any { it.user.email == email },
+            problemBookmark.any { it.user.email == email },
         )
     }
 }

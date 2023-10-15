@@ -20,7 +20,7 @@ class UserAnswer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_answer_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "answer", columnDefinition = "VARCHAR(300)")
     val answer: String,
@@ -68,7 +68,7 @@ class UserAnswer(
 
     fun toUserAnswerDataDto(): UserAnswerDataDto {
         return UserAnswerDataDto(
-            id!!,
+            id,
             problem.title,
             assignedUser?.username,
             validatingUser?.username,

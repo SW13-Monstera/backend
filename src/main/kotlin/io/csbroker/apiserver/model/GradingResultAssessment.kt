@@ -18,7 +18,7 @@ class GradingResultAssessment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_result_assessment_id")
-    val id: Long? = null,
+    val id: Long = 0,
 
     @OneToOne(mappedBy = "gradingResultAssessment", fetch = FetchType.LAZY)
     val gradingHistory: GradingHistory,

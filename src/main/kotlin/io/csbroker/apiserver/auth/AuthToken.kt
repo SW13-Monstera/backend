@@ -18,21 +18,17 @@ class AuthToken(
     private val key: Key,
 ) {
     constructor(email: String, expiry: Date, key: Key, role: String? = null) : this("", key) {
-        if (role != null) {
-            token = createAuthToken(email, expiry, role)
+        token = if (role != null) {
+            createAuthToken(email, expiry, role)
         } else {
-            token = createAuthToken(email, expiry)
+            createAuthToken(email, expiry)
         }
     }
 
     val tokenClaims: Claims?
         get() {
             try {
-                return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .body
+                return parseJwt()
             } catch (e: SecurityException) {
                 log.error("Invalid JWT signature.")
             } catch (e: MalformedJwtException) {
@@ -52,11 +48,7 @@ class AuthToken(
     val expiredTokenClaims: Claims?
         get() {
             try {
-                Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .body
+                parseJwt()
             } catch (e: ExpiredJwtException) {
                 log.info("Expired JWT token.")
                 return e.claims
@@ -76,6 +68,12 @@ class AuthToken(
 
     val isValid: Boolean
         get() = tokenClaims != null
+
+    private fun parseJwt(): Claims? = Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .body
 
     private fun createAuthToken(email: String, expiry: Date): String {
         return Jwts.builder()

@@ -37,7 +37,7 @@ class ShortProblem(
 
     fun toShortProblemResponseDto(): ShortProblemResponseDto {
         return ShortProblemResponseDto(
-            id!!,
+            id,
             title,
             description,
             problemTags.map { it.tag.name },
@@ -55,7 +55,7 @@ class ShortProblem(
         }
 
         return ShortProblemSearchResponseDto.ShortProblemDataDto(
-            id!!,
+            id,
             title,
             creator.username,
             if (answerCnt == 0) null else correctAnswerCnt / answerCnt.toDouble(),
@@ -68,7 +68,7 @@ class ShortProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseDto(
-            id!!,
+            id,
             title,
             commonDetail.tags,
             description,
@@ -79,6 +79,10 @@ class ShortProblem(
             isEnglish(),
             gradingHistory.any { it.user.email == email },
             score,
+            problemLike.count().toLong(),
+            problemBookmark.count().toLong(),
+            problemLike.any { it.user.email == email },
+            problemBookmark.any { it.user.email == email },
         )
     }
 
@@ -86,7 +90,7 @@ class ShortProblem(
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseV2Dto(
-            id!!,
+            id,
             title,
             commonDetail.tags,
             description,

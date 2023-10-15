@@ -25,7 +25,7 @@ abstract class Problem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "problem_id")
-    var id: Long? = null,
+    var id: Long = 0,
 
     @Column(name = "problem_title", columnDefinition = "VARCHAR(50)")
     var title: String,
@@ -57,6 +57,12 @@ abstract class Problem(
 
     @OneToMany(mappedBy = "problem")
     val problemSetMapping: MutableList<ProblemSetMapping> = mutableListOf(),
+
+    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val problemLike: MutableList<ProblemLike> = mutableListOf(),
+
+    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val problemBookmark: MutableList<ProblemBookmark> = mutableListOf(),
 ) : BaseEntity() {
     fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats?): ProblemResponseDto {
         val tags = problemTags.map {
@@ -66,7 +72,7 @@ abstract class Problem(
         }
 
         return ProblemResponseDto(
-            id!!,
+            id,
             title,
             tags,
             gradingHistoryStats?.avgScore,

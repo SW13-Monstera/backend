@@ -7,6 +7,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.KeywordDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
+import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
 import io.mockk.every
 import io.mockk.mockk
@@ -32,13 +33,16 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParamete
 class LongProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
     private lateinit var longProblemService: LongProblemService
+    private lateinit var postService: PostService
 
     @BeforeEach
     fun setUp() {
         longProblemService = mockk()
+        postService = mockk()
         mockMvc = mockMvc(
             LongProblemController(
                 longProblemService,
+                postService,
             ),
         ).header("Authorization", "Bearer TEST-TOKEN")
     }
@@ -58,6 +62,10 @@ class LongProblemControllerTest : RestDocsTest() {
             totalSubmission = 10,
             isSolved = true,
             isGradable = true,
+            bookmarkCount = 10,
+            likeCount = 10,
+            isBookmarked = true,
+            isLiked = true,
         )
 
         // when
@@ -96,6 +104,14 @@ class LongProblemControllerTest : RestDocsTest() {
                             .description("문제 채점 가능 여부"),
                         fieldWithPath("data.score").type(JsonFieldType.NUMBER)
                             .description("문제 배점"),
+                        fieldWithPath("data.bookmarkCount").type(JsonFieldType.NUMBER)
+                            .description("북마크 수"),
+                        fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER)
+                            .description("좋아요 수"),
+                        fieldWithPath("data.isBookmarked").type(JsonFieldType.BOOLEAN)
+                            .description("북마크 여부"),
+                        fieldWithPath("data.isLiked").type(JsonFieldType.BOOLEAN)
+                            .description("좋아요 여부"),
                     ),
                 ),
             )
@@ -206,6 +222,7 @@ class LongProblemControllerTest : RestDocsTest() {
             standardAnswer = "standard answer",
         )
         every { longProblemService.submitProblem(any()) } returns responseDto
+        every { postService.create(any(), any(), any()) } returns 1L
 
         // when
 

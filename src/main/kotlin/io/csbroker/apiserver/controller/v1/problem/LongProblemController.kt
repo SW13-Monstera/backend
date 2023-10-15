@@ -9,6 +9,7 @@ import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
+import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/problems/long")
 class LongProblemController(
     private val longProblemService: LongProblemService,
+    private val postService: PostService,
 ) {
     @GetMapping("/{id}")
     fun getLongProblemById(@PathVariable("id") id: Long): ApiResponse<LongProblemDetailResponseDto> {
@@ -56,6 +58,7 @@ class LongProblemController(
     ): ApiResponse<SubmitLongProblemResponseDto> {
         val submitRequestDto = SubmitLongProblemDto(user.username, problemId, answerDto.answer)
         val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
+        postService.create(problemId = submitRequestDto.problemId, content = answerDto.answer, email = user.username)
         return ApiResponse.success(submitResponseDto)
     }
 }
