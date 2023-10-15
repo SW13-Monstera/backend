@@ -61,7 +61,7 @@ class LongProblemController(
         postService.create(
             problemId = submitRequestDto.problemId,
             content = answerDto.answer,
-            email = loginUser.username,
+            email = loginUser.email,
         )
         return ApiResponse.success(submitResponseDto)
     }
