@@ -7,6 +7,7 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemUpsertRequestDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ChoiceRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
@@ -43,11 +44,8 @@ class AdminMultipleProblemServiceImpl(
     }
 
     @Transactional
-    override fun createProblem(createRequestDto: MultipleChoiceProblemUpsertRequestDto, email: String): Long {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
-
-        val multipleChoiceProblem = createRequestDto.toMultipleChoiceProblem(findUser)
+    override fun createProblem(createRequestDto: MultipleChoiceProblemUpsertRequestDto, user: User): Long {
+        val multipleChoiceProblem = createRequestDto.toMultipleChoiceProblem(user)
         val choiceDataList = createRequestDto.getChoiceList(multipleChoiceProblem)
 
         tagUpserter.setTags(multipleChoiceProblem, createRequestDto.tags)
@@ -62,7 +60,7 @@ class AdminMultipleProblemServiceImpl(
     }
 
     @Transactional
-    override fun updateProblem(id: Long, updateRequestDto: MultipleChoiceProblemUpsertRequestDto, email: String): Long {
+    override fun updateProblem(id: Long, updateRequestDto: MultipleChoiceProblemUpsertRequestDto): Long {
         val findProblem = multipleChoiceProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 객관식 문제입니다.")
 

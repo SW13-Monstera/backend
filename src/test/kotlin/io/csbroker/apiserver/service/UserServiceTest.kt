@@ -1,9 +1,7 @@
 package io.csbroker.apiserver.service
 
 import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.Role
-import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.RedisRepository
@@ -17,7 +15,6 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.UUID
 
@@ -124,31 +121,6 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유저 수정 ID 조회 불가 실패 테스트`() {
-        // given
-        val id = UUID.randomUUID()
-        every { userRepository.findByIdOrNull(any()) } returns null
-
-        // when
-        val exception = assertThrows<EntityNotFoundException> {
-            userService.modifyUser(
-                id,
-                "test@test.com",
-                UserUpdateRequestDto(
-                    "test-url.com",
-                    "test",
-                    "test1234!",
-                    "test1234",
-                ),
-            )
-        }
-
-        // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
-        assertThat(ErrorCode.NOT_FOUND_ENTITY).isEqualTo(exception.errorCode)
-    }
-
-    @Test
     fun `유저 수정 성공 without password 테스트`() {
         // given
         val user = createUser()
@@ -159,12 +131,11 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            "test@test.com",
+            user,
             userUpdateRequestDto,
         )
 
         // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
         assertThat("test-url.com").isEqualTo(modifyUser.profileImageUrl)
         assertThat("test").isEqualTo(modifyUser.username)
         assertThat(user.password).isEqualTo(modifyUser.password)
@@ -183,12 +154,11 @@ class UserServiceTest {
         // when
         val modifyUser = userService.modifyUser(
             id,
-            "test@test.com",
+            user,
             userUpdateRequestDto,
         )
 
         // then
-        verify(exactly = 1) { userRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { passwordEncoder.encode(any()) }
         verify(exactly = 1) { passwordEncoder.matches(any(), any()) }
         assertThat("test-url.com").isEqualTo(modifyUser.profileImageUrl)

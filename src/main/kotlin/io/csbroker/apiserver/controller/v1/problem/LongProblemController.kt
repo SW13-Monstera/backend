@@ -9,9 +9,9 @@ import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
-import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -41,7 +41,7 @@ class LongProblemController(
         @RequestParam("isGrading", required = false) isGrading: Boolean?,
     ): ApiResponse<LongProblemGradingHistoryDto> {
         val gradingRequestDto = LongProblemGradingRequestDto(
-            loginUser.username,
+            loginUser.email,
             id,
             answerDto.answer,
             isGrading ?: true,
@@ -52,13 +52,17 @@ class LongProblemController(
 
     @PostMapping("{id}/submit")
     fun submitLongProblem(
-        @LoginUser user: User,
+        @LoginUser loginUser: User,
         @PathVariable("id") problemId: Long,
         @RequestBody answerDto: LongProblemAnswerDto,
     ): ApiResponse<SubmitLongProblemResponseDto> {
-        val submitRequestDto = SubmitLongProblemDto(user.username, problemId, answerDto.answer)
+        val submitRequestDto = SubmitLongProblemDto(loginUser.email, problemId, answerDto.answer)
         val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
-        postService.create(problemId = submitRequestDto.problemId, content = answerDto.answer, email = user.username)
+        postService.create(
+            problemId = submitRequestDto.problemId,
+            content = answerDto.answer,
+            email = loginUser.email,
+        )
         return ApiResponse.success(submitResponseDto)
     }
 }

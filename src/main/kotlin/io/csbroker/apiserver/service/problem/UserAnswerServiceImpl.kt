@@ -75,6 +75,7 @@ class UserAnswerServiceImpl(
         if (userAnswer.assignedUser == null) {
             throw EntityNotFoundException("${userAnswerId}번에 담당자가 존재하지 않습니다.")
         }
+
         if (userAnswer.assignedUser!!.email != email) {
             throw EntityNotFoundException("${userAnswerId}번에 할당된 유저가 아닙니다.")
         }

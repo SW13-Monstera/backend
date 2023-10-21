@@ -117,7 +117,7 @@ class AdminMultipleProblemControllerTest : RestDocsTest() {
             ),
             5.0,
         )
-        every { problemService.updateProblem(any(), any(), any()) } returns 1L
+        every { problemService.updateProblem(any(), any()) } returns 1L
 
         // when
         val result = mockMvc.body(multipleChoiceProblemUpsertRequestDto)

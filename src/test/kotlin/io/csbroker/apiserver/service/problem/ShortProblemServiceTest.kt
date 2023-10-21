@@ -53,40 +53,20 @@ class ShortProblemServiceTest {
     }
 
     @Test
-    fun `gradingProblem - 없는 유저가 답안을 제출할 시 예외가 발생합니다`() {
-        // given
-        val email = user.email
-        val problemId = 1L
-        val answer = "answer"
-        val gradingRequest = ShortProblemGradingRequestDto(
-            email,
-            problemId,
-            answer,
-        )
-        every { userRepository.findByEmail(email) } returns null
-
-        // when & then
-        assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
-        verify { userRepository.findByEmail(email) }
-    }
-
-    @Test
     fun `gradingProblem - 없는 문제에 답안을 제출할 시 예외가 발생합니다`() {
         // given
         val email = user.email
         val problemId = 1L
         val answer = "answer"
         val gradingRequest = ShortProblemGradingRequestDto(
-            email,
+            user,
             problemId,
             answer,
         )
-        every { userRepository.findByEmail(email) } returns user
         every { shortProblemRepository.findByIdOrNull(problemId) } returns null
 
         // when & then
         assertThrows<EntityNotFoundException> { service.gradingProblem(gradingRequest) }
-        verify { userRepository.findByEmail(email) }
         verify { shortProblemRepository.findByIdOrNull(problemId) }
     }
 
@@ -95,7 +75,7 @@ class ShortProblemServiceTest {
         // given
         val problem = createProblem()
         val gradingRequest = ShortProblemGradingRequestDto(
-            user.email,
+            user,
             problem.id,
             problem.answer,
         )
@@ -106,7 +86,6 @@ class ShortProblemServiceTest {
             userAnswer = problem.answer,
             score = problem.score,
         )
-        every { userRepository.findByEmail(user.email) } returns user
         every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
 
@@ -115,7 +94,6 @@ class ShortProblemServiceTest {
 
         // then
         assertEquals(problem.score, result.score)
-        verify { userRepository.findByEmail(user.email) }
         verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }
@@ -126,7 +104,7 @@ class ShortProblemServiceTest {
         val problem = createProblem()
         val wrongAnswer = "wrongAnswer"
         val gradingRequest = ShortProblemGradingRequestDto(
-            user.email,
+            user,
             problem.id,
             wrongAnswer,
         )
@@ -137,7 +115,6 @@ class ShortProblemServiceTest {
             userAnswer = wrongAnswer,
             score = 10.0,
         )
-        every { userRepository.findByEmail(user.email) } returns user
         every { shortProblemRepository.findByIdOrNull(problem.id) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
         // when
@@ -145,7 +122,6 @@ class ShortProblemServiceTest {
 
         // then
         assertEquals(0.0, result.score)
-        verify { userRepository.findByEmail(user.email) }
         verify { shortProblemRepository.findByIdOrNull(problem.id) }
         verify { gradingHistoryRepository.save(any()) }
     }

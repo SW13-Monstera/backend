@@ -12,11 +12,11 @@ import io.csbroker.apiserver.dto.common.UpsertSuccessResponseDto
 import io.csbroker.apiserver.dto.user.UserInfoResponseDto
 import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.service.auth.AuthService
 import io.csbroker.apiserver.service.common.MailService
 import kotlinx.coroutines.runBlocking
-import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping

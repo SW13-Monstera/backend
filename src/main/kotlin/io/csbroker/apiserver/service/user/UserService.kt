@@ -10,14 +10,14 @@ interface UserService {
 
     fun findUserById(uuid: UUID): User?
 
-    fun modifyUser(uuid: UUID, email: String, userUpdateRequestDto: UserUpdateRequestDto): User
+    fun modifyUser(uuid: UUID, user: User, userUpdateRequestDto: UserUpdateRequestDto): User
 
     fun findUsers(): List<User>
 
     fun findAdminUsers(): List<User>
     fun getStats(id: UUID): UserStatsDto
-    fun deleteUser(email: String, id: UUID): Boolean
-    fun updateUserProfileImg(email: String, imgUrl: String)
+    fun deleteUser(user: User, id: UUID): Boolean
+    fun updateUserProfileImg(user: User, imgUrl: String)
 
     fun calculateRank()
 }

@@ -49,3 +49,4 @@ src/main/resources/static/
 
 ## test ##
 spy.log
+src/test/resources/*.sql

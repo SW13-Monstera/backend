@@ -5,6 +5,7 @@ import io.csbroker.apiserver.dto.problem.AdminProblemSearchDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
@@ -39,18 +40,15 @@ class AdminShortProblemServiceImpl(
     }
 
     @Transactional
-    override fun createProblem(createRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
-        val findUser = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
-        val shortProblem = createRequestDto.toShortProblem(findUser)
-
+    override fun createProblem(createRequestDto: ShortProblemUpsertRequestDto, user: User): Long {
+        val shortProblem = createRequestDto.toShortProblem(user)
         tagUpserter.setTags(shortProblem, createRequestDto.tags)
 
         return problemRepository.save(shortProblem).id
     }
 
     @Transactional
-    override fun updateProblem(id: Long, updateRequestDto: ShortProblemUpsertRequestDto, email: String): Long {
+    override fun updateProblem(id: Long, updateRequestDto: ShortProblemUpsertRequestDto): Long {
         val findProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
 
