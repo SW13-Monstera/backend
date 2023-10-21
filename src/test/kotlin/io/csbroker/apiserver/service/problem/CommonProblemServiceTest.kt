@@ -10,7 +10,6 @@ import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepositor
 import io.csbroker.apiserver.repository.problem.ProblemBookmarkRepository
 import io.csbroker.apiserver.repository.problem.ProblemLikeRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -24,7 +23,6 @@ class CommonProblemServiceTest {
     private val problemRepository = mockk<ProblemRepository>()
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
     private val gradingResultAssessmentRepository = mockk<GradingResultAssessmentRepository>()
-    private val userRepository = mockk<UserRepository>()
     private val challengeRepository = mockk<ChallengeRepository>()
     private val problemLikeRepository = mockk<ProblemLikeRepository>()
     private val problemBookmarkRepository = mockk<ProblemBookmarkRepository>()
@@ -43,7 +41,6 @@ class CommonProblemServiceTest {
             problemRepository,
             gradingHistoryRepository,
             gradingResultAssessmentRepository,
-            userRepository,
             challengeRepository,
             problemLikeRepository,
             problemBookmarkRepository,
@@ -54,8 +51,6 @@ class CommonProblemServiceTest {
     fun `createChallenge should throw EntityNotFoundException when problem not found`() {
         // Arrange
         // Define necessary mock for user here
-        every { userRepository.findByEmail(any()) } returns user
-
         every { problemRepository.findByIdOrNull(any()) } returns null
 
         // Act & Assert

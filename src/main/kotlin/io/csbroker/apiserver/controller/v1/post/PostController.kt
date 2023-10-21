@@ -26,7 +26,7 @@ class PostController(
         val postId = postService.create(
             postCreateRequestDto.problemId,
             postCreateRequestDto.content,
-            loginUser.username,
+            loginUser,
         )
         return ApiResponse.success(postId)
     }
@@ -36,7 +36,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.deleteById(id, loginUser.username)
+        postService.deleteById(id, loginUser)
         return ApiResponse.success()
     }
 
@@ -44,7 +44,7 @@ class PostController(
     fun findAllByProblemId(
         @PathVariable("problemId") id: Long,
     ): ApiResponse<List<PostResponseDto>> {
-        val email = getEmailFromSecurityContextHolder()
+        val email = getEmailFromSecurityContextHolder() // Question : ContextHolder로부터 email을 가져와서 필터링 하는 이유는?
         return ApiResponse.success(postService.findByProblemId(id, email))
     }
 
@@ -53,7 +53,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.like(id, loginUser.username)
+        postService.like(id, loginUser)
         return ApiResponse.success()
     }
 }
