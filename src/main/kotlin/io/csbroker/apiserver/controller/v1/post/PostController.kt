@@ -44,7 +44,7 @@ class PostController(
     fun findAllByProblemId(
         @PathVariable("problemId") id: Long,
     ): ApiResponse<List<PostResponseDto>> {
-        val email = getEmailFromSecurityContextHolder() // Question : ContextHolder로부터 email을 가져와서 필터링 하는 이유는?
+        val email = getEmailFromSecurityContextHolder()
         return ApiResponse.success(postService.findByProblemId(id, email))
     }
 

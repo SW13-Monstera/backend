@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class CustomUserDetailsService(
     private val userRepository: UserRepository,
 ) : UserDetailsService {
-    override fun loadUserByUsername(username: String): UserDetails { // Todo: 이거 사용하는 코드 아닌 것 같은데 지워도 되나?
+    override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByEmail(username)
             ?: throw EntityNotFoundException("$username 을 가진 유저는 존재하지 않습니다.")
 
