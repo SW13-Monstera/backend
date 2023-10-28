@@ -35,7 +35,7 @@ class ProblemControllerV2(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        commonProblemService.likeProblem(loginUser.username, id)
+        commonProblemService.likeProblem(loginUser, id)
         return ApiResponse.success()
     }
 
@@ -44,7 +44,7 @@ class ProblemControllerV2(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        commonProblemService.bookmarkProblem(loginUser.username, id)
+        commonProblemService.bookmarkProblem(loginUser, id)
         return ApiResponse.success()
     }
 }

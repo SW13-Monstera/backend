@@ -176,16 +176,6 @@ class AuthControllerTest : RestDocsTest() {
 
     @Test
     fun `Get userInfo v1 200 OK`() {
-        // given
-        every { authService.getUserInfo(any()) } returns UserInfoDto(
-            id = UUID.randomUUID(),
-            username = "seongil-kim",
-            email = "seongil.kim@gmail.com",
-            role = Role.ROLE_USER,
-            accessToken = "accessToken",
-            refreshToken = "refreshToken",
-        )
-
         // when
         val result = mockMvc.request(Method.GET, "$AUTH_ENDPOINT/info")
 
@@ -205,7 +195,6 @@ class AuthControllerTest : RestDocsTest() {
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("닉네임"),
                         fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
                         fieldWithPath("data.role").type(JsonFieldType.STRING).description("권한"),
-                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("Access 토큰 (JWT)"),
                     ),
                 ),
             )

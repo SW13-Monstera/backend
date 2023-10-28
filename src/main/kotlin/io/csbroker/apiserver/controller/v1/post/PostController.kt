@@ -26,7 +26,7 @@ class PostController(
         val postId = postService.create(
             postCreateRequestDto.problemId,
             postCreateRequestDto.content,
-            loginUser.username,
+            loginUser,
         )
         return ApiResponse.success(postId)
     }
@@ -36,7 +36,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.deleteById(id, loginUser.username)
+        postService.deleteById(id, loginUser)
         return ApiResponse.success()
     }
 
@@ -53,7 +53,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.like(id, loginUser.username)
+        postService.like(id, loginUser)
         return ApiResponse.success()
     }
 }
