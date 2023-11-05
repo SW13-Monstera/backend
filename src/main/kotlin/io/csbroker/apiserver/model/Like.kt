@@ -1,7 +1,10 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.common.enums.LikeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -10,10 +13,9 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 
-
 @Entity
 @Table(name = "like")
-class Like (
+class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id")
@@ -23,11 +25,11 @@ class Like (
     @JoinColumn(name = "user_id")
     val user: User,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    val post: Post? = null,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "like_type")
+    val type: LikeType,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    val comment: Comment? = null,
+    @Column(name = "target_id")
+    val targetId: Long,
+
 ) : BaseEntity()
