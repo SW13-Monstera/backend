@@ -3,6 +3,7 @@ package io.csbroker.apiserver.service.post
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.model.Comment
+import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.post.CommentRepository
 import io.csbroker.apiserver.repository.post.PostRepository
 import io.csbroker.apiserver.repository.user.UserRepository
@@ -19,8 +20,7 @@ class CommentServiceImpl(
     private val userRepository: UserRepository,
 ) : CommentService {
     @Transactional
-    override fun create(postId: Long, content: String, email: String): Long {
-        val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+    override fun create(postId: Long, content: String, user: User): Long {
         val post = postRepository.findByIdOrNull(postId) ?: throw EntityNotFoundException(
             "${postId}번 답변은 존재하지 않는 답변입니다",
         )
@@ -29,8 +29,7 @@ class CommentServiceImpl(
     }
 
     @Transactional
-    override fun deleteById(id: Long, email: String) {
-        val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+    override fun deleteById(id: Long, user: User) {
         val comment = commentRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
         if (comment.user != user) {

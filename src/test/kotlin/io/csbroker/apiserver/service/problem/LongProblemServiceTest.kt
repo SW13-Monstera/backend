@@ -54,26 +54,13 @@ class LongProblemServiceTest {
     }
 
     @Test
-    fun `submitProblem - 존재하지 않는 유저가 제출시 예외가 발생합니다`() {
-        // given
-        val submitRequest = SubmitLongProblemDto(email = "test@test.com", problemId = 1L, answer = "test answer")
-        every { userRepository.findByEmail(any()) } returns null
-
-        // when & then
-        assertThrows<EntityNotFoundException> { longProblemService.submitProblem(submitRequest) }
-        verify { userRepository.findByEmail(any()) }
-    }
-
-    @Test
     fun `submitProblem - 존재하지 않는 문제에 대한 답안을 제출할 시 예외가 발생합니다`() {
         // given
-        val submitRequest = SubmitLongProblemDto(email = "test@test.com", problemId = 1L, answer = "test answer")
-        every { userRepository.findByEmail("test@test.com") } returns user
+        val submitRequest = SubmitLongProblemDto(user = user, problemId = 1L, answer = "test answer")
         every { longProblemRepository.findByIdOrNull(1L) } returns null
 
         // when & then
         assertThrows<EntityNotFoundException> { longProblemService.submitProblem(submitRequest) }
-        verify { userRepository.findByEmail("test@test.com") }
         verify { longProblemRepository.findByIdOrNull(1L) }
     }
 
@@ -83,7 +70,7 @@ class LongProblemServiceTest {
         val email = "test@test.com"
         val problemId = 1L
         val answer = "test answer"
-        val submitRequest = SubmitLongProblemDto(email, problemId, answer)
+        val submitRequest = SubmitLongProblemDto(user, problemId, answer)
         val title = "test problem"
         val description = "test description"
         val longProblem = LongProblem(
@@ -92,7 +79,6 @@ class LongProblemServiceTest {
             description = description,
         )
         val userAnswer = UserAnswer(answer = answer, problem = longProblem)
-        every { userRepository.findByEmail(email) } returns user
         every { longProblemRepository.findByIdOrNull(problemId) } returns longProblem
         every { userAnswerRepository.save(any<UserAnswer>()) } returns userAnswer
         every { standardAnswerRepository.findAllByLongProblem(longProblem) } returns emptyList()
@@ -100,7 +86,6 @@ class LongProblemServiceTest {
         // when && then
         assertThrows<EntityNotFoundException> { longProblemService.submitProblem(submitRequest) }
 
-        verify { userRepository.findByEmail(email) }
         verify { longProblemRepository.findByIdOrNull(problemId) }
         verify { userAnswerRepository.save(any<UserAnswer>()) }
         verify { standardAnswerRepository.findAllByLongProblem(longProblem) }
@@ -112,7 +97,7 @@ class LongProblemServiceTest {
         val email = "test@test.com"
         val problemId = 1L
         val answer = "test answer"
-        val submitRequest = SubmitLongProblemDto(email, problemId, answer)
+        val submitRequest = SubmitLongProblemDto(user, problemId, answer)
         val title = "test problem"
         val description = "test description"
         val content = "std content"
@@ -123,7 +108,6 @@ class LongProblemServiceTest {
         )
         val standardAnswer = StandardAnswer(content = "std content", longProblem = longProblem)
         val userAnswer = UserAnswer(answer = answer, problem = longProblem)
-        every { userRepository.findByEmail(email) } returns user
         every { longProblemRepository.findByIdOrNull(problemId) } returns longProblem
         every { userAnswerRepository.save(any<UserAnswer>()) } returns userAnswer
         every { standardAnswerRepository.findAllByLongProblem(longProblem) } returns listOf(standardAnswer)
@@ -138,7 +122,6 @@ class LongProblemServiceTest {
         assertEquals(answer, result.userAnswer)
         assertEquals(content, result.standardAnswer)
 
-        verify { userRepository.findByEmail(email) }
         verify { longProblemRepository.findByIdOrNull(problemId) }
         verify { userAnswerRepository.save(any<UserAnswer>()) }
         verify { standardAnswerRepository.findAllByLongProblem(longProblem) }
