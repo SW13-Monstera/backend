@@ -5,22 +5,24 @@ buildscript {
         maven(url = "https://plugins.gradle.org/m2/")
     }
     dependencies {
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:11.3.1")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle")
     }
 }
 
 plugins {
-    id("org.springframework.boot") version "2.7.1"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
-    kotlin("kapt") version "1.3.61" // QueryDsl
-    idea // QueryDsl
-    id("org.sonarqube") version "3.4.0.2513"
+    kotlin("jvm")
+    kotlin("kapt")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+
+    idea
     jacoco
+
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("org.asciidoctor.jvm.convert")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("org.sonarqube")
 }
 
 sonarqube {
@@ -31,17 +33,15 @@ sonarqube {
     }
 }
 
-group = "io.csbroker"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+group = "${property("projectGroup")}"
+version = "${property("applicationVersion")}"
+java.sourceCompatibility = JavaVersion.valueOf("VERSION_${property("javaVersion")}")
 
 repositories {
     mavenCentral()
 }
 
 val snippetsDir by extra { file("build/generated-snippets") }
-val querydslVersion = "5.0.0"
-extra["springCloudVersion"] = "2021.0.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -52,9 +52,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-api:${property("jwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${property("jwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${property("jwtVersion")}")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
     implementation("mysql:mysql-connector-java")
@@ -64,42 +64,39 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
     testImplementation("io.rest-assured:spring-mock-mvc")
     testImplementation("org.springframework.security:spring-security-test")
+
     // QueryDsl
-    implementation("com.querydsl:querydsl-jpa:$querydslVersion")
-    kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+    implementation("com.querydsl:querydsl-jpa:${property("queryDslVersion")}")
+    kapt("com.querydsl:querydsl-apt:${property("queryDslVersion")}:jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
-    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8")
-
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
-    testImplementation("io.mockk:mockk:1.13.4")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
-    testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
-    testImplementation("io.kotest:kotest-assertions-core:5.5.5")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+    testImplementation("io.mockk:mockk:${property("mockkVersion")}")
+    implementation("com.squareup.okhttp3:okhttp:${property("okHttpVersion")}")
+    testImplementation("com.squareup.okhttp3:mockwebserver:${property("okHttpVersion")}")
+    testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
+    testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:${property("kotestExtensionsVersion")}")
 
-    implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
-
-    implementation("net.logstash.logback:logstash-logback-encoder:4.11")
+    implementation("io.sentry:sentry-spring-boot-starter:${property("sentryVersion")}")
 
     // mail
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("aws.sdk.kotlin:ses:0.16.0")
-    implementation("aws.sdk.kotlin:s3:0.16.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("aws.sdk.kotlin:ses:${property("awsSdkVersion")}")
+    implementation("aws.sdk.kotlin:s3:${property("awsSdkVersion")}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${property("kotlinCoroutinesVersion")}")
 
     // rate-limiter
-    implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.2.0")
+    implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:${property("bucket4jVersion")}")
 }
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudDependenciesVersion")}")
     }
 }
 
@@ -114,7 +111,7 @@ idea {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "${project.property("javaVersion")}"
     }
 }
 
