@@ -12,12 +12,10 @@ jobs:
               with:
                   fetch-depth: 1
 
-            - name: ktlint
-              uses: ScaCap/action-ktlint@master
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  reporter: github-pr-review
-                  android: false
-                  fail_on_error: true
-                  level: warning
-                  ktlint_version: 0.38.0
+            - name: add permission to gradlew
+              run: chmod +x ./gradlew
+              shell: bash
+
+            - name: test
+              run: ./gradlew ktlintCheck
+              shell: bash
