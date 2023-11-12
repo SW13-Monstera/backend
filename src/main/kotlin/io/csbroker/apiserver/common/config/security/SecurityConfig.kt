@@ -16,6 +16,7 @@ import io.csbroker.apiserver.service.auth.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -48,52 +49,58 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .cors()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(RestAuthenticationEntryPoint())
-            .accessDeniedHandler(tokenAccessDeniedHandler)
-            .and()
-            .authorizeRequests()
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .requestMatchers(
-                AntPathRequestMatcher("/"),
-                AntPathRequestMatcher("/error"),
-                AntPathRequestMatcher("/favicon.ico"),
-                AntPathRequestMatcher("/**/*.png"),
-                AntPathRequestMatcher("/**/*.gif"),
-                AntPathRequestMatcher("/**/*.svg"),
-                AntPathRequestMatcher("/**/*.jpg"),
-                AntPathRequestMatcher("/**/*.html"),
-                AntPathRequestMatcher("/**/*.css"),
-                AntPathRequestMatcher("/**/*.js"),
-            )
-            .permitAll()
-            .requestMatchers(AntPathRequestMatcher("/api/v1/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher("/api/v2/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher("/actuator/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority(Role.ROLE_ADMIN.code)
-            .anyRequest().authenticated()
-            .and()
-            .oauth2Login()
-            .authorizationEndpoint()
-            .baseUri("/oauth2/authorization")
-            .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-            .and()
-            .redirectionEndpoint()
-            .baseUri("/*/oauth2/code/*")
-            .and()
-            .userInfoEndpoint()
-            .userService(oAuth2UserService)
-            .and()
-            .successHandler(oAuth2AuthenticationSuccessHandler())
-            .failureHandler(oAuth2AuthenticationFailureHandler())
+            .cors(Customizer.withDefaults())
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .csrf {
+                it.disable()
+            }
+            .formLogin {
+                it.disable()
+            }
+            .httpBasic {
+                it.disable()
+            }
+            .exceptionHandling {
+                it.authenticationEntryPoint(RestAuthenticationEntryPoint())
+                it.accessDeniedHandler(tokenAccessDeniedHandler)
+            }
+            .authorizeHttpRequests {
+                it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .requestMatchers(
+                        AntPathRequestMatcher("/"),
+                        AntPathRequestMatcher("/error"),
+                        AntPathRequestMatcher("/favicon.ico"),
+                        AntPathRequestMatcher("/**/*.png"),
+                        AntPathRequestMatcher("/**/*.gif"),
+                        AntPathRequestMatcher("/**/*.svg"),
+                        AntPathRequestMatcher("/**/*.jpg"),
+                        AntPathRequestMatcher("/**/*.html"),
+                        AntPathRequestMatcher("/**/*.css"),
+                        AntPathRequestMatcher("/**/*.js"),
+                    )
+                    .permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/api/v1/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/api/v2/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/actuator/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority(Role.ROLE_ADMIN.code)
+                    .anyRequest().authenticated()
+            }
+            .oauth2Login {
+                it.authorizationEndpoint { authorizationEndpoint ->
+                    authorizationEndpoint.baseUri("/oauth2/authorization")
+                    authorizationEndpoint.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                }
+                it.redirectionEndpoint { redirectionEndPoint ->
+                    redirectionEndPoint.baseUri("/oauth2/callback/*")
+                }
+                it.userInfoEndpoint { userInfoEndPoint ->
+                    userInfoEndPoint.userService(oAuth2UserService)
+                }
+                it.successHandler(oAuth2AuthenticationSuccessHandler())
+                it.failureHandler(oAuth2AuthenticationFailureHandler())
+            }
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
 
