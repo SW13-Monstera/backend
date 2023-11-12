@@ -68,6 +68,8 @@ dependencies {
     // QueryDsl
     implementation("com.querydsl:querydsl-jpa:${property("queryDslVersion")}:jakarta")
     kapt("com.querydsl:querydsl-apt:${property("queryDslVersion")}:jakarta")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
