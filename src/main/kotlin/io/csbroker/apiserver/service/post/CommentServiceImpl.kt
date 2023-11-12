@@ -44,7 +44,8 @@ class CommentServiceImpl(
         val comment = commentRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
 
-        likeRepository.findByCommentIdAndUser(comment.id, user)?.let { likeRepository.delete(it) }
+        likeRepository.findByTargetIdAndUser(LikeType.COMMENT, comment.id, user)
+            ?.let { likeRepository.delete(it) }
             ?: likeRepository.save(Like(user = user, type = LikeType.COMMENT, targetId = comment.id))
     }
 }

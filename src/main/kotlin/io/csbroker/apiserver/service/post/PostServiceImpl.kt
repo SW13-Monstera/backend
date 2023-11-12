@@ -36,9 +36,9 @@ class PostServiceImpl(
         }
         val posts = postRepository.findAllByProblem(problem)
         val comments = posts.flatMap { it.comments }
-        val postLikeMap = likeRepository.findAllByPostIdIn(posts.map { it.id })
+        val postLikeMap = likeRepository.findAllByTargetIdIn(LikeType.POST, posts.map { it.id })
             .groupBy { it.targetId }
-        val commentLikeMap = likeRepository.findByCommentIdIn(comments.map { it.id })
+        val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, comments.map { it.id })
             .groupBy { it.targetId }
 
         return posts.map {
@@ -60,8 +60,8 @@ class PostServiceImpl(
                 ?: throw EntityNotFoundException("$emailIfLogin 을 가진 유저는 존재하지 않습니다.")
         }
 
-        val postLikes = likeRepository.findAllByPostIdIn(listOf(postId))
-        val commentLikeMap = likeRepository.findByCommentIdIn(post.comments.map { it.id })
+        val postLikes = likeRepository.findAllByTargetIdIn(LikeType.POST, listOf(postId))
+        val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, post.comments.map { it.id })
             .groupBy { it.targetId }
 
         return combineResponseDto(
@@ -86,7 +86,7 @@ class PostServiceImpl(
         comments = comments.map { comment ->
             CommentResponseDto(
                 comment = comment,
-                likeCount = commentLikeMap[comment.id]?.count() ?: 0,
+                likeCount = commentLikeMap[comment.id]?.count()?.toLong() ?: 0,
                 isLiked = commentLikeMap[comment.id]?.any { like -> like.user == user } ?: false,
             )
         },
@@ -106,8 +106,9 @@ class PostServiceImpl(
         val post = postRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 게시글은 존재하지 않습니다.")
 
-        likeRepository.findByPostIdAndUser(post.id, user)?.let { likeRepository.delete(it) }
-            ?: likeRepository.save(Like(targetId = post.id, user = user, type = LikeType.POST))
+        likeRepository.findByTargetIdAndUser(LikeType.POST, post.id, user)
+            ?.let { likeRepository.delete(it) }
+            ?: likeRepository.save(Like(user = user, type = LikeType.POST, targetId = post.id))
     }
 
     @Transactional
