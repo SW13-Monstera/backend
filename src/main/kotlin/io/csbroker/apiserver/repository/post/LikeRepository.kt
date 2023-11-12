@@ -19,7 +19,7 @@ interface LikeRepository : JpaRepository<Like, Long> {
     @Query(
         """
             select l from Like l
-            where l.type = :type and l.targetId = :postId and l.user = :user
+            where l.type = :type and l.targetId = :targetId and l.user = :user
         """,
     )
     fun findByTargetIdAndUser(type: LikeType, targetId: Long, user: User): Like?
