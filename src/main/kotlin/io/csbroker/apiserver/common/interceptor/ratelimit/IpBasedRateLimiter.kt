@@ -4,9 +4,9 @@ import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
 import io.github.bucket4j.Bucket4j
 import io.github.bucket4j.Refill
+import jakarta.servlet.http.HttpServletRequest
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
-import jakarta.servlet.http.HttpServletRequest
 
 class IpBasedRateLimiter(
     private val rateLimit: Long,

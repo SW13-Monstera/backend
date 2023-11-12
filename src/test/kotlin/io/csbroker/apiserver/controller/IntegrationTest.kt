@@ -6,6 +6,10 @@ import io.csbroker.apiserver.auth.AuthTokenProvider
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.model.User
+import jakarta.persistence.EntityManager
+import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.PersistenceUnit
+import jakarta.persistence.Query
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,10 +26,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import java.util.Date
-import jakarta.persistence.EntityManager
-import jakarta.persistence.EntityManagerFactory
-import jakarta.persistence.PersistenceUnit
-import jakarta.persistence.Query
 
 @ActiveProfiles("local")
 @SpringBootTest

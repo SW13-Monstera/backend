@@ -1,6 +1,6 @@
 package io.csbroker.apiserver.common.filter
 
-import org.springframework.web.util.ContentCachingResponseWrapper
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.web.util.ContentCachingResponseWrapper
 
 class ResponseWrapper(response: HttpServletResponse) : ContentCachingResponseWrapper(response)

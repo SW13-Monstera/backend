@@ -7,10 +7,10 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.post.CommentRepository
 import io.csbroker.apiserver.repository.post.PostRepository
 import io.csbroker.apiserver.repository.user.UserRepository
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import jakarta.persistence.EntityNotFoundException
 
 @Service
 @Transactional(readOnly = true)

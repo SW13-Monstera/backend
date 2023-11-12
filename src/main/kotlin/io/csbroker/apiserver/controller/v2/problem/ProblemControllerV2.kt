@@ -6,12 +6,12 @@ import io.csbroker.apiserver.dto.common.ApiResponse
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.problem.CommonProblemService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import jakarta.validation.Valid
 
 @RestController
 @RequestMapping("/api/v2/problems")

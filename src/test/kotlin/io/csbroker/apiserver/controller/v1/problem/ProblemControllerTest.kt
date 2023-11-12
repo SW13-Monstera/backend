@@ -206,7 +206,7 @@ class ProblemControllerTest : RestDocsTest() {
         ).request(
             Method.POST,
             "/api/v1/problems/grade/{grading_history_id}/assessment",
-            "1"
+            "1",
         )
 
         // then

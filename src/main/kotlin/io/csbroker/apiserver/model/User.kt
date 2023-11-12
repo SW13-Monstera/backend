@@ -4,8 +4,6 @@ import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.enums.Role
 import io.csbroker.apiserver.dto.user.UserResponseDto
 import io.csbroker.apiserver.dto.user.UserUpdateRequestDto
-import org.hibernate.annotations.GenericGenerator
-import java.util.UUID
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -16,6 +14,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.GenericGenerator
+import java.util.UUID
 
 @Entity
 @Table(name = "users")

@@ -1,11 +1,11 @@
 package io.csbroker.apiserver.common.util
 
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
-import org.springframework.util.SerializationUtils
-import java.util.Base64
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
+import org.springframework.util.SerializationUtils
+import java.util.Base64
 
 fun getCookie(request: HttpServletRequest, name: String) = request.cookies?.let {
     it.find { cookie -> cookie.name == name }
