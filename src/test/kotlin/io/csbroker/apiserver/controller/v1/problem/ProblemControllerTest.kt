@@ -28,7 +28,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 
 class ProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
@@ -91,7 +91,7 @@ class ProblemControllerTest : RestDocsTest() {
                             .description("인증을 위한 Access 토큰 ( 푼 문제로 검색을 하는 경우가 아니라면, 포함하지 않아도 됨. )")
                             .optional(),
                     ),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("query").description("검색어"),
                         parameterWithName("isSolved").description("풀이 여부"),
                         parameterWithName("tags").description("문제의 태그들"),
@@ -172,7 +172,7 @@ class ProblemControllerTest : RestDocsTest() {
                             .description("인증을 위한 Access 토큰")
                             .optional(),
                     ),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("size").description("랜덤하게 가져올 문제의 개수"),
                     ),
                     responseFields(
@@ -206,7 +206,7 @@ class ProblemControllerTest : RestDocsTest() {
         ).request(
             Method.POST,
             "/api/v1/problems/grade/{grading_history_id}/assessment",
-            1L,
+            "1"
         )
 
         // then

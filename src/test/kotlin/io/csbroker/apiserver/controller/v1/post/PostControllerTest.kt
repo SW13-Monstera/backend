@@ -73,7 +73,7 @@ class PostControllerTest : RestDocsTest() {
         justRun { postService.deleteById(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.DELETE, "/api/v1/posts/{postId}", 1L)
+        val result = mockMvc.request(Method.DELETE, "/api/v1/posts/{postId}", "1")
 
         // then
         result.then().statusCode(200)
@@ -115,7 +115,7 @@ class PostControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v1/problems/{problemId}/posts", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v1/problems/{problemId}/posts", "1")
 
         // then
         result.then().statusCode(200)
@@ -159,7 +159,7 @@ class PostControllerTest : RestDocsTest() {
         justRun { postService.like(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.POST, "/api/v1/posts/{postId}/like", 1L)
+        val result = mockMvc.request(Method.POST, "/api/v1/posts/{postId}/like", "1")
 
         // then
         result.then().statusCode(200)

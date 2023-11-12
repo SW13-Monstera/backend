@@ -22,10 +22,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import java.util.Date
-import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
-import javax.persistence.PersistenceUnit
-import javax.persistence.Query
+import jakarta.persistence.EntityManager
+import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.PersistenceUnit
+import jakarta.persistence.Query
 
 @ActiveProfiles("local")
 @SpringBootTest

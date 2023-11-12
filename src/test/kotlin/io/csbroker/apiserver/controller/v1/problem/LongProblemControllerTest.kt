@@ -28,7 +28,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 
 class LongProblemControllerTest : RestDocsTest() {
     private lateinit var mockMvc: MockMvcRequestSpecification
@@ -69,7 +69,7 @@ class LongProblemControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v1/problems/long/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v1/problems/long/{problem_id}", "1")
 
         // then
         result.then()
@@ -142,7 +142,7 @@ class LongProblemControllerTest : RestDocsTest() {
             LongProblemAnswerDto(
                 answer = "정답의 키워드는 test를 포함해야합니다.",
             ),
-        ).request(Method.POST, "/api/v1/problems/long/{problem_id}/grade?isGrading=true", 1L)
+        ).request(Method.POST, "/api/v1/problems/long/{problem_id}/grade?isGrading=true", "1")
 
         // then
         result.then()
@@ -157,7 +157,7 @@ class LongProblemControllerTest : RestDocsTest() {
                             .description("인증을 위한 Access 토큰")
                             .optional(),
                     ),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("isGrading").description("실제 채점 진행 여부 ( default = true )"),
                     ),
                     pathParameters(
@@ -230,7 +230,7 @@ class LongProblemControllerTest : RestDocsTest() {
             LongProblemAnswerDto(
                 answer = "user answer",
             ),
-        ).request(Method.POST, "/api/v1/problems/long/{problem_id}/submit", 1L)
+        ).request(Method.POST, "/api/v1/problems/long/{problem_id}/submit", "1")
 
         result.then()
             .statusCode(200)

@@ -61,7 +61,7 @@ class MultipleProblemControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v1/problems/multiple/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v1/problems/multiple/{problem_id}", "1")
 
         // then
         result.then()
@@ -139,7 +139,7 @@ class MultipleProblemControllerTest : RestDocsTest() {
         ).request(
             Method.POST,
             "/api/v1/problems/multiple/{problem_id}/grade",
-            1L,
+            "1",
         )
 
         // then
