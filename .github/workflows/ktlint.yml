@@ -12,6 +12,13 @@ jobs:
               with:
                   fetch-depth: 1
 
+            - name: setup jdk 11
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'adopt'
+                  java-version: '11'
+                  cache: 'gradle'
+
             - name: add permission to gradlew
               run: chmod +x ./gradlew
               shell: bash
