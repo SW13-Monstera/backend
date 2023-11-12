@@ -9,10 +9,20 @@ interface PostRepository : JpaRepository<Post, Long> {
     @Query(
         """
         select p from Post p
-        join fetch p.problem
         join fetch p.user
+        join fetch p.comments
         where p.problem = :problem
     """,
     )
     fun findAllByProblem(problem: Problem): List<Post>
+
+    @Query(
+        """
+            select p from Post p
+            join fetch p.user
+            join fetch p.comments
+            where p.id = :id
+        """,
+    )
+    fun findByIdOrNull(id: Long): Post?
 }
