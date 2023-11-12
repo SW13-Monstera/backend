@@ -125,16 +125,17 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
         html.required.set(true)
-        html.outputLocation.set(file("$buildDir/reports/myReport.html"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/myReport.html"))
         csv.required.set(true)
         xml.required.set(true)
     }
 
-    val excludes = mutableListOf<String>()
-    excludes.add("io/csbroker/apiserver/model")
-    excludes.add("io/csbroker/apiserver/common")
-    excludes.add("io/csbroker/apiserver/dto")
-    excludes.add("io/csbroker/apiserver/ApiServerApplication.kt")
+    val excludes = listOf(
+        "io/csbroker/apiserver/model",
+        "io/csbroker/apiserver/common",
+        "io/csbroker/apiserver/dto",
+        "io/csbroker/apiserver/ApiServerApplication.kt",
+    )
 
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
