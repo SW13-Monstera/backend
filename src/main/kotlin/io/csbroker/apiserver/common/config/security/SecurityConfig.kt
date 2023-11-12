@@ -16,8 +16,10 @@ import io.csbroker.apiserver.service.auth.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -25,13 +27,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
+@EnableMethodSecurity(
     prePostEnabled = true,
     securedEnabled = true,
 )
@@ -61,23 +64,23 @@ class SecurityConfig(
             .and()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .antMatchers(
-                "/",
-                "/error",
-                "/favicon.ico",
-                "/**/*.png",
-                "/**/*.gif",
-                "/**/*.svg",
-                "/**/*.jpg",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.js",
+            .requestMatchers(
+                AntPathRequestMatcher("/"),
+                AntPathRequestMatcher("/error"),
+                AntPathRequestMatcher("/favicon.ico"),
+                AntPathRequestMatcher("/**/*.png"),
+                AntPathRequestMatcher("/**/*.gif"),
+                AntPathRequestMatcher("/**/*.svg"),
+                AntPathRequestMatcher("/**/*.jpg"),
+                AntPathRequestMatcher("/**/*.html"),
+                AntPathRequestMatcher("/**/*.css"),
+                AntPathRequestMatcher("/**/*.js"),
             )
             .permitAll()
-            .antMatchers("/api/v1/**").permitAll()
-            .antMatchers("/api/v2/**").permitAll()
-            .antMatchers("/actuator/**").permitAll()
-            .antMatchers("/api/admin/**").hasAuthority(Role.ROLE_ADMIN.code)
+            .requestMatchers(AntPathRequestMatcher("/api/v1/**")).permitAll()
+            .requestMatchers(AntPathRequestMatcher("/api/v2/**")).permitAll()
+            .requestMatchers(AntPathRequestMatcher("/actuator/**")).permitAll()
+            .requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority(Role.ROLE_ADMIN.code)
             .anyRequest().authenticated()
             .and()
             .oauth2Login()

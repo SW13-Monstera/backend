@@ -3,7 +3,7 @@ package io.csbroker.apiserver.common.util
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 fun HttpServletResponse.setStatus(status: HttpStatus) {
     this.status = status.value()

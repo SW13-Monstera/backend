@@ -7,8 +7,8 @@ import io.csbroker.apiserver.common.util.setStatus
 import io.csbroker.apiserver.dto.common.ApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.HandlerInterceptor
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 class HttpInterceptor(
     private val rateLimiters: List<RateLimiter>,

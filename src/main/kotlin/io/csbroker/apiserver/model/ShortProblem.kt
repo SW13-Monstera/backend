@@ -9,10 +9,10 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponse
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestDto
-import javax.persistence.Column
-import javax.persistence.DiscriminatorValue
-import javax.persistence.Entity
-import javax.persistence.Table
+import jakarta.persistence.Column
+import jakarta.persistence.DiscriminatorValue
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "short_problem")

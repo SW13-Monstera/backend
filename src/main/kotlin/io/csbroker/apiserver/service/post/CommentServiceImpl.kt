@@ -10,7 +10,7 @@ import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Service
 @Transactional(readOnly = true)

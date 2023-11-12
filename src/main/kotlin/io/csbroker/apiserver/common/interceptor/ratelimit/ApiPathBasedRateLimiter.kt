@@ -6,7 +6,7 @@ import io.github.bucket4j.Bucket4j
 import io.github.bucket4j.Refill
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 class ApiPathBasedRateLimiter(
     private val paths: List<String>,

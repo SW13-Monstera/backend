@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 private const val THREE_DAYS_MSEC = 259200000
 

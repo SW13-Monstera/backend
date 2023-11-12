@@ -7,8 +7,8 @@ import io.csbroker.apiserver.common.util.getCookie
 import io.csbroker.apiserver.common.util.serialize
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME: String = "oauth2_auth_request"
 const val REDIRECT_URI_PARAM_COOKIE_NAME: String = "redirect_uri"
@@ -45,14 +45,6 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRe
         if (redirectUriAfterLogin.isNotBlank()) {
             addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, COOKIE_EXPIRE_SECONDS)
         }
-    }
-
-    @Deprecated(
-        message = "deprecated at original interface",
-        replaceWith = ReplaceWith("this.loadAuthorizationRequest(request)"),
-    )
-    override fun removeAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
-        return loadAuthorizationRequest(request)
     }
 
     override fun removeAuthorizationRequest(
