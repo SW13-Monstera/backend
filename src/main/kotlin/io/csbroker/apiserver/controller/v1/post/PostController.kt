@@ -26,7 +26,7 @@ class PostController(
         val postId = postService.create(
             postCreateRequestDto.problemId,
             postCreateRequestDto.content,
-            loginUser,
+            loginUser.username,
         )
         return ApiResponse.success(postId)
     }
@@ -36,7 +36,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.deleteById(id, loginUser)
+        postService.deleteById(id, loginUser.username)
         return ApiResponse.success()
     }
 
@@ -44,8 +44,8 @@ class PostController(
     fun findAllByProblemId(
         @PathVariable("problemId") id: Long,
     ): ApiResponse<List<PostResponseDto>> {
-        val nullableEmail = getEmailFromSecurityContextHolder()
-        return ApiResponse.success(postService.findByProblemId(id, nullableEmail))
+        val email = getEmailFromSecurityContextHolder()
+        return ApiResponse.success(postService.findByProblemId(id, email))
     }
 
     @PostMapping("/api/v1/posts/{id}/like")
@@ -53,7 +53,7 @@ class PostController(
         @LoginUser loginUser: User,
         @PathVariable("id") id: Long,
     ): ApiResponse<Unit> {
-        postService.like(id, loginUser)
+        postService.like(id, loginUser.username)
         return ApiResponse.success()
     }
 }

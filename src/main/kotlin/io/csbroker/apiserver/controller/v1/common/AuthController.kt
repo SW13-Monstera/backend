@@ -42,7 +42,8 @@ class AuthController(
 
     @GetMapping("/info")
     fun getUserInfo(@LoginUser loginUser: User): ApiResponse<UserInfoResponseDto> {
-        return ApiResponse.success(UserInfoResponseDto(loginUser))
+        val userInfo = authService.getUserInfo(loginUser.username)
+        return ApiResponse.success(UserInfoResponseDto(userInfo))
     }
 
     @PostMapping("/login")

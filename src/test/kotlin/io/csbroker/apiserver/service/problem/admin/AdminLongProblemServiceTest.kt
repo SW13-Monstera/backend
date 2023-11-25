@@ -88,6 +88,7 @@ class AdminLongProblemServiceTest {
         val createRequestDto = getLongProblemUpsertRequestDto()
         val longProblem = createRequestDto.toLongProblem(user)
         longProblem.id = 1L
+        every { userRepository.findByEmail(any()) } returns user
         every { problemRepository.save(any()) } returns longProblem
         every { tagUpserter.setTags(any(), any()) } just runs
         every { standardAnswerRepository.saveAll(emptyList()) } returns emptyList()
