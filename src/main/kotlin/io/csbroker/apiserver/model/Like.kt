@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
