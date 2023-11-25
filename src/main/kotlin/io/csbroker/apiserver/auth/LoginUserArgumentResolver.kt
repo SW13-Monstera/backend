@@ -29,10 +29,12 @@ class LoginUserArgumentResolver(
     ): Any {
         val authentication = SecurityContextHolder.getContext().authentication
 
-        if (authentication == null || authentication.principal.equals("anonymousUser")) {
+        if (authentication == null || authentication.principal == "anonymousUser") {
             throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
         }
-        val email = authentication.name
+        val email = authentication.principal?.let {
+            it as? org.springframework.security.core.userdetails.User
+        }?.username ?: throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
 
         return userRepository.findByEmail(email)
             ?: throw UnAuthorizedException(ErrorCode.NOT_FOUND_ENTITY, "알 수 없는 유저의 요청입니다.")
