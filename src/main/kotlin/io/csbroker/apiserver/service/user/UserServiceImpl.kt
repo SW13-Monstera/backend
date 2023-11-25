@@ -26,10 +26,6 @@ class UserServiceImpl(
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val redisRepository: RedisRepository,
 ) : UserService {
-    override fun findUserByEmail(email: String): User? {
-        return userRepository.findByEmail(email)
-    }
-
     override fun findUserById(uuid: UUID): User? {
         return userRepository.findByIdOrNull(uuid)
     }
