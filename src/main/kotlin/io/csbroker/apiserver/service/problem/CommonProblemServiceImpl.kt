@@ -12,13 +12,13 @@ import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.model.Challenge
 import io.csbroker.apiserver.model.ProblemBookmark
 import io.csbroker.apiserver.model.ProblemLike
-import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ChallengeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.problem.ProblemBookmarkRepository
 import io.csbroker.apiserver.repository.problem.ProblemLikeRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
+import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,6 +29,7 @@ class CommonProblemServiceImpl(
     private val problemRepository: ProblemRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
+    private val userRepository: UserRepository,
     private val challengeRepository: ChallengeRepository,
     private val problemLikeRepository: ProblemLikeRepository,
     private val problemBookmarkRepository: ProblemBookmarkRepository,
@@ -106,9 +107,11 @@ class CommonProblemServiceImpl(
     }
 
     @Transactional
-    override fun likeProblem(user: User, problemId: Long) {
+    override fun likeProblem(email: String, problemId: Long) {
         val problem = problemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val problemLike = problemLikeRepository.findByUserAndProblem(user, problem)
         if (problemLike == null) {
             problemLikeRepository.save(ProblemLike(user = user, problem = problem))
@@ -118,9 +121,11 @@ class CommonProblemServiceImpl(
     }
 
     @Transactional
-    override fun bookmarkProblem(user: User, problemId: Long) {
+    override fun bookmarkProblem(email: String, problemId: Long) {
         val problem = problemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val problemBookmark = problemBookmarkRepository.findByUserAndProblem(user, problem)
         if (problemBookmark == null) {
             problemBookmarkRepository.save(ProblemBookmark(user = user, problem = problem))

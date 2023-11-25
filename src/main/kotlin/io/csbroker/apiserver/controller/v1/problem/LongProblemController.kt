@@ -56,9 +56,13 @@ class LongProblemController(
         @PathVariable("id") problemId: Long,
         @RequestBody answerDto: LongProblemAnswerDto,
     ): ApiResponse<SubmitLongProblemResponseDto> {
-        val submitRequestDto = SubmitLongProblemDto(loginUser, problemId, answerDto.answer)
+        val submitRequestDto = SubmitLongProblemDto(loginUser.email, problemId, answerDto.answer)
         val submitResponseDto = longProblemService.submitProblem(submitRequestDto)
-        postService.create(submitRequestDto.problemId, answerDto.answer, loginUser) // Todo : LongProblemService 내부로 보내기
+        postService.create(
+            problemId = submitRequestDto.problemId,
+            content = answerDto.answer,
+            email = loginUser.email,
+        )
         return ApiResponse.success(submitResponseDto)
     }
 }

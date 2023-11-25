@@ -1,16 +1,14 @@
 package io.csbroker.apiserver.service.post
 
 import io.csbroker.apiserver.common.enums.ErrorCode
-import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
 import io.csbroker.apiserver.controller.v1.post.response.CommentResponseDto
 import io.csbroker.apiserver.controller.v1.post.response.PostResponseDto
-import io.csbroker.apiserver.model.Comment
-import io.csbroker.apiserver.model.Like
 import io.csbroker.apiserver.model.Post
-import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.post.LikeRepository
+import io.csbroker.apiserver.model.PostLike
+import io.csbroker.apiserver.repository.post.CommentRepository
+import io.csbroker.apiserver.repository.post.PostLikeRepository
 import io.csbroker.apiserver.repository.post.PostRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.user.UserRepository
@@ -23,77 +21,34 @@ import org.springframework.transaction.annotation.Transactional
 class PostServiceImpl(
     private val problemRepository: ProblemRepository,
     private val postRepository: PostRepository,
-    private val likeRepository: LikeRepository,
+    private val postLikeRepository: PostLikeRepository,
     private val userRepository: UserRepository,
+    private val commentRepository: CommentRepository,
 ) : PostService {
-    override fun findByProblemId(problemId: Long, emailIfLogin: String?): List<PostResponseDto> {
-        val problem = problemRepository.findByIdOrNull(problemId)
-            ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않습니다")
-
-        val user = emailIfLogin?.let {
-            userRepository.findByEmail(it)
-                ?: throw EntityNotFoundException("$emailIfLogin 을 가진 유저는 존재하지 않습니다.")
-        }
-        val posts = postRepository.findAllByProblem(problem)
-        val comments = posts.flatMap { it.comments }
-        val postLikeMap = likeRepository.findAllByTargetIdIn(LikeType.POST, posts.map { it.id })
-            .groupBy { it.targetId }
-        val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, comments.map { it.id })
-            .groupBy { it.targetId }
-
-        return posts.map {
-            combineResponseDto(
-                post = it,
-                comments = comments,
-                postLikes = postLikeMap[it.id] ?: emptyList(),
-                commentLikeMap = commentLikeMap,
-                user = user,
-            )
-        }
-    }
-
-    override fun findByPostId(postId: Long, emailIfLogin: String?): PostResponseDto {
-        val post = postRepository.findByIdOrNull(postId)
-            ?: throw EntityNotFoundException("id : $postId 게시글은 존재하지 않는 게시글입니다")
-        val user = emailIfLogin?.let {
-            userRepository.findByEmail(it)
-                ?: throw EntityNotFoundException("$emailIfLogin 을 가진 유저는 존재하지 않습니다.")
-        }
-
-        val postLikes = likeRepository.findAllByTargetIdIn(LikeType.POST, listOf(postId))
-        val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, post.comments.map { it.id })
-            .groupBy { it.targetId }
-
-        return combineResponseDto(
-            post = post,
-            comments = post.comments,
-            postLikes = postLikes,
-            commentLikeMap = commentLikeMap,
-            user = user,
+    override fun findByProblemId(problemId: Long, email: String?): List<PostResponseDto> {
+        val problem = problemRepository.findByIdOrNull(problemId) ?: throw EntityNotFoundException(
+            "${problemId}번 문제는 존재하지 않습니다",
         )
-    }
-
-    private fun combineResponseDto(
-        post: Post,
-        comments: List<Comment>,
-        postLikes: List<Like>,
-        commentLikeMap: Map<Long, List<Like>>,
-        user: User?,
-    ) = PostResponseDto(
-        post,
-        likeCount = postLikes.count(),
-        isLiked = postLikes.any { like -> like.user == user },
-        comments = comments.map { comment ->
-            CommentResponseDto(
-                comment = comment,
-                likeCount = commentLikeMap[comment.id]?.count()?.toLong() ?: 0,
-                isLiked = commentLikeMap[comment.id]?.any { like -> like.user == user } ?: false,
+        val posts = postRepository.findAllByProblem(problem)
+        val comments = commentRepository.findAllByPostIn(posts)
+        val postLikes = postLikeRepository.findAllByPostIn(posts)
+        return posts.map {
+            PostResponseDto(
+                it,
+                likeCount = postLikes.count { postLike -> postLike.post == it }.toLong(),
+                isLiked = postLikes.any { postLike -> postLike.post == it && postLike.user.email == email },
+                comments = comments.filter { comment -> comment.post == it }.map { comment ->
+                    CommentResponseDto(
+                        comment,
+                    )
+                },
             )
-        },
-    )
+        }
+    }
 
     @Transactional
-    override fun create(problemId: Long, content: String, user: User): Long {
+    override fun create(problemId: Long, content: String, email: String): Long {
+        val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val problem = problemRepository.findByIdOrNull(problemId) ?: throw EntityNotFoundException(
             "${problemId}번 문제는 존재하지 않는 문제입니다",
         )
@@ -102,17 +57,20 @@ class PostServiceImpl(
     }
 
     @Transactional
-    override fun like(id: Long, user: User) {
-        val post = postRepository.findByIdOrNull(id)
-            ?: throw EntityNotFoundException("${id}번 게시글은 존재하지 않습니다.")
-
-        likeRepository.findByTargetIdAndUser(LikeType.POST, post.id, user)
-            ?.let { likeRepository.delete(it) }
-            ?: likeRepository.save(Like(user = user, type = LikeType.POST, targetId = post.id))
+    override fun like(id: Long, email: String) {
+        val post = postRepository.findByIdOrNull(id) ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
+        val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
+        val postLike = postLikeRepository.findByPostAndUser(post, user)
+        if (postLike == null) {
+            postLikeRepository.save(PostLike(post = post, user = user))
+        } else {
+            postLikeRepository.delete(postLike)
+        }
     }
 
     @Transactional
-    override fun deleteById(id: Long, user: User) {
+    override fun deleteById(id: Long, email: String) {
+        val user = userRepository.findByEmail(email) ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
         val post = postRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
         if (post.user != user) {

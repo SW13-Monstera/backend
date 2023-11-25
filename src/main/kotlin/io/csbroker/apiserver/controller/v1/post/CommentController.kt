@@ -20,7 +20,7 @@ class CommentController(
         @LoginUser user: User,
         @PathVariable id: Long,
     ): ApiResponse<Unit> {
-        commentService.deleteById(id, user)
+        commentService.deleteById(id, user.username)
         return ApiResponse.success()
     }
 
@@ -32,17 +32,8 @@ class CommentController(
         val postId = commentService.create(
             commentCreateRequestDto.postId,
             commentCreateRequestDto.content,
-            loginUser,
+            loginUser.username,
         )
         return ApiResponse.success(postId)
-    }
-
-    @PostMapping("/api/v1/comments/{id}/like")
-    fun likeComment(
-        @LoginUser loginUser: User,
-        @PathVariable("id") id: Long,
-    ): ApiResponse<Unit> {
-        commentService.like(id, loginUser)
-        return ApiResponse.success()
     }
 }

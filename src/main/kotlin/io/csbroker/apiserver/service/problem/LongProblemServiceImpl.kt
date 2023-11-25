@@ -142,7 +142,9 @@ class LongProblemServiceImpl(
 
     @Transactional
     override fun submitProblem(submitRequest: SubmitLongProblemDto): SubmitLongProblemResponseDto {
-        val (user, problemId, answer) = submitRequest
+        val (email, problemId, answer) = submitRequest
+        val user = userRepository.findByEmail(email)
+            ?: throw EntityNotFoundException("$email 을 가진 유저는 존재하지 않습니다.")
 
         val problem = longProblemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 서술형 문제입니다.")
