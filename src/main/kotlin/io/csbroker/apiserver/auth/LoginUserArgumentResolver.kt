@@ -29,7 +29,7 @@ class LoginUserArgumentResolver(
     ): Any {
         val authentication = SecurityContextHolder.getContext().authentication
 
-        if (authentication == null || (authentication.principal is String && authentication.principal == "anonymousUser")) {
+        if (authentication == null || authentication.principal == "anonymousUser") {
             throw UnAuthorizedException(ErrorCode.UNAUTHORIZED, "로그인이 필요합니다.")
         }
         val email = authentication.principal?.let {
