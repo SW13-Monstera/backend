@@ -1,36 +1,35 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.common.enums.LikeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
-@Table(name = "post")
-class Post(
+@Table(name = "like")
+class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "like_id")
     val id: Long = 0,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_id")
-    val problem: Problem,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: User,
 
-    @Column(name = "content", columnDefinition = "VARCHAR(300)")
-    val content: String,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "like_type")
+    val type: LikeType,
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    val comments: List<Comment> = listOf(),
+    @Column(name = "target_id")
+    val targetId: Long,
 
 ) : BaseEntity()
