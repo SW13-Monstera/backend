@@ -10,7 +10,7 @@ interface PostRepository : JpaRepository<Post, Long> {
         """
         select p from Post p
         join fetch p.user
-        join fetch p.comments
+        left join fetch p.comments
         where p.problem = :problem
     """,
     )
@@ -20,7 +20,7 @@ interface PostRepository : JpaRepository<Post, Long> {
         """
             select p from Post p
             join fetch p.user
-            join fetch p.comments
+            left join fetch p.comments
             where p.id = :id
         """,
     )
