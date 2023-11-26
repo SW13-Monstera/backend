@@ -44,8 +44,8 @@ class PostController(
     fun findAllByProblemId(
         @PathVariable("problemId") id: Long,
     ): ApiResponse<List<PostResponseDto>> {
-        val email = getEmailFromSecurityContextHolder()
-        return ApiResponse.success(postService.findByProblemId(id, email))
+        val nullableEmail = getEmailFromSecurityContextHolder()
+        return ApiResponse.success(postService.findByProblemId(id, nullableEmail))
     }
 
     @PostMapping("/api/v1/posts/{id}/like")

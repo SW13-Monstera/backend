@@ -36,4 +36,13 @@ class CommentController(
         )
         return ApiResponse.success(postId)
     }
+
+    @PostMapping("/api/v1/comments/{id}/like")
+    fun likeComment(
+        @LoginUser loginUser: User,
+        @PathVariable("id") id: Long,
+    ): ApiResponse<Unit> {
+        commentService.like(id, loginUser)
+        return ApiResponse.success()
+    }
 }
