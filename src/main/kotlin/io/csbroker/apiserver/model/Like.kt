@@ -12,9 +12,15 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "like")
+@Table(
+    name = "likes",
+    uniqueConstraints = [
+        UniqueConstraint(columnNames = ["user_id", "like_type", "target_id"])
+    ]
+)
 class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
