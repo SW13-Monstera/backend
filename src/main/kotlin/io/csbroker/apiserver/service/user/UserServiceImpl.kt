@@ -13,11 +13,11 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.user.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
-import javax.transaction.Transactional
 
 @Service
 class UserServiceImpl(

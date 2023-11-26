@@ -69,7 +69,7 @@ class AdminProblemSetControllerTest : RestDocsTest() {
         // when
         val response = mockMvc
             .body(ProblemSetUpsertRequestDto(listOf(1L, 2L), "name", "description"))
-            .request(Method.PUT, "/api/admin/problem-sets/{problem_set_id}", 1L)
+            .request(Method.PUT, "/api/admin/problem-sets/{problem_set_id}", "1")
 
         // then
         response.then().statusCode(200)

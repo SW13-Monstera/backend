@@ -42,7 +42,7 @@ class ProblemControllerV2Test : RestDocsTest() {
 
         // when
         val result = mockMvc.body(ChallengeCreateRequest("이것은 이의제기를 위한 내용입니다."))
-            .request(Method.POST, "/api/v2/problems/{problem_id}/challenge", 1L)
+            .request(Method.POST, "/api/v2/problems/{problem_id}/challenge", "1")
 
         // then
         result.then()
@@ -78,7 +78,7 @@ class ProblemControllerV2Test : RestDocsTest() {
         justRun { commonProblemService.likeProblem(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/like", 1L)
+        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/like", "1")
 
         // then
         result.then().statusCode(200)
@@ -103,7 +103,7 @@ class ProblemControllerV2Test : RestDocsTest() {
         justRun { commonProblemService.bookmarkProblem(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/bookmark", 1L)
+        val result = mockMvc.request(Method.POST, "/api/v2/problems/{problemId}/bookmark", "1")
 
         // then
         result.then().statusCode(200)
