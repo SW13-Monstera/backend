@@ -112,8 +112,7 @@ class CommentControllerTest : RestDocsTest() {
                         PayloadDocumentation.fieldWithPath("status")
                             .type(JsonFieldType.STRING).description("결과 상태"),
                     ),
-                )
+                ),
             )
-
     }
 }

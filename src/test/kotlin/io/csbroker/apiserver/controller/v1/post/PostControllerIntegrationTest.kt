@@ -2,10 +2,10 @@ package io.csbroker.apiserver.controller.v1.post
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.controller.v1.post.request.PostCreateRequestDto
@@ -15,11 +15,11 @@ import io.csbroker.apiserver.model.Like
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Post
 import io.kotest.matchers.shouldBe
-import javax.persistence.NoResultException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import javax.persistence.NoResultException
 
 class PostControllerIntegrationTest : IntegrationTest() {
 
@@ -47,7 +47,7 @@ class PostControllerIntegrationTest : IntegrationTest() {
     fun deletePostTest() {
         // given
         val problem = save(LongProblem("title", "description", defaultUser))
-        val post = save(Post(problem=problem, user=defaultUser, content="post content"))
+        val post = save(Post(problem = problem, user = defaultUser, content = "post content"))
 
         // when
         val response = request(
@@ -67,7 +67,7 @@ class PostControllerIntegrationTest : IntegrationTest() {
     fun findAllByProblemIdTest() {
         // given
         val problem = save(LongProblem("title", "description", defaultUser))
-        val posts = (1..10).map { save(Post(problem=problem, user=defaultUser, content="post content $it"))}
+        val posts = (1..10).map { save(Post(problem = problem, user = defaultUser, content = "post content $it")) }
 
         // when
         val response = request(
@@ -90,9 +90,9 @@ class PostControllerIntegrationTest : IntegrationTest() {
     fun `findAllByProblemIdTest - response with like`() {
         // given
         val problem = save(LongProblem("title", "description", defaultUser))
-        val post = save(Post(problem=problem, user=defaultUser, content="post content"))
-        save(Comment(post=post, user=defaultUser, content="comment content"))
-        save(Like(user=defaultUser, targetId = post.id, type = LikeType.POST))
+        val post = save(Post(problem = problem, user = defaultUser, content = "post content"))
+        save(Comment(post = post, user = defaultUser, content = "comment content"))
+        save(Like(user = defaultUser, targetId = post.id, type = LikeType.POST))
         val expectPostLikeCount = 1L
 
         // when
@@ -113,13 +113,11 @@ class PostControllerIntegrationTest : IntegrationTest() {
             }
     }
 
-
-
     @Test
     fun likePostTest() {
         // given
         val problem = save(LongProblem("title", "description", defaultUser))
-        val post = save(Post(problem=problem, user=defaultUser, content="post content"))
+        val post = save(Post(problem = problem, user = defaultUser, content = "post content"))
 
         // when
         val likeResponse = request(
@@ -155,6 +153,4 @@ class PostControllerIntegrationTest : IntegrationTest() {
                 }
             }
     }
-
-
 }

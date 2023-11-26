@@ -18,8 +18,8 @@ import javax.persistence.UniqueConstraint
 @Table(
     name = "likes",
     uniqueConstraints = [
-        UniqueConstraint(columnNames = ["user_id", "like_type", "target_id"])
-    ]
+        UniqueConstraint(columnNames = ["user_id", "like_type", "target_id"]),
+    ],
 )
 class Like(
     @Id

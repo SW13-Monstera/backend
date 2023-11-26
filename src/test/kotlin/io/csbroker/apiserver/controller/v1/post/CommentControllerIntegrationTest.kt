@@ -9,17 +9,16 @@ import io.csbroker.apiserver.model.Like
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Post
 import io.kotest.matchers.shouldBe
-import javax.persistence.NoResultException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import javax.persistence.NoResultException
 
 class CommentControllerIntegrationTest : IntegrationTest() {
 
     private val baseUrl = "/api/v1/comments/"
     private val objectMapper = jacksonObjectMapper()
-
 
     @Test
     fun createCommentTest() {
@@ -42,7 +41,8 @@ class CommentControllerIntegrationTest : IntegrationTest() {
                     .toString()
                     .toLong()
                 val comment = findOne<Comment>(
-                    "SELECT c FROM Comment c WHERE c.id = :id", mapOf("id" to commentId)
+                    "SELECT c FROM Comment c WHERE c.id = :id",
+                    mapOf("id" to commentId),
                 )
                 comment.content shouldBe "comment content"
             }
@@ -58,7 +58,7 @@ class CommentControllerIntegrationTest : IntegrationTest() {
         // when
         val response = request(
             method = HttpMethod.DELETE,
-            url = baseUrl + "/${comment.id}"
+            url = baseUrl + "/${comment.id}",
         )
 
         // then
@@ -66,7 +66,6 @@ class CommentControllerIntegrationTest : IntegrationTest() {
         assertThrows<NoResultException> {
             findOne<Comment>("SELECT c FROM Comment c WHERE c.id = :id", mapOf("id" to comment.id))
         }
-
     }
 
     @Test
@@ -79,7 +78,7 @@ class CommentControllerIntegrationTest : IntegrationTest() {
         // when
         val likeResponse = request(
             method = HttpMethod.POST,
-            url = baseUrl + "/${comment.id}/like"
+            url = baseUrl + "/${comment.id}/like",
         )
         // then
         likeResponse.andExpect(status().isOk)
@@ -95,7 +94,7 @@ class CommentControllerIntegrationTest : IntegrationTest() {
         // when
         val notLikeResponse = request(
             method = HttpMethod.POST,
-            url = baseUrl + "/${comment.id}/like"
+            url = baseUrl + "/${comment.id}/like",
         )
 
         // then
@@ -109,7 +108,5 @@ class CommentControllerIntegrationTest : IntegrationTest() {
                     )
                 }
             }
-
     }
-
 }
