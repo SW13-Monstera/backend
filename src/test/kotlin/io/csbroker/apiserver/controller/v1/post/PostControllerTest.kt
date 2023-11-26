@@ -101,13 +101,15 @@ class PostControllerTest : RestDocsTest() {
                 1L,
                 "CONTENT",
                 "USER",
-                1L,
+                1,
                 true,
                 listOf(
                     CommentResponseDto(
                         1L,
                         "CONTENT",
                         "USER",
+                        1,
+                        true,
                         LocalDateTime.now(),
                     ),
                 ),
@@ -146,6 +148,10 @@ class PostControllerTest : RestDocsTest() {
                             .type(JsonFieldType.STRING).description("댓글 내용"),
                         PayloadDocumentation.fieldWithPath("data[].comments[].username")
                             .type(JsonFieldType.STRING).description("댓글 작성자"),
+                        PayloadDocumentation.fieldWithPath("data[].comments[].likeCount")
+                            .type(JsonFieldType.NUMBER).description("좋아요 수"),
+                        PayloadDocumentation.fieldWithPath("data[].comments[].isLiked")
+                            .type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                         PayloadDocumentation.fieldWithPath("data[].comments[].createdAt")
                             .type(JsonFieldType.STRING).description("댓글 생성일시"),
                     ),
