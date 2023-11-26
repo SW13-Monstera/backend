@@ -81,7 +81,7 @@ class NotificationControllerTest : RestDocsTest() {
                             .description("인증을 위한 Access 토큰")
                             .optional(),
                     ),
-                    RequestDocumentation.requestParameters(
+                    RequestDocumentation.queryParameters(
                         RequestDocumentation.parameterWithName("page").description("페이지"),
                         RequestDocumentation.parameterWithName("size").description("가져올 문제의 개수"),
                     ),
@@ -121,7 +121,7 @@ class NotificationControllerTest : RestDocsTest() {
         justRun { notificationService.readNotificationById(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.PUT, "$NOTIFICATION_ENDPOINT/read/{notification_id}", 1L)
+        val result = mockMvc.request(Method.PUT, "$NOTIFICATION_ENDPOINT/read/{notification_id}", "1")
 
         // then
         result.then()

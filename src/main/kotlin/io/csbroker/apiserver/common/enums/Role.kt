@@ -11,7 +11,7 @@ enum class Role(
 
     companion object {
         fun of(code: String): Role {
-            return Role.values()
+            return Role.entries
                 .find { role -> role.code == code } ?: ROLE_USER
         }
     }

@@ -57,7 +57,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:${property("jwtVersion")}")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
-    implementation("mysql:mysql-connector-java")
+    implementation("com.mysql:mysql-connector-j")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
@@ -66,8 +66,10 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 
     // QueryDsl
-    implementation("com.querydsl:querydsl-jpa:${property("queryDslVersion")}")
-    kapt("com.querydsl:querydsl-apt:${property("queryDslVersion")}:jpa")
+    implementation("com.querydsl:querydsl-jpa:${property("queryDslVersion")}:jakarta")
+    kapt("com.querydsl:querydsl-apt:${property("queryDslVersion")}:jakarta")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
@@ -122,17 +124,18 @@ tasks.withType<Test> {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
-        html.isEnabled = true
-        html.destination = file("$buildDir/reports/myReport.html")
-        csv.isEnabled = true
-        xml.isEnabled = true
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/myReport.html"))
+        csv.required.set(true)
+        xml.required.set(true)
     }
 
-    var excludes = mutableListOf<String>()
-    excludes.add("io/csbroker/apiserver/model")
-    excludes.add("io/csbroker/apiserver/common")
-    excludes.add("io/csbroker/apiserver/dto")
-    excludes.add("io/csbroker/apiserver/ApiServerApplication.kt")
+    val excludes = listOf(
+        "io/csbroker/apiserver/model",
+        "io/csbroker/apiserver/common",
+        "io/csbroker/apiserver/dto",
+        "io/csbroker/apiserver/ApiServerApplication.kt",
+    )
 
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
@@ -188,9 +191,9 @@ tasks.bootJar { // 5
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 val jar: Jar by tasks

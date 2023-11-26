@@ -27,7 +27,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -165,7 +165,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/admin/user-answers/{user_answer_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/admin/user-answers/{user_answer_id}", "1")
 
         // then
         result.then().statusCode(200)
@@ -231,7 +231,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
 
         // when
         val result = mockMvc.body(userAnswerLabelRequestDto)
-            .request(Method.POST, "/api/admin/user-answers/{user_answer_id}/label", 1L)
+            .request(Method.POST, "/api/admin/user-answers/{user_answer_id}/label", "1")
 
         // then
         result.then().statusCode(200)
@@ -268,7 +268,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
 
         // when
         val result = mockMvc.body(userAnswerLabelRequestDto)
-            .request(Method.POST, "/api/admin/user-answers/{user_answer_id}/validate", 1L)
+            .request(Method.POST, "/api/admin/user-answers/{user_answer_id}/validate", "1")
 
         // then
         result.then().statusCode(200)
@@ -348,7 +348,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
                     "admin/userAnswer/search",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("id")
                             .description("ID 검색 ( 옵션 )").optional(),
                         parameterWithName("assignedBy")
@@ -479,7 +479,7 @@ class AdminUserAnswerProblemControllerTest : RestDocsTest() {
         justRun { userAnswerService.removeUserAnswerById(any()) }
 
         // when
-        val result = mockMvc.request(Method.DELETE, "/api/admin/user-answers/{user_answer_id}", 1L)
+        val result = mockMvc.request(Method.DELETE, "/api/admin/user-answers/{user_answer_id}", "1")
 
         // then
         result.then().statusCode(200)

@@ -23,7 +23,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 
 class AdminLongProblemControllerTest : RestDocsTest() {
     private lateinit var problemService: AdminLongProblemService
@@ -93,7 +93,7 @@ class AdminLongProblemControllerTest : RestDocsTest() {
 
         // when
         val result = mockMvc.body(longProblemUpsertRequestDto)
-            .request(Method.PUT, "/api/admin/problems/long/{problem_id}", 1L)
+            .request(Method.PUT, "/api/admin/problems/long/{problem_id}", "1")
 
         // then
         result.then().statusCode(200)
@@ -159,7 +159,7 @@ class AdminLongProblemControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/admin/problems/long/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/admin/problems/long/{problem_id}", "1")
 
         // then
         result.then().statusCode(200)
@@ -239,7 +239,7 @@ class AdminLongProblemControllerTest : RestDocsTest() {
                     "admin/problems/long/search",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("id")
                             .description("ID 검색 ( 옵션 )").optional(),
                         parameterWithName("title")

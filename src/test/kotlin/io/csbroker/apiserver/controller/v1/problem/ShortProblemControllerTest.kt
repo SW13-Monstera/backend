@@ -60,7 +60,7 @@ class ShortProblemControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v1/problems/short/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v1/problems/short/{problem_id}", "1")
 
         // then
         result.then()
@@ -132,7 +132,7 @@ class ShortProblemControllerTest : RestDocsTest() {
             ShortProblemAnswerDto(
                 answer = "user answer",
             ),
-        ).request(Method.POST, "/api/v1/problems/short/{problem_id}/grade", 1L)
+        ).request(Method.POST, "/api/v1/problems/short/{problem_id}/grade", "1")
 
         // then
         result.then()

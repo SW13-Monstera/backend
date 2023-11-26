@@ -4,8 +4,8 @@ import io.csbroker.apiserver.dto.auth.TokenDto
 import io.csbroker.apiserver.dto.user.UserInfoDto
 import io.csbroker.apiserver.dto.user.UserLoginRequestDto
 import io.csbroker.apiserver.dto.user.UserSignUpDto
+import jakarta.servlet.http.HttpServletRequest
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 interface AuthService {
     fun saveUser(userDto: UserSignUpDto): UUID

@@ -58,7 +58,7 @@ class UserControllerTest : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "$USER_ENDPOINT/{user_id}", UUID.randomUUID())
+        val result = mockMvc.request(Method.GET, "$USER_ENDPOINT/{user_id}", UUID.randomUUID().toString())
 
         // then
         result.then()
@@ -261,7 +261,7 @@ class UserControllerTest : RestDocsTest() {
         every { userService.deleteUser(any(), any()) } returns true
 
         // when
-        val result = mockMvc.delete("$USER_ENDPOINT/{user_id}", UUID.randomUUID())
+        val result = mockMvc.delete("$USER_ENDPOINT/{user_id}", UUID.randomUUID().toString())
 
         // then
         result.then()
