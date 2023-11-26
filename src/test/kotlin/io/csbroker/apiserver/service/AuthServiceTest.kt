@@ -105,35 +105,6 @@ class AuthServiceTest {
     }
 
     @Test
-    fun `유저 정보 조회 테스트`() {
-        // given
-        val user = createUser()
-        every { userRepository.findByEmail(any()) } returns user
-
-        // when
-        val userInfo = sut.getUserInfo("test@test.com")
-
-        // then
-        verify(exactly = 1) { userRepository.findByEmail(any()) }
-        assertThat("test@test.com").isEqualTo(userInfo.email)
-    }
-
-    @Test
-    fun `유저 정보 조회 실패 테스트`() {
-        // given
-        every { userRepository.findByEmail(any()) } returns null
-
-        // when
-        val exception = assertThrows<EntityNotFoundException> {
-            sut.getUserInfo("test1@test.com")
-        }
-
-        // then
-        verify(exactly = 1) { userRepository.findByEmail(any()) }
-        assertThat(ErrorCode.NOT_FOUND_ENTITY).isEqualTo(exception.errorCode)
-    }
-
-    @Test
     fun `로그인 성공 테스트`() {
         // given
         val user = createUser()

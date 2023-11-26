@@ -6,8 +6,6 @@ import io.csbroker.apiserver.model.User
 import java.util.UUID
 
 interface UserService {
-    fun findUserByEmail(email: String): User?
-
     fun findUserById(uuid: UUID): User?
 
     fun modifyUser(uuid: UUID, user: User, userUpdateRequestDto: UserUpdateRequestDto): User

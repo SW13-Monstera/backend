@@ -35,34 +35,6 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유저 정보 이메일 조회 성공 테스트`() {
-        // given
-        val user = createUser()
-        every { userRepository.findByEmail(any()) } returns user
-
-        // when
-        val userInfo = userService.findUserByEmail("test@test.com")
-
-        // then
-        verify(exactly = 1) { userRepository.findByEmail(any()) }
-        assertThat(userInfo).isNotNull
-        assertThat("test@test.com").isEqualTo(userInfo!!.email)
-    }
-
-    @Test
-    fun `유저 정보 이메일 조회 불가 테스트`() {
-        // given
-        every { userRepository.findByEmail(any()) } returns null
-
-        // when
-        val userInfo = userService.findUserByEmail("test1@test.com")
-
-        // then
-        verify(exactly = 1) { userRepository.findByEmail(any()) }
-        assertThat(userInfo).isNull()
-    }
-
-    @Test
     fun `유저 정보 ID 조회 성공 테스트`() {
         // given
         val user = createUser()
