@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import javax.persistence.NoResultException
+import jakarta.persistence.NoResultException
 
 class PostControllerIntegrationTest : IntegrationTest() {
 

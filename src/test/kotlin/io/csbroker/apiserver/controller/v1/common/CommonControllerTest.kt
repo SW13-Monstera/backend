@@ -20,7 +20,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import java.util.UUID
 
 class CommonControllerTest : RestDocsTest() {
@@ -96,7 +96,7 @@ class CommonControllerTest : RestDocsTest() {
                     "common/techs",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("query").description("검색어 ( 필수 )"),
                     ),
                     PayloadDocumentation.responseFields(
@@ -138,7 +138,7 @@ class CommonControllerTest : RestDocsTest() {
                     "common/ranks",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("size").description("가져올 첫 랭킹 ( 1 이상 )"),
                         parameterWithName("page").description("가져올 페이지 ( 0 이상 )"),
                     ),
@@ -186,7 +186,7 @@ class CommonControllerTest : RestDocsTest() {
                     "common/majors",
                     Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("query").description("검색어 ( 필수 )"),
                     ),
                     PayloadDocumentation.responseFields(

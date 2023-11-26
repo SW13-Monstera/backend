@@ -38,7 +38,7 @@ class AdminProblemControllerTest : RestDocsTest() {
         justRun { problemService.removeProblemById(any()) }
 
         // when
-        val result = mockMvc.request(Method.DELETE, "/api/admin/problems/{problem_id}", 1L)
+        val result = mockMvc.request(Method.DELETE, "/api/admin/problems/{problem_id}", "1")
 
         // then
         result.then().statusCode(200)

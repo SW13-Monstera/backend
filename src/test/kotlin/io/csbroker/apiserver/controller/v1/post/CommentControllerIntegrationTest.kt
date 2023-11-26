@@ -9,15 +9,15 @@ import io.csbroker.apiserver.model.Like
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.Post
 import io.kotest.matchers.shouldBe
+import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import javax.persistence.NoResultException
 
 class CommentControllerIntegrationTest : IntegrationTest() {
 
-    private val baseUrl = "/api/v1/comments/"
+    private val baseUrl = "/api/v1/comments"
     private val objectMapper = jacksonObjectMapper()
 
     @Test

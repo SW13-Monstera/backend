@@ -55,7 +55,7 @@ class ShortProblemControllerV2Test : RestDocsTest() {
         )
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/v2/problems/short/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/v2/problems/short/{problem_id}", "1")
 
         // then
         result.then()

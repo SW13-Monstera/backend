@@ -18,12 +18,12 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.user.UserRepository
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 private const val THREE_DAYS_MSEC = 259200000
 

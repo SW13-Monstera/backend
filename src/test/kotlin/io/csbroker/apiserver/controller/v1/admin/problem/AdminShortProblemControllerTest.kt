@@ -21,7 +21,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 
 class AdminShortProblemControllerTest : RestDocsTest() {
     private lateinit var problemService: AdminShortProblemService
@@ -99,7 +99,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
 
         // when
         val result = mockMvc.body(shortProblemUpsertRequestDto)
-            .request(Method.PUT, "/api/admin/problems/short/{problem_id}", 1L)
+            .request(Method.PUT, "/api/admin/problems/short/{problem_id}", "1")
 
         // then
         result.then().statusCode(200)
@@ -153,7 +153,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
         every { problemService.findProblemById(any()) } returns shortProblemResponseDto
 
         // when
-        val result = mockMvc.request(Method.GET, "/api/admin/problems/short/{problem_id}", 1L)
+        val result = mockMvc.request(Method.GET, "/api/admin/problems/short/{problem_id}", "1")
 
         // then
         result.then().statusCode(200)
@@ -225,7 +225,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
                     "admin/problems/short/search",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestParameters(
+                    queryParameters(
                         parameterWithName("id")
                             .description("ID 검색 ( 옵션 )").optional(),
                         parameterWithName("title")
