@@ -11,6 +11,7 @@ interface LikeRepository : JpaRepository<Like, Long> {
     @Query(
         """
             select l from Like l
+            join fetch l.user
             where l.type = :type and l.targetId in :targetIds
         """,
     )
@@ -19,6 +20,16 @@ interface LikeRepository : JpaRepository<Like, Long> {
     @Query(
         """
             select l from Like l
+            join fetch l.user
+            where l.type = :type and l.targetId = :targetId
+        """,
+    )
+    fun findAllByTargetId(type: LikeType, targetId: Long): List<Like>
+
+    @Query(
+        """
+            select l from Like l
+            join fetch l.user
             where l.type = :type and l.targetId = :targetId and l.user = :user
         """,
     )

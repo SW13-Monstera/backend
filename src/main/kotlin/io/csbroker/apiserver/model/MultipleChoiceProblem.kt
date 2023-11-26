@@ -84,7 +84,7 @@ class MultipleChoiceProblem(
         )
     }
 
-    fun toDetailResponseDto(email: String?): MultipleChoiceProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?, likes: List<Like>): MultipleChoiceProblemDetailResponseDto {
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return MultipleChoiceProblemDetailResponseDto(
@@ -99,9 +99,9 @@ class MultipleChoiceProblem(
             gradingHistory.any { it.user.email == email },
             isMultiple,
             score,
-            problemLike.count().toLong(),
+            likes.count().toLong(),
             problemBookmark.count().toLong(),
-            problemLike.any { it.user.email == email },
+            likes.any { it.user.email == email },
             problemBookmark.any { it.user.email == email },
         )
     }

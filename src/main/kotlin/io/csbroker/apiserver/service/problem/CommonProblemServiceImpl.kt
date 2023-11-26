@@ -1,6 +1,7 @@
 package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.common.enums.ErrorCode
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.UnAuthorizedException
@@ -10,14 +11,14 @@ import io.csbroker.apiserver.dto.problem.ProblemsResponseDto
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.dto.problem.grade.AssessmentRequestDto
 import io.csbroker.apiserver.model.Challenge
+import io.csbroker.apiserver.model.Like
 import io.csbroker.apiserver.model.ProblemBookmark
-import io.csbroker.apiserver.model.ProblemLike
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.ChallengeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.problem.ProblemBookmarkRepository
-import io.csbroker.apiserver.repository.problem.ProblemLikeRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -30,7 +31,7 @@ class CommonProblemServiceImpl(
     private val gradingHistoryRepository: GradingHistoryRepository,
     private val gradingResultAssessmentRepository: GradingResultAssessmentRepository,
     private val challengeRepository: ChallengeRepository,
-    private val problemLikeRepository: ProblemLikeRepository,
+    private val likeRepository: LikeRepository,
     private val problemBookmarkRepository: ProblemBookmarkRepository,
 ) : CommonProblemService {
     override fun findProblems(problemSearchDto: ProblemSearchDto): ProblemPageResponseDto {
@@ -107,14 +108,11 @@ class CommonProblemServiceImpl(
 
     @Transactional
     override fun likeProblem(user: User, problemId: Long) {
-        val problem = problemRepository.findByIdOrNull(problemId)
+        problemRepository.findByIdOrNull(problemId)
             ?: throw EntityNotFoundException("${problemId}번 문제는 존재하지 않는 문제입니다.")
-        val problemLike = problemLikeRepository.findByUserAndProblem(user, problem)
-        if (problemLike == null) {
-            problemLikeRepository.save(ProblemLike(user = user, problem = problem))
-        } else {
-            problemLikeRepository.delete(problemLike)
-        }
+        likeRepository.findByTargetIdAndUser(LikeType.PROBLEM, problemId, user)
+            ?.let { likeRepository.delete(it) }
+            ?: likeRepository.save(Like(user = user, type = LikeType.PROBLEM, targetId = problemId))
     }
 
     @Transactional
