@@ -29,12 +29,12 @@ class CommentController(
         @LoginUser loginUser: User,
         @RequestBody commentCreateRequestDto: CommentCreateRequestDto,
     ): ApiResponse<Long> {
-        val postId = commentService.create(
+        val commentId = commentService.create(
             commentCreateRequestDto.postId,
             commentCreateRequestDto.content,
             loginUser,
         )
-        return ApiResponse.success(postId)
+        return ApiResponse.success(commentId)
     }
 
     @PostMapping("/api/v1/comments/{id}/like")

@@ -89,4 +89,31 @@ class CommentControllerTest : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun `댓글 좋아요`() {
+        // given
+        justRun { commentService.like(any(), any()) }
+
+        // when
+        val result = mockMvc.request(Method.POST, "/api/v1/comments/{commentId}/like", 1L)
+
+        // then
+        result.then().statusCode(200)
+            .apply(
+                MockMvcRestDocumentation.document(
+                    "comments/like",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                    RequestDocumentation.pathParameters(
+                        RequestDocumentation.parameterWithName("commentId").description("댓글 id"),
+                    ),
+                    PayloadDocumentation.responseFields(
+                        PayloadDocumentation.fieldWithPath("status")
+                            .type(JsonFieldType.STRING).description("결과 상태"),
+                    ),
+                )
+            )
+
+    }
 }

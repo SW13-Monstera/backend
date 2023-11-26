@@ -81,7 +81,7 @@ class PostServiceImpl(
         user: User?,
     ) = PostResponseDto(
         post,
-        likeCount = postLikes.count(),
+        likeCount = postLikes.count().toLong(),
         isLiked = postLikes.any { like -> like.user == user },
         comments = comments.map { comment ->
             CommentResponseDto(
