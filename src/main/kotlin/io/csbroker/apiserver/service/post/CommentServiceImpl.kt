@@ -40,6 +40,7 @@ class CommentServiceImpl(
         commentRepository.delete(comment)
     }
 
+    @Transactional
     override fun like(id: Long, user: User) {
         val comment = commentRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 답변은 존재하지 않는 답변입니다")
