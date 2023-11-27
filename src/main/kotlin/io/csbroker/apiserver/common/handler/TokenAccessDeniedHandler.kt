@@ -1,12 +1,12 @@
 package io.csbroker.apiserver.common.handler
 
 import io.csbroker.apiserver.common.enums.ErrorCode
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class TokenAccessDeniedHandler : AccessDeniedHandler {

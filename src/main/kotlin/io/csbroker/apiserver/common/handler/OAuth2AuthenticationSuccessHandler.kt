@@ -17,6 +17,8 @@ import io.csbroker.apiserver.repository.common.REDIRECT_URI_PARAM_COOKIE_NAME
 import io.csbroker.apiserver.repository.common.REFRESH_TOKEN
 import io.csbroker.apiserver.repository.common.RedisRepository
 import io.csbroker.apiserver.repository.user.UserRepository
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -26,8 +28,6 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
 import java.util.Date
 import java.util.Locale
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class OAuth2AuthenticationSuccessHandler(

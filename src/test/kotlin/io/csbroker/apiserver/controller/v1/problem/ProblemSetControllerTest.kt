@@ -64,7 +64,7 @@ class ProblemSetControllerTest : RestDocsTest() {
         } returns createProblemsetDetailResponseDto()
 
         // when
-        val response = mockMvc.request(Method.GET, "/api/v1/problem-sets/{problem_sets_id}", 1L)
+        val response = mockMvc.request(Method.GET, "/api/v1/problem-sets/{problem_sets_id}", "1")
 
         // then
         response.then().statusCode(200)

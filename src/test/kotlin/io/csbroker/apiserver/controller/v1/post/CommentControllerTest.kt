@@ -34,7 +34,7 @@ class CommentControllerTest : RestDocsTest() {
         justRun { commentService.deleteById(any(), any()) }
 
         // when
-        val result = mockMvc.request(Method.DELETE, "/api/v1/comments/{commentId}", 1L)
+        val result = mockMvc.request(Method.DELETE, "/api/v1/comments/{commentId}", "1")
 
         // then
         result.then().statusCode(200)

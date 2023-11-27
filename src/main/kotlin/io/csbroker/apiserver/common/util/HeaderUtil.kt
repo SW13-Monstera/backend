@@ -1,6 +1,6 @@
 package io.csbroker.apiserver.common.util
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 const val HEADER_AUTHORIZATION = "Authorization"
 const val TOKEN_PREFIX = "Bearer "
