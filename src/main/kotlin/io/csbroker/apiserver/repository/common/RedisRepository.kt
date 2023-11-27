@@ -1,9 +1,10 @@
 package io.csbroker.apiserver.repository.common
 
-import aws.smithy.kotlin.runtime.util.push
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.dto.common.RankListDto
 import io.csbroker.apiserver.dto.user.RankResultDto
+import org.springframework.data.redis.core.RedisOperations
+import org.springframework.data.redis.core.SessionCallback
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple
 import org.springframework.stereotype.Repository
@@ -23,8 +24,7 @@ class RedisRepository(
     }
 
     fun setRefreshTokenByEmail(email: String, refreshToken: String) {
-        redisTemplate.opsForValue()
-            .set(email, refreshToken, appProperties.auth.refreshTokenExpiry, TimeUnit.MILLISECONDS)
+        redisTemplate.opsForValue().set(email, refreshToken, appProperties.auth.refreshTokenExpiry, TimeUnit.MILLISECONDS)
     }
 
     fun setPasswordVerification(code: String, email: String) {
@@ -39,10 +39,21 @@ class RedisRepository(
         redisTemplate.delete(code)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun setRank(scoreMap: Map<String, Double>) {
-        redisTemplate.opsForZSet().add(
-            RANKING,
-            scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet(),
+        redisTemplate.execute(
+            object : SessionCallback<Unit> {
+                override fun <K : Any?, V : Any?> execute(operations: RedisOperations<K, V>) {
+                    val stringOperations = operations as RedisOperations<String, String>
+                    stringOperations.multi()
+                    stringOperations.delete(RANKING)
+                    stringOperations.opsForZSet().add(
+                        RANKING,
+                        scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet(),
+                    )
+                    operations.exec()
+                }
+            },
         )
     }
 
@@ -61,42 +72,12 @@ class RedisRepository(
 
     fun getRanks(size: Long, page: Long): RankListDto {
         val start = size * page
-        val end = size * (page + 1) - 1
+        val end = start + size - 1
 
-        val keyWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(RANKING, start, end)
+        val keyWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(RANKING, start, end) ?: emptySet()
         val totalElements = redisTemplate.opsForZSet().size(RANKING) ?: 0
         val totalPage = if (totalElements % size > 0) totalElements / size + 1 else totalElements / size
-        val result = mutableListOf<RankListDto.RankDetail>()
-        var rank = 1L
-        var isFirst = true
-
-        keyWithScores?.let {
-            it.forEach { keyWithScore ->
-                if (!isFirst && result.last().score != keyWithScore.score) {
-                    isFirst = true
-                }
-
-                if (isFirst) {
-                    val score = keyWithScore.score!!
-                    val key = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)!!.first()
-                    rank = redisTemplate.opsForZSet().reverseRank(RANKING, key)!!.plus(1)
-                    isFirst = false
-                }
-
-                val keys = keyWithScore.value!!.split('@')
-                val id = UUID.fromString(keys[0])
-                val username = keys[1]
-
-                result.push(
-                    RankListDto.RankDetail(
-                        id,
-                        username,
-                        rank,
-                        keyWithScore.score!!,
-                    ),
-                )
-            }
-        }
+        val result = getRankDetails(keyWithScores)
 
         return RankListDto(
             size = size,
@@ -105,5 +86,31 @@ class RedisRepository(
             numberOfElements = result.size.toLong(),
             contents = result,
         )
+    }
+
+    private fun getRankDetails(keyWithScores: Set<TypedTuple<String>>): List<RankListDto.RankDetail> {
+        return keyWithScores.fold(emptyList()) { acc, value ->
+            val score = value.score!!
+            val keys = value.value!!.split('@')
+            val id = UUID.fromString(keys[0])
+            val username = keys[1]
+
+            acc + if (acc.isEmpty() || acc.last().score != score) {
+                val key = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)!!.first()
+                RankListDto.RankDetail(
+                    id,
+                    username,
+                    redisTemplate.opsForZSet().reverseRank(RANKING, key)!!.plus(1),
+                    score,
+                )
+            } else {
+                RankListDto.RankDetail(
+                    id,
+                    username,
+                    acc.last().rank,
+                    score,
+                )
+            }
+        }
     }
 }
