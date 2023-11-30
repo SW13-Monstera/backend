@@ -1,4 +1,4 @@
-FROM adoptopenjdk:17 AS builder
+FROM adoptopenjdk:21 AS builder
 COPY .editorconfig .
 COPY gradlew .
 COPY settings.gradle.kts .
@@ -9,7 +9,7 @@ COPY backend-config backend-config
 RUN chmod +x ./gradlew
 RUN ./gradlew build -x test -x copyHTML -x asciidoctor
 
-FROM adoptopenjdk:17
+FROM adoptopenjdk:21
 RUN mkdir /opt/app
 COPY --from=builder build/libs/*.jar /opt/app/spring-boot-application.jar
 EXPOSE 8080
