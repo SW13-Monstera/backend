@@ -18,7 +18,7 @@ class RedisRepositoryTest {
         auth = AppProperties.Auth(
             tokenExpiry = 1,
             refreshTokenExpiry = 1,
-            tokenSecret = "this is secret"
+            tokenSecret = "this is secret",
         ),
         oAuth2 = AppProperties.OAuth2(
             authorizedRedirectUris = listOf("http://localhost:3000/oauth2/redirect"),
@@ -48,25 +48,25 @@ class RedisRepositoryTest {
             TypedTuple.of("${randomUUIDs[6]}@username7", 1.0),
         )
         every { redisTemplate.opsForZSet().size(RANKING) } returns 7
-        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 5.0, 5.0,  0, 1) } returns setOf(
+        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 5.0, 5.0, 0, 1) } returns setOf(
             "${randomUUIDs[0]}@username1",
             "${randomUUIDs[1]}@username2",
         )
         every { redisTemplate.opsForZSet().reverseRank(RANKING, "${randomUUIDs[0]}@username1") } returns 0
-        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 4.0, 4.0,  0, 1) } returns setOf(
+        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 4.0, 4.0, 0, 1) } returns setOf(
             "${randomUUIDs[2]}@username3",
             "${randomUUIDs[3]}@username4",
         )
         every { redisTemplate.opsForZSet().reverseRank(RANKING, "${randomUUIDs[2]}@username3") } returns 2
-        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 3.0, 3.0,  0, 1) } returns setOf(
+        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 3.0, 3.0, 0, 1) } returns setOf(
             "${randomUUIDs[4]}@username5",
         )
         every { redisTemplate.opsForZSet().reverseRank(RANKING, "${randomUUIDs[4]}@username5") } returns 4
-        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 2.0, 2.0,  0, 1) } returns setOf(
+        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 2.0, 2.0, 0, 1) } returns setOf(
             "${randomUUIDs[5]}@username6",
         )
         every { redisTemplate.opsForZSet().reverseRank(RANKING, "${randomUUIDs[5]}@username6") } returns 5
-        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 1.0, 1.0,  0, 1) } returns setOf(
+        every { redisTemplate.opsForZSet().reverseRangeByScore(RANKING, 1.0, 1.0, 0, 1) } returns setOf(
             "${randomUUIDs[6]}@username7",
         )
         every { redisTemplate.opsForZSet().reverseRank(RANKING, "${randomUUIDs[6]}@username7") } returns 6
