@@ -4,11 +4,11 @@ import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.challenge.CreateChallengeDto
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.ChallengeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.GradingResultAssessmentRepository
 import io.csbroker.apiserver.repository.problem.ProblemBookmarkRepository
-import io.csbroker.apiserver.repository.problem.ProblemLikeRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +24,7 @@ class CommonProblemServiceTest {
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
     private val gradingResultAssessmentRepository = mockk<GradingResultAssessmentRepository>()
     private val challengeRepository = mockk<ChallengeRepository>()
-    private val problemLikeRepository = mockk<ProblemLikeRepository>()
+    private val likeRepository = mockk<LikeRepository>()
     private val problemBookmarkRepository = mockk<ProblemBookmarkRepository>()
     private val user = User(
         id = UUID.randomUUID(),
@@ -42,7 +42,7 @@ class CommonProblemServiceTest {
             gradingHistoryRepository,
             gradingResultAssessmentRepository,
             challengeRepository,
-            problemLikeRepository,
+            likeRepository,
             problemBookmarkRepository,
         )
     }

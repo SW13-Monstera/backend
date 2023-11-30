@@ -1,14 +1,15 @@
 package io.csbroker.apiserver.service.problem
 
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.controller.v2.problem.response.ShortProblemDetailResponseV2Dto
 import io.csbroker.apiserver.dto.problem.grade.ShortProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemGradingHistoryDto
 import io.csbroker.apiserver.model.GradingHistory
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class ShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
-    private val userRepository: UserRepository,
+    private val likeRepository: LikeRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
 ) : ShortProblemService {
     override fun findProblemById(id: Long, email: String?): ShortProblemDetailResponseDto {
-        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
+        val likes = likeRepository.findAllByTargetId(LikeType.PROBLEM, id)
+        return shortProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email, likes)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 

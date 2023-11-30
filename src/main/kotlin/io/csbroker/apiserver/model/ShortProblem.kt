@@ -64,7 +64,7 @@ class ShortProblem(
         )
     }
 
-    fun toDetailResponseDto(email: String?): ShortProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?, likes: List<Like>): ShortProblemDetailResponseDto {
         val commonDetail = ProblemCommonDetailResponse.getCommonDetail(this)
 
         return ShortProblemDetailResponseDto(
@@ -79,9 +79,9 @@ class ShortProblem(
             isEnglish(),
             gradingHistory.any { it.user.email == email },
             score,
-            problemLike.count().toLong(),
+            likes.count().toLong(),
             problemBookmark.count().toLong(),
-            problemLike.any { it.user.email == email },
+            likes.any { it.user.email == email },
             problemBookmark.any { it.user.email == email },
         )
     }

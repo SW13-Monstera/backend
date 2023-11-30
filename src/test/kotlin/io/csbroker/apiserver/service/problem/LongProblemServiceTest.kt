@@ -8,6 +8,7 @@ import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.model.UserAnswer
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
@@ -30,6 +31,7 @@ class LongProblemServiceTest {
     private val userAnswerRepository = mockk<UserAnswerRepository>()
     private val standardAnswerRepository = mockk<StandardAnswerRepository>()
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
+    private val likeRepository = mockk<LikeRepository>()
     private val aiServerClient = mockk<AIServerClient>()
     private val user = User(
         id = UUID.randomUUID(),
@@ -49,6 +51,7 @@ class LongProblemServiceTest {
             userAnswerRepository,
             standardAnswerRepository,
             gradingHistoryRepository,
+            likeRepository,
             aiServerClient,
         )
     }
