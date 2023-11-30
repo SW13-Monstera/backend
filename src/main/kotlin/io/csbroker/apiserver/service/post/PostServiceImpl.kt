@@ -44,7 +44,7 @@ class PostServiceImpl(
         return posts.map {
             combineResponseDto(
                 post = it,
-                comments = comments,
+                comments = it.comments,
                 postLikes = postLikeMap[it.id] ?: emptyList(),
                 commentLikeMap = commentLikeMap,
                 user = user,
