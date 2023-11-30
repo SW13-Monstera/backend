@@ -52,6 +52,27 @@ class PostServiceImpl(
         }
     }
 
+    override fun findByPostId(postId: Long, emailIfLogin: String?): PostResponseDto {
+        val post = postRepository.findByIdOrNull(postId)
+            ?: throw EntityNotFoundException("id : $postId 게시글은 존재하지 않는 게시글입니다")
+        val user = emailIfLogin?.let {
+            userRepository.findByEmail(it)
+                ?: throw EntityNotFoundException("$emailIfLogin 을 가진 유저는 존재하지 않습니다.")
+        }
+
+        val postLikes = likeRepository.findAllByTargetIdIn(LikeType.POST, listOf(postId))
+        val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, post.comments.map { it.id })
+            .groupBy { it.targetId }
+
+        return combineResponseDto(
+            post = post,
+            comments = post.comments,
+            postLikes = postLikes,
+            commentLikeMap = commentLikeMap,
+            user = user,
+        )
+    }
+
     private fun combineResponseDto(
         post: Post,
         comments: List<Comment>,
@@ -60,7 +81,7 @@ class PostServiceImpl(
         user: User?,
     ) = PostResponseDto(
         post,
-        likeCount = postLikes.count(),
+        likeCount = postLikes.count().toLong(),
         isLiked = postLikes.any { like -> like.user == user },
         comments = comments.map { comment ->
             CommentResponseDto(
