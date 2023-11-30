@@ -59,9 +59,6 @@ abstract class Problem(
     val problemSetMapping: MutableList<ProblemSetMapping> = mutableListOf(),
 
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val problemLike: MutableList<ProblemLike> = mutableListOf(),
-
-    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val problemBookmark: MutableList<ProblemBookmark> = mutableListOf(),
 ) : BaseEntity() {
     fun toProblemResponseDto(gradingHistoryStats: GradingHistoryStats?): ProblemResponseDto {

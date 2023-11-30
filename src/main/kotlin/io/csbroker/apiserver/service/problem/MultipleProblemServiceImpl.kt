@@ -1,13 +1,14 @@
 package io.csbroker.apiserver.service.problem
 
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.grade.MultipleProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemDetailResponseDto
 import io.csbroker.apiserver.dto.problem.multiplechoiceproblem.MultipleChoiceProblemGradingHistoryDto
 import io.csbroker.apiserver.model.GradingHistory
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,11 +17,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class MultipleProblemServiceImpl(
     private val multipleChoiceProblemRepository: MultipleChoiceProblemRepository,
-    private val userRepository: UserRepository,
+    private val likeRepository: LikeRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
 ) : MultipleProblemService {
     override fun findProblemById(id: Long, email: String?): MultipleChoiceProblemDetailResponseDto {
-        return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
+        val likes = likeRepository.findAllByTargetId(LikeType.PROBLEM, id)
+        return multipleChoiceProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email, likes)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 

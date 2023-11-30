@@ -79,7 +79,6 @@ class PostControllerIntegrationTest : IntegrationTest() {
             .andDo {
                 val dataString = objectMapper.readTree(it.response.contentAsString).get("data").toString()
                 val postResponses = objectMapper.readValue(dataString, Array<PostResponseDto>::class.java)
-
                 postResponses.size shouldBe posts.size
             }
     }

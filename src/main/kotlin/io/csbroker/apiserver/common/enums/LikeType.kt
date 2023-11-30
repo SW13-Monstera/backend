@@ -1,5 +1,5 @@
 package io.csbroker.apiserver.common.enums
 
 enum class LikeType {
-    POST, COMMENT
+    PROBLEM, POST, COMMENT
 }

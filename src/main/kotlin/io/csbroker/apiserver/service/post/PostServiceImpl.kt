@@ -60,7 +60,7 @@ class PostServiceImpl(
                 ?: throw EntityNotFoundException("$emailIfLogin 을 가진 유저는 존재하지 않습니다.")
         }
 
-        val postLikes = likeRepository.findAllByTargetIdIn(LikeType.POST, listOf(postId))
+        val postLikes = likeRepository.findAllByTargetId(LikeType.POST, postId)
         val commentLikeMap = likeRepository.findAllByTargetIdIn(LikeType.COMMENT, post.comments.map { it.id })
             .groupBy { it.targetId }
 
