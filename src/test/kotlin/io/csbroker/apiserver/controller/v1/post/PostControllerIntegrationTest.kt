@@ -39,7 +39,7 @@ class PostControllerIntegrationTest : IntegrationTest() {
             .andDo {
                 val postId = objectMapper.readTree(it.response.contentAsString).get("data").toString().toLong()
                 val post = findOne<Post>("SELECT p FROM Post p WHERE p.id = :id", mapOf("id" to postId))
-                assert(post.content == "post content")
+                post.content shouldBe "post content"
             }
     }
 
@@ -78,9 +78,8 @@ class PostControllerIntegrationTest : IntegrationTest() {
         response.andExpect(status().isOk)
             .andDo {
                 val dataString = objectMapper.readTree(it.response.contentAsString).get("data").toString()
-                print(dataString)
                 val postResponses = objectMapper.readValue(dataString, Array<PostResponseDto>::class.java)
-                assert(postResponses.size == posts.size)
+                postResponses.size shouldBe posts.size
             }
     }
 
@@ -106,10 +105,11 @@ class PostControllerIntegrationTest : IntegrationTest() {
                 val dataString = objectMapper.readTree(it.response.contentAsString).get("data").toString()
                 print(dataString)
                 val postResponses = objectMapper.readValue(dataString, Array<PostResponseDto>::class.java)
-                assert(postResponses.size == 1)
-                assert(postResponses.first().isLiked)
-                assert(postResponses.first().likeCount == expectPostLikeCount)
-                assert(!postResponses.first().comments.first().isLiked)
+
+                postResponses.size shouldBe 1
+                postResponses.first().isLiked shouldBe true
+                postResponses.first().likeCount shouldBe expectPostLikeCount
+                !postResponses.first().comments.first().isLiked shouldBe true
             }
     }
 
