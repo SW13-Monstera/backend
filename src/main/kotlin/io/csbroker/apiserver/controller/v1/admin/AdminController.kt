@@ -52,4 +52,10 @@ class AdminController(
             ),
         )
     }
+
+    @PostMapping("/rank/refresh")
+    fun refreshRank(): ApiResponse<Unit> {
+        userService.calculateRank()
+        return ApiResponse.success()
+    }
 }
