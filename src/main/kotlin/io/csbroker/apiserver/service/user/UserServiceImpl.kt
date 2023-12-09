@@ -132,7 +132,6 @@ class UserServiceImpl(
         user.profileImageUrl = imgUrl
     }
 
-    @Transactional
     @Scheduled(cron = "0 0 * * * *")
     override fun calculateRank() {
         val userScoreMap = userRepository.findAll().associate {

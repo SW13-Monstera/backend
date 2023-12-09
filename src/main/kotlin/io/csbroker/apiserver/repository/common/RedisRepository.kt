@@ -51,7 +51,7 @@ class RedisRepository(
                         RANKING,
                         scoreMap.map { TypedTuple.of(it.key, it.value) }.toSet(),
                     )
-                    operations.exec()
+                    stringOperations.exec()
                 }
             },
         )
