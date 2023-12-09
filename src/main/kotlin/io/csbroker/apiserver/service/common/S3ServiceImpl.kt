@@ -37,7 +37,7 @@ class S3ServiceImpl(
                     key = s3FileName
                     body = ByteStream.fromBytes(multipartFile.bytes)
                     acl = ObjectCannedAcl.PublicRead
-                }
+                },
             )
         }
 
