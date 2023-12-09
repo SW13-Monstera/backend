@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.repository.common
 
-import aws.smithy.kotlin.runtime.util.push
 import io.csbroker.apiserver.common.config.properties.AppProperties
 import io.csbroker.apiserver.dto.common.RankListDto
 import io.csbroker.apiserver.dto.user.RankResultDto
@@ -87,7 +86,7 @@ class RedisRepository(
                 val id = UUID.fromString(keys[0])
                 val username = keys[1]
 
-                result.push(
+                result.add(
                     RankListDto.RankDetail(
                         id,
                         username,
