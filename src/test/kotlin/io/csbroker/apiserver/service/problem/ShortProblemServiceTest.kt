@@ -1,14 +1,15 @@
 package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.auth.ProviderType
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.grade.ShortProblemGradingRequestDto
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.ShortProblem
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,7 +23,7 @@ import java.util.UUID
 class ShortProblemServiceTest {
 
     private val shortProblemRepository = mockk<ShortProblemRepository>()
-    private val userRepository = mockk<UserRepository>()
+    private val likeRepository = mockk<LikeRepository>()
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
     private val user = User(
         id = UUID.randomUUID(),
@@ -37,7 +38,7 @@ class ShortProblemServiceTest {
     fun setUp() {
         service = ShortProblemServiceImpl(
             shortProblemRepository,
-            userRepository,
+            likeRepository,
             gradingHistoryRepository,
         )
     }
@@ -46,6 +47,7 @@ class ShortProblemServiceTest {
     fun `findProblemById - 없는 문제를 조회할 시 예외가 발생합니다`() {
         // given
         every { shortProblemRepository.findByIdOrNull(any()) } returns null
+        every { likeRepository.findAllByTargetId(LikeType.PROBLEM, any()) } returns emptyList()
 
         // when & then
         assertThrows<EntityNotFoundException> { service.findProblemById(1L, user.email) }

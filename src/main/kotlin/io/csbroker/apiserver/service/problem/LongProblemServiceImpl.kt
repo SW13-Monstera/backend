@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.csbroker.apiserver.common.client.AIServerClient
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.enums.GradingStandardType
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.common.exception.InternalServiceException
 import io.csbroker.apiserver.common.util.log
@@ -20,6 +21,7 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDt
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.UserAnswer
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
@@ -37,10 +39,12 @@ class LongProblemServiceImpl(
     private val userAnswerRepository: UserAnswerRepository,
     private val standardAnswerRepository: StandardAnswerRepository,
     private val gradingHistoryRepository: GradingHistoryRepository,
+    private val likeRepository: LikeRepository,
     private val aiServerClient: AIServerClient,
 ) : LongProblemService {
     override fun findProblemById(id: Long, email: String?): LongProblemDetailResponseDto {
-        return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email)
+        val likes = likeRepository.findAllByTargetId(LikeType.PROBLEM, id)
+        return longProblemRepository.findByIdOrNull(id)?.toDetailResponseDto(email, likes)
             ?: throw EntityNotFoundException("${id}번 문제를 찾을 수 없습니다.")
     }
 

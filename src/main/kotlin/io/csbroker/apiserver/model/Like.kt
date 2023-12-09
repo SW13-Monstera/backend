@@ -12,9 +12,15 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "likes")
+@Table(
+    name = "likes",
+    uniqueConstraints = [
+        UniqueConstraint(columnNames = ["user_id", "like_type", "target_id"]),
+    ],
+)
 class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

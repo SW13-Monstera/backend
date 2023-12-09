@@ -1,15 +1,16 @@
 package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.auth.ProviderType
+import io.csbroker.apiserver.common.enums.LikeType
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.dto.problem.grade.MultipleProblemGradingRequestDto
 import io.csbroker.apiserver.model.Choice
 import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.MultipleChoiceProblem
 import io.csbroker.apiserver.model.User
+import io.csbroker.apiserver.repository.post.LikeRepository
 import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -23,7 +24,7 @@ import java.util.UUID
 class MultipleProblemServiceTest {
 
     private val multipleChoiceProblemRepository = mockk<MultipleChoiceProblemRepository>()
-    private val userRepository = mockk<UserRepository>()
+    private val likeRepository = mockk<LikeRepository>()
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
     private val user = User(
         id = UUID.randomUUID(),
@@ -38,7 +39,7 @@ class MultipleProblemServiceTest {
     fun setUp() {
         service = MultipleProblemServiceImpl(
             multipleChoiceProblemRepository,
-            userRepository,
+            likeRepository,
             gradingHistoryRepository,
         )
     }
@@ -46,6 +47,7 @@ class MultipleProblemServiceTest {
     @Test
     fun `findProblemById - 없는 문제를 찾을 시 예외가 발생합니다`() {
         // given
+        every { likeRepository.findAllByTargetId(LikeType.PROBLEM, 1L) } returns emptyList()
         every { multipleChoiceProblemRepository.findByIdOrNull(any()) } returns null
 
         // when & then
@@ -55,14 +57,15 @@ class MultipleProblemServiceTest {
 
     @Test
     fun `findProblemById - success`() {
-        val problemId: Long = 1
+        val problemId = 1L
 
         val mockProblem = mockk<MultipleChoiceProblem>()
-        every { mockProblem.toDetailResponseDto(user.email) } returns mockk(relaxed = true)
+        every { likeRepository.findAllByTargetId(LikeType.PROBLEM, 1) } returns emptyList()
+        every { mockProblem.toDetailResponseDto(user.email, emptyList()) } returns mockk(relaxed = true)
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns mockProblem
 
         val responseDto = service.findProblemById(problemId, user.email)
-        assertEquals(responseDto, mockProblem.toDetailResponseDto(user.email))
+        assertEquals(responseDto, mockProblem.toDetailResponseDto(user.email, emptyList()))
     }
 
     @Test
@@ -94,7 +97,6 @@ class MultipleProblemServiceTest {
             userAnswer = answerId.toString(),
             score = problem.score,
         )
-        every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
 
@@ -119,7 +121,6 @@ class MultipleProblemServiceTest {
             userAnswer = answerId.toString(),
             score = 0.0,
         )
-        every { userRepository.findByEmail(email) } returns user
         every { multipleChoiceProblemRepository.findByIdOrNull(problemId) } returns problem
         every { gradingHistoryRepository.save(any()) } returns gradingHistory
 

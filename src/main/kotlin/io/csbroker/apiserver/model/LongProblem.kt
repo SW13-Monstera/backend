@@ -80,7 +80,7 @@ class LongProblem(
         )
     }
 
-    fun toDetailResponseDto(email: String?): LongProblemDetailResponseDto {
+    fun toDetailResponseDto(email: String?, likes: List<Like>): LongProblemDetailResponseDto {
         val tags = problemTags.map {
             it.tag
         }.map {
@@ -105,9 +105,9 @@ class LongProblem(
             scoreList.size,
             isSolved,
             isGradable,
-            problemLike.count().toLong(),
+            likes.count().toLong(),
             problemBookmark.count().toLong(),
-            problemLike.any { it.user.email == email },
+            likes.any { it.user.email == email },
             problemBookmark.any { it.user.email == email },
         )
     }
