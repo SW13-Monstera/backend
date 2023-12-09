@@ -59,7 +59,7 @@ class RedisRepository(
 
     fun getRank(key: String): RankResultDto {
         val score = redisTemplate.opsForZSet().score(RANKING, key) ?: 0.0
-        val rankKey = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)?.first()
+        val rankKey = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)?.firstOrNull()
 
         val rank = rankKey?.let {
             redisTemplate.opsForZSet().reverseRank(RANKING, rankKey)?.plus(1)
