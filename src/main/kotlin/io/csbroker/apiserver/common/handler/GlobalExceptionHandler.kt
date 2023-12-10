@@ -17,7 +17,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 class GlobalExceptionHandler {
     @ExceptionHandler(value = [BizException::class])
     fun handlingBizException(bizException: BizException): ResponseEntity<ApiResponse<String>> {
-        log.error(bizException.log)
+        log.error(bizException.log, bizException)
         return ResponseEntity.status(bizException.errorCode.code)
             .body(ApiResponse.fail(bizException.errorCode.message))
     }
@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
         ],
     )
     fun handlingBizException(exception: Exception): ResponseEntity<ApiResponse<String>> {
-        log.error(exception.message)
+        log.error(exception.message, exception)
         return ResponseEntity.status(ErrorCode.CONDITION_NOT_FULFILLED.code)
             .body(ApiResponse.fail(ErrorCode.CONDITION_NOT_FULFILLED.message))
     }
@@ -39,7 +39,7 @@ class GlobalExceptionHandler {
     fun handlingInternalServiceException(internalServiceException: InternalServiceException):
         ResponseEntity<ApiResponse<String>> {
         Sentry.captureException(internalServiceException)
-        log.error(internalServiceException.log)
+        log.error(internalServiceException.log, internalServiceException)
 
         return ResponseEntity.status(internalServiceException.errorCode.code)
             .body(ApiResponse.error(internalServiceException.errorCode.message))
@@ -48,7 +48,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = [Exception::class])
     fun handlingException(exception: Exception): ResponseEntity<ApiResponse<String>> {
         Sentry.captureException(exception)
-        log.error(exception.message)
+        log.error(exception.message, exception)
 
         if (exception is AccessDeniedException) {
             return ResponseEntity.status(ErrorCode.FORBIDDEN.code)
