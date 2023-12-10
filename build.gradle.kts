@@ -90,8 +90,12 @@ dependencies {
     // mail
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("aws.sdk.kotlin:ses:${property("awsSdkVersion")}")
-    implementation("aws.sdk.kotlin:s3:${property("awsSdkVersion")}")
+    implementation("aws.sdk.kotlin:ses:${property("awsSdkVersion")}") {
+        exclude("com.squareup.okhttp3:okhttp")
+    }
+    implementation("aws.sdk.kotlin:s3:${property("awsSdkVersion")}") {
+        exclude("com.squareup.okhttp3:okhttp")
+    }
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${property("kotlinCoroutinesVersion")}")
 
     // rate-limiter
