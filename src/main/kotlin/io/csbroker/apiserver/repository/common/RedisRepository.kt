@@ -58,11 +58,12 @@ class RedisRepository(
     }
 
     fun getRank(key: String): RankResultDto {
-        val score = redisTemplate.opsForZSet().score(RANKING, key) ?: 0.0
-        val rankKey = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)?.firstOrNull()
+        val score = redisTemplate.opsForZSet().score(RANKING, key)
+            ?: return RankResultDto(null, 0.0)
 
+        val rankKey = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)?.firstOrNull()
         val rank = rankKey?.let {
-            redisTemplate.opsForZSet().reverseRank(RANKING, rankKey)?.plus(1)
+            redisTemplate.opsForZSet().reverseRank(RANKING, it)?.plus(1)
         }
 
         return RankResultDto(rank, score)
@@ -88,10 +89,7 @@ class RedisRepository(
 
     private fun getRankDetails(keyWithScores: Set<TypedTuple<String>>): List<RankListDto.RankDetail> {
         return keyWithScores.fold(emptyList()) { acc, value ->
-            val score = value.score!!
-            val keys = value.value!!.split('@')
-            val id = UUID.fromString(keys[0])
-            val username = keys[1]
+            val (score, id, username) = value.getRankInfo()
 
             acc + if (acc.isEmpty() || acc.last().score != score) {
                 val key = redisTemplate.opsForZSet().reverseRangeByScore(RANKING, score, score, 0, 1)!!.first()
@@ -110,5 +108,13 @@ class RedisRepository(
                 )
             }
         }
+    }
+
+    private fun TypedTuple<String>.getRankInfo(): Triple<Double, UUID, String> {
+        val keys = value!!.split('@')
+        val id = UUID.fromString(keys[0])
+        val username = keys[1]
+
+        return Triple(this.score!!, id, username)
     }
 }
