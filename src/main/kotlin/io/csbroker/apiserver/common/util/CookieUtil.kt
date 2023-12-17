@@ -4,7 +4,11 @@ import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
-import org.springframework.util.SerializationUtils
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.util.Base64
 
 fun getCookie(request: HttpServletRequest, name: String) = request.cookies?.let {
@@ -32,13 +36,30 @@ fun deleteCookie(request: HttpServletRequest, response: HttpServletResponse, nam
 
 fun OAuth2AuthorizationRequest.serialize(): String {
     return Base64.getUrlEncoder()
-        .encodeToString(SerializationUtils.serialize(this))
+        .encodeToString(this.toByteArray())
 }
 
-fun <T> deserialize(cookie: Cookie, cls: Class<T>): T {
-    return cls.cast(
-        SerializationUtils.deserialize(
-            Base64.getUrlDecoder().decode(cookie.value),
-        ),
-    )
+fun <T> deserialize(cookie: Cookie): T {
+    return Base64.getUrlDecoder().decode(cookie.value).fromByteArray()
+}
+
+@Suppress("UNCHECKED_CAST")
+private fun <T : Serializable> ByteArray.fromByteArray(): T {
+    val byteArrayInputStream = ByteArrayInputStream(this)
+    val objectInput = ObjectInputStream(byteArrayInputStream)
+    val result = objectInput.readObject() as T
+    objectInput.close()
+    byteArrayInputStream.close()
+    return result
+}
+
+private fun Serializable.toByteArray(): ByteArray {
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+    objectOutputStream.writeObject(this)
+    objectOutputStream.flush()
+    val result = byteArrayOutputStream.toByteArray()
+    byteArrayOutputStream.close()
+    objectOutputStream.close()
+    return result
 }

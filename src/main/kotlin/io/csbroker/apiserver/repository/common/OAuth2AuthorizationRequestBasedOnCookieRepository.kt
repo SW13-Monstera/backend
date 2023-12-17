@@ -18,8 +18,7 @@ private const val COOKIE_EXPIRE_SECONDS = 180L
 class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     override fun loadAuthorizationRequest(request: HttpServletRequest): OAuth2AuthorizationRequest? {
         val cookie = getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME) ?: return null
-
-        return deserialize(cookie, OAuth2AuthorizationRequest::class.java)
+        return deserialize(cookie)
     }
 
     override fun saveAuthorizationRequest(
