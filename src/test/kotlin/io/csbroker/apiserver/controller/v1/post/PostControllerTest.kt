@@ -18,6 +18,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.request.RequestDocumentation
 import java.time.LocalDateTime
+import java.util.UUID
 
 class PostControllerTest : RestDocsTest() {
     private lateinit var postService: PostService
@@ -101,6 +102,7 @@ class PostControllerTest : RestDocsTest() {
                 1L,
                 "CONTENT",
                 "USER",
+                UUID.randomUUID(),
                 1,
                 true,
                 listOf(
@@ -108,6 +110,7 @@ class PostControllerTest : RestDocsTest() {
                         1L,
                         "CONTENT",
                         "USER",
+                        UUID.randomUUID(),
                         1,
                         true,
                         LocalDateTime.now(),
@@ -138,6 +141,8 @@ class PostControllerTest : RestDocsTest() {
                             .type(JsonFieldType.STRING).description("글 내용"),
                         PayloadDocumentation.fieldWithPath("data[].username")
                             .type(JsonFieldType.STRING).description("작성자"),
+                        PayloadDocumentation.fieldWithPath("data[].userId")
+                            .type(JsonFieldType.STRING).description("작성자 ID"),
                         PayloadDocumentation.fieldWithPath("data[].likeCount")
                             .type(JsonFieldType.NUMBER).description("좋아요 수"),
                         PayloadDocumentation.fieldWithPath("data[].isLiked")
@@ -148,6 +153,8 @@ class PostControllerTest : RestDocsTest() {
                             .type(JsonFieldType.STRING).description("댓글 내용"),
                         PayloadDocumentation.fieldWithPath("data[].comments[].username")
                             .type(JsonFieldType.STRING).description("댓글 작성자"),
+                        PayloadDocumentation.fieldWithPath("data[].comments[].userId")
+                            .type(JsonFieldType.STRING).description("댓글 작성자 ID"),
                         PayloadDocumentation.fieldWithPath("data[].comments[].likeCount")
                             .type(JsonFieldType.NUMBER).description("좋아요 수"),
                         PayloadDocumentation.fieldWithPath("data[].comments[].isLiked")
