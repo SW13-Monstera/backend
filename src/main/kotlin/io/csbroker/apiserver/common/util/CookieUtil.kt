@@ -39,27 +39,22 @@ fun OAuth2AuthorizationRequest.serialize(): String {
         .encodeToString(this.toByteArray())
 }
 
-fun <T> deserialize(cookie: Cookie): T {
-    return Base64.getUrlDecoder().decode(cookie.value).fromByteArray()
-}
-
-@Suppress("UNCHECKED_CAST")
-private fun <T : Serializable> ByteArray.fromByteArray(): T {
-    val byteArrayInputStream = ByteArrayInputStream(this)
-    val objectInput = ObjectInputStream(byteArrayInputStream)
-    val result = objectInput.readObject() as T
-    objectInput.close()
-    byteArrayInputStream.close()
-    return result
+inline fun <reified T> Cookie.deserialize(): T {
+    return Base64.getUrlDecoder().decode(this.value).let {
+        ByteArrayInputStream(it).use { byteArrayInputStream ->
+            ObjectInputStream(byteArrayInputStream).use { objectInput ->
+                objectInput.readObject()
+            }
+        }
+    } as? T ?: throw ClassCastException()
 }
 
 private fun Serializable.toByteArray(): ByteArray {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
-    objectOutputStream.writeObject(this)
-    objectOutputStream.flush()
-    val result = byteArrayOutputStream.toByteArray()
-    byteArrayOutputStream.close()
-    objectOutputStream.close()
-    return result
+    return ByteArrayOutputStream().use {
+        ObjectOutputStream(it).use { objectOutputStream ->
+            objectOutputStream.writeObject(this)
+            objectOutputStream.flush()
+            it.toByteArray()
+        }
+    }
 }
