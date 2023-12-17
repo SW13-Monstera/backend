@@ -178,8 +178,8 @@ class LongProblemServiceImpl(
             title = problem.title,
             tags = tags,
             description = problem.description,
-            totalSubmissionCount = totalSubmissionCount,
-            userSubmissionCount = userSubmissionCount,
+            totalSubmission = totalSubmissionCount,
+            userSubmission = userSubmissionCount,
             userAnswer = answer,
             standardAnswer = standardAnswer,
         )

@@ -216,8 +216,8 @@ class LongProblemControllerTest : RestDocsTest() {
             title = "title",
             tags = listOf("tag1", "tag2", "tag3"),
             description = "description",
-            totalSubmissionCount = 100,
-            userSubmissionCount = 10,
+            totalSubmission = 100,
+            userSubmission = 10,
             userAnswer = "user answer",
             standardAnswer = "standard answer",
         )
@@ -255,9 +255,9 @@ class LongProblemControllerTest : RestDocsTest() {
                         fieldWithPath("data.title").type(JsonFieldType.STRING).description("문제 제목"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
                         fieldWithPath("data.description").type(JsonFieldType.STRING).description("문제 설명"),
-                        fieldWithPath("data.totalSubmissionCount").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.totalSubmission").type(JsonFieldType.NUMBER)
                             .description("해당 문제에 대해 전체 유저가 제출한 수 (총 제출 수)"),
-                        fieldWithPath("data.userSubmissionCount").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.userSubmission").type(JsonFieldType.NUMBER)
                             .description("해당 문제에 대해 유저가 제출한 수 "),
                         fieldWithPath("data.userAnswer").type(JsonFieldType.STRING).description("유저의 답변"),
                         fieldWithPath("data.standardAnswer").type(JsonFieldType.STRING).description("모범 답안"),
