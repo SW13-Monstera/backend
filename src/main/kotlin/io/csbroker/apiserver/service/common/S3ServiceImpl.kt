@@ -2,6 +2,8 @@ package io.csbroker.apiserver.service.common
 
 import aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider
 import aws.sdk.kotlin.services.s3.S3Client
+import aws.sdk.kotlin.services.s3.model.ObjectCannedAcl
+import aws.sdk.kotlin.services.s3.model.PutObjectRequest
 import aws.smithy.kotlin.runtime.content.ByteStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -29,11 +31,14 @@ class S3ServiceImpl(
                 secretAccessKey = secretKey
             }
         }.use {
-            it.putObject {
-                this.bucket = bucketName
-                this.key = s3FileName
-                this.body = ByteStream.fromBytes(multipartFile.bytes)
-            }
+            it.putObject(
+                PutObjectRequest.invoke {
+                    bucket = bucketName
+                    key = s3FileName
+                    body = ByteStream.fromBytes(multipartFile.bytes)
+                    acl = ObjectCannedAcl.PublicRead
+                },
+            )
         }
 
         return getFullPath(s3FileName)
