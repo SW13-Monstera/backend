@@ -4,8 +4,8 @@ data class SubmitLongProblemResponseDto(
     val title: String,
     val tags: List<String>,
     val description: String,
-    val totalSubmissionCount: Int,
-    val userSubmissionCount: Int,
+    val totalSubmission: Int,
+    val userSubmission: Int,
     val userAnswer: String,
     val standardAnswer: String,
 )
