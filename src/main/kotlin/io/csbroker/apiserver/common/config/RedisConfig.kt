@@ -27,13 +27,12 @@ class RedisConfig(
 
     @Bean
     fun stringRedisTemplate(): StringRedisTemplate {
-        val redisTemplate = StringRedisTemplate()
-        redisTemplate.keySerializer = StringRedisSerializer()
-        redisTemplate.valueSerializer = StringRedisSerializer()
-        redisTemplate.connectionFactory = redisConnectionFactory()
-        redisTemplate.setEnableTransactionSupport(true)
-
-        return redisTemplate
+        return StringRedisTemplate().also {
+            it.keySerializer = StringRedisSerializer()
+            it.valueSerializer = StringRedisSerializer()
+            it.connectionFactory = redisConnectionFactory()
+            it.setEnableTransactionSupport(true)
+        }
     }
 
     @Bean
