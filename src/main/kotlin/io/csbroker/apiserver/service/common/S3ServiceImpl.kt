@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.service.common
 
-import aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider
 import aws.sdk.kotlin.services.s3.S3Client
 import aws.sdk.kotlin.services.s3.model.ObjectCannedAcl
 import aws.sdk.kotlin.services.s3.model.PutObjectRequest
@@ -12,35 +11,20 @@ import java.util.UUID
 
 @Service
 class S3ServiceImpl(
-    @Value("\${aws.access-key}")
-    private val accessKey: String,
-
-    @Value("\${aws.secret-key}")
-    private val secretKey: String,
-
+    private val s3Client: S3Client,
     @Value("\${aws.s3-bucket}")
     private val bucketName: String,
 ) : S3Service {
     override suspend fun uploadProfileImg(multipartFile: MultipartFile): String {
         val s3FileName = createS3FileName(multipartFile)
-
-        S3Client {
-            region = "ap-northeast-2"
-            credentialsProvider = StaticCredentialsProvider {
-                accessKeyId = accessKey
-                secretAccessKey = secretKey
-            }
-        }.use {
-            it.putObject(
-                PutObjectRequest.invoke {
-                    bucket = bucketName
-                    key = s3FileName
-                    body = ByteStream.fromBytes(multipartFile.bytes)
-                    acl = ObjectCannedAcl.PublicRead
-                },
-            )
-        }
-
+        s3Client.putObject(
+            PutObjectRequest {
+                bucket = bucketName
+                key = s3FileName
+                body = ByteStream.fromBytes(multipartFile.bytes)
+                acl = ObjectCannedAcl.PublicRead
+            },
+        )
         return getFullPath(s3FileName)
     }
 
