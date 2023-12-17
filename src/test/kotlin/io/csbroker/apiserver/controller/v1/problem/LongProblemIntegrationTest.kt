@@ -77,8 +77,8 @@ class LongProblemIntegrationTest : IntegrationTest() {
                 val responseDto = objectMapper.readValue<SubmitLongProblemResponseDto>(dataAsString)
                 responseDto.title shouldBe problem.title
                 responseDto.description shouldBe problem.description
-                responseDto.totalSubmissionCount shouldBe preSubmissionCount + 1 // 제출 수가 증가하는지 확인
-                responseDto.userSubmissionCount shouldBe preUserSubmissionCount + 1 // 제출 수가 증가하는지 확인
+                responseDto.totalSubmission shouldBe preSubmissionCount + 1 // 제출 수가 증가하는지 확인
+                responseDto.userSubmission shouldBe preUserSubmissionCount + 1 // 제출 수가 증가하는지 확인
                 responseDto.userAnswer shouldBe userAnswer
                 standardAnswers.map { sa -> sa.content } shouldContain responseDto.standardAnswer // 모법답안중 하나가 반환되는지 확인
             }
