@@ -1,7 +1,6 @@
 package io.csbroker.apiserver.service.problem
 
 import io.csbroker.apiserver.auth.ProviderType
-import io.csbroker.apiserver.common.client.AIServerClient
 import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.controller.v2.problem.request.SubmitLongProblemDto
 import io.csbroker.apiserver.model.LongProblem
@@ -13,7 +12,6 @@ import io.csbroker.apiserver.repository.problem.GradingHistoryRepository
 import io.csbroker.apiserver.repository.problem.LongProblemRepository
 import io.csbroker.apiserver.repository.problem.StandardAnswerRepository
 import io.csbroker.apiserver.repository.problem.UserAnswerRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -27,12 +25,10 @@ import java.util.UUID
 class LongProblemServiceTest {
 
     private val longProblemRepository = mockk<LongProblemRepository>()
-    private val userRepository = mockk<UserRepository>()
     private val userAnswerRepository = mockk<UserAnswerRepository>()
     private val standardAnswerRepository = mockk<StandardAnswerRepository>()
     private val gradingHistoryRepository = mockk<GradingHistoryRepository>()
     private val likeRepository = mockk<LikeRepository>()
-    private val aiServerClient = mockk<AIServerClient>()
     private val user = User(
         id = UUID.randomUUID(),
         email = "test@test.com",
