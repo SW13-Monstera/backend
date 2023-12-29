@@ -15,4 +15,3 @@ data class ShortProblemGradingRequestDto(
     val problemId: Long,
     val answer: String,
 ) : GradingRequestDto
-
