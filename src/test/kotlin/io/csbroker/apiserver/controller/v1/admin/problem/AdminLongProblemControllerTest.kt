@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.controller.v1.admin.problem
 
+import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto

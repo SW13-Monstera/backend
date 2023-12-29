@@ -47,12 +47,10 @@ class LongProblemServiceTest {
     fun setUp() {
         longProblemService = LongProblemServiceImpl(
             longProblemRepository,
-            userRepository,
             userAnswerRepository,
             standardAnswerRepository,
             gradingHistoryRepository,
             likeRepository,
-            aiServerClient,
         )
     }
 

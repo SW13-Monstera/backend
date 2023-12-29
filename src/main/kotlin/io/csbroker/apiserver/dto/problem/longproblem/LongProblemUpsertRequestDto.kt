@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.dto.problem.longproblem
 
+import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.model.GradingStandard
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.User

@@ -1,6 +1,7 @@
 package io.csbroker.apiserver.dto.problem.grade
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.model.LongProblem
 
 data class LongProblemGradingRequestToAiServerDto(

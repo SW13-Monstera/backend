@@ -1,5 +1,6 @@
 package io.csbroker.apiserver.model
 
+import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto.UserAnswerDataDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
