@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.model
 
-import io.csbroker.apiserver.common.enums.GradingStandardType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -17,7 +16,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "grading_standard")
-class GradingStandard(
+class GradingStandard(  // Todo : 제거 예정
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_standard_id")

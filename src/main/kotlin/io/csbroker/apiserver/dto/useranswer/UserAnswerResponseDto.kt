@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.dto.useranswer
 
-import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import io.csbroker.apiserver.model.UserAnswer
 

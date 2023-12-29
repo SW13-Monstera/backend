@@ -16,9 +16,3 @@ data class ShortProblemGradingRequestDto(
     val answer: String,
 ) : GradingRequestDto
 
-data class LongProblemGradingRequestDto(
-    val email: String,
-    val problemId: Long,
-    val answer: String,
-    val isGrading: Boolean,
-) : GradingRequestDto

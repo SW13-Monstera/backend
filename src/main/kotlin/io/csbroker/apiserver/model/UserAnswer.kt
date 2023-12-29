@@ -1,6 +1,5 @@
 package io.csbroker.apiserver.model
 
-import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto.UserAnswerDataDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -16,7 +15,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "user_answer")
-class UserAnswer(
+class UserAnswer(  // Todo : 제거 예정
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_answer_id")
