@@ -16,7 +16,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "user_answer")
-class UserAnswer(  // Todo : 제거 예정
+class UserAnswer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_answer_id")

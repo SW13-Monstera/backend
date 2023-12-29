@@ -17,7 +17,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "grading_standard")
-class GradingStandard(  // Todo : 제거 예정
+class GradingStandard(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grading_standard_id")
