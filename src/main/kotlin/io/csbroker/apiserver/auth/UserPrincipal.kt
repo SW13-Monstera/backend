@@ -16,20 +16,20 @@ class UserPrincipal(
     private val password: String,
     private val providerType: ProviderType,
     private val roleType: Role,
-    private val authorities: MutableCollection<GrantedAuthority>,
+    private val authorities: Collection<GrantedAuthority>,
 ) : OAuth2User, UserDetails, OidcUser {
 
-    private lateinit var attributes: MutableMap<String, Any>
+    private lateinit var attributes: Map<String, Any>
 
     override fun getName(): String {
         return userId
     }
 
-    override fun getAttributes(): MutableMap<String, Any> {
+    override fun getAttributes(): Map<String, Any> {
         return attributes
     }
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+    override fun getAuthorities(): Collection<GrantedAuthority> {
         return authorities
     }
 
@@ -57,7 +57,7 @@ class UserPrincipal(
         return true
     }
 
-    override fun getClaims(): MutableMap<String, Any>? {
+    override fun getClaims(): Map<String, Any>? {
         return null
     }
 
@@ -80,7 +80,7 @@ class UserPrincipal(
             )
         }
 
-        fun create(user: User, attributes: MutableMap<String, Any>): UserPrincipal {
+        fun create(user: User, attributes: Map<String, Any>): UserPrincipal {
             val userPrincipal = create(user)
             userPrincipal.attributes = attributes
 

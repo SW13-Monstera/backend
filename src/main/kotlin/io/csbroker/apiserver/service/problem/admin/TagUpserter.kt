@@ -31,23 +31,10 @@ class TagUpserter(
         problem.problemTags.addAll(problemTags)
     }
 
-    fun updateTags(problem: Problem, tagNames: MutableList<String>) {
-        problem.problemTags.removeIf {
-            if (it.tag.name !in tagNames) {
-                problemTagRepository.delete(it)
-                return@removeIf true
-            }
-            return@removeIf false
-        }
-
-        tagNames.removeIf {
-            it in problem.problemTags.map { pt ->
-                pt.tag.name
-            }
-        }
+    fun updateTags(problem: Problem, tagNames: List<String>) {
+        problem.problemTags.clear()
 
         val tags = tagRepository.findTagsByNameIn(tagNames)
-
         checkEveryTagExist(tags, tagNames)
 
         val problemTags = tags.map {

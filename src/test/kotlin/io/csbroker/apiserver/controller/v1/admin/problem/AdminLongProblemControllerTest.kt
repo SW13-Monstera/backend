@@ -288,8 +288,8 @@ class AdminLongProblemControllerTest : RestDocsTest() {
         "test",
         "test",
         listOf("test"),
-        mutableListOf("db", "network"),
-        mutableListOf(
+        listOf("db", "network"),
+        listOf(
             LongProblemUpsertRequestDto.GradingStandardData(
                 "keyword-1",
                 1.0,

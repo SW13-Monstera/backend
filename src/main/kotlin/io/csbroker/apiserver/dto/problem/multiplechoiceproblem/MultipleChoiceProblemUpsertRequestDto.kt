@@ -7,8 +7,8 @@ import io.csbroker.apiserver.model.User
 data class MultipleChoiceProblemUpsertRequestDto(
     val title: String,
     val description: String,
-    val tags: MutableList<String>,
-    val choices: MutableList<ChoiceData>,
+    val tags: List<String>,
+    val choices: List<ChoiceData>,
     val score: Double,
     val isGradable: Boolean = true,
     val isActive: Boolean = true,

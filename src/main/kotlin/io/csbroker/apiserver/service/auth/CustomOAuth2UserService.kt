@@ -42,10 +42,10 @@ class CustomOAuth2UserService(
 
         val accessToken = userRequest.accessToken.tokenValue
 
-        val attributes = user.attributes.toMutableMap()
-
-        if (providerType == ProviderType.GITHUB && attributes["email"] == null) {
-            setGithubPrimaryEmail(accessToken, attributes)
+        val attributes = if (providerType == ProviderType.GITHUB && user.attributes["email"] == null) {
+            setGithubPrimaryEmail(accessToken, user.attributes)
+        } else {
+            user.attributes
         }
 
         return UserPrincipal.create(getOrCreateUser(providerType, attributes), attributes)
@@ -53,15 +53,18 @@ class CustomOAuth2UserService(
 
     private fun setGithubPrimaryEmail(
         accessToken: String?,
-        attributes: MutableMap<String, Any>,
-    ) {
+        attributes: Map<String, Any>,
+    ): Map<String, Any> {
         val emailResponseDto = githubClient.getUserEmail("Bearer $accessToken").first { it.primary }
-        attributes["email"] = emailResponseDto.email
+        return hashMapOf<String, Any>().also {
+            it.putAll(attributes)
+            it["email"] = emailResponseDto.email
+        }
     }
 
     private fun getOrCreateUser(
         providerType: ProviderType,
-        attributes: MutableMap<String, Any>,
+        attributes: Map<String, Any>,
     ): User {
         val userInfo = OAuth2UserInfoFactory.getOauth2UserInfo(providerType, attributes)
         val savedUser = userRepository.findByEmail(userInfo.email)

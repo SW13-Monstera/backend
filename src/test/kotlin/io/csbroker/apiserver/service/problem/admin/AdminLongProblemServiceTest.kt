@@ -103,9 +103,9 @@ class AdminLongProblemServiceTest {
         return LongProblemUpsertRequestDto(
             title = "Test problem",
             description = "This is a test problem",
-            tags = mutableListOf("tag 1", "tag 2"),
+            tags = listOf("tag 1", "tag 2"),
             standardAnswers = emptyList(),
-            gradingStandards = mutableListOf(),
+            gradingStandards = emptyList(),
         )
     }
 }

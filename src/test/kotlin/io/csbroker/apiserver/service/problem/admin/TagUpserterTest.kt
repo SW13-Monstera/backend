@@ -44,7 +44,7 @@ class TagUpserterTest {
         val tag1 = Tag(id = 1, name = "tag1")
         val tag2 = Tag(id = 2, name = "tag2")
         every { tagRepository.findTagsByNameIn(tagNames) } returns listOf(tag1, tag2)
-        every { problemTagRepository.saveAll(any<List<ProblemTag>>()) } returns mutableListOf()
+        every { problemTagRepository.saveAll(any<List<ProblemTag>>()) } returns emptyList()
 
         // when
         tagUpserter.setTags(problem, tagNames)
@@ -91,7 +91,7 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames) }
     }
 
     @Test
@@ -103,7 +103,7 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames) }
     }
 
     private fun getLongProblem(): LongProblem = LongProblem(

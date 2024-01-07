@@ -119,7 +119,7 @@ class AdminShortProblemServiceTest {
         val requestDto = ShortProblemUpsertRequestDto(
             title = "title",
             description = "description",
-            tags = mutableListOf(),
+            tags = emptyList(),
             answer = "answer",
             score = 10.0,
         )
@@ -143,7 +143,7 @@ class AdminShortProblemServiceTest {
         val requestDto = ShortProblemUpsertRequestDto(
             title = "updatedTitle",
             description = "updatedDescription",
-            tags = mutableListOf(),
+            tags = emptyList(),
             answer = "updatedAnswer",
             score = 10.0,
         )

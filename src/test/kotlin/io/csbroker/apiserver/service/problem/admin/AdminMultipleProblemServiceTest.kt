@@ -141,8 +141,8 @@ class AdminMultipleProblemServiceTest {
         val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
             title = "title",
             description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(),
+            tags = emptyList(),
+            choices = emptyList(),
             score = 10.0,
         )
         every { tagUpserter.setTags(any(), any()) } just runs
@@ -161,8 +161,8 @@ class AdminMultipleProblemServiceTest {
         val createRequestDto = MultipleChoiceProblemUpsertRequestDto(
             title = "title",
             description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(ChoiceData(content = "content", isAnswer = true)),
+            tags = emptyList(),
+            choices = listOf(ChoiceData(content = "content", isAnswer = true)),
             score = 10.0,
         )
         every { tagUpserter.setTags(any(), any()) } just runs
@@ -181,8 +181,8 @@ class AdminMultipleProblemServiceTest {
         val requestDto = MultipleChoiceProblemUpsertRequestDto(
             title = "title",
             description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(),
+            tags = emptyList(),
+            choices = emptyList(),
             score = 10.0,
         )
         every { multipleChoiceProblemRepository.findByIdOrNull(any()) } returns null
@@ -200,8 +200,8 @@ class AdminMultipleProblemServiceTest {
         val requestDto = MultipleChoiceProblemUpsertRequestDto(
             title = "title",
             description = "description",
-            tags = mutableListOf(),
-            choices = mutableListOf(),
+            tags = emptyList(),
+            choices = emptyList(),
             score = 10.0,
         )
         every { multipleChoiceProblemRepository.findByIdOrNull(problem.id) } returns problem

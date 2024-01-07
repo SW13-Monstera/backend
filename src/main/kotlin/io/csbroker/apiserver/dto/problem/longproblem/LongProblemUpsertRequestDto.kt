@@ -9,8 +9,8 @@ data class LongProblemUpsertRequestDto(
     val title: String,
     val description: String,
     val standardAnswers: List<String>,
-    val tags: MutableList<String>,
-    val gradingStandards: MutableList<GradingStandardData>,
+    val tags: List<String>,
+    val gradingStandards: List<GradingStandardData>,
     val isGradable: Boolean = false,
     val isActive: Boolean = true,
 ) {
