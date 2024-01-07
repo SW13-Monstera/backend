@@ -22,7 +22,6 @@ class AdminMultipleProblemServiceImpl(
     private val multipleChoiceProblemRepository: MultipleChoiceProblemRepository,
     private val choiceRepository: ChoiceRepository,
     private val problemRepository: ProblemRepository,
-    private val userRepository: UserRepository,
     private val tagUpserter: TagUpserter,
 ) : AdminMultipleProblemService {
     override fun findProblems(problemSearchDto: AdminProblemSearchDto): MultipleChoiceProblemSearchResponseDto {

@@ -27,7 +27,6 @@ class AdminShortProblemServiceTest {
 
     private lateinit var shortProblemRepository: ShortProblemRepository
     private lateinit var problemRepository: ProblemRepository
-    private lateinit var userRepository: UserRepository
     private lateinit var tagUpserter: TagUpserter
     private lateinit var adminShortProblemService: AdminShortProblemService
     private lateinit var user: User
@@ -37,12 +36,10 @@ class AdminShortProblemServiceTest {
     fun setUp() {
         shortProblemRepository = mockk()
         problemRepository = mockk()
-        userRepository = mockk()
         tagUpserter = mockk()
         adminShortProblemService = AdminShortProblemServiceImpl(
             shortProblemRepository,
             problemRepository,
-            userRepository,
             tagUpserter,
         )
         user = User(

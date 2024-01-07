@@ -128,7 +128,7 @@ class ShortProblemServiceTest {
         verify { gradingHistoryRepository.save(any()) }
     }
 
-    fun createProblem(): ShortProblem {
+    private fun createProblem(): ShortProblem {
         val problem = ShortProblem(
             title = "title",
             description = "description",

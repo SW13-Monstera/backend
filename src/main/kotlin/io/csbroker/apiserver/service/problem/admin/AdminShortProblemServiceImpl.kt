@@ -8,7 +8,6 @@ import io.csbroker.apiserver.dto.problem.shortproblem.ShortProblemUpsertRequestD
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 class AdminShortProblemServiceImpl(
     private val shortProblemRepository: ShortProblemRepository,
     private val problemRepository: ProblemRepository,
-    private val userRepository: UserRepository,
     private val tagUpserter: TagUpserter,
 ) : AdminShortProblemService {
     override fun findProblems(problemSearchDto: AdminProblemSearchDto): ShortProblemSearchResponseDto {
