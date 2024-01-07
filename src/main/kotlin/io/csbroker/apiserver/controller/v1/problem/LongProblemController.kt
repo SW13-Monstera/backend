@@ -5,10 +5,8 @@ import io.csbroker.apiserver.common.util.getEmailFromSecurityContextHolder
 import io.csbroker.apiserver.controller.v2.problem.request.SubmitLongProblemDto
 import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.common.ApiResponse
-import io.csbroker.apiserver.dto.problem.grade.LongProblemGradingRequestDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDto
-import io.csbroker.apiserver.dto.problem.longproblem.LongProblemGradingHistoryDto
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.service.post.PostService
 import io.csbroker.apiserver.service.problem.LongProblemService
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -31,23 +28,6 @@ class LongProblemController(
         val findProblemDetail = longProblemService.findProblemById(id, getEmailFromSecurityContextHolder())
 
         return ApiResponse.success(findProblemDetail)
-    }
-
-    @PostMapping("/{id}/grade")
-    fun gradeLongProblem(
-        @LoginUser loginUser: User,
-        @PathVariable("id") id: Long,
-        @RequestBody answerDto: LongProblemAnswerDto,
-        @RequestParam("isGrading", required = false) isGrading: Boolean?,
-    ): ApiResponse<LongProblemGradingHistoryDto> {
-        val gradingRequestDto = LongProblemGradingRequestDto(
-            loginUser.email,
-            id,
-            answerDto.answer,
-            isGrading ?: true,
-        )
-        val gradeHistory = longProblemService.gradingProblem(gradingRequestDto)
-        return ApiResponse.success(gradeHistory)
     }
 
     @PostMapping("{id}/submit")
