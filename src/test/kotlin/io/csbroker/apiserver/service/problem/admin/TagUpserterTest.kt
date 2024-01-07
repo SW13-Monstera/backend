@@ -95,6 +95,18 @@ class TagUpserterTest {
         assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
     }
 
+    @Test
+    fun `중복된 태그를 포함하여 업데이트하려고 하면 예외가 발생한다`() {
+        // given
+        val problem = getLongProblem()
+        val tagNames = listOf("tag1", "tag1", "tag2")
+        val tags = listOf(Tag(name = "tag1"), Tag(name = "tag1"))
+        every { tagRepository.findTagsByNameIn(tagNames) } returns tags
+
+        // when, then
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
+    }
+
     private fun getLongProblem(): LongProblem = LongProblem(
         title = "test title",
         description = "test description",
