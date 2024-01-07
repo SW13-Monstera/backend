@@ -67,8 +67,11 @@ class TagUpserter(
             }
             throw ConditionConflictException(
                 ErrorCode.CONDITION_NOT_FULFILLED,
-                if (notExistTags.isNotEmpty()) "$notExistTags 태그가 존재하지 않습니다."
-                else "중복된 태그가 존재합니다."
+                if (notExistTags.isNotEmpty()) {
+                    "$notExistTags 태그가 존재하지 않습니다."
+                } else {
+                    "중복된 태그가 존재합니다."
+                },
             )
         }
     }

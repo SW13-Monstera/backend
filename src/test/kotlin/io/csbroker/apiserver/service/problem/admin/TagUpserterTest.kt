@@ -2,7 +2,6 @@ package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.exception.ConditionConflictException
-import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
