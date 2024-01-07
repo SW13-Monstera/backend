@@ -6,7 +6,6 @@ enum class ErrorCode(
 ) {
     CONDITION_NOT_FULFILLED(400, "올바르지 않은 요청입니다."),
     TOKEN_NOT_EXPIRED(400, "만료되지 않은 토큰입니다."),
-    TOKEN_EXPIRED(401, "액세스 토큰이 만료되었습니다."),
     ACCESS_TOKEN_NOT_EXIST(401, "액세스 토큰이 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_EXIST(401, "리프레시 토큰이 존재하지 않습니다."),
     TOKEN_MISS_MATCH(401, "저장된 토큰과 일치하지 않습니다."),

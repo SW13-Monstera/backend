@@ -24,7 +24,6 @@ class TagUpserterTest {
     private val problemTagRepository = mockk<ProblemTagRepository>()
     private val tagUpserter = TagUpserter(tagRepository, problemTagRepository)
 
-    private val tags = mutableListOf(Tag(name = "tag1"), Tag(name = "tag2"))
     private val user = User(
         id = UUID.randomUUID(),
         email = "test@test.com",

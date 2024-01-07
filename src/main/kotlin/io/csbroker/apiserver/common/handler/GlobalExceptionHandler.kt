@@ -29,7 +29,7 @@ class GlobalExceptionHandler {
             HttpRequestMethodNotSupportedException::class,
         ],
     )
-    fun handlingBizException(exception: Exception): ResponseEntity<ApiResponse<String>> {
+    fun handlingBadRequestException(exception: Exception): ResponseEntity<ApiResponse<String>> {
         log.error(exception.message, exception)
         return ResponseEntity.status(ErrorCode.CONDITION_NOT_FULFILLED.code)
             .body(ApiResponse.fail(ErrorCode.CONDITION_NOT_FULFILLED.message))
