@@ -2,7 +2,6 @@ package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.auth.ProviderType
 import io.csbroker.apiserver.common.exception.ConditionConflictException
-import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
@@ -81,7 +80,7 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<EntityNotFoundException> { tagUpserter.setTags(problem, tagNames) }
+        assertThrows<ConditionConflictException> { tagUpserter.setTags(problem, tagNames) }
     }
 
     @Test
@@ -93,7 +92,19 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<EntityNotFoundException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
+    }
+
+    @Test
+    fun `중복된 태그를 포함하여 업데이트하려고 하면 예외가 발생한다`() {
+        // given
+        val problem = getLongProblem()
+        val tagNames = listOf("tag1", "tag1", "tag2")
+        val tags = listOf(Tag(name = "tag1"), Tag(name = "tag1"))
+        every { tagRepository.findTagsByNameIn(tagNames) } returns tags
+
+        // when, then
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
     }
 
     private fun getLongProblem(): LongProblem = LongProblem(

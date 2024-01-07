@@ -2,7 +2,6 @@ package io.csbroker.apiserver.service.problem.admin
 
 import io.csbroker.apiserver.common.enums.ErrorCode
 import io.csbroker.apiserver.common.exception.ConditionConflictException
-import io.csbroker.apiserver.common.exception.EntityNotFoundException
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
@@ -59,14 +58,21 @@ class TagUpserter(
     }
 
     private fun checkEveryTagExist(
-        tags: List<Tag>,
+        existTags: List<Tag>,
         tagNames: List<String>,
     ) {
-        if (tags.size != tagNames.size) {
+        if (existTags.size != tagNames.size) {
             val notExistTags = tagNames.filter {
-                it !in tags.map { tag -> tag.name }
+                it !in existTags.map { tag -> tag.name }
             }
-            throw EntityNotFoundException("$notExistTags 태그가 존재하지 않습니다.")
+            throw ConditionConflictException(
+                ErrorCode.CONDITION_NOT_FULFILLED,
+                if (notExistTags.isNotEmpty()) {
+                    "$notExistTags 태그가 존재하지 않습니다."
+                } else {
+                    "중복된 태그가 존재합니다."
+                },
+            )
         }
     }
 }
