@@ -27,11 +27,6 @@ class MultipleChoiceProblem(
     @OneToMany(mappedBy = "multipleChoiceProblem", cascade = [CascadeType.ALL])
     val choicesList: MutableList<Choice> = arrayListOf(),
 ) : Problem(title = title, description = description, creator = creator, dtype = "multiple", score = score) {
-    fun addChoice(choice: Choice) {
-        choicesList.add(choice)
-        choice.multipleChoiceProblem = this
-    }
-
     fun addChoices(choices: List<Choice>) {
         choicesList.addAll(choices)
         choices.forEach {

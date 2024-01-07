@@ -12,7 +12,6 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ChoiceRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -31,7 +30,6 @@ class AdminMultipleProblemServiceTest {
     private lateinit var multipleChoiceProblemRepository: MultipleChoiceProblemRepository
     private lateinit var choiceRepository: ChoiceRepository
     private lateinit var problemRepository: ProblemRepository
-    private lateinit var userRepository: UserRepository
     private lateinit var tagUpserter: TagUpserter
     private lateinit var adminMultipleProblemService: AdminMultipleProblemService
     private lateinit var user: User
@@ -42,13 +40,11 @@ class AdminMultipleProblemServiceTest {
         multipleChoiceProblemRepository = mockk()
         choiceRepository = mockk()
         problemRepository = mockk()
-        userRepository = mockk()
         tagUpserter = mockk()
         adminMultipleProblemService = AdminMultipleProblemServiceImpl(
             multipleChoiceProblemRepository,
             choiceRepository,
             problemRepository,
-            userRepository,
             tagUpserter,
         )
         user = User(

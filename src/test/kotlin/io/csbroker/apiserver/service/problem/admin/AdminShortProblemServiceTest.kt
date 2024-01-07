@@ -8,7 +8,6 @@ import io.csbroker.apiserver.model.ShortProblem
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -27,7 +26,6 @@ class AdminShortProblemServiceTest {
 
     private lateinit var shortProblemRepository: ShortProblemRepository
     private lateinit var problemRepository: ProblemRepository
-    private lateinit var userRepository: UserRepository
     private lateinit var tagUpserter: TagUpserter
     private lateinit var adminShortProblemService: AdminShortProblemService
     private lateinit var user: User
@@ -37,12 +35,10 @@ class AdminShortProblemServiceTest {
     fun setUp() {
         shortProblemRepository = mockk()
         problemRepository = mockk()
-        userRepository = mockk()
         tagUpserter = mockk()
         adminShortProblemService = AdminShortProblemServiceImpl(
             shortProblemRepository,
             problemRepository,
-            userRepository,
             tagUpserter,
         )
         user = User(

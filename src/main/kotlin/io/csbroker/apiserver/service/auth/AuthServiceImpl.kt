@@ -24,8 +24,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.UUID
-
-private const val THREE_DAYS_MSEC = 259200000
+import kotlin.time.Duration.Companion.days
 
 @Service
 class AuthServiceImpl(
@@ -123,8 +122,9 @@ class AuthServiceImpl(
         ).token
 
         val validTime = convertRefreshToken.tokenClaims!!.expiration.time - now.time
+        val refreshTime = 3.days.inWholeMilliseconds
 
-        if (validTime <= THREE_DAYS_MSEC) {
+        if (validTime <= refreshTime) {
             val refreshTokenExpiry = appProperties.auth.refreshTokenExpiry
             val newRefreshToken = authTokenProvider.createAuthToken(
                 email,

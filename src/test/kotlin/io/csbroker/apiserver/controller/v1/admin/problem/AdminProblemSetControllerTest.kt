@@ -25,7 +25,7 @@ class AdminProblemSetControllerTest : RestDocsTest() {
     private lateinit var problemSetService: ProblemSetService
     private lateinit var mockMvc: MockMvcRequestSpecification
 
-    @BeforeEach()
+    @BeforeEach
     fun setUp() {
         problemSetService = mockk()
         mockMvc = mockMvc(AdminProblemSetController(problemSetService))
