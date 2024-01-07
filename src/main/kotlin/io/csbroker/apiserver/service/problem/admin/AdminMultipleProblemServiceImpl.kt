@@ -11,7 +11,6 @@ import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ChoiceRepository
 import io.csbroker.apiserver.repository.problem.MultipleChoiceProblemRepository
 import io.csbroker.apiserver.repository.problem.ProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

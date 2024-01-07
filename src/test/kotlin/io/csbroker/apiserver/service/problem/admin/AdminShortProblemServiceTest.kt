@@ -8,7 +8,6 @@ import io.csbroker.apiserver.model.ShortProblem
 import io.csbroker.apiserver.model.User
 import io.csbroker.apiserver.repository.problem.ProblemRepository
 import io.csbroker.apiserver.repository.problem.ShortProblemRepository
-import io.csbroker.apiserver.repository.user.UserRepository
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
