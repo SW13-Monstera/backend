@@ -64,7 +64,7 @@ class AdminProblemControllerTest : RestDocsTest() {
     fun `Delete Problems By Ids 200`() {
         // given
         val problemDeleteRequestDto = ProblemDeleteRequestDto(
-            mutableListOf(1L, 2L, 3L),
+            listOf(1L, 2L, 3L),
         )
         justRun { problemService.removeProblemsById(any()) }
 

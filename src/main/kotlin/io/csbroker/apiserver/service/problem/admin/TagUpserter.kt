@@ -47,7 +47,6 @@ class TagUpserter(
         }
 
         val tags = tagRepository.findTagsByNameIn(tagNames)
-
         checkEveryTagExist(tags, tagNames)
 
         val problemTags = tags.map {

@@ -4,7 +4,7 @@ import io.csbroker.apiserver.common.exception.OAuthProviderMissMatchException
 
 class OAuth2UserInfoFactory {
     companion object {
-        fun getOauth2UserInfo(providerType: ProviderType, attributes: MutableMap<String, Any>): OAuth2UserInfo {
+        fun getOauth2UserInfo(providerType: ProviderType, attributes: Map<String, Any>): OAuth2UserInfo {
             return when (providerType) {
                 ProviderType.GOOGLE -> GoogleOAuth2UserInfo(attributes)
                 ProviderType.GITHUB -> GithubOAuth2UserInfo(attributes)

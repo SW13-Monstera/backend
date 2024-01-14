@@ -41,7 +41,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
         val shortProblemUpsertRequestDto = ShortProblemUpsertRequestDto(
             "test",
             "test",
-            mutableListOf("db", "network"),
+            listOf("db", "network"),
             "test",
             5.0,
         )
@@ -89,7 +89,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
         val shortProblemUpsertRequestDto = ShortProblemUpsertRequestDto(
             "test1",
             "test1",
-            mutableListOf("db", "network"),
+            listOf("db", "network"),
             "test",
             5.0,
             true,
@@ -144,7 +144,7 @@ class AdminShortProblemControllerTest : RestDocsTest() {
             1L,
             "test",
             "test",
-            mutableListOf("db", "network"),
+            listOf("db", "network"),
             "test",
             5.0,
             true,

@@ -42,8 +42,8 @@ class AdminMultipleProblemControllerTest : RestDocsTest() {
         val multipleChoiceProblemUpsertRequestDto = MultipleChoiceProblemUpsertRequestDto(
             "test",
             "test",
-            mutableListOf("db", "network"),
-            mutableListOf(
+            listOf("db", "network"),
+            listOf(
                 ChoiceData(
                     "choice-1",
                     true,
@@ -104,8 +104,8 @@ class AdminMultipleProblemControllerTest : RestDocsTest() {
         val multipleChoiceProblemUpsertRequestDto = MultipleChoiceProblemUpsertRequestDto(
             "test",
             "test",
-            mutableListOf("db", "network"),
-            mutableListOf(
+            listOf("db", "network"),
+            listOf(
                 ChoiceData(
                     "choice-1",
                     true,
@@ -170,9 +170,9 @@ class AdminMultipleProblemControllerTest : RestDocsTest() {
             1L,
             "test",
             "test",
-            mutableListOf("db", "network"),
+            listOf("db", "network"),
             true,
-            mutableListOf(
+            listOf(
                 ChoiceData(
                     "choice-1",
                     true,

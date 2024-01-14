@@ -50,7 +50,7 @@ class AdminShortProblemServiceImpl(
         val findProblem = shortProblemRepository.findByIdOrNull(id)
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 단답형 문제입니다.")
 
-        tagUpserter.updateTags(findProblem, updateRequestDto.tags)
+        tagUpserter.updateTags(findProblem, updateRequestDto.tags.toMutableList())
         findProblem.updateFromDto(updateRequestDto)
 
         return id
