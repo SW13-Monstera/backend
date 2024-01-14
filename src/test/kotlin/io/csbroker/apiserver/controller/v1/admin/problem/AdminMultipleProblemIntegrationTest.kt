@@ -25,19 +25,19 @@ class AdminMultipleProblemIntegrationTest : IntegrationTest() {
         )
         val tag = save(
             Tag(
-                name = "tag1"
-            )
+                name = "tag1",
+            ),
         )
         save(
             Tag(
-                name = "tag2"
-            )
+                name = "tag2",
+            ),
         )
         save(
             ProblemTag(
                 problem = problem,
                 tag = tag,
-            )
+            ),
         )
 
         // when
@@ -60,13 +60,16 @@ class AdminMultipleProblemIntegrationTest : IntegrationTest() {
                 ),
                 tags = listOf("tag2"),
                 score = problem.score,
-            )
+            ),
         )
 
         // then
         response.andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect {
-                val problemTags = findAll<ProblemTag>("SELECT p FROM ProblemTag p join fetch p.tag where p.problem.id = :problemId", mapOf("problemId" to problem.id))
+                val problemTags = findAll<ProblemTag>(
+                    "SELECT p FROM ProblemTag p join fetch p.tag where p.problem.id = :problemId",
+                    mapOf("problemId" to problem.id),
+                )
                 problemTags.size shouldBe 1
                 problemTags[0].tag.name shouldBe "tag2"
             }
