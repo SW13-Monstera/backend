@@ -1,7 +1,6 @@
 package io.csbroker.apiserver.model
 
 import io.csbroker.apiserver.common.enums.GradingStandardType
-import io.csbroker.apiserver.dto.useranswer.UserAnswerSearchResponseDto.UserAnswerDataDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -64,17 +63,5 @@ class UserAnswer(
         }.sumOf {
             it.score
         }
-    }
-
-    fun toUserAnswerDataDto(): UserAnswerDataDto {
-        return UserAnswerDataDto(
-            id,
-            problem.title,
-            assignedUser?.username,
-            validatingUser?.username,
-            updatedAt!!,
-            isLabeled,
-            isValidated,
-        )
     }
 }
