@@ -25,7 +25,7 @@ class LongProblem(
     @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
     var userAnswers: MutableList<UserAnswer> = mutableListOf(),
 
-    @OneToMany(mappedBy = "longProblem", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "longProblem", cascade = [CascadeType.ALL], orphanRemoval = true)
     var standardAnswers: MutableList<StandardAnswer> = mutableListOf(),
 ) : Problem(
     title = title,
@@ -45,6 +45,7 @@ class LongProblem(
         description = upsertRequestDto.description
         isGradable = upsertRequestDto.isGradable
         isActive = upsertRequestDto.isActive
+        updateStandardAnswers(upsertRequestDto.standardAnswers)
     }
 
     fun toLongProblemResponseDto(): LongProblemResponseDto {
@@ -110,5 +111,19 @@ class LongProblem(
             likes.any { it.user.email == email },
             problemBookmark.any { it.user.email == email },
         )
+    }
+
+    fun updateStandardAnswers(standardAnswers: List<String>) {
+        if (this.standardAnswers.map { it.content }.toSet() != standardAnswers.toSet()) {
+            this.standardAnswers.clear()
+            this.standardAnswers.addAll(
+                standardAnswers.map {
+                    StandardAnswer(
+                        content = it,
+                        longProblem = this,
+                    )
+                },
+            )
+        }
     }
 }
