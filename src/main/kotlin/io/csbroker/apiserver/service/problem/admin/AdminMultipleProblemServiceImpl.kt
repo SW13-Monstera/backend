@@ -74,7 +74,7 @@ class AdminMultipleProblemServiceImpl(
         findProblem.addChoices(choiceDataList)
         findProblem.updateFromDto(updateRequestDto)
 
-        tagUpserter.updateTags(findProblem, updateRequestDto.tags)
+        tagUpserter.updateTags(findProblem, updateRequestDto.tags.toMutableList())
 
         return id
     }

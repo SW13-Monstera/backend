@@ -91,7 +91,7 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames) }
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
     }
 
     @Test
@@ -103,7 +103,7 @@ class TagUpserterTest {
         every { tagRepository.findTagsByNameIn(tagNames) } returns tags
 
         // when, then
-        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames) }
+        assertThrows<ConditionConflictException> { tagUpserter.updateTags(problem, tagNames.toMutableList()) }
     }
 
     private fun getLongProblem(): LongProblem = LongProblem(
