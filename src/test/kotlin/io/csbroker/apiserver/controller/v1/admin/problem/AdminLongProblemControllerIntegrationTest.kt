@@ -7,7 +7,6 @@ import io.csbroker.apiserver.model.StandardAnswer
 import io.csbroker.apiserver.model.Tag
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-
 import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -24,7 +23,7 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
             ),
         )
         save(StandardAnswer(content = "삭제될 모범 답안", longProblem = problem))
-        save(Tag(name="tag1"))
+        save(Tag(name = "tag1"))
         val updateRequestDto = LongProblemUpsertRequestDto(
             title = "Test problem",
             description = "This is a test problem",
@@ -44,9 +43,11 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
         // then
         response.andExpect(status().isOk)
             .andExpect {
-                val standardAnswers = findAll<StandardAnswer>("SELECT s FROM StandardAnswer s where s.longProblem.id = :id", mapOf("id" to problem.id))
+                val standardAnswers = findAll<StandardAnswer>(
+                    "SELECT s FROM StandardAnswer s where s.longProblem.id = :id",
+                    mapOf("id" to problem.id),
+                )
                 standardAnswers.map { it.content }.toSet() shouldBe updateRequestDto.standardAnswers.toSet()
             }
-
     }
 }
