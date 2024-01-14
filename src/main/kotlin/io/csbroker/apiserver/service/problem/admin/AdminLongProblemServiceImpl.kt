@@ -71,18 +71,6 @@ class AdminLongProblemServiceImpl(
             ?: throw EntityNotFoundException("${id}번 문제는 존재하지 않는 서술형 문제입니다.")
         val gradingStandardList = updateRequestDto.getGradingStandardList(longProblem)
 
-        if (longProblem.standardAnswers.map { it.content }.toSet() != updateRequestDto.standardAnswers.toSet()) {
-            standardAnswerRepository.deleteAllByLongProblem(longProblem)
-            standardAnswerRepository.saveAll(
-                updateRequestDto.standardAnswers.map {
-                    StandardAnswer(
-                        content = it,
-                        longProblem = longProblem,
-                    )
-                },
-            )
-        }
-
         if (longProblem.gradingStandards.map { it.content }.toSet() != gradingStandardList.map { it.content }.toSet()) {
             gradingStandardRepository.deleteAllById(longProblem.gradingStandards.map { it.id })
             longProblem.addGradingStandards(gradingStandardList)
