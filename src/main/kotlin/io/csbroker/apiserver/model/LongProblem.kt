@@ -4,7 +4,6 @@ import io.csbroker.apiserver.dto.problem.longproblem.LongProblemDetailResponseDt
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto.LongProblemDataDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
@@ -43,7 +42,6 @@ class LongProblem(
     fun updateFromDto(upsertRequestDto: LongProblemUpsertRequestDto) {
         title = upsertRequestDto.title
         description = upsertRequestDto.description
-        isGradable = upsertRequestDto.isGradable
         isActive = upsertRequestDto.isActive
         updateStandardAnswers(upsertRequestDto.standardAnswers)
     }
@@ -55,9 +53,7 @@ class LongProblem(
             description,
             standardAnswers.map { it.content },
             problemTags.map { it.tag.name },
-            gradingStandards.map { GradingStandardResponseDto.fromGradingStandard(it) },
             isActive,
-            isGradable,
         )
     }
 
