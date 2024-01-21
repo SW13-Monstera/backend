@@ -83,5 +83,4 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
                 problemTags.size shouldBe updateRequestDto.tags.size
             }
     }
-
 }

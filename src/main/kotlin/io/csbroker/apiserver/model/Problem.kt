@@ -90,14 +90,13 @@ abstract class Problem(
     }
 
     fun addTags(tags: List<Tag>) {
-        val newProblemTags = tags.map { ProblemTag(problem = this, tag = it)}
+        val newProblemTags = tags.map { ProblemTag(problem = this, tag = it) }
         val existProblemTags = problemTags.map { it.tag.name }.intersect(tags.map { it.name }.toSet())
         if (existProblemTags.isNotEmpty()) {
             throw ConditionConflictException(ErrorCode.TAG_DUPLICATED, "해당 태그가 이미 존재합니다. tagName: $existProblemTags")
         }
         problemTags.addAll(newProblemTags)
     }
-
 
     fun deleteTag(tag: Tag) {
         val problemTag = problemTags.find {
@@ -106,5 +105,4 @@ abstract class Problem(
 
         problemTags.remove(problemTag)
     }
-
 }

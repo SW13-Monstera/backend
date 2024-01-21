@@ -6,7 +6,6 @@ import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.problem.ProblemTagRepository
 import io.csbroker.apiserver.repository.problem.TagRepository
 import io.mockk.clearMocks
 import io.mockk.every
@@ -20,8 +19,7 @@ import java.util.UUID
 
 class TagUpserterTest {
     private val tagRepository = mockk<TagRepository>()
-    private val problemTagRepository = mockk<ProblemTagRepository>()
-    private val tagUpserter = TagUpserter(tagRepository, problemTagRepository)
+    private val tagUpserter = TagUpserter(tagRepository)
 
     private val user = User(
         id = UUID.randomUUID(),
@@ -33,7 +31,7 @@ class TagUpserterTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks(tagRepository, problemTagRepository)
+        clearMocks(tagRepository)
     }
 
     @Test

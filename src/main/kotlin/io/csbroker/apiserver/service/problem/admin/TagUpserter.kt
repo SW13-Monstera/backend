@@ -5,14 +5,12 @@ import io.csbroker.apiserver.common.exception.ConditionConflictException
 import io.csbroker.apiserver.model.Problem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
-import io.csbroker.apiserver.repository.problem.ProblemTagRepository
 import io.csbroker.apiserver.repository.problem.TagRepository
 import org.springframework.stereotype.Component
 
 @Component
 class TagUpserter(
     private val tagRepository: TagRepository,
-    private val problemTagRepository: ProblemTagRepository,
 ) {
     fun setTags(problem: Problem, tagNames: List<String>) {
         if (tagNames.isEmpty()) {
