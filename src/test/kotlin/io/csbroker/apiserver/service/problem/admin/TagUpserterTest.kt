@@ -83,6 +83,17 @@ class TagUpserterTest {
     }
 
     @Test
+    fun `이미 태그가 존재하는 문제에 태그를 생성할 시 예외가 발생한다`() {
+        // given
+        val problem = getLongProblem()
+        val existTag = Tag(name = "tag1")
+        problem.problemTags.add(ProblemTag(problem = problem, tag = existTag))
+
+        // when, then
+        assertThrows<ConditionConflictException> { tagUpserter.setTags(problem, listOf("newTag!!!")) }
+    }
+
+    @Test
     fun `존재하지 않는 태그를 업데이트하려고 하면 예외가 발생한다`() {
         // given
         val problem = getLongProblem()

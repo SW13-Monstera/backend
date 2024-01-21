@@ -18,7 +18,9 @@ class TagUpserter(
         if (tagNames.isEmpty()) {
             throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "태그의 개수는 1개 이상이여야합니다.")
         }
-
+        if (problem.problemTags.isNotEmpty()) {
+            throw ConditionConflictException(ErrorCode.CONDITION_NOT_FULFILLED, "태그가 이미 존재합니다.")
+        }
         val tags = tagRepository.findTagsByNameIn(tagNames)
 
         checkEveryTagExist(tags, tagNames)
