@@ -16,6 +16,7 @@ enum class ErrorCode(
     FORBIDDEN(403, "이 작업에 대한 권한이 없습니다."),
     NOT_FOUND_ENTITY(404, "대상을 찾을 수 없습니다."),
     USERNAME_DUPLICATED(409, "닉네임이 중복되었습니다."),
+    TAG_DUPLICATED(409, "태그가 중복되었습니다."),
     EMAIL_DUPLICATED(409, "이메일이 중복되었습니다."),
     PROVIDER_MISS_MATCH(409, "올바르지 않은 provider입니다."),
     SERVER_ERROR(500, "서버에서 오류가 발생했습니다."),

@@ -16,7 +16,7 @@ class Tag(
     @Column(name = "tag_id")
     val id: Long = 0,
 
-    @Column(name = "tag_name", columnDefinition = "VARCHAR(30)")
+    @Column(name = "tag_name", columnDefinition = "VARCHAR(30)", unique = true)
     val name: String,
 
     @OneToMany(mappedBy = "tag")

@@ -6,7 +6,6 @@ import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.ProblemTag
 import io.csbroker.apiserver.model.Tag
 import io.csbroker.apiserver.model.User
-import io.csbroker.apiserver.repository.problem.ProblemTagRepository
 import io.csbroker.apiserver.repository.problem.TagRepository
 import io.mockk.clearMocks
 import io.mockk.every
@@ -20,8 +19,7 @@ import java.util.UUID
 
 class TagUpserterTest {
     private val tagRepository = mockk<TagRepository>()
-    private val problemTagRepository = mockk<ProblemTagRepository>()
-    private val tagUpserter = TagUpserter(tagRepository, problemTagRepository)
+    private val tagUpserter = TagUpserter(tagRepository)
 
     private val user = User(
         id = UUID.randomUUID(),
@@ -33,7 +31,7 @@ class TagUpserterTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks(tagRepository, problemTagRepository)
+        clearMocks(tagRepository)
     }
 
     @Test
@@ -44,16 +42,12 @@ class TagUpserterTest {
         val tag1 = Tag(id = 1, name = "tag1")
         val tag2 = Tag(id = 2, name = "tag2")
         every { tagRepository.findTagsByNameIn(tagNames) } returns listOf(tag1, tag2)
-        every { problemTagRepository.saveAll(any<List<ProblemTag>>()) } returns emptyList()
 
         // when
         tagUpserter.setTags(problem, tagNames)
 
         // then
-        verify {
-            tagRepository.findTagsByNameIn(tagNames)
-            problemTagRepository.saveAll(any<List<ProblemTag>>())
-        }
+        verify { tagRepository.findTagsByNameIn(tagNames) }
         assertEquals(2, problem.problemTags.size)
         val updatedTagSet = problem.problemTags.map { it.tag.name }.toSet()
         assert(updatedTagSet.contains("tag1"))
@@ -80,6 +74,17 @@ class TagUpserterTest {
 
         // when, then
         assertThrows<ConditionConflictException> { tagUpserter.setTags(problem, tagNames) }
+    }
+
+    @Test
+    fun `이미 태그가 존재하는 문제에 태그를 생성할 시 예외가 발생한다`() {
+        // given
+        val problem = getLongProblem()
+        val existTag = Tag(name = "tag1")
+        problem.problemTags.add(ProblemTag(problem = problem, tag = existTag))
+
+        // when, then
+        assertThrows<ConditionConflictException> { tagUpserter.setTags(problem, listOf("newTag!!!")) }
     }
 
     @Test
