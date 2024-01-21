@@ -24,7 +24,6 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
             description = "This is a test problem",
             tags = mutableListOf(),
             standardAnswers = listOf("업데이트될 모범 답안"),
-//            gradingStandards = mutableListOf(),
         )
 
         // when
@@ -61,8 +60,7 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
             description = longProblem.description,
             tags = mutableListOf(newTag1.name, newTag2.name),
             standardAnswers = emptyList(),
-//            gradingStandards = mutableListOf(),
-        )
+g        )
 
         // when
         val response = request(
