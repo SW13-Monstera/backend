@@ -1,11 +1,9 @@
 package io.csbroker.apiserver.controller.v1.admin.problem
 
-import io.csbroker.apiserver.common.enums.GradingStandardType
 import io.csbroker.apiserver.controller.RestDocsTest
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemSearchResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemUpsertRequestDto
-import io.csbroker.apiserver.dto.user.GradingStandardResponseDto
 import io.csbroker.apiserver.service.problem.admin.AdminLongProblemService
 import io.mockk.every
 import io.mockk.mockk
@@ -62,16 +60,6 @@ class AdminLongProblemControllerTest : RestDocsTest() {
                             .description("모범 답안"),
                         fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
-                        fieldWithPath("gradingStandards").type(JsonFieldType.ARRAY)
-                            .description("채점기준"),
-                        fieldWithPath("gradingStandards.[].content")
-                            .type(JsonFieldType.STRING).description("채점기준 내용"),
-                        fieldWithPath("gradingStandards.[].score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
-                        fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
-                        fieldWithPath("isGradable")
-                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부 ( 필수 x, 기본 값 false )"),
                         fieldWithPath("isActive")
                             .type(JsonFieldType.BOOLEAN).description("활성화 여부 ( 필수 x, 기본 값 true )"),
                     ),
@@ -114,16 +102,6 @@ class AdminLongProblemControllerTest : RestDocsTest() {
                             .description("모범 답안"),
                         fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
-                        fieldWithPath("gradingStandards").type(JsonFieldType.ARRAY)
-                            .description("채점기준"),
-                        fieldWithPath("gradingStandards.[].content")
-                            .type(JsonFieldType.STRING).description("채점기준 내용"),
-                        fieldWithPath("gradingStandards.[].score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
-                        fieldWithPath("gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
-                        fieldWithPath("isGradable")
-                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         fieldWithPath("isActive")
                             .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
@@ -146,16 +124,7 @@ class AdminLongProblemControllerTest : RestDocsTest() {
             standardAnswers = listOf("answer"),
             description = "description",
             tags = listOf("tag1", "tag2"),
-            gradingStandards = listOf(
-                GradingStandardResponseDto(
-                    id = 1L,
-                    content = "content",
-                    score = 1.0,
-                    type = GradingStandardType.KEYWORD,
-                ),
-            ),
             isActive = true,
-            isGradable = true,
         )
 
         // when
@@ -184,18 +153,6 @@ class AdminLongProblemControllerTest : RestDocsTest() {
                             .description("모범 답안"),
                         fieldWithPath("data.tags").type(JsonFieldType.ARRAY)
                             .description("태그"),
-                        fieldWithPath("data.gradingStandards").type(JsonFieldType.ARRAY)
-                            .description("채점기준"),
-                        fieldWithPath("data.gradingStandards.[].id")
-                            .type(JsonFieldType.NUMBER).description("채점기준 ID"),
-                        fieldWithPath("data.gradingStandards.[].content")
-                            .type(JsonFieldType.STRING).description("채점기준 내용"),
-                        fieldWithPath("data.gradingStandards.[].score")
-                            .type(JsonFieldType.NUMBER).description("채점기준 점수"),
-                        fieldWithPath("data.gradingStandards.[].type")
-                            .type(JsonFieldType.STRING).description("채점기준 타입 ( 'KEYWORD' or 'CONTENT' )"),
-                        fieldWithPath("data.isGradable")
-                            .type(JsonFieldType.BOOLEAN).description("채점 가능 여부"),
                         fieldWithPath("data.isActive")
                             .type(JsonFieldType.BOOLEAN).description("활성화 여부"),
                     ),
@@ -289,12 +246,5 @@ class AdminLongProblemControllerTest : RestDocsTest() {
         "test",
         listOf("test"),
         listOf("db", "network"),
-        listOf(
-            LongProblemUpsertRequestDto.GradingStandardData(
-                "keyword-1",
-                1.0,
-                GradingStandardType.KEYWORD,
-            ),
-        ),
     )
 }

@@ -6,7 +6,6 @@ import com.jayway.jsonpath.JsonPath
 import io.csbroker.apiserver.controller.IntegrationTest
 import io.csbroker.apiserver.controller.v2.problem.response.SubmitLongProblemResponseDto
 import io.csbroker.apiserver.dto.problem.longproblem.LongProblemAnswerDto
-import io.csbroker.apiserver.model.GradingHistory
 import io.csbroker.apiserver.model.LongProblem
 import io.csbroker.apiserver.model.StandardAnswer
 import io.kotest.matchers.collections.shouldContain
@@ -44,17 +43,6 @@ class LongProblemIntegrationTest : IntegrationTest() {
     fun `서술형 문제 제출`() {
         val problem = getProblem()
 
-        // given & when
-        val preSubmissionCount = findAll<GradingHistory>(
-            "SELECT gh From GradingHistory gh where gh.problem.id = :id",
-            mapOf("id" to problem.id),
-        ).size
-
-        val preUserSubmissionCount = findAll<GradingHistory>(
-            "SELECT gh From GradingHistory gh where gh.problem.id = :problemId AND gh.user.id = :userId",
-            mapOf("problemId" to problem.id, "userId" to defaultUser.id!!),
-        ).size
-
         val standardAnswers = findAll<StandardAnswer>(
             "SELECT sa From StandardAnswer sa where sa.longProblem.id = :id",
             mapOf("id" to problem.id),
@@ -77,8 +65,6 @@ class LongProblemIntegrationTest : IntegrationTest() {
                 val responseDto = objectMapper.readValue<SubmitLongProblemResponseDto>(dataAsString)
                 responseDto.title shouldBe problem.title
                 responseDto.description shouldBe problem.description
-                responseDto.totalSubmission shouldBe preSubmissionCount + 1 // 제출 수가 증가하는지 확인
-                responseDto.userSubmission shouldBe preUserSubmissionCount + 1 // 제출 수가 증가하는지 확인
                 responseDto.userAnswer shouldBe userAnswer
                 standardAnswers.map { sa -> sa.content } shouldContain responseDto.standardAnswer // 모법답안중 하나가 반환되는지 확인
             }

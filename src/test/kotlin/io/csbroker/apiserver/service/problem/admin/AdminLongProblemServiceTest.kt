@@ -50,8 +50,6 @@ class AdminLongProblemServiceTest {
         adminLongProblemService = AdminLongProblemServiceImpl(
             longProblemRepository,
             problemRepository,
-            userRepository,
-            gradingStandardRepository,
             tagUpserter,
             standardAnswerRepository,
         )
@@ -105,7 +103,6 @@ class AdminLongProblemServiceTest {
             description = "This is a test problem",
             tags = listOf("tag 1", "tag 2"),
             standardAnswers = emptyList(),
-            gradingStandards = emptyList(),
         )
     }
 }
