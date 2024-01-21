@@ -44,16 +44,12 @@ class TagUpserterTest {
         val tag1 = Tag(id = 1, name = "tag1")
         val tag2 = Tag(id = 2, name = "tag2")
         every { tagRepository.findTagsByNameIn(tagNames) } returns listOf(tag1, tag2)
-        every { problemTagRepository.saveAll(any<List<ProblemTag>>()) } returns emptyList()
 
         // when
         tagUpserter.setTags(problem, tagNames)
 
         // then
-        verify {
-            tagRepository.findTagsByNameIn(tagNames)
-            problemTagRepository.saveAll(any<List<ProblemTag>>())
-        }
+        verify { tagRepository.findTagsByNameIn(tagNames) }
         assertEquals(2, problem.problemTags.size)
         val updatedTagSet = problem.problemTags.map { it.tag.name }.toSet()
         assert(updatedTagSet.contains("tag1"))

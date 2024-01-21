@@ -24,39 +24,24 @@ class TagUpserter(
         val tags = tagRepository.findTagsByNameIn(tagNames)
 
         checkEveryTagExist(tags, tagNames)
-
-        val problemTags = tags.map {
-            ProblemTag(problem = problem, tag = it)
-        }
-
-        problemTagRepository.saveAll(problemTags)
-        problem.problemTags.addAll(problemTags)
+        problem.addTags(tags)
     }
 
     fun updateTags(problem: Problem, tagNames: MutableList<String>) {
-        problem.problemTags.removeIf {
-            if (it.tag.name !in tagNames) {
-                problemTagRepository.delete(it)
-                return@removeIf true
-            }
-            return@removeIf false
-        }
+        if (isNotChanged(problem, tagNames)) return
 
-        tagNames.removeIf {
-            it in problem.problemTags.map { pt ->
-                pt.tag.name
-            }
-        }
-
+        problem.problemTags.clear()
         val tags = tagRepository.findTagsByNameIn(tagNames)
         checkEveryTagExist(tags, tagNames)
 
-        val problemTags = tags.map {
-            ProblemTag(problem = problem, tag = it)
-        }
-
+        val problemTags = tags.map { ProblemTag(problem = problem, tag = it) }
         problem.problemTags.addAll(problemTags)
     }
+
+    private fun isNotChanged(
+        problem: Problem,
+        tagNames: MutableList<String>,
+    ) = problem.problemTags.map { it.tag.name }.toSet() == tagNames.toSet()
 
     private fun checkEveryTagExist(
         existTags: List<Tag>,

@@ -23,22 +23,9 @@ class AdminMultipleProblemIntegrationTest : IntegrationTest() {
                 isMultiple = false,
             ),
         )
-        val tag = save(
-            Tag(
-                name = "tag1",
-            ),
-        )
-        save(
-            Tag(
-                name = "tag2",
-            ),
-        )
-        save(
-            ProblemTag(
-                problem = problem,
-                tag = tag,
-            ),
-        )
+        val tag = save(Tag(name = "${problem.id}-tag1"))
+        val newTag = save(Tag(name = "${problem.id}-tag2"))
+        save(ProblemTag(problem = problem, tag = tag))
 
         // when
         val response = request(
@@ -58,7 +45,7 @@ class AdminMultipleProblemIntegrationTest : IntegrationTest() {
                         isAnswer = false,
                     ),
                 ),
-                tags = listOf("tag2"),
+                tags = listOf(newTag.name),
                 score = problem.score,
             ),
         )
@@ -71,7 +58,7 @@ class AdminMultipleProblemIntegrationTest : IntegrationTest() {
                     mapOf("problemId" to problem.id),
                 )
                 problemTags.size shouldBe 1
-                problemTags[0].tag.name shouldBe "tag2"
+                problemTags[0].tag.name shouldBe newTag.name
             }
     }
 }
