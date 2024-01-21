@@ -77,7 +77,7 @@ class AdminLongProblemServiceImpl(
         }
 
         longProblem.updateFromDto(updateRequestDto)
-        tagUpserter.setTags(longProblem, updateRequestDto.tags)
+        tagUpserter.updateTags(longProblem, updateRequestDto.tags.toMutableList())
         return id
     }
 }
