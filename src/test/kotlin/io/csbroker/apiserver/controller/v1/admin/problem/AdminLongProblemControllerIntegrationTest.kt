@@ -60,7 +60,7 @@ class AdminLongProblemControllerIntegrationTest : IntegrationTest() {
             description = longProblem.description,
             tags = mutableListOf(newTag1.name, newTag2.name),
             standardAnswers = emptyList(),
-g        )
+        )
 
         // when
         val response = request(
